@@ -51,12 +51,20 @@ export default function Navigation() {
                 <span className="text-[10px] font-bold gradient-text">VX</span>
               </div>
             </div>
-            <span
-              className="text-lg font-bold tracking-tight gradient-text"
-              style={{ fontFamily: 'var(--font-space)' }}
-            >
-              voidexa
-            </span>
+            <div className="flex flex-col leading-none">
+              <span
+                className="text-lg font-bold tracking-tight gradient-text"
+                style={{ fontFamily: 'var(--font-space)' }}
+              >
+                voidexa
+              </span>
+              <span
+                className="text-[9px] font-medium tracking-widest uppercase"
+                style={{ color: 'rgba(0,212,255,0.45)', letterSpacing: '0.12em' }}
+              >
+                AI-native systems
+              </span>
+            </div>
           </Link>
 
           {/* Desktop links */}

@@ -89,38 +89,6 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
 
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 mb-8"
-        >
-          <div
-            className="flex items-center gap-2 px-4 py-1.5 rounded-full"
-            style={{
-              background: 'rgba(0,212,255,0.06)',
-              border: '1px solid rgba(0,212,255,0.2)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <div
-              className="w-1.5 h-1.5 rounded-full"
-              style={{
-                background: '#00d4ff',
-                boxShadow: '0 0 8px #00d4ff',
-                animation: 'breathe 2s ease-in-out infinite',
-              }}
-            />
-            <span
-              className="text-xs font-semibold tracking-widest uppercase"
-              style={{ color: '#00d4ff', fontFamily: 'var(--font-space)' }}
-            >
-              AI-native systems
-            </span>
-          </div>
-        </motion.div>
-
         {/* Main headline */}
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
