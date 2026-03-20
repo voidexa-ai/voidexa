@@ -5,12 +5,12 @@ import Link from 'next/link'
 import { ArrowRight, Shield, Lock, Zap, EyeOff, Clock, Globe } from 'lucide-react'
 
 const comlinkFeatures = [
-  { icon: Lock,    title: 'End-to-end encrypted',  desc: 'Every message encrypted client-side. Not even we can read it.' },
-  { icon: EyeOff,  title: 'Zero server storage',   desc: 'Nothing persisted. Messages live only on your devices.' },
-  { icon: Clock,   title: 'Ephemeral channels',    desc: 'Channels that auto-close and self-destruct when you leave.' },
-  { icon: Globe,   title: 'Cross-platform',        desc: 'iOS, Android, and web. Works everywhere, logs nowhere.' },
-  { icon: Zap,     title: 'No account required',   desc: 'No email, no phone. Create a channel and share the link.' },
-  { icon: Shield,  title: 'Open protocol (v2)',     desc: 'Full protocol documentation and self-hosting planned.' },
+  { icon: Lock,    title: 'End-to-end encrypted',    desc: 'Every message encrypted client-side. Not even we can read it.' },
+  { icon: EyeOff,  title: '60-min message lifespan', desc: 'Messages auto-expire. Ghost mode keeps everything RAM-only — nothing written to disk.' },
+  { icon: Clock,   title: 'Ephemeral channels',      desc: 'Channels that auto-close and self-destruct when you leave.' },
+  { icon: Globe,   title: 'QR invite only',          desc: 'No links, no search. Join by scanning a QR code. Zero discovery surface.' },
+  { icon: Zap,     title: 'Off-grid capable',        desc: 'Runs on Raspberry Pi. Solar or wind powered. Can be buried. No cloud dependency.' },
+  { icon: Shield,  title: 'Master/agent hierarchy',  desc: 'Command center control. One master node, unlimited agent nodes under it.' },
 ]
 
 const upcoming = [
@@ -74,19 +74,20 @@ export default function AppsPage() {
                   className="text-4xl font-bold text-[#e2e8f0] mb-4"
                   style={{ fontFamily: 'var(--font-space)' }}
                 >
-                  Privacy isn't a feature.{' '}
+                  Off-grid.{' '}
                   <span style={{
                     background: 'linear-gradient(135deg, #8b5cf6, #00d4ff)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                   }}>
-                    It's the architecture.
+                    Encrypted. Untraceable.
                   </span>
                 </h2>
                 <p className="text-[#64748b] leading-relaxed mb-6">
-                  Comlink was built because every existing messenger makes a compromise.
-                  We didn't. End-to-end encryption, zero logs, ephemeral by design.
-                  For conversations that shouldn't exist anywhere but between you and who you're talking to.
+                  Comlink is P2P encrypted communication built for people who take privacy seriously.
+                  QR invite only, 60-minute message lifespan, ghost mode (RAM only), master/agent hierarchy.
+                  Runs on a Raspberry Pi — solar or wind powered, can be buried underground.
+                  No cloud, no trace, no compromise.
                 </p>
                 <Link
                   href="/contact"
@@ -119,6 +120,54 @@ export default function AppsPage() {
                   </motion.div>
                 ))}
               </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Custom Apps */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 rounded-3xl p-8 lg:p-10"
+          style={{
+            background: 'linear-gradient(135deg, rgba(0,212,255,0.04), rgba(139,92,246,0.04))',
+            border: '1px solid rgba(0,212,255,0.1)',
+          }}
+        >
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
+            <div className="lg:w-1/2">
+              <h2 className="text-3xl font-bold text-[#e2e8f0] mb-3" style={{ fontFamily: 'var(--font-space)' }}>
+                Have an idea?{' '}
+                <span className="gradient-text">We build it.</span>
+              </h2>
+              <p className="text-[#64748b] leading-relaxed mb-6">
+                From concept to deployment — custom encrypted communication apps, automation tools,
+                business apps, anything. Tell us what you need and we'll scope it, build it, and hand you the code.
+              </p>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-[#0a0a0f] hover:opacity-90 transition-opacity"
+                style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
+              >
+                Tell us what you need <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                'Encrypted communication apps',
+                'Automation tools & pipelines',
+                'Business intelligence apps',
+                'Trading & financial tools',
+                'AI-integrated workflows',
+                'Off-grid / hardware projects',
+              ].map(item => (
+                <div key={item} className="flex items-center gap-2 p-3 rounded-xl text-sm text-[#64748b]"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ color: '#00d4ff' }}>·</span>
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>

@@ -1,0 +1,19 @@
+
+> voidexa-tmp@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 13756, using available port 3002 instead.
+▲ Next.js 16.2.0 (Turbopack)
+- Local:         http://localhost:3002
+- Network:       http://192.168.0.31:3002
+- Environments: .env
+✓ Ready in 2.2s
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3001
+- PID:          15320
+- Dir:          C:\Users\Jixwu\Desktop\voidexa
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 15320 /F to stop it.
+[?25h

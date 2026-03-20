@@ -7,12 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 
 const links = [
-  { href: '/',          label: 'Home' },
-  { href: '/products',  label: 'Products' },
-  { href: '/services',  label: 'Services' },
-  { href: '/apps',      label: 'Apps' },
-  { href: '/about',     label: 'About' },
-  { href: '/contact',   label: 'Contact' },
+  { href: '/',           label: 'Home' },
+  { href: '/trading',    label: 'Trading' },
+  { href: '/apps',       label: 'Apps' },
+  { href: '/ai-tools',   label: 'AI Tools' },
+  { href: '/services',   label: 'Services' },
+  { href: '/about',      label: 'About' },
+  { href: '/contact',    label: 'Contact' },
 ]
 
 export default function Navigation() {
@@ -34,11 +35,11 @@ export default function Navigation() {
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: scrolled
-            ? 'rgba(10, 10, 15, 0.92)'
-            : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(0,212,255,0.08)' : 'none',
+          background: scrolled ? 'rgba(7, 4, 18, 0.88)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(0,212,255,0.1)' : 'none',
+          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.4), 0 1px 0 rgba(0,212,255,0.06)' : 'none',
         }}
       >
         <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">

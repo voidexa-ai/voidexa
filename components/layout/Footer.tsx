@@ -3,18 +3,19 @@ import { Mail, Github, Twitter } from 'lucide-react'
 
 const pages = [
   { href: '/',          label: 'Home' },
-  { href: '/products',  label: 'Products' },
-  { href: '/services',  label: 'Services' },
+  { href: '/trading',   label: 'Trading' },
   { href: '/apps',      label: 'Apps' },
+  { href: '/ai-tools',  label: 'AI Tools' },
+  { href: '/services',  label: 'Services' },
   { href: '/about',     label: 'About' },
   { href: '/contact',   label: 'Contact' },
 ]
 
 const products = [
-  { href: '/products', label: 'AI Trading Bot' },
-  { href: '/products', label: 'Comlink App' },
-  { href: '/products', label: 'AI Book Creator' },
-  { href: '/products', label: 'Website Builder' },
+  { href: '/trading',   label: 'AI Trading Bot' },
+  { href: '/apps',      label: 'Comlink' },
+  { href: '/ai-tools',  label: 'AI Book Creator' },
+  { href: '/ai-tools',  label: 'Website Builder' },
 ]
 
 export default function Footer() {

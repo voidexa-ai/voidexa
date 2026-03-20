@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 import { ArrowRight, TrendingUp, Shield as ShieldIcon, Activity, Clock } from 'lucide-react'
 
 const stats = [
-  { icon: TrendingUp, value: '+313%',   label: '12-month backtest',   color: '#00d4ff' },
+  { icon: TrendingUp, value: '+306%',   label: '12-month backtest',   color: '#00d4ff' },
   { icon: Activity,   value: '5-stage', label: 'AI pipeline',          color: '#8b5cf6' },
-  { icon: ShieldIcon, value: 'Dry-run', label: 'Default safe mode',    color: '#00d4ff' },
+  { icon: ShieldIcon, value: '11',      label: 'Coins tracked',        color: '#00d4ff' },
   { icon: Clock,      value: '24/7',    label: 'Autonomous operation', color: '#8b5cf6' },
 ]
 
@@ -23,16 +23,20 @@ export default function FeaturedProduct() {
   return (
     <section
       className="section-pad relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #0a0a0f 0%, #0f0520 50%, #0a0a0f 100%)' }}
+      style={{ background: 'linear-gradient(180deg, #07070d 0%, #0d0419 45%, #07070d 100%)' }}
     >
-      {/* Background glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 60% 50% at 30% 50%, rgba(0,212,255,0.05) 0%, transparent 60%)',
-        }}
-      />
+      {/* Rich gradient mesh */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 70% 60% at 15% 50%, rgba(0,212,255,0.07) 0%, transparent 55%)' }} />
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 50% 60% at 85% 40%, rgba(139,92,246,0.07) 0%, transparent 55%)' }} />
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 40% 40% at 50% 100%, rgba(244,113,181,0.03) 0%, transparent 60%)' }} />
+
+      {/* Divider top */}
+      <div className="absolute top-0 left-0 right-0">
+        <div className="section-divider opacity-30" />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -51,7 +55,7 @@ export default function FeaturedProduct() {
                 color: '#00d4ff',
               }}
             >
-              Featured — AI Trading Bot
+              Featured — The All-Season Bot
             </span>
             <h2
               className="text-4xl sm:text-5xl font-bold text-[#e2e8f0] leading-tight mb-5"
@@ -61,7 +65,7 @@ export default function FeaturedProduct() {
               <span className="gradient-text">thinks</span>{' '}
               before it trades.
             </h2>
-            <p className="text-[#64748b] leading-relaxed mb-8">
+            <p className="text-[#3d5068] leading-relaxed mb-8">
               A modular, fully autonomous crypto spot rebalancer with a futures overlay.
               It classifies the market regime every tick, proposes an allocation, validates
               it through a risk gate, then executes — or doesn't. Every decision is logged.
@@ -89,14 +93,23 @@ export default function FeaturedProduct() {
               ))}
             </div>
 
-            <Link
-              href="/products"
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-[#0a0a0f] transition-all hover:opacity-90 glow-cyan-btn"
-              style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
-            >
-              Learn more
-              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/trading#node"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-[#0a0a0f] transition-all hover:opacity-90 glow-cyan-btn"
+                style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
+              >
+                Join the Node
+                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+              <Link
+                href="/trading"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-[#94a3b8] hover:text-white transition-colors"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+              >
+                Learn more
+              </Link>
+            </div>
           </motion.div>
 
           {/* Right — stats */}
@@ -114,7 +127,7 @@ export default function FeaturedProduct() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.2 + i * 0.08 }}
-                className="glass-card rounded-2xl p-6 text-center"
+                className="glass-card shimmer-card rounded-2xl p-6 text-center"
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3"
@@ -133,7 +146,7 @@ export default function FeaturedProduct() {
                 >
                   {value}
                 </div>
-                <div className="text-xs text-[#475569]">{label}</div>
+                <div className="text-xs text-[#3d5068] tracking-wide">{label}</div>
               </motion.div>
             ))}
           </motion.div>

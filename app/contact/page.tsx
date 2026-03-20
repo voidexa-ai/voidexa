@@ -6,11 +6,16 @@ import { Send, Mail, ArrowRight } from 'lucide-react'
 
 const subjects = [
   'AI Trading Bot — access request',
+  'Join the Node — waitlist',
   'Comlink — beta access',
-  'Custom AI development',
+  'AI Book Creator — waitlist',
+  'AI Website Builder — waitlist',
+  'Custom app development',
   'Data intelligence project',
   'AI consulting',
+  'Node membership',
   'General inquiry',
+  'Other',
 ]
 
 export default function ContactPage() {

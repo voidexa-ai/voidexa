@@ -1,19 +1,21 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { DM_Sans, Syne } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
 import JarvisAssistant from '@/components/ui/JarvisAssistant'
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-inter',
+  weight: ['300', '400', '500'],
   display: 'swap',
 })
 
-const spaceGrotesk = Space_Grotesk({
+const syne = Syne({
   subsets: ['latin'],
   variable: '--font-space',
+  weight: ['600', '700', '800'],
   display: 'swap',
 })
 
@@ -31,8 +33,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="min-h-screen bg-[#0a0a0f] text-[#e2e8f0] antialiased overflow-x-hidden">
+    <html lang="en" className={`${dmSans.variable} ${syne.variable}`}>
+      <body className="min-h-screen bg-[#0a0a0f] text-[#e2e8f0] antialiased overflow-x-hidden noise-body">
         <Navigation />
         <main className="relative">{children}</main>
         <Footer />

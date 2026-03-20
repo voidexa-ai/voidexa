@@ -5,36 +5,36 @@ import { Code2, Brain, Shield, Zap, Database, Network } from 'lucide-react'
 
 const values = [
   {
+    icon: Zap,
+    title: 'Autonomy',
+    desc: 'Systems that run themselves. A system that requires constant human intervention is a system that isn\'t done yet.',
+  },
+  {
     icon: Brain,
-    title: 'Intelligence first',
-    desc: 'Every product we ship has AI at its core — not as a feature, but as the foundation it was built on.',
+    title: 'Intelligence',
+    desc: 'AI that makes real decisions — not just suggestions. Built into the architecture, not bolted on as a feature.',
   },
   {
     icon: Shield,
-    title: 'Minimal footprint',
-    desc: "We build for function, not optics. If a feature doesn't serve the user's actual goal, it doesn't ship.",
-  },
-  {
-    icon: Zap,
-    title: 'Autonomous by default',
-    desc: 'A system that requires constant human intervention is a system that isn\'t done yet. We build to completion.',
+    title: 'Privacy',
+    desc: 'Your data, your control. No surveillance, no vendor lock-in, no compromises. End-to-end or not at all.',
   },
   {
     icon: Code2,
-    title: 'You own the code',
-    desc: "Everything we build is delivered as source code you control. No vendor lock-in, no subscription traps.",
+    title: 'Innovation',
+    desc: "If it doesn't exist, we build it. We don't wait for the industry to catch up to what people actually need.",
   },
 ]
 
 const stack = [
-  { name: 'Python',      role: 'Core AI systems & pipelines' },
-  { name: 'Next.js',     role: 'Web products & interfaces' },
-  { name: 'TypeScript',  role: 'Frontend and API layers' },
-  { name: 'Claude API',  role: 'LLM reasoning & decisions' },
-  { name: 'ccxt',        role: 'Exchange integrations' },
-  { name: 'Pydantic',    role: 'Configuration & validation' },
-  { name: 'Framer Motion', role: 'Interaction and animation' },
-  { name: 'Tailwind CSS', role: 'Styling systems' },
+  { name: 'Python',           role: 'Core AI systems & pipelines' },
+  { name: 'TypeScript',       role: 'Frontend and API layers' },
+  { name: 'React / Next.js',  role: 'Web products & interfaces' },
+  { name: 'Claude AI',        role: 'LLM reasoning & agent decisions' },
+  { name: 'Multi-agent arch', role: 'Custom agent orchestration' },
+  { name: 'E2E Encryption',   role: 'Privacy-first communication' },
+  { name: 'P2P Protocols',    role: 'Decentralised data transfer' },
+  { name: 'Custom Hardware',  role: 'Solar & off-grid servers' },
 ]
 
 export default function AboutPage() {
@@ -55,19 +55,24 @@ export default function AboutPage() {
             className="text-5xl sm:text-6xl font-bold text-[#e2e8f0] mb-6 leading-tight"
             style={{ fontFamily: 'var(--font-space)' }}
           >
-            Built from the{' '}
-            <span className="gradient-text">void up.</span>
+            Born from the{' '}
+            <span className="gradient-text">void.</span>
           </h1>
           <div className="space-y-4 text-[#64748b] leading-relaxed max-w-2xl">
             <p>
-              voidexa started with a single question: what would software look like if intelligence
-              was baked into every layer — not bolted on, not a chat widget, but structurally
-              embedded in how the system makes decisions?
+              voidexa was born from the void — the space between what technology can do
+              and what it actually does for people.
             </p>
             <p>
-              The answer is a trading bot that classifies market regimes and rebalances portfolios
-              autonomously. An encrypted messenger that leaves no trace. A website builder that
-              ships production code from a brief. Tools that work without you.
+              The philosophy is simple: technology should work autonomously, intelligently,
+              for the benefit of its owner. Not require constant supervision. Not generate
+              busy work. Not lock you in. Just run.
+            </p>
+            <p>
+              Founded by a developer and AI architect. The answer took the form of a trading bot
+              that classifies market regimes and executes autonomously. An encrypted messenger
+              that leaves no trace. A website builder that ships production code from a brief.
+              Tools that work without you.
             </p>
             <p>
               We operate globally from the digital void. No office, no bloat, no meetings about meetings.
