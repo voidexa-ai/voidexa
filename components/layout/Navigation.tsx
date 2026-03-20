@@ -60,9 +60,9 @@ export default function Navigation() {
               </span>
               <span
                 className="text-[9px] font-medium tracking-widest uppercase"
-                style={{ color: 'rgba(0,212,255,0.45)', letterSpacing: '0.12em' }}
+                style={{ color: '#666', letterSpacing: '0.12em' }}
               >
-                AI-native systems
+                sovereign AI infrastructure
               </span>
             </div>
           </Link>
