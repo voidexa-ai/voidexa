@@ -129,8 +129,7 @@ export default function Hero() {
           className="text-5xl sm:text-7xl lg:text-[88px] font-bold leading-[1.02] tracking-tight mb-6"
           style={{ fontFamily: 'var(--font-space)' }}
         >
-          <span className="text-[#e2e8f0]">We build</span>
-          <br />
+          <span className="text-[#e2e8f0]">We build{' '}</span>
           <span
             style={{
               background: 'linear-gradient(135deg, #00d4ff 0%, #a78bfa 55%, #f471b5 100%)',
@@ -164,8 +163,8 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="text-lg sm:text-xl text-[#64748b] max-w-2xl mx-auto leading-relaxed mb-12"
         >
-          voidexa builds AI-powered trading systems, encrypted communication apps,
-          and intelligent automation tools — technology that thinks, adapts, and executes.
+          We build autonomous systems that trade, communicate, and create —
+          without waiting for instructions.
         </motion.p>
 
         {/* CTAs */}

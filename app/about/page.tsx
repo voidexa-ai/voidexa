@@ -69,14 +69,13 @@ export default function AboutPage() {
               busy work. Not lock you in. Just run.
             </p>
             <p>
-              Founded by a developer and AI architect. The answer took the form of a trading bot
-              that classifies market regimes and executes autonomously. An encrypted messenger
-              that leaves no trace. A website builder that ships production code from a brief.
-              Tools that work without you.
+              Founded by an independent developer and AI architect who got tired of tools that
+              need babysitting. The answer took the form of a trading bot that classifies market
+              regimes and executes autonomously. An encrypted messenger that leaves no trace.
+              A website builder that ships production code from a brief. Tools that work without you.
             </p>
             <p>
-              We operate globally from the digital void. No office, no bloat, no meetings about meetings.
-              Just builders who ship.
+              We operate globally. No office, no overhead — just builders who ship.
             </p>
           </div>
         </motion.div>

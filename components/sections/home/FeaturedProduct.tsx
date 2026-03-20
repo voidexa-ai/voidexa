@@ -66,10 +66,9 @@ export default function FeaturedProduct() {
               before it trades.
             </h2>
             <p className="text-[#3d5068] leading-relaxed mb-8">
-              A modular, fully autonomous crypto spot rebalancer with a futures overlay.
-              It classifies the market regime every tick, proposes an allocation, validates
-              it through a risk gate, then executes — or doesn't. Every decision is logged.
-              Nothing runs without approval.
+              An autonomous trading system that reads the market in real time, adjusts strategy
+              across four phases, and executes through a five-stage risk pipeline.
+              Every decision is logged. Nothing runs without passing the gate.
             </p>
 
             {/* Pipeline visualization */}

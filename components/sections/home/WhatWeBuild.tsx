@@ -145,7 +145,7 @@ export default function WhatWeBuild() {
             className="text-4xl sm:text-5xl font-bold text-[#e2e8f0] mb-4 leading-tight"
             style={{ fontFamily: 'var(--font-space)' }}
           >
-            Intelligent systems,
+            Intelligent systems,{' '}
             <br />
             <span
               style={{
