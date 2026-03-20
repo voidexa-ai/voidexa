@@ -2,21 +2,42 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, Shield, Lock, Zap, EyeOff, Clock, Globe } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
-const comlinkFeatures = [
-  { icon: Lock,    title: 'End-to-end encrypted',    desc: 'Every message encrypted client-side. Not even we can read it.' },
-  { icon: EyeOff,  title: '60-min message lifespan', desc: 'Messages auto-expire. Ghost mode keeps everything RAM-only — nothing written to disk.' },
-  { icon: Clock,   title: 'Ephemeral channels',      desc: 'Channels that auto-close and self-destruct when you leave.' },
-  { icon: Globe,   title: 'QR invite only',          desc: 'No links, no search. Join by scanning a QR code. Zero discovery surface.' },
-  { icon: Zap,     title: 'Off-grid capable',        desc: 'Runs on Raspberry Pi. Solar or wind powered. Can be buried. No cloud dependency.' },
-  { icon: Shield,  title: 'Master/agent hierarchy',  desc: 'Command center control. One master node, unlimited agent nodes under it.' },
+const deploymentTiers = [
+  {
+    tier: 'Tier 1',
+    title: 'Anonymous Cloud',
+    desc: 'Rent an anonymous server through voidexa. Instant setup, no hardware needed. Your messages route through infrastructure we manage but cannot read.',
+  },
+  {
+    tier: 'Tier 2',
+    title: 'Own Server',
+    desc: 'Run Comlink on a compact computer with 4G/5G SIM and mobile hotspot. Full control, full anonymity. No third party involved.',
+  },
+  {
+    tier: 'Tier 3',
+    title: 'Off-Grid Suitcase',
+    desc: 'Weatherproof hardcase with built-in computer, 4G/5G modem with external antenna, solar panel or small windmill for power. Can be deployed anywhere — mounted in a tree, placed on the ground, or buried with only antenna and power source visible. Complete off-grid operation for days without maintenance.',
+  },
 ]
 
 const upcoming = [
-  { title: 'JARVIS Desktop',  desc: 'AI-powered desktop agent that controls your workflow.', tag: 'Concept' },
-  { title: 'DataLens',        desc: 'AI dashboard generator — connect a database, get instant insights.', tag: 'Concept' },
-  { title: 'PaperTrail',      desc: 'Automated document intelligence — extract, classify, and route.', tag: 'Concept' },
+  {
+    title: 'TINE — AI Secretary',
+    desc: 'Voice-powered AI assistant for Danish tradespeople. Records client conversations on the job site, extracts project details, generates PDF quotes, sends via SMS or email, and auto-follows up on unanswered quotes after 48 hours. Speaks fluent Danish with trade-specific jargon. Voice-controlled — works with dirty hands.',
+    tag: 'Coming Soon',
+  },
+  {
+    title: "DIY Mechanic's Bible",
+    desc: 'AI repair assistant for engines. Point your camera at any component — the AI identifies it and walks you through the repair step by step. Voice-controlled for greasy hands. Uses only verified repair manuals — no hallucinations. Works for boat motors, scooters, motorcycles, cars.',
+    tag: 'Coming Soon',
+  },
+  {
+    title: 'BOSSO — Smart Lending',
+    desc: 'Peer-to-peer lending between friends with built-in tracking and contracts. Available as standard Play Store app, or as anonymous voidexa custom build for private transactions.',
+    tag: 'Coming Soon',
+  },
 ]
 
 export default function AppsPage() {
@@ -84,16 +105,13 @@ export default function AppsPage() {
                   </span>
                 </h2>
                 <p className="text-[#b0b0b0] leading-relaxed mb-3">
-                  Comlink is P2P encrypted communication built for people who take privacy seriously.
-                  Every message is encrypted client-side — we can't read it, no one can.
+                  Comlink is encrypted one-to-many communication. A master node sends to all agents. Each agent responds directly to master only. Agents cannot see each other. Every message is encrypted client-side before it leaves your device.
                 </p>
                 <p className="text-[#b0b0b0] leading-relaxed mb-3">
-                  QR invite only. 60-minute message lifespan. Ghost mode runs entirely in RAM —
-                  nothing is written to disk, nothing persists.
+                  QR invite only. 60-minute message lifespan. Ghost mode runs entirely in RAM — nothing written to disk, nothing persists after shutdown.
                 </p>
                 <p className="text-[#b0b0b0] leading-relaxed mb-6">
-                  Runs on a Raspberry Pi. Solar or wind powered. Can be buried underground.
-                  No cloud dependency, no trace, no compromise.
+                  Three deployment tiers:
                 </p>
                 <Link
                   href="/contact"
@@ -104,25 +122,23 @@ export default function AppsPage() {
                 </Link>
               </div>
 
-              <div className="lg:w-3/5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {comlinkFeatures.map(({ icon: Icon, title, desc }, i) => (
+              <div className="lg:w-3/5 space-y-4">
+                {deploymentTiers.map(({ tier, title, desc }, i) => (
                   <motion.div
-                    key={title}
+                    key={tier}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.07 }}
-                    className="flex gap-3 p-4 rounded-xl"
+                    className="p-4 rounded-xl"
                     style={{
                       background: 'rgba(255,255,255,0.03)',
                       border: '1px solid rgba(255,255,255,0.06)',
                     }}
                   >
-                    <Icon size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#8b5cf6' }} />
-                    <div>
-                      <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{title}</div>
-                      <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
-                    </div>
+                    <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>{tier}</div>
+                    <div className="text-sm font-semibold text-[#e2e8f0] mb-1">{title}</div>
+                    <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
                   </motion.div>
                 ))}
               </div>

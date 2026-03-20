@@ -7,11 +7,11 @@ import { ArrowRight, BookOpen, Globe, Lightbulb, Mic, Layers, Upload, MessageSqu
 
 /* ─── Book Creator how-it-works steps ─── */
 const bookSteps = [
-  { icon: Mic,         label: 'You talk',      desc: 'Tell us your story concept in your own words — a few sentences or an hour-long brain dump.' },
-  { icon: MessageSquare, label: 'AI interviews',  desc: 'JARVIS asks targeted questions about characters, timeline, feelings, key moments, and plot structure.' },
-  { icon: Layers,      label: 'Structure',     desc: 'Your story gets organised into chapters, arcs, and narrative threads — a complete outline.' },
-  { icon: BookOpen,    label: 'Book written',  desc: 'The AI writes a full, consistent, publication-quality manuscript in your voice.' },
-  { icon: Upload,      label: 'Published',     desc: 'We help you publish through Amazon KDP, Ingram Spark, or your preferred platform.' },
+  { icon: Lightbulb,   label: 'Discovery',      desc: 'genre, scope, characters, world' },
+  { icon: Mic,         label: 'Deep listening', desc: 'you tell your story, AI records and asks' },
+  { icon: Layers,      label: 'Architecture',   desc: 'threads, arcs, intersections mapped' },
+  { icon: BookOpen,    label: 'Writing',        desc: 'full chapters, consistent voice, your story' },
+  { icon: Upload,      label: 'Publication',    desc: 'formatted for Amazon KDP, BoD, or print' },
 ]
 
 /* ─── Website builder how-it-works steps ─── */
@@ -20,13 +20,6 @@ const siteSteps = [
   { icon: Sparkles,    label: 'AI builds it', desc: 'A production-quality Next.js site is assembled in real time — not a template, actual code.' },
   { icon: Globe,       label: 'Review',       desc: 'Preview, request changes, refine. The AI iterates until it\'s right.' },
   { icon: Upload,      label: 'Deploy',       desc: 'Push to GitHub, deploy to Vercel or your own server. Done.' },
-]
-
-/* ─── Genres supported ─── */
-const genres = [
-  'Autobiography', 'Memoir', 'Children\'s stories', 'Fairy tales',
-  'Action', 'Sci-fi', 'Horror', 'Romance', 'Fantasy', 'Thriller',
-  'Self-help', 'Business', 'Historical fiction',
 ]
 
 /* ─── Site types ─── */
@@ -110,29 +103,29 @@ export default function AIToolsPage() {
                         style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)' }}>
                         <BookOpen size={20} style={{ color: '#00d4ff' }} />
                       </div>
-                      <span className="badge-soon">Coming Soon</span>
+                      <span
+                        className="inline-block text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
+                        style={{
+                          background: 'rgba(16,185,129,0.12)',
+                          border: '1px solid rgba(16,185,129,0.3)',
+                          color: '#10b981',
+                        }}
+                      >
+                        LIVE
+                      </span>
                     </div>
                     <h2 className="text-4xl font-bold text-[#e2e8f0] mb-4" style={{ fontFamily: 'var(--font-space)' }}>
                       AI Book Creator
                     </h2>
-                    <p className="text-xl text-[#94a3b8] font-medium mb-4">
-                      Tell your story. AI writes your book.
+                    <p className="text-[#b0b0b0] leading-relaxed mb-4">
+                      Your story deserves more than a template. The Book Creator starts by understanding what kind of book you want to make — biography, sci-fi, thriller, romance, or something entirely your own. It asks about the scope, the characters, the world.
                     </p>
-                    <p className="text-[#b0b0b0] leading-relaxed mb-6">
-                      You don't need to know how to write. You just need your story. The AI interviews you, structures your narrative, maintains a consistent voice across every chapter, and produces a publication-ready manuscript. Mostly automated — your story, AI craftsmanship.
+                    <p className="text-[#b0b0b0] leading-relaxed mb-4">
+                      For real stories, the AI becomes your listener. It records everything you tell it, then asks the questions that unlock the parts you forgot — feelings at specific moments, context that fills gaps, details that make a chapter come alive. It doesn't interrupt. It doesn't judge. It just listens, then helps you remember more.
                     </p>
-                    <p className="text-[#b0b0b0] text-sm mb-6">
-                      Works for any genre:
+                    <p className="text-[#b0b0b0] leading-relaxed mb-8">
+                      Once the full picture is clear, it maps every thread from beginning to end, builds character arcs, creates intersections, and writes full chapters with consistent voice. The result is a publication-ready manuscript — not AI slop, but your story told properly.
                     </p>
-                    <div className="flex flex-wrap gap-2 mb-8">
-                      {genres.map(g => (
-                        <span key={g} className="text-xs px-3 py-1 rounded-full text-[#b0b0b0]"
-                          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                          {g}
-                        </span>
-                      ))}
-                    </div>
-                    <WaitlistInput label="Join waitlist" />
                   </div>
 
                   {/* Right — steps */}
