@@ -79,7 +79,7 @@ export default function AIToolsPage() {
               AI that{' '}
               <span className="gradient-text">does the work.</span>
             </h1>
-            <p className="text-[#64748b] max-w-xl mx-auto">
+            <p className="text-[#b0b0b0] max-w-xl mx-auto">
               From publishing a book to launching a website to exploring a business idea — voidexa's AI tools turn conversations into finished products.
             </p>
           </motion.div>
@@ -118,15 +118,15 @@ export default function AIToolsPage() {
                     <p className="text-xl text-[#94a3b8] font-medium mb-4">
                       Tell your story. AI writes your book.
                     </p>
-                    <p className="text-[#64748b] leading-relaxed mb-6">
+                    <p className="text-[#b0b0b0] leading-relaxed mb-6">
                       You don't need to know how to write. You just need your story. The AI interviews you, structures your narrative, maintains a consistent voice across every chapter, and produces a publication-ready manuscript. Mostly automated — your story, AI craftsmanship.
                     </p>
-                    <p className="text-[#7a8a9e] text-sm mb-6">
+                    <p className="text-[#b0b0b0] text-sm mb-6">
                       Works for any genre:
                     </p>
                     <div className="flex flex-wrap gap-2 mb-8">
                       {genres.map(g => (
-                        <span key={g} className="text-xs px-3 py-1 rounded-full text-[#64748b]"
+                        <span key={g} className="text-xs px-3 py-1 rounded-full text-[#b0b0b0]"
                           style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                           {g}
                         </span>
@@ -137,7 +137,7 @@ export default function AIToolsPage() {
 
                   {/* Right — steps */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#7a8a9e] mb-6">How it works</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[#b0b0b0] mb-6">How it works</p>
                     <div className="space-y-4">
                       {bookSteps.map(({ icon: Icon, label, desc }, i) => (
                         <motion.div key={label}
@@ -151,7 +151,7 @@ export default function AIToolsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
-                            <div className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</div>
+                            <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
                       ))}
@@ -194,7 +194,7 @@ export default function AIToolsPage() {
                     <p className="text-xl text-[#94a3b8] font-medium mb-4">
                       Talk it. Build it. Launch it.
                     </p>
-                    <p className="text-[#64748b] leading-relaxed mb-6">
+                    <p className="text-[#b0b0b0] leading-relaxed mb-6">
                       No coding, no drag-and-drop, no templates. Describe what you want in conversation — the AI builds it in production-quality Next.js, you review it, and it deploys straight to your domain. A real website, built by a real AI.
                     </p>
 
@@ -212,7 +212,7 @@ export default function AIToolsPage() {
                     <div className="flex items-center gap-3 p-4 rounded-xl mb-8"
                       style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)' }}>
                       <span className="text-[#8b5cf6] text-lg">✓</span>
-                      <span className="text-sm text-[#64748b]">No coding needed. Just talk.</span>
+                      <span className="text-sm text-[#b0b0b0]">No coding needed. Just talk.</span>
                     </div>
 
                     <WaitlistInput label="Notify me" />
@@ -220,7 +220,7 @@ export default function AIToolsPage() {
 
                   {/* Right — steps */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#7a8a9e] mb-6">How it works</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[#b0b0b0] mb-6">How it works</p>
                     <div className="space-y-4">
                       {siteSteps.map(({ icon: Icon, label, desc }, i) => (
                         <motion.div key={label}
@@ -234,7 +234,7 @@ export default function AIToolsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
-                            <div className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</div>
+                            <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
                       ))}
@@ -266,12 +266,12 @@ export default function AIToolsPage() {
             <p className="text-lg text-[#94a3b8] font-medium mb-4">
               Got an idea? Let's explore it together.
             </p>
-            <p className="text-[#64748b] leading-relaxed max-w-xl mx-auto mb-8">
+            <p className="text-[#b0b0b0] leading-relaxed max-w-xl mx-auto mb-8">
               A conversational AI that helps you develop and pressure-test ideas. It profiles your thinking, asks the hard questions, suggests directions, connects dots you didn't know existed. Your personal brainstorm partner — available any time.
             </p>
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               {['Business ideas', 'Product concepts', 'Creative projects', 'Technical architecture', 'Side hustles', 'Problem solving'].map(t => (
-                <span key={t} className="text-xs px-3 py-1.5 rounded-full text-[#64748b]"
+                <span key={t} className="text-xs px-3 py-1.5 rounded-full text-[#b0b0b0]"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                   {t}
                 </span>
@@ -289,7 +289,7 @@ export default function AIToolsPage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}>
-            <p className="text-[#64748b] mb-3 text-sm">Have a specific AI tool in mind?</p>
+            <p className="text-[#b0b0b0] mb-3 text-sm">Have a specific AI tool in mind?</p>
             <Link href="/contact"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-[#0a0a0f] hover:opacity-90 transition-opacity glow-cyan-btn"
               style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}>

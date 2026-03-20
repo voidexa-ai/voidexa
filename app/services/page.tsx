@@ -80,7 +80,7 @@ export default function ServicesPage() {
             We scope it,{' '}
             <span className="gradient-text">we ship it.</span>
           </h1>
-          <p className="text-[#64748b] max-w-xl mx-auto">
+          <p className="text-[#b0b0b0] max-w-xl mx-auto">
             Project-based AI development and consulting. No retainers, no padded teams —
             just the work, scoped and delivered.
           </p>
@@ -108,15 +108,15 @@ export default function ServicesPage() {
               >
                 {title}
               </h2>
-              <p className="text-sm text-[#7a8a9e] mb-3">{tagline}</p>
-              <p className="text-sm text-[#64748b] leading-relaxed mb-5">{desc}</p>
+              <p className="text-sm text-[#b0b0b0] mb-3">{tagline}</p>
+              <p className="text-sm text-[#b0b0b0] leading-relaxed mb-5">{desc}</p>
               <div className="mt-auto">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#7a8a9e] mb-3">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#b0b0b0] mb-3">
                   Includes
                 </p>
                 <ul className="space-y-2">
                   {includes.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-xs text-[#64748b]">
+                    <li key={f} className="flex items-start gap-2 text-xs text-[#b0b0b0]">
                       <CheckCircle2 size={12} className="mt-0.5 flex-shrink-0" style={{ color }} />
                       {f}
                     </li>
@@ -153,8 +153,8 @@ export default function ServicesPage() {
                 <div className="text-3xl font-bold gradient-text mb-3" style={{ fontFamily: 'var(--font-space)' }}>
                   {step}
                 </div>
-                <h3 className="text-sm font-semibold text-[#e2e8f0] mb-2">{title}</h3>
-                <p className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</p>
+                <h3 className="text-sm font-medium text-[#e2e8f0] mb-2">{title}</h3>
+                <p className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -177,7 +177,7 @@ export default function ServicesPage() {
           >
             Ready to build?
           </h2>
-          <p className="text-[#64748b] mb-6 max-w-md mx-auto">
+          <p className="text-[#b0b0b0] mb-6 max-w-md mx-auto">
             Tell us what you're trying to build. We'll scope it and send a proposal within 48 hours.
           </p>
           <Link

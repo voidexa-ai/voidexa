@@ -58,7 +58,7 @@ export default function ContactPage() {
             Let's build{' '}
             <span className="gradient-text">something.</span>
           </h1>
-          <p className="text-[#64748b] max-w-md mx-auto">
+          <p className="text-[#b0b0b0] max-w-md mx-auto">
             Tell us what you're working on. We respond within 24 hours.
           </p>
         </motion.div>
@@ -84,7 +84,7 @@ export default function ContactPage() {
               >
                 Message sent.
               </h2>
-              <p className="text-[#64748b]">We'll get back to you within 24 hours.</p>
+              <p className="text-[#b0b0b0]">We'll get back to you within 24 hours.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">

@@ -40,7 +40,7 @@ export default function AppsPage() {
             Tools for people who{' '}
             <span className="gradient-text">think in systems.</span>
           </h1>
-          <p className="text-[#64748b] max-w-xl mx-auto">
+          <p className="text-[#b0b0b0] max-w-xl mx-auto">
             Our consumer apps are designed for people who want software that respects
             their intelligence — and their privacy.
           </p>
@@ -83,15 +83,15 @@ export default function AppsPage() {
                     Encrypted. Untraceable.
                   </span>
                 </h2>
-                <p className="text-[#64748b] leading-relaxed mb-3">
+                <p className="text-[#b0b0b0] leading-relaxed mb-3">
                   Comlink is P2P encrypted communication built for people who take privacy seriously.
                   Every message is encrypted client-side — we can't read it, no one can.
                 </p>
-                <p className="text-[#64748b] leading-relaxed mb-3">
+                <p className="text-[#b0b0b0] leading-relaxed mb-3">
                   QR invite only. 60-minute message lifespan. Ghost mode runs entirely in RAM —
                   nothing is written to disk, nothing persists.
                 </p>
-                <p className="text-[#64748b] leading-relaxed mb-6">
+                <p className="text-[#b0b0b0] leading-relaxed mb-6">
                   Runs on a Raspberry Pi. Solar or wind powered. Can be buried underground.
                   No cloud dependency, no trace, no compromise.
                 </p>
@@ -121,7 +121,7 @@ export default function AppsPage() {
                     <Icon size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#8b5cf6' }} />
                     <div>
                       <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{title}</div>
-                      <div className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</div>
+                      <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -147,7 +147,7 @@ export default function AppsPage() {
                 Have an idea?{' '}
                 <span className="gradient-text">We build it.</span>
               </h2>
-              <p className="text-[#64748b] leading-relaxed mb-6">
+              <p className="text-[#b0b0b0] leading-relaxed mb-6">
                 From concept to deployment — custom encrypted communication apps, automation tools,
                 business apps, anything. Tell us what you need and we'll scope it, build it, and hand you the code.
               </p>
@@ -168,7 +168,7 @@ export default function AppsPage() {
                 'AI-integrated workflows',
                 'Off-grid / hardware projects',
               ].map(item => (
-                <div key={item} className="flex items-center gap-2 p-3 rounded-xl text-sm text-[#64748b]"
+                <div key={item} className="flex items-center gap-2 p-3 rounded-xl text-sm text-[#b0b0b0]"
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <span style={{ color: '#00d4ff' }}>·</span>
                   {item}
@@ -201,10 +201,10 @@ export default function AppsPage() {
                 className="glass-card rounded-2xl p-5"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-[#e2e8f0]">{title}</h3>
+                  <h3 className="text-sm font-medium text-[#e2e8f0]">{title}</h3>
                   <span className="badge-soon">{tag}</span>
                 </div>
-                <p className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</p>
+                <p className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>

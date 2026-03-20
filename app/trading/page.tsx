@@ -510,7 +510,7 @@ export default function TradingPage() {
                 >
                   {s.icon}
                 </div>
-                <h3 className="text-sm font-bold text-[#e2e8f0] mb-1.5" style={{ fontFamily: 'var(--font-space)' }}>
+                <h3 className="text-sm font-medium text-[#e2e8f0] mb-1.5" style={{ fontFamily: 'var(--font-space)' }}>
                   {s.name}
                 </h3>
                 <p className="text-xs text-[#8899af] leading-relaxed mb-3">{s.desc}</p>
