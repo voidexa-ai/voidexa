@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-space);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #0a0a0f;
+  --foreground: #e2e8f0;
+  --neon-cyan: #00d4ff;
+  --neon-purple: #8b5cf6;
+  --void: #0a0a0f;
+  --void-deep: #1a0a2e;
+  --void-mid: #0f0520;
 }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font-inter, system-ui, sans-serif);
+}
+
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow utilities ── */
+.glow-cyan     { box-shadow: 0 0 20px rgba(0,212,255,.25), 0 0 60px rgba(0,212,255,.08); }
+.glow-purple   { box-shadow: 0 0 20px rgba(139,92,246,.25), 0 0 60px rgba(139,92,246,.08); }
+.glow-cyan-btn { box-shadow: 0 0 30px rgba(0,212,255,.35), 0 0 80px rgba(0,212,255,.12); }
+
+/* ── Glass card ── */
+.glass-card {
+  background: rgba(26, 10, 46, 0.45);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 212, 255, 0.08);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.glass-card:hover {
+  border-color: rgba(0, 212, 255, 0.22);
+  box-shadow: 0 12px 50px rgba(0, 212, 255, 0.1);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,.3); border-radius: 2px; }
+
+/* ── Status badges ── */
+.badge-dev {
+  background: rgba(0,212,255,.1);
+  border: 1px solid rgba(0,212,255,.3);
+  color: #00d4ff;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .25rem .75rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+.badge-soon {
+  background: rgba(139,92,246,.1);
+  border: 1px solid rgba(139,92,246,.3);
+  color: #8b5cf6;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .25rem .75rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* ── Section spacing ── */
+.section-pad { padding: 6rem 1.5rem; }
+@media (min-width: 768px) { .section-pad { padding: 8rem 2rem; } }
+
+/* ── Subtle scanline texture ── */
+.scanlines {
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,.05) 2px, rgba(0,0,0,.05) 4px
+  );
 }
