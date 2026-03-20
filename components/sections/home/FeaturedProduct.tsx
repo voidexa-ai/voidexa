@@ -65,7 +65,7 @@ export default function FeaturedProduct() {
               <span className="gradient-text">thinks</span>{' '}
               before it trades.
             </h2>
-            <p className="text-[#3d5068] leading-relaxed mb-8">
+            <p className="text-[#8899af] leading-relaxed mb-8">
               A five-stage AI pipeline that classifies market regimes and executes trades
               autonomously. +306% backtested returns across 11 crypto assets.
               Every trade logged, every decision auditable.
@@ -83,7 +83,7 @@ export default function FeaturedProduct() {
                     }}
                   >
                     <div className="text-xs font-semibold text-[#e2e8f0]">{step.name}</div>
-                    <div className="text-[10px] text-[#475569]">{step.sub}</div>
+                    <div className="text-[10px] text-[#7a8a9e]">{step.sub}</div>
                   </div>
                   {i < pipeline.length - 1 && (
                     <ArrowRight size={12} className="text-[#334155] flex-shrink-0" />
@@ -145,7 +145,7 @@ export default function FeaturedProduct() {
                 >
                   {value}
                 </div>
-                <div className="text-xs text-[#3d5068] tracking-wide">{label}</div>
+                <div className="text-xs text-[#8899af] tracking-wide">{label}</div>
               </motion.div>
             ))}
           </motion.div>

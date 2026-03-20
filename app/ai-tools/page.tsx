@@ -121,7 +121,7 @@ export default function AIToolsPage() {
                     <p className="text-[#64748b] leading-relaxed mb-6">
                       You don't need to know how to write. You just need your story. The AI interviews you, structures your narrative, maintains a consistent voice across every chapter, and produces a publication-ready manuscript. Mostly automated — your story, AI craftsmanship.
                     </p>
-                    <p className="text-[#475569] text-sm mb-6">
+                    <p className="text-[#7a8a9e] text-sm mb-6">
                       Works for any genre:
                     </p>
                     <div className="flex flex-wrap gap-2 mb-8">
@@ -137,7 +137,7 @@ export default function AIToolsPage() {
 
                   {/* Right — steps */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#475569] mb-6">How it works</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[#7a8a9e] mb-6">How it works</p>
                     <div className="space-y-4">
                       {bookSteps.map(({ icon: Icon, label, desc }, i) => (
                         <motion.div key={label}
@@ -151,7 +151,7 @@ export default function AIToolsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
-                            <div className="text-xs text-[#475569] leading-relaxed">{desc}</div>
+                            <div className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
                       ))}
@@ -220,7 +220,7 @@ export default function AIToolsPage() {
 
                   {/* Right — steps */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#475569] mb-6">How it works</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[#7a8a9e] mb-6">How it works</p>
                     <div className="space-y-4">
                       {siteSteps.map(({ icon: Icon, label, desc }, i) => (
                         <motion.div key={label}
@@ -234,7 +234,7 @@ export default function AIToolsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
-                            <div className="text-xs text-[#475569] leading-relaxed">{desc}</div>
+                            <div className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
                       ))}

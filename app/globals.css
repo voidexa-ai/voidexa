@@ -31,8 +31,24 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   font-family: var(--font-inter, system-ui, sans-serif);
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.65;
+}
+
+/* ── Base typography ── */
+@layer base {
+  p {
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
 }
 
 /* ── Noise grain overlay ── */
@@ -312,3 +328,37 @@ body {
 .depth-1 { transform: translateZ(0); }
 .depth-2 { transform: translateZ(10px); }
 .depth-3 { transform: translateZ(20px); }
+
+/* ── Typography utilities ── */
+
+/* Body copy: used for page-level paragraphs */
+.text-body {
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.7;
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+/* Card descriptions: slightly smaller, muted */
+.text-card-desc {
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+  font-size: 0.875rem;
+  color: #7a8a9a;
+}
+
+/* Card headings: medium weight, not heavy */
+.text-card-heading {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Muted label text: section eyebrows, captions */
+.text-label {
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}

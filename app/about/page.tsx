@@ -110,7 +110,7 @@ export default function AboutPage() {
                   <Icon size={18} style={{ color: '#00d4ff' }} />
                 </div>
                 <h3 className="text-base font-semibold text-[#e2e8f0] mb-2">{title}</h3>
-                <p className="text-sm text-[#475569] leading-relaxed">{desc}</p>
+                <p className="text-sm text-[#7a8a9e] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>

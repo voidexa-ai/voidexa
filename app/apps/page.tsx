@@ -121,7 +121,7 @@ export default function AppsPage() {
                     <Icon size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#8b5cf6' }} />
                     <div>
                       <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{title}</div>
-                      <div className="text-xs text-[#475569] leading-relaxed">{desc}</div>
+                      <div className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -204,7 +204,7 @@ export default function AppsPage() {
                   <h3 className="text-sm font-semibold text-[#e2e8f0]">{title}</h3>
                   <span className="badge-soon">{tag}</span>
                 </div>
-                <p className="text-xs text-[#475569] leading-relaxed">{desc}</p>
+                <p className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>

@@ -108,10 +108,10 @@ export default function ServicesPage() {
               >
                 {title}
               </h2>
-              <p className="text-sm text-[#475569] mb-3">{tagline}</p>
+              <p className="text-sm text-[#7a8a9e] mb-3">{tagline}</p>
               <p className="text-sm text-[#64748b] leading-relaxed mb-5">{desc}</p>
               <div className="mt-auto">
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#475569] mb-3">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-[#7a8a9e] mb-3">
                   Includes
                 </p>
                 <ul className="space-y-2">
@@ -154,7 +154,7 @@ export default function ServicesPage() {
                   {step}
                 </div>
                 <h3 className="text-sm font-semibold text-[#e2e8f0] mb-2">{title}</h3>
-                <p className="text-xs text-[#475569] leading-relaxed">{desc}</p>
+                <p className="text-xs text-[#7a8a9e] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>

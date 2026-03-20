@@ -39,27 +39,27 @@ export default function Footer() {
                 voidexa
               </span>
             </Link>
-            <p className="text-[#475569] text-sm leading-relaxed mb-6">
+            <p className="text-[#7a8a9e] text-sm leading-relaxed mb-6">
               Intelligent systems that work for you. Built with AI at every layer.
             </p>
             <div className="flex gap-3">
               <a
                 href="mailto:hello@voidexa.com"
-                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#00d4ff]/20 text-[#475569] hover:text-[#00d4ff] hover:border-[#00d4ff]/50 transition-all"
+                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#00d4ff]/20 text-[#7a8a9e] hover:text-[#00d4ff] hover:border-[#00d4ff]/50 transition-all"
                 aria-label="Email"
               >
                 <Mail size={14} />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#00d4ff]/20 text-[#475569] hover:text-[#00d4ff] hover:border-[#00d4ff]/50 transition-all"
+                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#00d4ff]/20 text-[#7a8a9e] hover:text-[#00d4ff] hover:border-[#00d4ff]/50 transition-all"
                 aria-label="Twitter/X"
               >
                 <Twitter size={14} />
               </a>
               <a
                 href="#"
-                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#00d4ff]/20 text-[#475569] hover:text-[#00d4ff] hover:border-[#00d4ff]/50 transition-all"
+                className="w-9 h-9 rounded-full flex items-center justify-center border border-[#00d4ff]/20 text-[#7a8a9e] hover:text-[#00d4ff] hover:border-[#00d4ff]/50 transition-all"
                 aria-label="GitHub"
               >
                 <Github size={14} />
@@ -77,7 +77,7 @@ export default function Footer() {
                 <li key={href + label}>
                   <Link
                     href={href}
-                    className="text-sm text-[#475569] hover:text-[#e2e8f0] transition-colors"
+                    className="text-sm text-[#7a8a9e] hover:text-[#e2e8f0] transition-colors"
                   >
                     {label}
                   </Link>
@@ -96,7 +96,7 @@ export default function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-[#475569] hover:text-[#e2e8f0] transition-colors"
+                    className="text-sm text-[#7a8a9e] hover:text-[#e2e8f0] transition-colors"
                   >
                     {label}
                   </Link>
@@ -112,7 +112,7 @@ export default function Footer() {
             </h3>
             <a
               href="mailto:hello@voidexa.com"
-              className="text-sm text-[#475569] hover:text-[#00d4ff] transition-colors"
+              className="text-sm text-[#7a8a9e] hover:text-[#00d4ff] transition-colors"
             >
               hello@voidexa.com
             </a>

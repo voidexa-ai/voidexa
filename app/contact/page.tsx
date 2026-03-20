@@ -90,7 +90,7 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-semibold text-[#475569] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Name
                   </label>
                   <input
@@ -104,7 +104,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#475569] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Email
                   </label>
                   <input
@@ -121,7 +121,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#475569] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
                   Subject
                 </label>
                 <select
@@ -136,7 +136,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#475569] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
                   Message
                 </label>
                 <textarea
@@ -171,7 +171,7 @@ export default function ContactPage() {
         >
           <p className="text-xs text-[#334155]">
             Prefer email?{' '}
-            <a href="mailto:hello@voidexa.com" className="text-[#475569] hover:text-[#00d4ff] transition-colors">
+            <a href="mailto:hello@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
               hello@voidexa.com
             </a>
           </p>

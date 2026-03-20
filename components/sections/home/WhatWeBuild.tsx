@@ -109,7 +109,7 @@ function Card({ item, i }: { item: typeof items[0]; i: number }) {
         >
           {item.title}
         </h3>
-        <p className="text-sm text-[#3d5068] leading-relaxed mb-5">{item.desc}</p>
+        <p className="text-sm text-[#8899af] leading-relaxed mb-5">{item.desc}</p>
         <span
           className="text-xs font-semibold flex items-center gap-1 group-hover:gap-2 transition-all"
           style={{ color: item.color }}
@@ -158,7 +158,7 @@ export default function WhatWeBuild() {
               not just software
             </span>
           </h2>
-          <p className="text-[#3d5068] max-w-xl mx-auto leading-relaxed">
+          <p className="text-[#8899af] max-w-xl mx-auto leading-relaxed">
             Every product we ship has AI at its core — not as a feature, but as the foundation.
           </p>
         </motion.div>

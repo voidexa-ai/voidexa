@@ -222,7 +222,7 @@ export default function Hero() {
               >
                 {value}
               </div>
-              <div className="text-xs text-[#3d5068] tracking-wide uppercase font-medium">{label}</div>
+              <div className="text-xs text-[#8899af] tracking-wide uppercase font-medium">{label}</div>
             </motion.div>
           ))}
         </motion.div>

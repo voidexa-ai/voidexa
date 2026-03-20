@@ -183,7 +183,7 @@ function NetworkViz() {
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-[#00d4ff]"
               style={{ boxShadow: '0 0 6px #00d4ff', animation: 'breathe 2s ease-in-out infinite' }} />
-            <span className="text-xs text-[#475569]">7 active nodes</span>
+            <span className="text-xs text-[#7a8a9e]">7 active nodes</span>
           </div>
           <span className="text-[10px] text-[#334155]">next tier opens at 20</span>
           <div className="flex items-center gap-1">
@@ -384,7 +384,7 @@ export default function TradingPage() {
                   reads the market.
                 </span>
               </h1>
-              <p className="text-[#3d5068] leading-relaxed mb-8 text-lg max-w-lg">
+              <p className="text-[#8899af] leading-relaxed mb-8 text-lg max-w-lg">
                 An autonomous trading system that reads the market in real time, adjusts strategy
                 across four phases, and executes through a five-stage risk pipeline.
                 Set it once — it runs itself.
@@ -430,7 +430,7 @@ export default function TradingPage() {
                   WebkitTextFillColor: 'transparent',
                 }}
               >{value}</div>
-              <div className="text-xs text-[#3d5068] tracking-wide">{label}</div>
+              <div className="text-xs text-[#8899af] tracking-wide">{label}</div>
             </motion.div>
           ))}
         </div>
@@ -453,7 +453,7 @@ export default function TradingPage() {
             >
               The All-Season Bot
             </h2>
-            <p className="text-[#3d5068] max-w-2xl mx-auto leading-relaxed">
+            <p className="text-[#8899af] max-w-2xl mx-auto leading-relaxed">
               Five dedicated agents — Scanner, Season Engine, Rebalance, Risk Gate, Execution —
               each with a single job and the authority to block the next. Nothing trades unless
               everything clears. Every decision is logged.
@@ -513,7 +513,7 @@ export default function TradingPage() {
                 <h3 className="text-sm font-bold text-[#e2e8f0] mb-1.5" style={{ fontFamily: 'var(--font-space)' }}>
                   {s.name}
                 </h3>
-                <p className="text-xs text-[#3d5068] leading-relaxed mb-3">{s.desc}</p>
+                <p className="text-xs text-[#8899af] leading-relaxed mb-3">{s.desc}</p>
                 <div
                   className="text-[10px] font-medium px-2 py-1 rounded-lg"
                   style={{ background: `${s.color}08`, color: s.color, border: `1px solid ${s.color}18` }}
@@ -534,7 +534,7 @@ export default function TradingPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {features.map(f => (
-                <div key={f} className="flex items-start gap-2.5 text-sm text-[#3d5068] leading-relaxed">
+                <div key={f} className="flex items-start gap-2.5 text-sm text-[#8899af] leading-relaxed">
                   <CheckCircle2 size={14} className="flex-shrink-0 mt-0.5" style={{ color: '#00d4ff' }} />
                   {f}
                 </div>
@@ -568,7 +568,7 @@ export default function TradingPage() {
                   filter: 'drop-shadow(0 0 15px rgba(139,92,246,0.3))',
                 }}>Node.</span>
               </h2>
-              <p className="text-[#3d5068] leading-relaxed mb-6 text-base">
+              <p className="text-[#8899af] leading-relaxed mb-6 text-base">
                 Buy into a shared trading pool powered by the All-Season Bot.
                 Early nodes lock in at the lowest price tier — as more people join, the cost
                 per node increases. The bot trades for the collective. You hold a node. The node earns.
@@ -580,7 +580,7 @@ export default function TradingPage() {
                   { icon: Lock,         text: 'Trustless — your funds, your keys, your node' },
                   { icon: AlertTriangle, text: 'Price escalates as node count grows (currently tier 1)' },
                 ].map(({ icon: Icon, text }) => (
-                  <li key={text} className="flex items-start gap-3 text-sm text-[#3d5068]">
+                  <li key={text} className="flex items-start gap-3 text-sm text-[#8899af]">
                     <Icon size={14} className="mt-0.5 flex-shrink-0" style={{ color: '#8b5cf6' }} />
                     {text}
                   </li>
@@ -646,7 +646,7 @@ export default function TradingPage() {
               <h3 className="text-2xl font-bold text-[#e2e8f0] mb-2" style={{ fontFamily: 'var(--font-space)' }}>
                 All-Season Bot License
               </h3>
-              <p className="text-sm text-[#3d5068] mb-6 leading-relaxed">
+              <p className="text-sm text-[#8899af] mb-6 leading-relaxed">
                 License the full system — your exchange account, your keys, your infrastructure.
                 Flat fee or performance split. Full source code, no black box.
               </p>
@@ -656,7 +656,7 @@ export default function TradingPage() {
                   'Telegram notifications built-in', 'Paper trading mode for safe testing',
                   'Ongoing updates included', 'Setup documentation + support',
                 ].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-[#3d5068]">
+                  <li key={f} className="flex items-start gap-2 text-sm text-[#8899af]">
                     <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0" style={{ color: '#00d4ff' }} />
                     {f}
                   </li>
@@ -684,7 +684,7 @@ export default function TradingPage() {
                 Aggressive Scalper
               </h3>
               <p className="text-sm font-semibold mb-4" style={{ color: '#8b5cf6' }}>For experienced traders only.</p>
-              <p className="text-sm text-[#3d5068] mb-6 leading-relaxed">
+              <p className="text-sm text-[#8899af] mb-6 leading-relaxed">
                 High-frequency scalping bot. Sub-minute cycles, order book imbalance detection,
                 momentum signals. Tight entries, fast exits, no hand-holding.
               </p>
@@ -693,7 +693,7 @@ export default function TradingPage() {
                   'Sub-minute position cycles', 'Order book imbalance detection',
                   'Configurable risk parameters', 'Futures-first architecture',
                 ].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm opacity-50 text-[#3d5068]">
+                  <li key={f} className="flex items-start gap-2 text-sm opacity-50 text-[#8899af]">
                     <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0" style={{ color: '#8b5cf6' }} />
                     {f}
                   </li>
@@ -722,7 +722,7 @@ export default function TradingPage() {
             <h2 className="relative text-3xl font-bold text-[#e2e8f0] mb-3" style={{ fontFamily: 'var(--font-space)' }}>
               Ready to automate?
             </h2>
-            <p className="relative text-[#3d5068] mb-7 max-w-md mx-auto">
+            <p className="relative text-[#8899af] mb-7 max-w-md mx-auto">
               Whether you want to join the node or run it yourself — start a conversation.
               We respond within 24 hours.
             </p>

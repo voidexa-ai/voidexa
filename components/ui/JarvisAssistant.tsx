@@ -190,19 +190,19 @@ export default function JarvisAssistant() {
                 <span className="text-sm font-semibold text-[#00d4ff]" style={{ fontFamily: 'var(--font-space)' }}>
                   JARVIS
                 </span>
-                <span className="text-xs text-[#475569]">voidexa AI</span>
+                <span className="text-xs text-[#7a8a9e]">voidexa AI</span>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setMin(true)}
-                  className="p-1.5 text-[#475569] hover:text-[#94a3b8] transition-colors rounded"
+                  className="p-1.5 text-[#7a8a9e] hover:text-[#94a3b8] transition-colors rounded"
                   aria-label="Minimize"
                 >
                   <Minimize2 size={14} />
                 </button>
                 <button
                   onClick={() => setOpen(false)}
-                  className="p-1.5 text-[#475569] hover:text-[#94a3b8] transition-colors rounded"
+                  className="p-1.5 text-[#7a8a9e] hover:text-[#94a3b8] transition-colors rounded"
                   aria-label="Close"
                 >
                   <X size={14} />
