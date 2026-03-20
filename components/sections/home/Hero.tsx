@@ -129,31 +129,32 @@ export default function Hero() {
           className="text-5xl sm:text-7xl lg:text-[88px] font-bold leading-[1.02] tracking-tight mb-6"
           style={{ fontFamily: 'var(--font-space)' }}
         >
-          <span className="text-[#e2e8f0]">We build{' '}</span>
-          <span
-            style={{
-              background: 'linear-gradient(135deg, #00d4ff 0%, #a78bfa 55%, #f471b5 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 30px rgba(0,212,255,0.3))',
-            }}
-          >
-            {displayed}
+          <span className="block text-[#e2e8f0]">We build</span>
+          <span className="block">
+            <span
+              style={{
+                background: 'linear-gradient(135deg, #00d4ff 0%, #a78bfa 55%, #f471b5 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 30px rgba(0,212,255,0.3))',
+              }}
+            >
+              {displayed}
+            </span>
+            {/* Cursor */}
+            <motion.span
+              className="inline-block ml-1 w-[3px] align-middle"
+              style={{
+                height: '0.82em',
+                background: 'linear-gradient(180deg, #00d4ff, #8b5cf6)',
+                borderRadius: 2,
+              }}
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 0.9, repeat: Infinity }}
+            />
           </span>
-          {/* Cursor */}
-          <motion.span
-            className="inline-block ml-1 w-[3px] align-middle"
-            style={{
-              height: '0.82em',
-              background: 'linear-gradient(180deg, #00d4ff, #8b5cf6)',
-              borderRadius: 2,
-            }}
-            animate={{ opacity: [1, 0, 1] }}
-            transition={{ duration: 0.9, repeat: Infinity }}
-          />
-          <br />
-          <span className="text-[#e2e8f0]">software.</span>
+          <span className="block text-[#e2e8f0]">software.</span>
         </motion.h1>
 
         {/* Subheading */}

@@ -454,9 +454,9 @@ export default function TradingPage() {
               The All-Season Bot
             </h2>
             <p className="text-[#3d5068] max-w-2xl mx-auto leading-relaxed">
-              An autonomous trading system that reads the market in real time, adjusts strategy
-              across four phases, and executes through a five-stage risk pipeline.
-              Set it once — it runs itself.
+              Five dedicated agents — Scanner, Season Engine, Rebalance, Risk Gate, Execution —
+              each with a single job and the authority to block the next. Nothing trades unless
+              everything clears. Every decision is logged.
             </p>
           </motion.div>
 

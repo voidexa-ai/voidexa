@@ -145,9 +145,9 @@ export default function WhatWeBuild() {
             className="text-4xl sm:text-5xl font-bold text-[#e2e8f0] mb-4 leading-tight"
             style={{ fontFamily: 'var(--font-space)' }}
           >
-            Intelligent systems,{' '}
-            <br />
+            <span className="block">Intelligent systems,</span>
             <span
+              className="block"
               style={{
                 background: 'linear-gradient(135deg, #00d4ff 0%, #a78bfa 60%, #f471b5 100%)',
                 WebkitBackgroundClip: 'text',

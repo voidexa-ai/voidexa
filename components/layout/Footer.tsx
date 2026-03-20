@@ -117,7 +117,9 @@ export default function Footer() {
               hello@voidexa.com
             </a>
             <p className="text-xs text-[#334155] mt-6 leading-relaxed">
-              Based in the digital void. Operating globally.
+              Operating globally from Denmark.
+              <br />
+              CVR-nr: 46343387
             </p>
           </div>
         </div>

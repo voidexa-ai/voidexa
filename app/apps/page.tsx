@@ -14,7 +14,7 @@ const comlinkFeatures = [
 ]
 
 const upcoming = [
-  { title: 'JARVIS Desktop',  desc: 'Claude-powered desktop AI agent that controls your workflow.', tag: 'Concept' },
+  { title: 'JARVIS Desktop',  desc: 'AI-powered desktop agent that controls your workflow.', tag: 'Concept' },
   { title: 'DataLens',        desc: 'AI dashboard generator — connect a database, get instant insights.', tag: 'Concept' },
   { title: 'PaperTrail',      desc: 'Automated document intelligence — extract, classify, and route.', tag: 'Concept' },
 ]
@@ -83,11 +83,17 @@ export default function AppsPage() {
                     Encrypted. Untraceable.
                   </span>
                 </h2>
-                <p className="text-[#64748b] leading-relaxed mb-6">
+                <p className="text-[#64748b] leading-relaxed mb-3">
                   Comlink is P2P encrypted communication built for people who take privacy seriously.
-                  QR invite only, 60-minute message lifespan, ghost mode (RAM only), master/agent hierarchy.
-                  Runs on a Raspberry Pi — solar or wind powered, can be buried underground.
-                  No cloud, no trace, no compromise.
+                  Every message is encrypted client-side — we can't read it, no one can.
+                </p>
+                <p className="text-[#64748b] leading-relaxed mb-3">
+                  QR invite only. 60-minute message lifespan. Ghost mode runs entirely in RAM —
+                  nothing is written to disk, nothing persists.
+                </p>
+                <p className="text-[#64748b] leading-relaxed mb-6">
+                  Runs on a Raspberry Pi. Solar or wind powered. Can be buried underground.
+                  No cloud dependency, no trace, no compromise.
                 </p>
                 <Link
                   href="/contact"

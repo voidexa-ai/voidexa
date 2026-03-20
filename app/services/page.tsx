@@ -53,7 +53,7 @@ const services = [
 ]
 
 const process = [
-  { step: '01', title: 'Discovery call', desc: 'We learn your problem, constraints, and goals. 30 minutes.' },
+  { step: '01', title: 'Discovery call', desc: 'We learn your problem, constraints, and goals. 30 minutes, no strings attached.' },
   { step: '02', title: 'Scope + proposal', desc: 'We send a fixed-scope proposal with timeline and cost within 48h.' },
   { step: '03', title: 'Build + iterate', desc: 'Weekly check-ins, working software from day one, no waterfall.' },
   { step: '04', title: 'Handoff', desc: 'Full documentation, code ownership, and optional ongoing support.' },

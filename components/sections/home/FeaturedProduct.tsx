@@ -66,9 +66,9 @@ export default function FeaturedProduct() {
               before it trades.
             </h2>
             <p className="text-[#3d5068] leading-relaxed mb-8">
-              An autonomous trading system that reads the market in real time, adjusts strategy
-              across four phases, and executes through a five-stage risk pipeline.
-              Every decision is logged. Nothing runs without passing the gate.
+              A five-stage AI pipeline that classifies market regimes and executes trades
+              autonomously. +306% backtested returns across 11 crypto assets.
+              Every trade logged, every decision auditable.
             </p>
 
             {/* Pipeline visualization */}
