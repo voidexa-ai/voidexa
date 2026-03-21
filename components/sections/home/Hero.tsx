@@ -62,7 +62,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section className="hero-section relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Particle canvas */}
       <ParticleField />
 

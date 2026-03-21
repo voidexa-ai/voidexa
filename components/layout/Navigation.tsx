@@ -106,7 +106,7 @@ export default function Navigation() {
                   voidexa
                 </span>
                 <span
-                  className="text-[9px] font-medium tracking-widest uppercase"
+                  className="hidden sm:block text-[9px] font-medium tracking-widest uppercase"
                   style={{ color: '#666', letterSpacing: '0.12em' }}
                 >
                   sovereign AI infrastructure
@@ -150,7 +150,8 @@ export default function Navigation() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 text-[#94a3b8] hover:text-white transition-colors"
+              className="md:hidden p-2 rounded-lg text-[#94a3b8] hover:text-white transition-colors"
+              style={{ background: 'rgba(7,4,18,0.95)' }}
               aria-label="Toggle menu"
             >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
