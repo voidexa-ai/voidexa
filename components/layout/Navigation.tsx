@@ -19,9 +19,9 @@ const links = [
 ]
 
 export default function Navigation() {
-  const [scrolled, setScrolled]       = useState(false)
-  const [menuOpen, setMenuOpen]       = useState(false)
-  const [bannerVisible, setBanner]    = useState(false)
+  const [scrolled, setScrolled]    = useState(false)
+  const [menuOpen, setMenuOpen]    = useState(false)
+  const [bannerVisible, setBanner] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -33,13 +33,16 @@ export default function Navigation() {
 
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   function dismissBanner() {
     localStorage.setItem(BANNER_KEY, 'true')
     setBanner(false)
   }
-
-  // Mobile menu top offset: banner (33px) + nav bar (72px), or just nav bar
-  const menuTop = bannerVisible ? 'top-[105px]' : 'top-[72px]'
 
   return (
     <>
@@ -150,41 +153,67 @@ export default function Navigation() {
               className="md:hidden p-2 text-[#94a3b8] hover:text-white transition-colors"
               aria-label="Toggle menu"
             >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </nav>
         </header>
       </div>
 
-      {/* Mobile menu */}
+      {/* ── Mobile full-screen overlay ── */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className={`fixed ${menuTop} left-0 right-0 z-40 md:hidden`}
-            style={{
-              background: 'rgba(10, 10, 15, 0.98)',
-              backdropFilter: 'blur(20px)',
-              borderBottom: '1px solid rgba(0,212,255,0.1)',
-            }}
+            className="fixed inset-0 z-40 md:hidden flex flex-col"
+            style={{ background: 'rgba(7, 4, 18, 0.98)', backdropFilter: 'blur(24px)' }}
           >
-            <div className="px-6 py-6 flex flex-col gap-1">
-              {links.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`py-3 px-4 rounded-lg text-sm font-medium transition-colors ${
-                    pathname === href
-                      ? 'text-[#00d4ff] bg-[#00d4ff]/5'
-                      : 'text-[#94a3b8] hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
-              ))}
+            {/* Spacer for the fixed header (banner + nav) */}
+            <div className="shrink-0" style={{ height: bannerVisible ? '105px' : '72px' }} />
+
+            {/* Nav links */}
+            <nav className="flex-1 flex flex-col justify-center px-8 gap-1">
+              {links.map(({ href, label }, i) => {
+                const active = pathname === href
+                return (
+                  <motion.div
+                    key={href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.25 }}
+                  >
+                    <Link
+                      href={href}
+                      className="flex items-center w-full rounded-2xl px-5 transition-colors"
+                      style={{
+                        minHeight: '60px',
+                        fontSize: '1.25rem',
+                        fontWeight: 600,
+                        fontFamily: 'var(--font-space)',
+                        color: active ? '#00d4ff' : '#94a3b8',
+                        background: active ? 'rgba(0,212,255,0.06)' : 'transparent',
+                        borderLeft: active ? '2px solid #00d4ff' : '2px solid transparent',
+                      }}
+                    >
+                      {label}
+                    </Link>
+                  </motion.div>
+                )
+              })}
+            </nav>
+
+            {/* Bottom CTA */}
+            <div className="shrink-0 px-8 pb-12">
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center w-full rounded-full py-4 text-base font-semibold text-[#0a0a0f] transition-opacity hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
+              >
+                Get in touch
+              </Link>
             </div>
           </motion.div>
         )}

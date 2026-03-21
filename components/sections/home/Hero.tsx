@@ -9,12 +9,24 @@ import ParticleField from '@/components/ui/ParticleField'
 const TYPED_WORDS = ['intelligent', 'adaptive', 'autonomous', 'resilient']
 
 export default function Hero() {
-  const [wordIdx, setWordIdx] = useState(0)
+  const [wordIdx, setWordIdx]   = useState(0)
   const [displayed, setDisplayed] = useState('')
   const [typing, setTyping]     = useState(true)
   const [charIdx, setCharIdx]   = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
+  // Detect mobile once on mount + on resize
   useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    setIsMobile(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  // Typewriter — only runs on non-mobile
+  useEffect(() => {
+    if (isMobile) return
     const word = TYPED_WORDS[wordIdx]
     if (typing) {
       if (charIdx < word.length) {
@@ -39,39 +51,31 @@ export default function Hero() {
         setTyping(true)
       }
     }
-  }, [typing, charIdx, wordIdx])
+  }, [isMobile, typing, charIdx, wordIdx])
+
+  const gradientText = {
+    background: 'linear-gradient(135deg, #00d4ff 0%, #a78bfa 55%, #f471b5 100%)',
+    WebkitBackgroundClip: 'text' as const,
+    WebkitTextFillColor: 'transparent' as const,
+    backgroundClip: 'text' as const,
+    filter: 'drop-shadow(0 0 30px rgba(0,212,255,0.3))',
+  }
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Particle canvas */}
       <ParticleField />
 
-      {/* Deep space gradient base */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 100% 80% at 50% 0%, rgba(0,212,255,0.09) 0%, transparent 55%)',
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 70% 60% at 80% 70%, rgba(139,92,246,0.07) 0%, transparent 60%)',
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 50% 40% at 20% 80%, rgba(244,113,181,0.04) 0%, transparent 60%)',
-        }}
-      />
+      {/* Gradients */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 100% 80% at 50% 0%, rgba(0,212,255,0.09) 0%, transparent 55%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 60% at 80% 70%, rgba(139,92,246,0.07) 0%, transparent 60%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 40% at 20% 80%, rgba(244,113,181,0.04) 0%, transparent 60%)' }} />
 
-      {/* Faint grid */}
+      {/* Grid */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            'linear-gradient(rgba(0,212,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,1) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(0,212,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,1) 1px, transparent 1px)',
           backgroundSize: '80px 80px',
           opacity: 0.018,
           maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%)',
@@ -79,12 +83,7 @@ export default function Hero() {
       />
 
       {/* Vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(7,7,13,0.7) 100%)',
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(7,7,13,0.7) 100%)' }} />
 
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -98,29 +97,22 @@ export default function Hero() {
           style={{ fontFamily: 'var(--font-space)' }}
         >
           <span className="block text-[#e2e8f0]">We build</span>
-          <span className="block">
-            <span
-              style={{
-                background: 'linear-gradient(135deg, #00d4ff 0%, #a78bfa 55%, #f471b5 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 30px rgba(0,212,255,0.3))',
-              }}
-            >
-              {displayed}
-            </span>
-            {/* Cursor */}
-            <motion.span
-              className="inline-block ml-1 w-[3px] align-middle"
-              style={{
-                height: '0.82em',
-                background: 'linear-gradient(180deg, #00d4ff, #8b5cf6)',
-                borderRadius: 2,
-              }}
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 0.9, repeat: Infinity }}
-            />
+          <span className="block min-h-[1.1em]">
+            {isMobile ? (
+              /* Mobile: static text, no layout jump */
+              <span style={gradientText}>autonomous</span>
+            ) : (
+              /* Desktop: typewriter */
+              <>
+                <span style={gradientText}>{displayed}</span>
+                <motion.span
+                  className="inline-block ml-1 w-[3px] align-middle"
+                  style={{ height: '0.82em', background: 'linear-gradient(180deg, #00d4ff, #8b5cf6)', borderRadius: 2 }}
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 0.9, repeat: Infinity }}
+                />
+              </>
+            )}
           </span>
           <span className="block text-[#e2e8f0]">software.</span>
         </motion.h1>
@@ -151,10 +143,7 @@ export default function Hero() {
             Explore
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
           </a>
-          <Link
-            href="/services"
-            className="btn-ghost inline-flex items-center justify-center gap-2"
-          >
+          <Link href="/services" className="btn-ghost inline-flex items-center justify-center gap-2">
             Our services
           </Link>
         </motion.div>
@@ -190,7 +179,7 @@ export default function Hero() {
               >
                 {value}
               </div>
-              <div className="text-xs text-[#8899af] tracking-wide uppercase font-medium">{label}</div>
+              <div className="text-sm text-[#8899af] tracking-wide uppercase font-medium">{label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -211,10 +200,7 @@ export default function Hero() {
         style={{ color: '#2a3a4a' }}
       >
         <span className="text-[10px] tracking-[0.25em] uppercase font-medium">scroll</span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-        >
+        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
           <ChevronDown size={14} />
         </motion.div>
       </motion.div>

@@ -239,6 +239,11 @@ h1, h2, h3, h4, h5, h6 {
 .section-pad { padding: 7rem 1.5rem; }
 @media (min-width: 768px) { .section-pad { padding: 9rem 2rem; } }
 
+/* ── Mobile: body text minimum 16px ── */
+@media (max-width: 767px) {
+  p, li, td, th { font-size: max(1rem, 1em); }
+}
+
 /* ── Gradient mesh backgrounds ── */
 .mesh-bg-1 {
   background:
