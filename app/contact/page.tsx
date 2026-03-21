@@ -171,8 +171,8 @@ export default function ContactPage() {
         >
           <p className="text-xs text-[#334155]">
             Prefer email?{' '}
-            <a href="mailto:hello@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
-              hello@voidexa.com
+            <a href="mailto:info@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
+              info@voidexa.com
             </a>
           </p>
         </motion.div>
