@@ -239,13 +239,16 @@ h1, h2, h3, h4, h5, h6 {
 .section-pad { padding: 7rem 1.5rem; }
 @media (min-width: 768px) { .section-pad { padding: 9rem 2rem; } }
 
+/* ── Hero top clearance (all screens) ── */
+.hero-section { padding-top: 160px; }
+
 /* ── Mobile fixes ── */
 @media (max-width: 767px) {
   /* Body text floor */
   p, li, td, th { font-size: max(1rem, 1em); }
 
   /* Hero clears the fixed nav bar */
-  .hero-section { padding-top: 120px; }
+  .hero-section { padding-top: 180px; }
 
   /* Headline size on small screens */
   .hero-section h1 { font-size: 2rem; line-height: 1.15; }
