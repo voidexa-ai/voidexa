@@ -484,7 +484,7 @@ export default function TradingPage() {
                     }}
                   >
                     <div className="text-xs font-semibold text-[#e2e8f0]">{step.name}</div>
-                    <div className="text-[10px] mt-0.5" style={{ color: step.color }}>{step.sub}</div>
+                    <div className="text-sm mt-0.5" style={{ color: step.color }}>{step.sub}</div>
                   </motion.div>
                   {i < pipeline.length - 1 && (
                     <ChevronRight size={12} className="hidden sm:block flex-shrink-0" style={{ color: '#1e2a38' }} />
@@ -513,7 +513,7 @@ export default function TradingPage() {
                 <h3 className="text-sm font-medium text-[#e2e8f0] mb-1.5" style={{ fontFamily: 'var(--font-space)' }}>
                   {s.name}
                 </h3>
-                <p className="text-xs text-[#8899af] leading-relaxed mb-3">{s.desc}</p>
+                <p className="text-[15px] text-[#8899af] leading-relaxed mb-3">{s.desc}</p>
                 <div
                   className="text-[10px] font-medium px-2 py-1 rounded-lg"
                   style={{ background: `${s.color}08`, color: s.color, border: `1px solid ${s.color}18` }}
@@ -534,7 +534,7 @@ export default function TradingPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {features.map(f => (
-                <div key={f} className="flex items-start gap-2.5 text-sm text-[#8899af] leading-relaxed">
+                <div key={f} className="flex items-start gap-2.5 text-base text-[#8899af] leading-relaxed">
                   <CheckCircle2 size={14} className="flex-shrink-0 mt-0.5" style={{ color: '#00d4ff' }} />
                   {f}
                 </div>
@@ -580,7 +580,7 @@ export default function TradingPage() {
                   { icon: Lock,         text: 'Trustless — your funds, your keys, your node' },
                   { icon: AlertTriangle, text: 'Price escalates as node count grows (currently tier 1)' },
                 ].map(({ icon: Icon, text }) => (
-                  <li key={text} className="flex items-start gap-3 text-sm text-[#8899af]">
+                  <li key={text} className="flex items-start gap-3 text-base text-[#8899af]">
                     <Icon size={14} className="mt-0.5 flex-shrink-0" style={{ color: '#8b5cf6' }} />
                     {text}
                   </li>
@@ -646,7 +646,7 @@ export default function TradingPage() {
               <h3 className="text-2xl font-bold text-[#e2e8f0] mb-2" style={{ fontFamily: 'var(--font-space)' }}>
                 All-Season Bot License
               </h3>
-              <p className="text-sm text-[#8899af] mb-6 leading-relaxed">
+              <p className="text-base text-[#8899af] mb-6 leading-relaxed">
                 License the full system — your exchange account, your keys, your infrastructure.
                 Flat fee or performance split. Full source code, no black box.
               </p>
@@ -656,7 +656,7 @@ export default function TradingPage() {
                   'Telegram notifications built-in', 'Paper trading mode for safe testing',
                   'Ongoing updates included', 'Setup documentation + support',
                 ].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-[#8899af]">
+                  <li key={f} className="flex items-start gap-2 text-base text-[#8899af]">
                     <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0" style={{ color: '#00d4ff' }} />
                     {f}
                   </li>
@@ -684,7 +684,7 @@ export default function TradingPage() {
                 Aggressive Scalper
               </h3>
               <p className="text-sm font-semibold mb-4" style={{ color: '#8b5cf6' }}>For experienced traders only.</p>
-              <p className="text-sm text-[#8899af] mb-6 leading-relaxed">
+              <p className="text-base text-[#8899af] mb-6 leading-relaxed">
                 High-frequency scalping bot. Sub-minute cycles, order book imbalance detection,
                 momentum signals. Tight entries, fast exits, no hand-holding.
               </p>
@@ -693,7 +693,7 @@ export default function TradingPage() {
                   'Sub-minute position cycles', 'Order book imbalance detection',
                   'Configurable risk parameters', 'Futures-first architecture',
                 ].map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm opacity-50 text-[#8899af]">
+                  <li key={f} className="flex items-start gap-2 text-base opacity-50 text-[#8899af]">
                     <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0" style={{ color: '#8b5cf6' }} />
                     {f}
                   </li>

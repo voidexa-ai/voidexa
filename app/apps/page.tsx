@@ -138,7 +138,7 @@ export default function AppsPage() {
                   >
                     <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>{tier}</div>
                     <div className="text-sm font-semibold text-[#e2e8f0] mb-1">{title}</div>
-                    <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
+                    <div className="text-[15px] text-[#b0b0b0] leading-relaxed">{desc}</div>
                   </motion.div>
                 ))}
               </div>
@@ -184,7 +184,7 @@ export default function AppsPage() {
                 'AI-integrated workflows',
                 'Off-grid / hardware projects',
               ].map(item => (
-                <div key={item} className="flex items-center gap-2 p-3 rounded-xl text-sm text-[#b0b0b0]"
+                <div key={item} className="flex items-center gap-2 p-3 rounded-xl text-base text-[#b0b0b0]"
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <span style={{ color: '#00d4ff' }}>·</span>
                   {item}
@@ -220,7 +220,7 @@ export default function AppsPage() {
                   <h3 className="text-sm font-medium text-[#e2e8f0]">{title}</h3>
                   <span className="badge-soon">{tag}</span>
                 </div>
-                <p className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</p>
+                <p className="text-[15px] text-[#b0b0b0] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>

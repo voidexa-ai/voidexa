@@ -144,7 +144,7 @@ export default function AIToolsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
-                            <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
+                            <div className="text-sm text-[#b0b0b0] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
                       ))}
@@ -227,7 +227,7 @@ export default function AIToolsPage() {
                           </div>
                           <div>
                             <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
-                            <div className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</div>
+                            <div className="text-sm text-[#b0b0b0] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
                       ))}

@@ -108,15 +108,15 @@ export default function ServicesPage() {
               >
                 {title}
               </h2>
-              <p className="text-sm text-[#b0b0b0] mb-3">{tagline}</p>
-              <p className="text-sm text-[#b0b0b0] leading-relaxed mb-5">{desc}</p>
+              <p className="text-base text-[#b0b0b0] mb-3">{tagline}</p>
+              <p className="text-base text-[#b0b0b0] leading-relaxed mb-5">{desc}</p>
               <div className="mt-auto">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-[#b0b0b0] mb-3">
                   Includes
                 </p>
                 <ul className="space-y-2">
                   {includes.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-xs text-[#b0b0b0]">
+                    <li key={f} className="flex items-start gap-2 text-[15px] text-[#b0b0b0]">
                       <CheckCircle2 size={12} className="mt-0.5 flex-shrink-0" style={{ color }} />
                       {f}
                     </li>
@@ -154,7 +154,7 @@ export default function ServicesPage() {
                   {step}
                 </div>
                 <h3 className="text-sm font-medium text-[#e2e8f0] mb-2">{title}</h3>
-                <p className="text-xs text-[#b0b0b0] leading-relaxed">{desc}</p>
+                <p className="text-[15px] text-[#b0b0b0] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>

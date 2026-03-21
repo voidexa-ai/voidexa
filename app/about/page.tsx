@@ -110,7 +110,7 @@ export default function AboutPage() {
                   <Icon size={18} style={{ color: '#00d4ff' }} />
                 </div>
                 <h3 className="text-base font-medium text-[#e2e8f0] mb-2">{title}</h3>
-                <p className="text-sm text-[#b0b0b0] leading-relaxed">{desc}</p>
+                <p className="text-base text-[#b0b0b0] leading-relaxed">{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -143,7 +143,7 @@ export default function AboutPage() {
                 }}
               >
                 <div className="text-sm font-semibold text-[#e2e8f0] mb-1">{name}</div>
-                <div className="text-[10px] text-[#334155]">{role}</div>
+                <div className="text-sm text-[#334155]">{role}</div>
               </motion.div>
             ))}
           </div>

@@ -244,8 +244,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Mobile fixes ── */
 @media (max-width: 767px) {
-  /* Body text floor */
-  p, li, td, th { font-size: max(1rem, 1em); }
+  /* Body text floor — !important needed to override Tailwind utility specificity */
+  p, li, td, th { font-size: max(1rem, 1em) !important; }
 
   /* Hero clears the fixed nav bar */
   .hero-section { padding-top: 180px; }
