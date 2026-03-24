@@ -78,7 +78,12 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
       if (travel.progress >= 0.8 && !travel.navigated) {
         travel.navigated = true
-        router.push(travel.path)
+        // router.push('/') is a no-op when already on '/'; use refresh instead
+        if (travel.path === '/') {
+          router.refresh()
+        } else {
+          router.push(travel.path)
+        }
       }
 
       if (travel.progress >= 1) {
@@ -106,7 +111,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
   // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
   const handleNodeClick = useCallback(() => {
-    console.log('=== NODE CLICKED ===', label, path)
+    console.log('CLICK:', label, path, isCenter)
     if (onWarpStart) onWarpStart(node)
 
     const travel = travelRef.current
