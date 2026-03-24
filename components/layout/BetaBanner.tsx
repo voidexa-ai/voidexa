@@ -36,7 +36,7 @@ export default function BetaBanner() {
         Interested in beta?{' '}
         <Link
           href="/contact"
-          className="font-semibold underline underline-offset-2 hover:text-white transition-colors"
+          className="font-medium underline underline-offset-2 hover:text-white transition-colors"
           style={{ color: '#00d4ff' }}
         >
           Get in touch.

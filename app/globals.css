@@ -215,7 +215,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(0,212,255,.3);
   color: #00d4ff;
   font-size: .63rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
   padding: .2rem .7rem;
@@ -227,7 +227,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(139,92,246,.3);
   color: #8b5cf6;
   font-size: .63rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
   padding: .2rem .7rem;

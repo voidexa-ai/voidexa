@@ -39,6 +39,9 @@ export default function Navigation() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  // Star map homepage has its own MiniNav — all hooks called above
+  if (pathname === '/') return null
+
   function dismissBanner() {
     localStorage.setItem(BANNER_KEY, 'true')
     setBanner(false)
@@ -62,7 +65,7 @@ export default function Navigation() {
               Interested in beta?{' '}
               <Link
                 href="/contact"
-                className="font-semibold underline underline-offset-2 hover:text-white transition-colors"
+                className="font-medium underline underline-offset-2 hover:text-white transition-colors"
                 style={{ color: '#00d4ff' }}
               >
                 Get in touch.

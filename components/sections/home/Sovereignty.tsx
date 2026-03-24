@@ -28,7 +28,7 @@ export default function Sovereignty() {
           />
 
           <p
-            className="text-xs font-semibold uppercase tracking-widest mb-6"
+            className="text-xs font-medium uppercase tracking-widest mb-6"
             style={{ color: 'rgba(139,92,246,0.7)' }}
           >
             Built for sovereignty
@@ -42,14 +42,14 @@ export default function Sovereignty() {
               in cybersecurity for Danish SMEs.
             </p>
 
-            <p className="text-[#c4c4c4] leading-relaxed font-medium">
+            <p className="text-[#c4c4c4] leading-relaxed">
               voidexa builds for this moment. Encrypted communication that runs on your hardware.
               AI workflows that never touch a third-party server. Trading systems that execute
               autonomously. Data intelligence that stays on your infrastructure.
             </p>
 
             <p
-              className="text-sm font-semibold tracking-wide"
+              className="text-sm font-medium tracking-wide"
               style={{
                 background: 'linear-gradient(135deg, #8b5cf6, #00d4ff)',
                 WebkitBackgroundClip: 'text',

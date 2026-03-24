@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Send, Minimize2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 const RESPONSES: Record<string, { text: string; nav?: string }> = {
   hello:    { text: "Hello. I'm JARVIS — voidexa's onboard intelligence. What are you looking for?" },
@@ -50,10 +50,14 @@ export default function JarvisAssistant() {
   ])
   const endRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // Hide on star map homepage — all hooks called above
+  if (pathname === '/') return null
 
   function send() {
     const text = input.trim()
@@ -187,7 +191,7 @@ export default function JarvisAssistant() {
             >
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-[#00d4ff] animate-pulse" />
-                <span className="text-sm font-semibold text-[#00d4ff]" style={{ fontFamily: 'var(--font-space)' }}>
+                <span className="text-sm font-medium text-[#00d4ff]" style={{ fontFamily: 'var(--font-space)' }}>
                   JARVIS
                 </span>
                 <span className="text-xs text-[#7a8a9e]">voidexa AI</span>

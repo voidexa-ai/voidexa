@@ -48,7 +48,7 @@ export default function ContactPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+          <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
             Contact
           </p>
           <h1
@@ -90,7 +90,7 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Name
                   </label>
                   <input
@@ -104,7 +104,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Email
                   </label>
                   <input
@@ -121,7 +121,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                   Subject
                 </label>
                 <select
@@ -136,7 +136,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#7a8a9e] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                   Message
                 </label>
                 <textarea
@@ -171,8 +171,14 @@ export default function ContactPage() {
         >
           <p className="text-xs text-[#334155]">
             Prefer email?{' '}
-            <a href="mailto:info@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
-              info@voidexa.com
+            <a href="mailto:contact@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
+              contact@voidexa.com
+            </a>
+          </p>
+          <p className="text-xs text-[#334155] mt-2">
+            Management:{' '}
+            <a href="mailto:ceo@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
+              ceo@voidexa.com
             </a>
           </p>
         </motion.div>

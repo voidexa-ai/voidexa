@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { DM_Sans, Syne } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
-import Footer from '@/components/layout/Footer'
+import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import JarvisAssistant from '@/components/ui/JarvisAssistant'
 
 const dmSans = DM_Sans({
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-[#0a0a0f] text-[#e2e8f0] antialiased overflow-x-hidden noise-body">
         <Navigation />
         <main className="relative">{children}</main>
-        <Footer />
+        <ConditionalFooter />
         <JarvisAssistant />
       </body>
     </html>

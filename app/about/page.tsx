@@ -1,7 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Code2, Brain, Shield, Zap, Database, Network } from 'lucide-react'
+import { Code2, Brain, Shield, Zap } from 'lucide-react'
+import Hero            from '@/components/sections/home/Hero'
+import WhatWeBuild     from '@/components/sections/home/WhatWeBuild'
+import Sovereignty     from '@/components/sections/home/Sovereignty'
+import FeaturedProduct from '@/components/sections/home/FeaturedProduct'
 
 const values = [
   {
@@ -39,116 +43,125 @@ const stack = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f] pt-32 pb-24">
-      <div className="max-w-5xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-20"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#00d4ff]/70 mb-3">
-            About
-          </p>
-          <h1
-            className="text-5xl sm:text-6xl font-bold text-[#e2e8f0] mb-6 leading-tight"
-            style={{ fontFamily: 'var(--font-space)' }}
-          >
-            Born from the{' '}
-            <span className="gradient-text">void.</span>
-          </h1>
-          <div className="space-y-4 text-[#64748b] leading-relaxed max-w-2xl">
-            <p>
-              voidexa was born from the void — the space between what technology can do
-              and what it actually does for people.
-            </p>
-            <p>
-              The philosophy is simple: technology should work autonomously, intelligently,
-              for the benefit of its owner. Not require constant supervision. Not generate
-              busy work. Not lock you in. Just run.
-            </p>
-            <p>
-              Founded by an independent developer and AI architect who got tired of tools that
-              need babysitting. The answer took the form of a trading bot that classifies market
-              regimes and executes autonomously. An encrypted messenger that leaves no trace.
-              A website builder that ships production code from a brief. Tools that work without you.
-            </p>
-            <p>
-              We operate globally. No office, no overhead — just builders who ship.
-            </p>
-          </div>
-        </motion.div>
+    <>
+      {/* Former homepage sections */}
+      <Hero />
+      <WhatWeBuild />
+      <Sovereignty />
+      <FeaturedProduct />
 
-        {/* Values */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mb-20"
-        >
-          <h2
-            className="text-2xl font-bold text-[#e2e8f0] mb-8"
-            style={{ fontFamily: 'var(--font-space)' }}
+      {/* About content */}
+      <div className="min-h-screen bg-[#0a0a0f] pt-24 pb-24">
+        <div className="max-w-5xl mx-auto px-6">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-20"
           >
-            How we think
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {values.map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="glass-card rounded-2xl p-6"
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)' }}
+            <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+              About
+            </p>
+            <h1
+              className="text-5xl sm:text-6xl font-bold text-[#e2e8f0] mb-6 leading-tight"
+              style={{ fontFamily: 'var(--font-space)' }}
+            >
+              Born from the{' '}
+              <span className="gradient-text">void.</span>
+            </h1>
+            <div className="space-y-4 text-[#64748b] leading-relaxed max-w-2xl">
+              <p>
+                voidexa was born from the void — the space between what technology can do
+                and what it actually does for people.
+              </p>
+              <p>
+                The philosophy is simple: technology should work autonomously, intelligently,
+                for the benefit of its owner. Not require constant supervision. Not generate
+                busy work. Not lock you in. Just run.
+              </p>
+              <p>
+                Founded by an independent developer and AI architect who got tired of tools that
+                need babysitting. The answer took the form of a trading bot that classifies market
+                regimes and executes autonomously. An encrypted messenger that leaves no trace.
+                A website builder that ships production code from a brief. Tools that work without you.
+              </p>
+              <p>
+                We operate globally. No office, no overhead — just builders who ship.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Values */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mb-20"
+          >
+            <h2
+              className="text-2xl font-bold text-[#e2e8f0] mb-8"
+              style={{ fontFamily: 'var(--font-space)' }}
+            >
+              How we think
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {values.map(({ icon: Icon, title, desc }, i) => (
+                <motion.div
+                  key={title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="glass-card rounded-2xl p-6"
                 >
-                  <Icon size={18} style={{ color: '#00d4ff' }} />
-                </div>
-                <h3 className="text-base font-medium text-[#e2e8f0] mb-2">{title}</h3>
-                <p className="text-base text-[#b0b0b0] leading-relaxed">{desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                    style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)' }}
+                  >
+                    <Icon size={18} style={{ color: '#00d4ff' }} />
+                  </div>
+                  <h3 className="text-base font-medium text-[#e2e8f0] mb-2">{title}</h3>
+                  <p className="text-base text-[#b0b0b0] leading-relaxed">{desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
 
-        {/* Tech stack */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="text-2xl font-bold text-[#e2e8f0] mb-8"
-            style={{ fontFamily: 'var(--font-space)' }}
+          {/* Tech stack */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
           >
-            Our stack
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {stack.map(({ name, role }, i) => (
-              <motion.div
-                key={name}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="p-4 rounded-xl text-center"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                }}
-              >
-                <div className="text-sm font-semibold text-[#e2e8f0] mb-1">{name}</div>
-                <div className="text-sm text-[#334155]">{role}</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+            <h2
+              className="text-2xl font-bold text-[#e2e8f0] mb-8"
+              style={{ fontFamily: 'var(--font-space)' }}
+            >
+              Our stack
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {stack.map(({ name, role }, i) => (
+                <motion.div
+                  key={name}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="p-4 rounded-xl text-center"
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                  }}
+                >
+                  <div className="text-sm font-medium text-[#e2e8f0] mb-1">{name}</div>
+                  <div className="text-sm text-[#334155]">{role}</div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

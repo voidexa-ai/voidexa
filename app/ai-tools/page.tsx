@@ -67,7 +67,7 @@ export default function AIToolsPage() {
           style={{ background: 'radial-gradient(ellipse 70% 40% at 50% 30%, rgba(139,92,246,0.07) 0%, rgba(0,212,255,0.04) 50%, transparent 70%)' }} />
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#8b5cf6]/70 mb-3">AI Tools</p>
+            <p className="text-xs font-medium uppercase tracking-widest text-[#8b5cf6]/70 mb-3">AI Tools</p>
             <h1 className="text-5xl sm:text-6xl font-bold text-[#e2e8f0] mb-5" style={{ fontFamily: 'var(--font-space)' }}>
               AI that{' '}
               <span className="gradient-text">does the work.</span>
@@ -104,7 +104,7 @@ export default function AIToolsPage() {
                         <BookOpen size={20} style={{ color: '#00d4ff' }} />
                       </div>
                       <span
-                        className="inline-block text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
+                        className="inline-block text-xs font-medium uppercase tracking-widest px-3 py-1 rounded-full"
                         style={{
                           background: 'rgba(16,185,129,0.12)',
                           border: '1px solid rgba(16,185,129,0.3)',
@@ -130,7 +130,7 @@ export default function AIToolsPage() {
 
                   {/* Right — steps */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#b0b0b0] mb-6">How it works</p>
+                    <p className="text-xs font-medium uppercase tracking-widest text-[#b0b0b0] mb-6">How it works</p>
                     <div className="space-y-4">
                       {bookSteps.map(({ icon: Icon, label, desc }, i) => (
                         <motion.div key={label}
@@ -143,7 +143,7 @@ export default function AIToolsPage() {
                             <Icon size={14} style={{ color: '#00d4ff' }} />
                           </div>
                           <div>
-                            <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
+                            <div className="text-sm font-medium text-[#e2e8f0] mb-0.5">{label}</div>
                             <div className="text-sm text-[#b0b0b0] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>
@@ -213,7 +213,7 @@ export default function AIToolsPage() {
 
                   {/* Right — steps */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[#b0b0b0] mb-6">How it works</p>
+                    <p className="text-xs font-medium uppercase tracking-widest text-[#b0b0b0] mb-6">How it works</p>
                     <div className="space-y-4">
                       {siteSteps.map(({ icon: Icon, label, desc }, i) => (
                         <motion.div key={label}
@@ -226,7 +226,7 @@ export default function AIToolsPage() {
                             <Icon size={14} style={{ color: '#8b5cf6' }} />
                           </div>
                           <div>
-                            <div className="text-sm font-semibold text-[#e2e8f0] mb-0.5">{label}</div>
+                            <div className="text-sm font-medium text-[#e2e8f0] mb-0.5">{label}</div>
                             <div className="text-sm text-[#b0b0b0] leading-relaxed">{desc}</div>
                           </div>
                         </motion.div>

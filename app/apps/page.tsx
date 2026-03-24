@@ -51,7 +51,7 @@ export default function AppsPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+          <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
             Apps
           </p>
           <h1
@@ -82,7 +82,7 @@ export default function AppsPage() {
             <div className="flex flex-col lg:flex-row gap-12">
               <div className="lg:w-2/5">
                 <span
-                  className="inline-block mb-4 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
+                  className="inline-block mb-4 text-xs font-medium uppercase tracking-widest px-3 py-1 rounded-full"
                   style={{
                     background: 'rgba(139,92,246,0.12)',
                     border: '1px solid rgba(139,92,246,0.3)',
@@ -136,8 +136,8 @@ export default function AppsPage() {
                       border: '1px solid rgba(255,255,255,0.06)',
                     }}
                   >
-                    <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>{tier}</div>
-                    <div className="text-sm font-semibold text-[#e2e8f0] mb-1">{title}</div>
+                    <div className="text-xs font-medium uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>{tier}</div>
+                    <div className="text-sm font-medium text-[#e2e8f0] mb-1">{title}</div>
                     <div className="text-[15px] text-[#b0b0b0] leading-relaxed">{desc}</div>
                   </motion.div>
                 ))}
