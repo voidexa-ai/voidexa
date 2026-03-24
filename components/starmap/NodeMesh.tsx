@@ -221,13 +221,13 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           style={{
             pointerEvents: 'auto',
             cursor: 'pointer',
-            color: 'rgba(255,255,255,0.7)',
+            color: 'rgba(255,255,255,0.85)',
             fontSize: isCenter ? '12px' : '10px',
-            fontWeight: 400,
+            fontWeight: 500,
             fontFamily: 'var(--font-inter, system-ui)',
             whiteSpace: 'nowrap',
             marginTop: 4,
-            letterSpacing: '0.01em',
+            letterSpacing: '0.5px',
             textShadow: '0 2px 8px rgba(0,0,0,0.8)',
           }}
         >
