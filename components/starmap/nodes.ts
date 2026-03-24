@@ -78,7 +78,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     path: '/about',
     position: [-2, -2, -12],
     color: '#1a1a1a',
-    emissive: '#f0f0f0',       // white/silver
+    emissive: '#64d2ff',       // ice blue
     emissiveIntensity: 2.0,
     size: 0.3,
     isCenter: false,

@@ -104,23 +104,9 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     console.log('=== POINTER DOWN ===', label, path)
   }, [label, path])
 
-  // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
-  const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation()
-    const down = pointerDownAt.current
-    pointerDownAt.current = null
-    if (!down) return
-    const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1])
-    console.log('=== POINTER UP ===', label, path, '| moved:', moved.toFixed(1), 'px')
-    if (moved >= 5) return // drag — ignore
-
+  // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
+  const handleNodeClick = useCallback(() => {
     console.log('=== NODE CLICKED ===', label, path)
-
-    if (isCenter) {
-      router.push('/')
-      return
-    }
-
     if (onWarpStart) onWarpStart(node)
 
     const travel = travelRef.current
@@ -130,12 +116,34 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     travel.startPos = camera.position.clone()
     travel.path = path
 
-    const pv = new THREE.Vector3(...position)
-    const dist = pv.length()
-    const dir = pv.clone().normalize()
-    travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
-    travel.lookAtPos = pv.clone()
-  }, [isCenter, path, label, camera, position, node, router, onWarpStart])
+    const planetPos = new THREE.Vector3(...position)
+
+    if (isCenter) {
+      // Center is at origin — fly along camera→planet direction, stop 1.5 units from surface
+      const dir = planetPos.clone().sub(camera.position).normalize()
+      const dist = camera.position.distanceTo(planetPos)
+      travel.targetPos = camera.position.clone().add(dir.multiplyScalar(Math.max(dist - 1.5, 0.5)))
+      travel.lookAtPos = planetPos.clone()
+    } else {
+      // Other nodes — fly along origin→planet direction, stop 2.5 units from surface
+      const dist = planetPos.length()
+      const dir = planetPos.clone().normalize()
+      travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
+      travel.lookAtPos = planetPos.clone()
+    }
+  }, [isCenter, path, label, camera, position, node, onWarpStart])
+
+  // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
+  const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
+    const down = pointerDownAt.current
+    pointerDownAt.current = null
+    if (!down) return
+    const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1])
+    console.log('=== POINTER UP ===', label, path, '| moved:', moved.toFixed(1), 'px')
+    if (moved >= 5) return // drag — ignore
+    handleNodeClick()
+  }, [label, path, handleNodeClick])
 
   return (
     <group position={position}>
@@ -196,21 +204,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center' }}
       >
         <div
-          onClick={() => {
-            if (isCenter) { router.push('/'); return }
-            if (onWarpStart) onWarpStart(node)
-            const travel = travelRef.current
-            travel.active = true
-            travel.progress = 0
-            travel.navigated = false
-            travel.startPos = camera.position.clone()
-            travel.path = path
-            const pv = new THREE.Vector3(...position)
-            const dist = pv.length()
-            const dir = pv.clone().normalize()
-            travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
-            travel.lookAtPos = pv.clone()
-          }}
+          onClick={handleNodeClick}
           style={{
             pointerEvents: 'auto',
             cursor: 'pointer',
@@ -228,21 +222,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           {label}
         </div>
         <div
-          onClick={() => {
-            if (isCenter) { router.push('/'); return }
-            if (onWarpStart) onWarpStart(node)
-            const travel = travelRef.current
-            travel.active = true
-            travel.progress = 0
-            travel.navigated = false
-            travel.startPos = camera.position.clone()
-            travel.path = path
-            const pv = new THREE.Vector3(...position)
-            const dist = pv.length()
-            const dir = pv.clone().normalize()
-            travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
-            travel.lookAtPos = pv.clone()
-          }}
+          onClick={handleNodeClick}
           style={{
             pointerEvents: 'auto',
             cursor: 'pointer',
