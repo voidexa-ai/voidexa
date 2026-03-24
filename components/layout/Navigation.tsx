@@ -10,7 +10,7 @@ import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 const BANNER_KEY = 'voidexa_beta_banner_dismissed'
 
 const links = [
-  { href: '/',           label: 'Home' },
+  { href: '/home',       label: 'Home' },
   { href: '/trading',    label: 'Trading' },
   { href: '/apps',       label: 'Apps' },
   { href: '/ai-tools',   label: 'AI Tools' },

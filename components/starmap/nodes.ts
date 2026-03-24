@@ -15,7 +15,7 @@ export const STAR_MAP_NODES: StarNode[] = [
   {
     id: 'voidexa',
     label: 'voidexa',
-    path: '/',
+    path: '/home',
     position: [0, 0, 0],
     color: '#041025',
     emissive: '#00ffff',       // bright cyan
