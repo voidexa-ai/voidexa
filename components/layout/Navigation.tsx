@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 
 const BANNER_KEY = 'voidexa_beta_banner_dismissed'
 
@@ -18,10 +19,15 @@ const links = [
   { href: '/contact',    label: 'Contact' },
 ]
 
+// Build a map from path → emissive color
+const PATH_COLOR: Record<string, string> = {}
+STAR_MAP_NODES.forEach(n => { PATH_COLOR[n.path] = n.emissive })
+
 export default function Navigation() {
   const [scrolled, setScrolled]    = useState(false)
   const [menuOpen, setMenuOpen]    = useState(false)
   const [bannerVisible, setBanner] = useState(false)
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -45,6 +51,28 @@ export default function Navigation() {
   function dismissBanner() {
     localStorage.setItem(BANNER_KEY, 'true')
     setBanner(false)
+  }
+
+  function getLinkColor(href: string): string {
+    const active = pathname === href
+    const hovered = hoveredHref === href
+    if (active || hovered) {
+      return PATH_COLOR[href] ?? '#00d4ff'
+    }
+    return '#94a3b8'
+  }
+
+  function getLinkBg(href: string): string {
+    const hovered = hoveredHref === href
+    if (hovered) {
+      const col = PATH_COLOR[href] ?? '#00d4ff'
+      // Convert hex to rgba with 0.08 opacity
+      const r = parseInt(col.slice(1, 3), 16)
+      const g = parseInt(col.slice(3, 5), 16)
+      const b = parseInt(col.slice(5, 7), 16)
+      return `rgba(${r},${g},${b},0.08)`
+    }
+    return 'transparent'
   }
 
   return (
@@ -121,21 +149,28 @@ export default function Navigation() {
             <div className="hidden md:flex items-center gap-1">
               {links.map(({ href, label }) => {
                 const active = pathname === href
+                const planetColor = PATH_COLOR[href] ?? '#00d4ff'
                 return (
                   <Link
                     key={href}
                     href={href}
-                    className={`
-                      relative px-4 py-2 text-sm font-medium transition-colors duration-200
-                      ${active ? 'text-[#00d4ff]' : 'text-[#94a3b8] hover:text-white'}
-                    `}
+                    className="relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg"
+                    style={{
+                      color: getLinkColor(href),
+                      background: getLinkBg(href),
+                      textShadow: (active || hoveredHref === href)
+                        ? `0 0 12px ${planetColor}88`
+                        : 'none',
+                    }}
+                    onMouseEnter={() => setHoveredHref(href)}
+                    onMouseLeave={() => setHoveredHref(null)}
                   >
                     {label}
                     {active && (
                       <motion.div
                         layoutId="nav-indicator"
                         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full"
-                        style={{ background: 'linear-gradient(90deg, #00d4ff, #8b5cf6)' }}
+                        style={{ background: planetColor }}
                       />
                     )}
                   </Link>
@@ -181,6 +216,7 @@ export default function Navigation() {
             <nav className="flex-1 flex flex-col justify-center px-8 gap-1">
               {links.map(({ href, label }, i) => {
                 const active = pathname === href
+                const planetColor = PATH_COLOR[href] ?? '#00d4ff'
                 return (
                   <motion.div
                     key={href}
@@ -196,9 +232,10 @@ export default function Navigation() {
                         fontSize: '1.25rem',
                         fontWeight: 600,
                         fontFamily: 'var(--font-space)',
-                        color: active ? '#00d4ff' : '#94a3b8',
-                        background: active ? 'rgba(0,212,255,0.06)' : 'transparent',
-                        borderLeft: active ? '2px solid #00d4ff' : '2px solid transparent',
+                        color: active ? planetColor : '#94a3b8',
+                        background: active ? `rgba(${parseInt(planetColor.slice(1,3),16)},${parseInt(planetColor.slice(3,5),16)},${parseInt(planetColor.slice(5,7),16)},0.06)` : 'transparent',
+                        borderLeft: active ? `2px solid ${planetColor}` : '2px solid transparent',
+                        textShadow: active ? `0 0 10px ${planetColor}66` : 'none',
                       }}
                     >
                       {label}

@@ -1,77 +1,102 @@
-export type StarNode = {
+export interface StarNode {
   id: string
   label: string
-  sublabel: string
-  href: string
+  path: string
   position: [number, number, number]
-  size: number
   color: string
-  isCenter?: boolean
+  emissive: string
+  emissiveIntensity: number
+  size: number
+  isCenter: boolean
+  sublabel: string
 }
 
-export const NODES: StarNode[] = [
+export const STAR_MAP_NODES: StarNode[] = [
   {
-    id: 'core',
+    id: 'voidexa',
     label: 'voidexa',
-    sublabel: 'intelligent systems',
-    href: '/',
+    path: '/',
     position: [0, 0, 0],
-    size: 1.0,
-    color: '#00d4ff',
+    color: '#041025',
+    emissive: '#00d4ff',
+    emissiveIntensity: 4.0,
+    size: 0.6,
     isCenter: true,
+    sublabel: 'Sovereign AI Infrastructure',
   },
   {
     id: 'trading',
     label: 'Trading',
+    path: '/trading',
+    position: [3, 2, -5],
+    color: '#1a0a00',
+    emissive: '#ff8c00',
+    emissiveIntensity: 2.5,
+    size: 0.35,
+    isCenter: false,
     sublabel: 'All-Season Bot · Scalper',
-    href: '/trading',
-    position: [5.5, 0.8, 0],
-    size: 0.55,
-    color: '#f59e0b',
   },
   {
     id: 'apps',
     label: 'Apps',
+    path: '/apps',
+    position: [-4, 1.5, -6],
+    color: '#0f001a',
+    emissive: '#bf5af2',
+    emissiveIntensity: 2.5,
+    size: 0.35,
+    isCenter: false,
     sublabel: 'Comlink · Encrypted Messenger',
-    href: '/apps',
-    position: [-4, 2.5, 1],
-    size: 0.5,
-    color: '#8b5cf6',
   },
   {
     id: 'ai-tools',
     label: 'AI Tools',
+    path: '/ai-tools',
+    position: [0, -3, -8],
+    color: '#001a0a',
+    emissive: '#30d158',
+    emissiveIntensity: 2.5,
+    size: 0.35,
+    isCenter: false,
     sublabel: 'Book Creator · Web Builder',
-    href: '/ai-tools',
-    position: [2, -3.5, 2.5],
-    size: 0.5,
-    color: '#10b981',
   },
   {
     id: 'services',
     label: 'Services',
+    path: '/services',
+    position: [5, -1, -7],
+    color: '#1a0005',
+    emissive: '#ff375f',
+    emissiveIntensity: 2.5,
+    size: 0.35,
+    isCenter: false,
     sublabel: 'Custom AI · Data Intelligence',
-    href: '/services',
-    position: [-3.5, -2, -2],
-    size: 0.5,
-    color: '#f43f5e',
   },
   {
     id: 'about',
     label: 'About',
+    path: '/about',
+    position: [-2, -2, -12],
+    color: '#000a1a',
+    emissive: '#0a84ff',
+    emissiveIntensity: 2.0,
+    size: 0.3,
+    isCenter: false,
     sublabel: 'Born from the void',
-    href: '/about',
-    position: [3.5, -2.5, -3],
-    size: 0.45,
-    color: '#06b6d4',
   },
   {
     id: 'contact',
     label: 'Contact',
+    path: '/contact',
+    position: [4, 3, -10],
+    color: '#1a1a00',
+    emissive: '#ffd60a',
+    emissiveIntensity: 2.0,
+    size: 0.3,
+    isCenter: false,
     sublabel: 'Get in touch',
-    href: '/contact',
-    position: [-2, 3.5, -2.5],
-    size: 0.45,
-    color: '#a78bfa',
   },
 ]
+
+// Legacy export for any components still using NODES
+export const NODES = STAR_MAP_NODES.map(n => ({ ...n, href: n.path }))
