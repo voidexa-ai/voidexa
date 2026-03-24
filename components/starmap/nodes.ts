@@ -18,7 +18,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     path: '/',
     position: [0, 0, 0],
     color: '#041025',
-    emissive: '#00d4ff',
+    emissive: '#00ffff',       // bright cyan
     emissiveIntensity: 4.0,
     size: 0.6,
     isCenter: true,
@@ -30,7 +30,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     path: '/trading',
     position: [3, 2, -5],
     color: '#1a0a00',
-    emissive: '#ff8c00',
+    emissive: '#ff6600',       // pure orange
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
@@ -42,7 +42,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     path: '/apps',
     position: [-4, 1.5, -6],
     color: '#0f001a',
-    emissive: '#bf5af2',
+    emissive: '#cc00ff',       // neon magenta/purple
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
@@ -54,7 +54,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     path: '/ai-tools',
     position: [0, -3, -8],
     color: '#001a0a',
-    emissive: '#30d158',
+    emissive: '#00ff44',       // neon green
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
@@ -66,7 +66,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     path: '/services',
     position: [5, -1, -7],
     color: '#1a0005',
-    emissive: '#ff375f',
+    emissive: '#ff0066',       // hot cherry red
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
@@ -77,8 +77,8 @@ export const STAR_MAP_NODES: StarNode[] = [
     label: 'About',
     path: '/about',
     position: [-2, -2, -12],
-    color: '#000a1a',
-    emissive: '#0a84ff',
+    color: '#1a1a1a',
+    emissive: '#ffffff',       // clean white
     emissiveIntensity: 2.0,
     size: 0.3,
     isCenter: false,
@@ -89,8 +89,8 @@ export const STAR_MAP_NODES: StarNode[] = [
     label: 'Contact',
     path: '/contact',
     position: [4, 3, -10],
-    color: '#1a1a00',
-    emissive: '#ffd60a',
+    color: '#1a1200',
+    emissive: '#ffcc00',       // amber/gold
     emissiveIntensity: 2.0,
     size: 0.3,
     isCenter: false,

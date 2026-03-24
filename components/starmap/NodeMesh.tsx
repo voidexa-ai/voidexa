@@ -28,6 +28,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     progress: number
     startPos: THREE.Vector3
     targetPos: THREE.Vector3
+    lookAtPos: THREE.Vector3
     path: string
     navigated: boolean
   }>({
@@ -35,6 +36,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     progress: 0,
     startPos: new THREE.Vector3(),
     targetPos: new THREE.Vector3(),
+    lookAtPos: new THREE.Vector3(),
     path: '',
     navigated: false,
   })
@@ -53,7 +55,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
     if (glowRef.current) {
       const mat = glowRef.current.material as THREE.MeshBasicMaterial
-      mat.opacity = hovered ? 0.25 : pulse * 0.1
+      mat.opacity = hovered ? 0.28 : pulse * 0.1
     }
 
     if (ringRef.current && isCenter) {
@@ -61,19 +63,17 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       ringRef.current.rotation.x = Math.sin(t * 0.15) * 0.3 + 0.4
     }
 
-    // Travel animation (warp effect)
+    // Warp travel animation toward clicked node
     const travel = travelRef.current
     if (travel.active) {
-      travel.progress = Math.min(travel.progress + 0.018, 1)
-      // Ease-in cubic
-      const ease = travel.progress < 0.5
-        ? 4 * travel.progress ** 3
-        : 1 - Math.pow(-2 * travel.progress + 2, 3) / 2
+      travel.progress = Math.min(travel.progress + 0.016, 1)
+      // Ease-out cubic
+      const ease = 1 - Math.pow(1 - travel.progress, 3)
 
       cam.position.lerpVectors(travel.startPos, travel.targetPos, ease)
-      cam.lookAt(0, 0, 0)
+      cam.lookAt(travel.lookAtPos)
 
-      if (travel.progress >= 0.85 && !travel.navigated) {
+      if (travel.progress >= 0.8 && !travel.navigated) {
         travel.navigated = true
         router.push(travel.path)
       }
@@ -95,8 +95,14 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   }, [])
 
   const onClick = useCallback(() => {
-    if (isCenter) return
-    // Trigger parent warp callback if provided
+    console.log('Node clicked:', label, path)
+
+    // Center node: navigate home directly (no warp needed, already there)
+    if (isCenter) {
+      router.push('/')
+      return
+    }
+
     if (onWarpStart) onWarpStart(node)
 
     const travel = travelRef.current
@@ -104,10 +110,16 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     travel.progress = 0
     travel.navigated = false
     travel.startPos = camera.position.clone()
-    const pv = new THREE.Vector3(...position)
-    travel.targetPos = pv.clone().multiplyScalar(0.5)
     travel.path = path
-  }, [isCenter, path, camera, position, node, onWarpStart])
+
+    // Fly camera TOWARD the clicked node — stop just in front of it
+    const pv = new THREE.Vector3(...position)
+    const dist = pv.length()
+    const dir = pv.clone().normalize()
+    // Target: 2.5 units in front of the node surface
+    travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
+    travel.lookAtPos = pv.clone()   // look AT the node throughout
+  }, [isCenter, path, label, camera, position, node, router, onWarpStart])
 
   return (
     <group position={position}>
@@ -131,7 +143,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         />
       </mesh>
 
-      {/* Outer glow sphere — BackSide, very transparent */}
+      {/* Outer glow sphere */}
       <mesh ref={glowRef} scale={1.65}>
         <sphereGeometry args={[size, 16, 16]} />
         <meshBasicMaterial
@@ -143,7 +155,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         />
       </mesh>
 
-      {/* Point light for scene lighting */}
+      {/* Point light */}
       <pointLight
         color={emissive}
         intensity={hovered ? 5.0 : isCenter ? 3.0 : 1.8}
@@ -167,7 +179,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center' }}
       >
         <div style={{
-          color: hovered ? '#ffffff' : 'rgba(226,232,240,0.92)',
+          color: hovered ? '#ffffff' : 'rgba(230,240,255,0.95)',
           fontSize: isCenter ? 20 : 16,
           fontWeight: isCenter ? 800 : 600,
           fontFamily: 'var(--font-space, system-ui)',
@@ -179,15 +191,16 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         }}>
           {label}
         </div>
+        {/* Sublabel — always visible, readable */}
         <div style={{
-          color: hovered ? 'rgba(210,230,255,0.95)' : 'rgba(148,163,184,0.70)',
-          fontSize: 13,
+          color: 'rgba(255,255,255,0.7)',
+          fontSize: 14,
+          fontWeight: 400,
           fontFamily: 'var(--font-inter, system-ui)',
           whiteSpace: 'nowrap',
-          marginTop: 3,
+          marginTop: 4,
           letterSpacing: '0.01em',
-          transition: 'color 0.2s',
-          textShadow: '0 1px 6px rgba(0,0,0,0.9)',
+          textShadow: '0 0 10px rgba(0,212,255,0.5), 0 1px 6px rgba(0,0,0,0.9)',
         }}>
           {sublabel}
         </div>

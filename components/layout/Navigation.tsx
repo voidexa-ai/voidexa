@@ -149,31 +149,52 @@ export default function Navigation() {
             <div className="hidden md:flex items-center gap-1">
               {links.map(({ href, label }) => {
                 const active = pathname === href
+                const isHovered = hoveredHref === href
                 const planetColor = PATH_COLOR[href] ?? '#00d4ff'
+                const r = parseInt(planetColor.slice(1, 3), 16)
+                const g = parseInt(planetColor.slice(3, 5), 16)
+                const b = parseInt(planetColor.slice(5, 7), 16)
                 return (
-                  <Link
+                  <div
                     key={href}
-                    href={href}
-                    className="relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg"
-                    style={{
-                      color: getLinkColor(href),
-                      background: getLinkBg(href),
-                      textShadow: (active || hoveredHref === href)
-                        ? `0 0 12px ${planetColor}88`
-                        : 'none',
-                    }}
                     onMouseEnter={() => setHoveredHref(href)}
                     onMouseLeave={() => setHoveredHref(null)}
+                    style={{ position: 'relative' }}
                   >
-                    {label}
+                    <Link
+                      href={href}
+                      style={{
+                        display: 'block',
+                        padding: '6px 14px',
+                        borderRadius: '6px',
+                        fontSize: '0.875rem',
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        color: (active || isHovered) ? planetColor : '#94a3b8',
+                        background: isHovered ? `rgba(${r},${g},${b},0.10)` : 'transparent',
+                        textShadow: (active || isHovered) ? `0 0 14px ${planetColor}` : 'none',
+                        transition: 'color 0.3s ease, background 0.3s ease, text-shadow 0.3s ease',
+                      }}
+                    >
+                      {label}
+                    </Link>
                     {active && (
                       <motion.div
                         layoutId="nav-indicator"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full"
-                        style={{ background: planetColor }}
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: 16,
+                          height: 2,
+                          borderRadius: 2,
+                          background: planetColor,
+                          boxShadow: `0 0 8px ${planetColor}`,
+                        }}
                       />
                     )}
-                  </Link>
+                  </div>
                 )
               })}
               <Link
