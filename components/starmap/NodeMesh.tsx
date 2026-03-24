@@ -48,18 +48,22 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   useFrame(({ clock, camera: cam }) => {
     const t = clock.elapsedTime
     const pulse = Math.sin(t * 1.4 + phaseOffset) * 0.12 + 0.88
+    const travel = travelRef.current
+
+    // Fade emissive/glow during warp approach to prevent bloom overflow
+    const warpFade = travel.active ? Math.max(0.08, 1 - travel.progress * 0.92) : 1
 
     if (meshRef.current) {
       const mat = meshRef.current.material as THREE.MeshStandardMaterial
-      const baseIntensity = emissiveIntensity * pulse
-      mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 : baseIntensity
+      const baseIntensity = emissiveIntensity * pulse * warpFade
+      mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 * warpFade : baseIntensity
       const targetScale = hovered ? 1.2 : 1.0
       meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12)
     }
 
     if (glowRef.current) {
       const mat = glowRef.current.material as THREE.MeshBasicMaterial
-      mat.opacity = hovered ? 0.28 : pulse * 0.1
+      mat.opacity = (hovered ? 0.28 : pulse * 0.1) * warpFade
     }
 
     if (ringRef.current && isCenter) {
@@ -68,7 +72,6 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     }
 
     // Warp travel animation toward clicked node
-    const travel = travelRef.current
     if (travel.active) {
       travel.progress = Math.min(travel.progress + 0.016, 1)
       const ease = 1 - Math.pow(1 - travel.progress, 3)
@@ -112,6 +115,14 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
   const handleNodeClick = useCallback(() => {
     console.log('CLICK:', label, path, isCenter)
+
+    if (isCenter) {
+      // Center planet = homepage. No warp (would zoom in and flood screen with bloom).
+      // Just refresh to reset the star map to its initial state.
+      router.refresh()
+      return
+    }
+
     if (onWarpStart) onWarpStart(node)
 
     const travel = travelRef.current
@@ -122,21 +133,11 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     travel.path = path
 
     const planetPos = new THREE.Vector3(...position)
-
-    if (isCenter) {
-      // Center is at origin — fly along camera→planet direction, stop 1.5 units from surface
-      const dir = planetPos.clone().sub(camera.position).normalize()
-      const dist = camera.position.distanceTo(planetPos)
-      travel.targetPos = camera.position.clone().add(dir.multiplyScalar(Math.max(dist - 1.5, 0.5)))
-      travel.lookAtPos = planetPos.clone()
-    } else {
-      // Other nodes — fly along origin→planet direction, stop 2.5 units from surface
-      const dist = planetPos.length()
-      const dir = planetPos.clone().normalize()
-      travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
-      travel.lookAtPos = planetPos.clone()
-    }
-  }, [isCenter, path, label, camera, position, node, onWarpStart])
+    const dist = planetPos.length()
+    const dir = planetPos.clone().normalize()
+    travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
+    travel.lookAtPos = planetPos.clone()
+  }, [isCenter, path, label, camera, position, node, router, onWarpStart])
 
   // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
   const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
