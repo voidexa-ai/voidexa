@@ -108,7 +108,7 @@ export const STAR_MAP_NODES: StarNode[] = [
   {
     id: 'ghost-ai',
     label: 'Ghost AI',
-    path: null,
+    path: '/ghost-ai',
     position: [-5, 3, -14],
     color: '#111111',
     emissive: '#666666',
@@ -121,7 +121,7 @@ export const STAR_MAP_NODES: StarNode[] = [
   {
     id: 'quantum',
     label: 'Quantum',
-    path: null,
+    path: '/quantum',
     position: [6, -3, -16],
     color: '#111122',
     emissive: '#444466',
@@ -134,7 +134,7 @@ export const STAR_MAP_NODES: StarNode[] = [
   {
     id: 'trading-hub',
     label: 'Trading Hub',
-    path: null,
+    path: '/trading-hub',
     position: [-3, 4, -18],
     color: '#221100',
     emissive: '#554433',

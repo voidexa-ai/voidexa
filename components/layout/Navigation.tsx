@@ -10,16 +10,22 @@ import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 const BANNER_KEY = 'voidexa_beta_banner_dismissed'
 
 const links = [
-  { href: '/home',       label: 'Home' },
-  { href: '/trading',    label: 'Trading' },
-  { href: '/apps',       label: 'Apps' },
-  { href: '/ai-tools',   label: 'AI Tools' },
-  { href: '/services',   label: 'Services' },
-  { href: '/about',      label: 'About' },
-  { href: '/contact',    label: 'Contact' },
+  { href: '/home',        label: 'Home',         comingSoon: false },
+  { href: '/trading',     label: 'AI Trading',   comingSoon: false },
+  { href: '/apps',        label: 'Apps',         comingSoon: false },
+  { href: '/ai-tools',    label: 'AI Tools',     comingSoon: false },
+  { href: '/services',    label: 'Services',     comingSoon: false },
+  { href: '/about',       label: 'About',        comingSoon: false },
+  { href: '/contact',     label: 'Contact',      comingSoon: false },
 ]
 
-// Build a map from path → emissive color
+const comingSoonLinks = [
+  { href: '/ghost-ai',    label: 'Ghost AI' },
+  { href: '/quantum',     label: 'Quantum' },
+  { href: '/trading-hub', label: 'Trading Hub' },
+]
+
+// Build a map from path → emissive color (covers all nodes including undiscovered)
 const PATH_COLOR: Record<string, string> = {}
 STAR_MAP_NODES.forEach(n => { if (n.path) PATH_COLOR[n.path] = n.emissive })
 
@@ -197,6 +203,68 @@ export default function Navigation() {
                   </div>
                 )
               })}
+
+              {/* Subtle divider */}
+              <div
+                style={{
+                  width: 1,
+                  height: 18,
+                  background: 'rgba(255,255,255,0.08)',
+                  margin: '0 6px',
+                  flexShrink: 0,
+                }}
+              />
+
+              {/* Coming soon mystery links */}
+              {comingSoonLinks.map(({ href, label }) => {
+                const active = pathname === href
+                const isHovered = hoveredHref === href
+                const planetColor = PATH_COLOR[href] ?? '#888888'
+                const r = parseInt(planetColor.slice(1, 3), 16)
+                const g = parseInt(planetColor.slice(3, 5), 16)
+                const b = parseInt(planetColor.slice(5, 7), 16)
+                return (
+                  <div key={href} style={{ position: 'relative' }}>
+                    <Link
+                      href={href}
+                      onMouseEnter={() => setHoveredHref(href)}
+                      onMouseLeave={() => setHoveredHref(null)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 5,
+                        padding: '6px 10px',
+                        borderRadius: '6px',
+                        fontSize: '0.875rem',
+                        fontWeight: 400,
+                        textDecoration: 'none',
+                        opacity: (active || isHovered) ? 0.85 : 0.45,
+                        color: (active || isHovered) ? planetColor : '#94a3b8',
+                        backgroundColor: isHovered ? `rgba(${r},${g},${b},0.10)` : 'transparent',
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      {label}
+                      <span
+                        style={{
+                          fontSize: '8px',
+                          fontWeight: 600,
+                          letterSpacing: '0.08em',
+                          padding: '1px 5px',
+                          borderRadius: 3,
+                          background: `rgba(${r},${g},${b},0.18)`,
+                          color: planetColor,
+                          textTransform: 'uppercase',
+                          lineHeight: '14px',
+                        }}
+                      >
+                        soon
+                      </span>
+                    </Link>
+                  </div>
+                )
+              })}
+
               <Link
                 href="/contact"
                 className="ml-4 px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
@@ -260,6 +328,52 @@ export default function Navigation() {
                       }}
                     >
                       {label}
+                    </Link>
+                  </motion.div>
+                )
+              })}
+
+              {/* Coming soon group */}
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '8px 20px' }} />
+              {comingSoonLinks.map(({ href, label }, i) => {
+                const active = pathname === href
+                const planetColor = PATH_COLOR[href] ?? '#888888'
+                return (
+                  <motion.div
+                    key={href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (links.length + i) * 0.05 + 0.05, duration: 0.25 }}
+                  >
+                    <Link
+                      href={href}
+                      className="flex items-center gap-3 w-full rounded-2xl px-5 transition-colors"
+                      style={{
+                        minHeight: '52px',
+                        fontSize: '1.1rem',
+                        fontWeight: 500,
+                        fontFamily: 'var(--font-space)',
+                        opacity: active ? 0.9 : 0.45,
+                        color: active ? planetColor : '#94a3b8',
+                        background: active ? `rgba(${parseInt(planetColor.slice(1,3),16)},${parseInt(planetColor.slice(3,5),16)},${parseInt(planetColor.slice(5,7),16)},0.06)` : 'transparent',
+                        borderLeft: active ? `2px solid ${planetColor}` : '2px solid transparent',
+                      }}
+                    >
+                      {label}
+                      <span
+                        style={{
+                          fontSize: '9px',
+                          fontWeight: 600,
+                          letterSpacing: '0.1em',
+                          padding: '2px 6px',
+                          borderRadius: 4,
+                          background: `rgba(${parseInt(planetColor.slice(1,3),16)},${parseInt(planetColor.slice(3,5),16)},${parseInt(planetColor.slice(5,7),16)},0.2)`,
+                          color: planetColor,
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        soon
+                      </span>
                     </Link>
                   </motion.div>
                 )

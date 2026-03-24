@@ -93,10 +93,10 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   })
 
   const onEnter = useCallback(() => {
-    if (!isDiscovered) return
+    if (!isDiscovered && !path) return
     setHovered(true)
     document.body.style.cursor = 'pointer'
-  }, [isDiscovered])
+  }, [isDiscovered, path])
 
   const onLeave = useCallback(() => {
     setHovered(false)
@@ -112,7 +112,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
   // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
   const handleNodeClick = useCallback(() => {
-    if (!isDiscovered || !path) return
+    if (!path) return
     console.log('CLICK:', label, path, isCenter)
 
     if (onWarpStart) onWarpStart(node)
