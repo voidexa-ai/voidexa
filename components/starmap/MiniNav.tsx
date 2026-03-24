@@ -1,7 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 
 const links = [
   { href: '/trading',  label: 'Trading'  },
@@ -12,8 +14,13 @@ const links = [
   { href: '/contact',  label: 'Contact'  },
 ]
 
+// path → planet emissive color
+const PATH_COLOR: Record<string, string> = {}
+STAR_MAP_NODES.forEach(n => { if (n.path) PATH_COLOR[n.path] = n.emissive })
+
 export default function MiniNav() {
   const pathname = usePathname()
+  const [hoveredHref, setHoveredHref] = useState<string | null>(null)
 
   return (
     <nav
@@ -77,31 +84,32 @@ export default function MiniNav() {
       </Link>
 
       {/* Links — desktop */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-        }}
-        className="starmap-nav-links"
-      >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         {links.map(({ href, label }) => {
           const active = pathname === href
+          const isHovered = hoveredHref === href
+          const planetColor = PATH_COLOR[href] ?? '#00d4ff'
+          const r = parseInt(planetColor.slice(1, 3), 16)
+          const g = parseInt(planetColor.slice(3, 5), 16)
+          const b = parseInt(planetColor.slice(5, 7), 16)
           return (
             <Link
               key={href}
               href={href}
+              onMouseEnter={() => setHoveredHref(href)}
+              onMouseLeave={() => setHoveredHref(null)}
               style={{
                 padding: '5px 11px',
                 borderRadius: 6,
                 fontSize: 12,
-                fontWeight: active ? 500 : 400,
-                color: active ? '#00d4ff' : 'rgba(148,163,184,0.7)',
+                fontWeight: (active || isHovered) ? 500 : 400,
+                color: (active || isHovered) ? planetColor : 'rgba(148,163,184,0.7)',
                 textDecoration: 'none',
                 letterSpacing: '0.01em',
-                transition: 'color 0.2s',
-                background: active ? 'rgba(0,212,255,0.07)' : 'transparent',
-                border: active ? '1px solid rgba(0,212,255,0.15)' : '1px solid transparent',
+                backgroundColor: isHovered ? `rgba(${r},${g},${b},0.12)` : 'transparent',
+                textShadow: (active || isHovered) ? `0 0 14px ${planetColor}` : 'none',
+                border: active ? `1px solid rgba(${r},${g},${b},0.2)` : '1px solid transparent',
+                transition: 'all 0.3s ease',
               }}
             >
               {label}

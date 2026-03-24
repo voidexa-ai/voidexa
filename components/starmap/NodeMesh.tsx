@@ -14,7 +14,7 @@ interface NodeMeshProps {
 }
 
 export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
-  const { position, size, color, emissive, emissiveIntensity, label, sublabel, path, isCenter } = node
+  const { position, size, color, emissive, emissiveIntensity, label, sublabel, path, isCenter, isDiscovered } = node
   const meshRef  = useRef<THREE.Mesh>(null)
   const glowRef  = useRef<THREE.Mesh>(null)
   const ringRef  = useRef<THREE.Mesh>(null)
@@ -55,15 +55,17 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
     if (meshRef.current) {
       const mat = meshRef.current.material as THREE.MeshStandardMaterial
-      const baseIntensity = emissiveIntensity * pulse * warpFade
-      mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 * warpFade : baseIntensity
-      const targetScale = hovered ? 1.2 : 1.0
+      if (isDiscovered) {
+        const baseIntensity = emissiveIntensity * pulse * warpFade
+        mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 * warpFade : baseIntensity
+      }
+      const targetScale = (isDiscovered && hovered) ? 1.2 : 1.0
       meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12)
     }
 
     if (glowRef.current) {
       const mat = glowRef.current.material as THREE.MeshBasicMaterial
-      mat.opacity = (hovered ? 0.28 : pulse * 0.1) * warpFade
+      mat.opacity = isDiscovered ? (hovered ? 0.28 : pulse * 0.1) * warpFade : 0
     }
 
     if (ringRef.current && isCenter) {
@@ -91,9 +93,10 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   })
 
   const onEnter = useCallback(() => {
+    if (!isDiscovered) return
     setHovered(true)
     document.body.style.cursor = 'pointer'
-  }, [])
+  }, [isDiscovered])
 
   const onLeave = useCallback(() => {
     setHovered(false)
@@ -109,6 +112,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
   // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
   const handleNodeClick = useCallback(() => {
+    if (!isDiscovered || !path) return
     console.log('CLICK:', label, path, isCenter)
 
     if (onWarpStart) onWarpStart(node)
@@ -126,7 +130,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     const dist = camera.position.distanceTo(planetPos)
     travel.targetPos = camera.position.clone().add(camToNode.multiplyScalar(Math.max(dist - 2.5, 0.5)))
     travel.lookAtPos = planetPos.clone()
-  }, [path, label, camera, position, node, router, onWarpStart])
+  }, [path, label, camera, position, node, router, onWarpStart, isDiscovered])
 
   // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
   const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -154,10 +158,11 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         <meshStandardMaterial
           color={color}
           emissive={emissive}
-          emissiveIntensity={emissiveIntensity}
+          emissiveIntensity={isDiscovered ? emissiveIntensity : 0.3}
           toneMapped={false}
-          transparent={false}
-          depthWrite={true}
+          transparent={!isDiscovered}
+          opacity={isDiscovered ? 1 : 0.4}
+          depthWrite={isDiscovered}
           roughness={0.3}
           metalness={0.1}
         />
@@ -178,7 +183,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       {/* Point light */}
       <pointLight
         color={emissive}
-        intensity={hovered ? 5.0 : isCenter ? 3.0 : 1.8}
+        intensity={isDiscovered ? (hovered ? 5.0 : isCenter ? 3.0 : 1.8) : 0.2}
         distance={isCenter ? 12 : 6}
         decay={2}
       />
@@ -201,27 +206,29 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         <div
           onClick={handleNodeClick}
           style={{
-            pointerEvents: 'auto',
-            cursor: 'pointer',
-            color: 'rgba(255,255,255,0.95)',
+            pointerEvents: isDiscovered ? 'auto' : 'none',
+            cursor: isDiscovered ? 'pointer' : 'default',
+            color: isDiscovered ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.4)',
             fontSize: isCenter ? '18px' : '15px',
             fontWeight: 600,
             fontFamily: 'var(--font-space, system-ui)',
             whiteSpace: 'nowrap',
             letterSpacing: '-0.01em',
-            textShadow: `0 2px 12px rgba(0,0,0,0.9), 0 0 18px ${emissive}, 0 0 6px ${emissive}88`,
+            textShadow: isDiscovered
+              ? `0 2px 12px rgba(0,0,0,0.9), 0 0 18px ${emissive}, 0 0 6px ${emissive}88`
+              : '0 2px 8px rgba(0,0,0,0.8)',
             transition: 'color 0.2s',
             lineHeight: 1.2,
           }}
         >
-          {label}
+          {label}{isDiscovered ? '' : ' ?'}
         </div>
         <div
           onClick={handleNodeClick}
           style={{
-            pointerEvents: 'auto',
-            cursor: 'pointer',
-            color: 'rgba(255,255,255,0.9)',
+            pointerEvents: isDiscovered ? 'auto' : 'none',
+            cursor: isDiscovered ? 'pointer' : 'default',
+            color: isDiscovered ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
             fontSize: isCenter ? '14px' : '12px',
             fontWeight: 500,
             fontFamily: 'var(--font-inter, system-ui)',

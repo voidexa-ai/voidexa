@@ -21,7 +21,7 @@ const links = [
 
 // Build a map from path → emissive color
 const PATH_COLOR: Record<string, string> = {}
-STAR_MAP_NODES.forEach(n => { PATH_COLOR[n.path] = n.emissive })
+STAR_MAP_NODES.forEach(n => { if (n.path) PATH_COLOR[n.path] = n.emissive })
 
 export default function Navigation() {
   const [scrolled, setScrolled]    = useState(false)

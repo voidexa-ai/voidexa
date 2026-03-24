@@ -1,7 +1,7 @@
 export interface StarNode {
   id: string
   label: string
-  path: string
+  path: string | null
   position: [number, number, number]
   color: string
   emissive: string
@@ -9,6 +9,7 @@ export interface StarNode {
   size: number
   isCenter: boolean
   sublabel: string
+  isDiscovered: boolean
 }
 
 export const STAR_MAP_NODES: StarNode[] = [
@@ -23,6 +24,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.6,
     isCenter: true,
     sublabel: 'Sovereign AI Infrastructure',
+    isDiscovered: true,
   },
   {
     id: 'trading',
@@ -35,6 +37,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.35,
     isCenter: false,
     sublabel: 'Autonomous Trading Platform',
+    isDiscovered: true,
   },
   {
     id: 'apps',
@@ -47,6 +50,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.35,
     isCenter: false,
     sublabel: 'Secure Tools · Private by Design',
+    isDiscovered: true,
   },
   {
     id: 'ai-tools',
@@ -59,6 +63,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.35,
     isCenter: false,
     sublabel: 'Multi-AI Orchestration Suite',
+    isDiscovered: true,
   },
   {
     id: 'services',
@@ -71,6 +76,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.35,
     isCenter: false,
     sublabel: 'Custom AI · Data Intelligence',
+    isDiscovered: true,
   },
   {
     id: 'about',
@@ -83,6 +89,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.3,
     isCenter: false,
     sublabel: 'Born from the void',
+    isDiscovered: true,
   },
   {
     id: 'contact',
@@ -95,6 +102,47 @@ export const STAR_MAP_NODES: StarNode[] = [
     size: 0.3,
     isCenter: false,
     sublabel: 'Get in touch',
+    isDiscovered: true,
+  },
+  // ── Undiscovered mystery nodes ──────────────────────────────────────────
+  {
+    id: 'ghost-ai',
+    label: 'Ghost AI',
+    path: null,
+    position: [-5, 3, -14],
+    color: '#111111',
+    emissive: '#666666',
+    emissiveIntensity: 0.3,
+    size: 0.28,
+    isCenter: false,
+    sublabel: '???',
+    isDiscovered: false,
+  },
+  {
+    id: 'quantum',
+    label: 'Quantum',
+    path: null,
+    position: [6, -3, -16],
+    color: '#111122',
+    emissive: '#444466',
+    emissiveIntensity: 0.3,
+    size: 0.28,
+    isCenter: false,
+    sublabel: '???',
+    isDiscovered: false,
+  },
+  {
+    id: 'trading-hub',
+    label: 'Trading Hub',
+    path: null,
+    position: [-3, 4, -18],
+    color: '#221100',
+    emissive: '#554433',
+    emissiveIntensity: 0.3,
+    size: 0.28,
+    isCenter: false,
+    sublabel: '???',
+    isDiscovered: false,
   },
 ]
 

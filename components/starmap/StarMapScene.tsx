@@ -123,8 +123,9 @@ function ConstellationLines() {
           color={node.emissive}
           lineWidth={0.5}
           transparent
-          opacity={0.06}
-          dashed={false}
+          opacity={node.isDiscovered ? 0.06 : 0.02}
+          dashed={!node.isDiscovered}
+          dashScale={node.isDiscovered ? 1 : 3}
           toneMapped={false}
         />
       ))}
@@ -135,7 +136,7 @@ function ConstellationLines() {
 // Energy pulse dots travelling along each constellation line
 function EnergyPulses() {
   const groupRef = useRef<THREE.Group>(null)
-  const satellites = STAR_MAP_NODES.filter(n => !n.isCenter)
+  const satellites = STAR_MAP_NODES.filter(n => !n.isCenter && n.isDiscovered)
 
   // Each pulse has a phase offset so they don't all sync
   const phaseOffsets = useMemo(
