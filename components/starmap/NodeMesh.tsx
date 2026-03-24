@@ -194,6 +194,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       {/* Labels */}
       <Html
         center
+        distanceFactor={8}
         position={[0, -(size + 0.55), 0]}
         style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center' }}
       >
@@ -203,8 +204,8 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
             pointerEvents: 'auto',
             cursor: 'pointer',
             color: 'rgba(255,255,255,0.95)',
-            fontSize: isCenter ? '32px' : '26px',
-            fontWeight: isCenter ? 700 : 600,
+            fontSize: isCenter ? '18px' : '15px',
+            fontWeight: 600,
             fontFamily: 'var(--font-space, system-ui)',
             whiteSpace: 'nowrap',
             letterSpacing: '-0.01em',
@@ -221,7 +222,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
             pointerEvents: 'auto',
             cursor: 'pointer',
             color: 'rgba(255,255,255,0.7)',
-            fontSize: isCenter ? '20px' : '17px',
+            fontSize: isCenter ? '12px' : '10px',
             fontWeight: 400,
             fontFamily: 'var(--font-inter, system-ui)',
             whiteSpace: 'nowrap',
