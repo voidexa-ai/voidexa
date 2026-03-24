@@ -203,13 +203,13 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           style={{
             pointerEvents: 'auto',
             cursor: 'pointer',
-            color: hovered ? '#ffffff' : 'rgba(230,240,255,0.95)',
+            color: 'rgba(255,255,255,0.95)',
             fontSize: isCenter ? 28 : 22,
-            fontWeight: 600,
+            fontWeight: isCenter ? 700 : 600,
             fontFamily: 'var(--font-space, system-ui)',
             whiteSpace: 'nowrap',
             letterSpacing: '-0.01em',
-            textShadow: `0 0 15px rgba(0,0,0,0.8), 0 0 18px ${emissive}, 0 0 6px ${emissive}88`,
+            textShadow: `0 2px 12px rgba(0,0,0,0.9), 0 0 18px ${emissive}, 0 0 6px ${emissive}88`,
             transition: 'color 0.2s',
             lineHeight: 1.2,
           }}
@@ -221,14 +221,14 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           style={{
             pointerEvents: 'auto',
             cursor: 'pointer',
-            color: 'rgba(255,255,255,0.8)',
-            fontSize: isCenter ? 18 : 16,
+            color: 'rgba(255,255,255,0.7)',
+            fontSize: isCenter ? 18 : 15,
             fontWeight: 400,
             fontFamily: 'var(--font-inter, system-ui)',
             whiteSpace: 'nowrap',
             marginTop: 4,
             letterSpacing: '0.01em',
-            textShadow: '0 0 15px rgba(0,0,0,0.8), 0 0 12px rgba(0,200,255,0.4)',
+            textShadow: '0 2px 8px rgba(0,0,0,0.8)',
           }}
         >
           {sublabel}
