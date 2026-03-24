@@ -81,12 +81,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
       if (travel.progress >= 0.8 && !travel.navigated) {
         travel.navigated = true
-        // router.push('/') is a no-op when already on '/'; use refresh instead
-        if (travel.path === '/') {
-          router.refresh()
-        } else {
-          router.push(travel.path)
-        }
+        router.push(travel.path)
       }
 
       if (travel.progress >= 1) {
@@ -116,12 +111,6 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   const handleNodeClick = useCallback(() => {
     console.log('CLICK:', label, path, isCenter)
 
-    if (isCenter) {
-      // Center planet — navigate to about page as a visible destination
-      router.push('/about')
-      return
-    }
-
     if (onWarpStart) onWarpStart(node)
 
     const travel = travelRef.current
@@ -131,12 +120,13 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     travel.startPos = camera.position.clone()
     travel.path = path
 
+    // Camera-relative direction — works for all nodes including center at [0,0,0]
     const planetPos = new THREE.Vector3(...position)
-    const dist = planetPos.length()
-    const dir = planetPos.clone().normalize()
-    travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
+    const camToNode = planetPos.clone().sub(camera.position).normalize()
+    const dist = camera.position.distanceTo(planetPos)
+    travel.targetPos = camera.position.clone().add(camToNode.multiplyScalar(Math.max(dist - 2.5, 0.5)))
     travel.lookAtPos = planetPos.clone()
-  }, [isCenter, path, label, camera, position, node, router, onWarpStart])
+  }, [path, label, camera, position, node, router, onWarpStart])
 
   // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
   const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
