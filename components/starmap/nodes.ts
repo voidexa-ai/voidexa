@@ -34,7 +34,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
-    sublabel: 'All-Season Bot · Scalper',
+    sublabel: 'Autonomous Trading Platform',
   },
   {
     id: 'apps',
@@ -46,7 +46,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
-    sublabel: 'Comlink · Encrypted Messenger',
+    sublabel: 'Secure Tools · Private by Design',
   },
   {
     id: 'ai-tools',
@@ -58,7 +58,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
-    sublabel: 'Book Creator · Web Builder',
+    sublabel: 'Multi-AI Orchestration Suite',
   },
   {
     id: 'services',

@@ -117,9 +117,8 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     console.log('CLICK:', label, path, isCenter)
 
     if (isCenter) {
-      // Center planet = homepage. No warp (would zoom in and flood screen with bloom).
-      // Just refresh to reset the star map to its initial state.
-      router.refresh()
+      // Center planet — navigate to about page as a visible destination
+      router.push('/about')
       return
     }
 
@@ -215,12 +214,12 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
             pointerEvents: 'auto',
             cursor: 'pointer',
             color: hovered ? '#ffffff' : 'rgba(230,240,255,0.95)',
-            fontSize: isCenter ? 20 : 18,
-            fontWeight: isCenter ? 800 : 600,
+            fontSize: isCenter ? 28 : 22,
+            fontWeight: 600,
             fontFamily: 'var(--font-space, system-ui)',
             whiteSpace: 'nowrap',
             letterSpacing: '-0.01em',
-            textShadow: `0 0 18px ${emissive}, 0 0 6px ${emissive}88, 0 2px 8px rgba(0,0,0,0.9)`,
+            textShadow: `0 0 15px rgba(0,0,0,0.8), 0 0 18px ${emissive}, 0 0 6px ${emissive}88`,
             transition: 'color 0.2s',
             lineHeight: 1.2,
           }}
@@ -232,14 +231,14 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           style={{
             pointerEvents: 'auto',
             cursor: 'pointer',
-            color: 'rgba(255,255,255,0.75)',
-            fontSize: 14,
+            color: 'rgba(255,255,255,0.8)',
+            fontSize: isCenter ? 18 : 16,
             fontWeight: 400,
             fontFamily: 'var(--font-inter, system-ui)',
             whiteSpace: 'nowrap',
             marginTop: 4,
             letterSpacing: '0.01em',
-            textShadow: '0 0 12px rgba(0,200,255,0.4), 0 1px 6px rgba(0,0,0,0.9)',
+            textShadow: '0 0 15px rgba(0,0,0,0.8), 0 0 12px rgba(0,200,255,0.4)',
           }}
         >
           {sublabel}
