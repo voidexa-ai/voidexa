@@ -28,7 +28,7 @@ export const STAR_MAP_NODES: StarNode[] = [
   },
   {
     id: 'trading',
-    label: 'Trading',
+    label: 'AI Trading',
     path: '/trading',
     position: [3, 2, -5],
     color: '#1a0a00',
@@ -36,7 +36,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     emissiveIntensity: 2.5,
     size: 0.35,
     isCenter: false,
-    sublabel: 'Autonomous Trading Platform',
+    sublabel: 'Autonomous Bot Systems',
     isDiscovered: true,
   },
   {
