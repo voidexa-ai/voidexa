@@ -195,29 +195,67 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         position={[0, -(size + 0.55), 0]}
         style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center' }}
       >
-        <div style={{
-          color: hovered ? '#ffffff' : 'rgba(230,240,255,0.95)',
-          fontSize: isCenter ? 20 : 18,
-          fontWeight: isCenter ? 800 : 600,
-          fontFamily: 'var(--font-space, system-ui)',
-          whiteSpace: 'nowrap',
-          letterSpacing: '-0.01em',
-          textShadow: `0 0 18px ${emissive}, 0 0 6px ${emissive}88, 0 2px 8px rgba(0,0,0,0.9)`,
-          transition: 'color 0.2s',
-          lineHeight: 1.2,
-        }}>
+        <div
+          onClick={() => {
+            if (isCenter) { router.push('/'); return }
+            if (onWarpStart) onWarpStart(node)
+            const travel = travelRef.current
+            travel.active = true
+            travel.progress = 0
+            travel.navigated = false
+            travel.startPos = camera.position.clone()
+            travel.path = path
+            const pv = new THREE.Vector3(...position)
+            const dist = pv.length()
+            const dir = pv.clone().normalize()
+            travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
+            travel.lookAtPos = pv.clone()
+          }}
+          style={{
+            pointerEvents: 'auto',
+            cursor: 'pointer',
+            color: hovered ? '#ffffff' : 'rgba(230,240,255,0.95)',
+            fontSize: isCenter ? 20 : 18,
+            fontWeight: isCenter ? 800 : 600,
+            fontFamily: 'var(--font-space, system-ui)',
+            whiteSpace: 'nowrap',
+            letterSpacing: '-0.01em',
+            textShadow: `0 0 18px ${emissive}, 0 0 6px ${emissive}88, 0 2px 8px rgba(0,0,0,0.9)`,
+            transition: 'color 0.2s',
+            lineHeight: 1.2,
+          }}
+        >
           {label}
         </div>
-        <div style={{
-          color: 'rgba(255,255,255,0.75)',
-          fontSize: 14,
-          fontWeight: 400,
-          fontFamily: 'var(--font-inter, system-ui)',
-          whiteSpace: 'nowrap',
-          marginTop: 4,
-          letterSpacing: '0.01em',
-          textShadow: '0 0 12px rgba(0,200,255,0.4), 0 1px 6px rgba(0,0,0,0.9)',
-        }}>
+        <div
+          onClick={() => {
+            if (isCenter) { router.push('/'); return }
+            if (onWarpStart) onWarpStart(node)
+            const travel = travelRef.current
+            travel.active = true
+            travel.progress = 0
+            travel.navigated = false
+            travel.startPos = camera.position.clone()
+            travel.path = path
+            const pv = new THREE.Vector3(...position)
+            const dist = pv.length()
+            const dir = pv.clone().normalize()
+            travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
+            travel.lookAtPos = pv.clone()
+          }}
+          style={{
+            pointerEvents: 'auto',
+            cursor: 'pointer',
+            color: 'rgba(255,255,255,0.75)',
+            fontSize: 14,
+            fontWeight: 400,
+            fontFamily: 'var(--font-inter, system-ui)',
+            whiteSpace: 'nowrap',
+            marginTop: 4,
+            letterSpacing: '0.01em',
+            textShadow: '0 0 12px rgba(0,200,255,0.4), 0 1px 6px rgba(0,0,0,0.9)',
+          }}
+        >
           {sublabel}
         </div>
       </Html>

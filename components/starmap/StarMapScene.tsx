@@ -215,11 +215,11 @@ export default function StarMapScene() {
           autoRotateSpeed={0.22}
           enableZoom
           enablePan={false}
-          minDistance={8}
-          maxDistance={35}
+          minDistance={5}
+          maxDistance={30}
           minPolarAngle={Math.PI * 0.18}
           maxPolarAngle={Math.PI * 0.82}
-          target={[0, 0, -3]}
+          target={[0, -0.5, -4]}
           makeDefault
         />
       )}
