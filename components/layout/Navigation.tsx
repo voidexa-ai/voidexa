@@ -157,12 +157,12 @@ export default function Navigation() {
                 return (
                   <div
                     key={href}
-                    onMouseEnter={() => setHoveredHref(href)}
-                    onMouseLeave={() => setHoveredHref(null)}
                     style={{ position: 'relative' }}
                   >
                     <Link
                       href={href}
+                      onMouseEnter={() => setHoveredHref(href)}
+                      onMouseLeave={() => setHoveredHref(null)}
                       style={{
                         display: 'block',
                         padding: '6px 14px',
@@ -171,9 +171,9 @@ export default function Navigation() {
                         fontWeight: 500,
                         textDecoration: 'none',
                         color: (active || isHovered) ? planetColor : '#94a3b8',
-                        background: isHovered ? `rgba(${r},${g},${b},0.10)` : 'transparent',
+                        backgroundColor: isHovered ? `rgba(${r},${g},${b},0.12)` : 'transparent',
                         textShadow: (active || isHovered) ? `0 0 14px ${planetColor}` : 'none',
-                        transition: 'color 0.3s ease, background 0.3s ease, text-shadow 0.3s ease',
+                        transition: 'all 0.3s ease',
                       }}
                     >
                       {label}

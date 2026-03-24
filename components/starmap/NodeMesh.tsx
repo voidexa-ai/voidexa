@@ -180,7 +180,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       >
         <div style={{
           color: hovered ? '#ffffff' : 'rgba(230,240,255,0.95)',
-          fontSize: isCenter ? 20 : 16,
+          fontSize: isCenter ? 20 : 18,
           fontWeight: isCenter ? 800 : 600,
           fontFamily: 'var(--font-space, system-ui)',
           whiteSpace: 'nowrap',
@@ -193,14 +193,14 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         </div>
         {/* Sublabel — always visible, readable */}
         <div style={{
-          color: 'rgba(255,255,255,0.7)',
+          color: 'rgba(255,255,255,0.75)',
           fontSize: 14,
           fontWeight: 400,
           fontFamily: 'var(--font-inter, system-ui)',
           whiteSpace: 'nowrap',
           marginTop: 4,
           letterSpacing: '0.01em',
-          textShadow: '0 0 10px rgba(0,212,255,0.5), 0 1px 6px rgba(0,0,0,0.9)',
+          textShadow: '0 0 12px rgba(0,200,255,0.4), 0 1px 6px rgba(0,0,0,0.9)',
         }}>
           {sublabel}
         </div>

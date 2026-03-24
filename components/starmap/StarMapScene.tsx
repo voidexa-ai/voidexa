@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { OrbitControls, Line } from '@react-three/drei'
 import * as THREE from 'three'
@@ -184,6 +184,8 @@ function EnergyPulses() {
 
 // ── Main scene ─────────────────────────────────────────────────────────────
 export default function StarMapScene() {
+  const [warping, setWarping] = useState(false)
+
   return (
     <>
       {/* Deep space nebula background */}
@@ -203,21 +205,24 @@ export default function StarMapScene() {
 
       {/* Planets */}
       {STAR_MAP_NODES.map(node => (
-        <NodeMesh key={node.id} node={node} />
+        <NodeMesh key={node.id} node={node} onWarpStart={() => setWarping(true)} />
       ))}
 
-      <OrbitControls
-        autoRotate
-        autoRotateSpeed={0.22}
-        enableZoom
-        enablePan={false}
-        minDistance={8}
-        maxDistance={35}
-        minPolarAngle={Math.PI * 0.18}
-        maxPolarAngle={Math.PI * 0.82}
-        target={[0, 0, -4]}
-        makeDefault
-      />
+      {/* Unmount OrbitControls during warp so it can't fight the camera animation */}
+      {!warping && (
+        <OrbitControls
+          autoRotate
+          autoRotateSpeed={0.22}
+          enableZoom
+          enablePan={false}
+          minDistance={8}
+          maxDistance={35}
+          minPolarAngle={Math.PI * 0.18}
+          maxPolarAngle={Math.PI * 0.82}
+          target={[0, 0, -4]}
+          makeDefault
+        />
+      )}
     </>
   )
 }
