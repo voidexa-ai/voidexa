@@ -2,6 +2,7 @@
 
 import { useRef, useState, useCallback } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
+import type { ThreeEvent } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import { useRouter } from 'next/navigation'
 import * as THREE from 'three'
@@ -21,6 +22,9 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   const router = useRouter()
   const { camera } = useThree()
   const phaseOffset = useRef(Math.random() * Math.PI * 2).current
+
+  // Click guard: track pointer-down position to distinguish click from drag
+  const pointerDownAt = useRef<[number, number] | null>(null)
 
   // Travel-zoom animation state
   const travelRef = useRef<{
@@ -67,7 +71,6 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     const travel = travelRef.current
     if (travel.active) {
       travel.progress = Math.min(travel.progress + 0.016, 1)
-      // Ease-out cubic
       const ease = 1 - Math.pow(1 - travel.progress, 3)
 
       cam.position.lerpVectors(travel.startPos, travel.targetPos, ease)
@@ -94,10 +97,25 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     document.body.style.cursor = 'grab'
   }, [])
 
-  const onClick = useCallback(() => {
-    console.log('Node clicked:', label, path)
+  // onPointerDown: record screen position for click-vs-drag detection
+  const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
+    pointerDownAt.current = [e.clientX, e.clientY]
+    console.log('=== POINTER DOWN ===', label, path)
+  }, [label, path])
 
-    // Center node: navigate home directly (no warp needed, already there)
+  // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
+  const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation()
+    const down = pointerDownAt.current
+    pointerDownAt.current = null
+    if (!down) return
+    const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1])
+    console.log('=== POINTER UP ===', label, path, '| moved:', moved.toFixed(1), 'px')
+    if (moved >= 5) return // drag — ignore
+
+    console.log('=== NODE CLICKED ===', label, path)
+
     if (isCenter) {
       router.push('/')
       return
@@ -112,23 +130,22 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     travel.startPos = camera.position.clone()
     travel.path = path
 
-    // Fly camera TOWARD the clicked node — stop just in front of it
     const pv = new THREE.Vector3(...position)
     const dist = pv.length()
     const dir = pv.clone().normalize()
-    // Target: 2.5 units in front of the node surface
     travel.targetPos = dir.multiplyScalar(Math.max(dist - 2.5, 1.0))
-    travel.lookAtPos = pv.clone()   // look AT the node throughout
+    travel.lookAtPos = pv.clone()
   }, [isCenter, path, label, camera, position, node, router, onWarpStart])
 
   return (
     <group position={position}>
-      {/* Main planet sphere */}
+      {/* Main planet sphere — all pointer events here */}
       <mesh
         ref={meshRef}
         onPointerOver={onEnter}
         onPointerOut={onLeave}
-        onClick={onClick}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
       >
         <sphereGeometry args={[size, 48, 48]} />
         <meshStandardMaterial
@@ -143,8 +160,8 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         />
       </mesh>
 
-      {/* Outer glow sphere */}
-      <mesh ref={glowRef} scale={1.65}>
+      {/* Outer glow sphere — excluded from raycasting so it can't block clicks */}
+      <mesh ref={glowRef} scale={1.65} raycast={() => null}>
         <sphereGeometry args={[size, 16, 16]} />
         <meshBasicMaterial
           color={emissive}
@@ -165,7 +182,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
 
       {/* Center orbital ring */}
       {isCenter && (
-        <mesh ref={ringRef}>
+        <mesh ref={ringRef} raycast={() => null}>
           <torusGeometry args={[size * 2.6, 0.025, 8, 96]} />
           <meshBasicMaterial color={emissive} transparent opacity={0.22} toneMapped={false} />
         </mesh>
@@ -191,7 +208,6 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         }}>
           {label}
         </div>
-        {/* Sublabel — always visible, readable */}
         <div style={{
           color: 'rgba(255,255,255,0.75)',
           fontSize: 14,
