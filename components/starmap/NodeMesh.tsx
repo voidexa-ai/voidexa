@@ -194,7 +194,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       {/* Labels */}
       <Html
         center
-        distanceFactor={8}
+        distanceFactor={12}
         position={[0, -(size + 0.55), 0]}
         style={{ pointerEvents: 'none', userSelect: 'none', textAlign: 'center' }}
       >
