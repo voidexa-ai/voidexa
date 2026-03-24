@@ -219,7 +219,7 @@ export default function StarMapScene() {
           maxDistance={35}
           minPolarAngle={Math.PI * 0.18}
           maxPolarAngle={Math.PI * 0.82}
-          target={[0, 0, -4]}
+          target={[0, 0, -3]}
           makeDefault
         />
       )}
