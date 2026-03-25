@@ -235,7 +235,7 @@ export default function GhostAIPage() {
               <FileText size={14} /> Read White Paper
             </Link>
             <a
-              href="https://t.me/GostAI"
+              href="https://t.me/GhostAI_voidexa"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-80"
