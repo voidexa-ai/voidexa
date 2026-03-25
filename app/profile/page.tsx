@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Copy, Check, Wallet, ExternalLink } from 'lucide-react'
+import { Copy, Check, ExternalLink } from 'lucide-react'
 import { useAuth } from '@/components/AuthProvider'
 import { supabase } from '@/lib/supabase'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import bs58 from 'bs58'
 
 interface Profile {
@@ -29,11 +27,28 @@ interface WaitlistEntry {
   created_at: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PhantomProvider = any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SolflareProvider = any
+
+function getPhantom(): PhantomProvider | null {
+  if (typeof window === 'undefined') return null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const w = window as any
+  return w.phantom?.solana?.isPhantom ? w.phantom.solana : null
+}
+
+function getSolflare(): SolflareProvider | null {
+  if (typeof window === 'undefined') return null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const w = window as any
+  return w.solflare?.isSolflare ? w.solflare : null
+}
+
 export default function ProfilePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const { publicKey, signMessage, connected, wallet } = useWallet()
-  const { setVisible: openWalletModal } = useWalletModal()
 
   const [profile, setProfile]             = useState<Profile | null>(null)
   const [wallets, setWallets]             = useState<WalletConnection[]>([])
@@ -42,7 +57,7 @@ export default function ProfilePage() {
   const [saving, setSaving]               = useState(false)
   const [saved, setSaved]                 = useState(false)
   const [copied, setCopied]               = useState(false)
-  const [signingWallet, setSigningWallet] = useState(false)
+  const [connectingWallet, setConnecting] = useState<'phantom' | 'solflare' | null>(null)
   const [walletError, setWalletError]     = useState('')
 
   // Redirect if not authenticated
@@ -87,64 +102,89 @@ export default function ProfilePage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  // Auto-verify when wallet connects (if not already saved)
-  useEffect(() => {
-    if (!connected || !publicKey || !user) return
-    const address = publicKey.toBase58()
-    const alreadySaved = wallets.some(w => w.wallet_address === address)
-    if (!alreadySaved && !signingWallet) {
-      console.log('[wallet] connected:', address, '— triggering verify')
-      verifyAndSaveWallet()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connected, publicKey])
+  async function reloadWallets() {
+    if (!user) return
+    const { data } = await supabase
+      .from('wallet_connections')
+      .select('id, wallet_address, wallet_type, created_at')
+      .eq('user_id', user.id)
+    if (data) setWallets(data)
+  }
 
-  async function verifyAndSaveWallet() {
-    if (!connected || !publicKey || !user) {
-      console.log('[wallet] verifyAndSaveWallet: missing deps', { connected, publicKey: !!publicKey, user: !!user })
+  async function connectPhantom() {
+    if (!user) return
+    const phantom = getPhantom()
+    if (!phantom) {
+      setWalletError('Phantom wallet not found. Install it from phantom.app.')
       return
     }
-    if (!signMessage) {
-      setWalletError('This wallet does not support message signing.')
-      console.warn('[wallet] signMessage not available on', wallet?.adapter.name)
-      return
-    }
-    setSigningWallet(true)
+    setConnecting('phantom')
     setWalletError('')
     try {
+      const resp = await phantom.connect()
+      const address: string = resp.publicKey.toString()
+      const alreadySaved = wallets.some(w => w.wallet_address === address)
+      if (alreadySaved) { setConnecting(null); return }
+
       const timestamp = Date.now()
-      const msg = `Verify wallet for voidexa: ${timestamp}`
-      console.log('[wallet] signing message:', msg)
-      const msgBytes = new TextEncoder().encode(msg)
-      const sig = await signMessage(msgBytes)
-      const sigBase58 = bs58.encode(sig)
-      console.log('[wallet] signed, saving to Supabase…')
+      const msgBytes = new TextEncoder().encode(`Verify wallet for voidexa: ${timestamp}`)
+      const { signature } = await phantom.signMessage(msgBytes, 'utf8')
+      const sigBase58 = bs58.encode(signature)
 
       const { error } = await supabase.from('wallet_connections').upsert({
         user_id: user.id,
-        wallet_address: publicKey.toBase58(),
-        wallet_type: wallet?.adapter.name ?? 'unknown',
+        wallet_address: address,
+        wallet_type: 'Phantom',
         signature: sigBase58,
         verified: true,
       }, { onConflict: 'user_id,wallet_address' })
 
-      if (error) {
-        console.error('[wallet] upsert error:', error)
-        setWalletError(error.message)
-      } else {
-        console.log('[wallet] saved successfully')
-        const { data } = await supabase
-          .from('wallet_connections')
-          .select('id, wallet_address, wallet_type, created_at')
-          .eq('user_id', user.id)
-        if (data) setWallets(data)
-      }
+      if (error) setWalletError(error.message)
+      else await reloadWallets()
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e)
-      console.warn('[wallet] signing rejected or failed:', msg)
-      setWalletError('Signing cancelled or failed.')
+      console.warn('[phantom] connect/sign failed:', msg)
+      setWalletError('Connection cancelled or failed.')
     }
-    setSigningWallet(false)
+    setConnecting(null)
+  }
+
+  async function connectSolflare() {
+    if (!user) return
+    const solflare = getSolflare()
+    if (!solflare) {
+      setWalletError('Solflare wallet not found. Install it from solflare.com.')
+      return
+    }
+    setConnecting('solflare')
+    setWalletError('')
+    try {
+      await solflare.connect()
+      const address: string = solflare.publicKey.toString()
+      const alreadySaved = wallets.some(w => w.wallet_address === address)
+      if (alreadySaved) { setConnecting(null); return }
+
+      const timestamp = Date.now()
+      const msgBytes = new TextEncoder().encode(`Verify wallet for voidexa: ${timestamp}`)
+      const { signature } = await solflare.signMessage(msgBytes, 'utf8')
+      const sigBase58 = bs58.encode(signature)
+
+      const { error } = await supabase.from('wallet_connections').upsert({
+        user_id: user.id,
+        wallet_address: address,
+        wallet_type: 'Solflare',
+        signature: sigBase58,
+        verified: true,
+      }, { onConflict: 'user_id,wallet_address' })
+
+      if (error) setWalletError(error.message)
+      else await reloadWallets()
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e)
+      console.warn('[solflare] connect/sign failed:', msg)
+      setWalletError('Connection cancelled or failed.')
+    }
+    setConnecting(null)
   }
 
   if (loading || !user) return null
@@ -234,25 +274,7 @@ export default function ProfilePage() {
 
           {/* Wallet connections */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} style={cardStyle}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-[#e2e8f0]">Connected wallets</h2>
-              {!connected ? (
-                <button
-                  onClick={() => { setWalletError(''); openWalletModal(true) }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-opacity hover:opacity-80"
-                  style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', color: '#a78bfa' }}
-                >
-                  <Wallet size={12} />
-                  Connect wallet
-                </button>
-              ) : signingWallet ? (
-                <span className="text-xs" style={{ color: '#64748b' }}>Signing…</span>
-              ) : (
-                <span className="text-xs" style={{ color: '#22c55e' }}>
-                  {publicKey?.toBase58().slice(0, 6)}… connected
-                </span>
-              )}
-            </div>
+            <h2 className="text-sm font-semibold text-[#e2e8f0] mb-4">Connected wallets</h2>
 
             {walletError && (
               <p className="text-xs mb-3 text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
@@ -260,10 +282,8 @@ export default function ProfilePage() {
               </p>
             )}
 
-            {wallets.length === 0 ? (
-              <p className="text-xs" style={{ color: '#334155' }}>No wallets connected yet. Connect a wallet above to verify ownership.</p>
-            ) : (
-              <div className="space-y-2">
+            {wallets.length > 0 && (
+              <div className="space-y-2 mb-4">
                 {wallets.map(w => (
                   <div key={w.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
                     <div>
@@ -282,6 +302,29 @@ export default function ProfilePage() {
                   </div>
                 ))}
               </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                onClick={connectPhantom}
+                disabled={connectingWallet !== null}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+                style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)', color: '#a78bfa' }}
+              >
+                {connectingWallet === 'phantom' ? 'Connecting…' : 'Connect Phantom'}
+              </button>
+              <button
+                onClick={connectSolflare}
+                disabled={connectingWallet !== null}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+                style={{ background: 'rgba(251,146,60,0.08)', border: '1px solid rgba(251,146,60,0.2)', color: '#fb923c' }}
+              >
+                {connectingWallet === 'solflare' ? 'Connecting…' : 'Connect Solflare'}
+              </button>
+            </div>
+
+            {wallets.length === 0 && !walletError && (
+              <p className="text-xs mt-3" style={{ color: '#334155' }}>No wallets connected yet. Connect a wallet above to verify ownership.</p>
             )}
           </motion.div>
 

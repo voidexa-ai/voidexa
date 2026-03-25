@@ -6,7 +6,6 @@ import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import GlobalStarfield from '@/components/layout/GlobalStarfield'
 import JarvisAssistant from '@/components/ui/JarvisAssistant'
 import { AuthProvider } from '@/components/AuthProvider'
-import WalletProvider from '@/components/WalletProvider'
 import { GetInTouchProvider } from '@/components/GetInTouchModal'
 
 const dmSans = DM_Sans({
@@ -40,15 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${dmSans.variable} ${syne.variable}`}>
       <body className="min-h-screen bg-[#0a0a0f] text-[#e2e8f0] antialiased overflow-x-hidden noise-body">
         <AuthProvider>
-          <WalletProvider>
-            <GetInTouchProvider>
-              <GlobalStarfield />
-              <Navigation />
-              <main className="relative">{children}</main>
-              <ConditionalFooter />
-              <JarvisAssistant />
-            </GetInTouchProvider>
-          </WalletProvider>
+          <GetInTouchProvider>
+            <GlobalStarfield />
+            <Navigation />
+            <main className="relative">{children}</main>
+            <ConditionalFooter />
+            <JarvisAssistant />
+          </GetInTouchProvider>
         </AuthProvider>
       </body>
     </html>
