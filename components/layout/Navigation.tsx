@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { STAR_MAP_NODES } from '@/components/starmap/nodes'
+import AuthButton from '@/components/AuthButton'
+import { useGetInTouchModal } from '@/components/GetInTouchModal'
 
 const BANNER_KEY = 'voidexa_beta_banner_dismissed'
 
@@ -35,6 +37,7 @@ export default function Navigation() {
   const [bannerVisible, setBanner] = useState(false)
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
   const pathname = usePathname()
+  const { open: openModal } = useGetInTouchModal()
 
   useEffect(() => {
     setBanner(localStorage.getItem(BANNER_KEY) !== 'true')
@@ -275,13 +278,17 @@ export default function Navigation() {
                 White Paper
               </Link>
 
-              <Link
-                href="/contact"
+              <button
+                onClick={() => openModal()}
                 className="ml-2 px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
                 style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
               >
                 Get in touch
-              </Link>
+              </button>
+
+              <div className="ml-2">
+                <AuthButton />
+              </div>
             </div>
 
             {/* Mobile hamburger */}
@@ -404,14 +411,13 @@ export default function Navigation() {
               >
                 White Paper
               </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMenuOpen(false)}
+              <button
+                onClick={() => { setMenuOpen(false); openModal() }}
                 className="flex items-center justify-center w-full rounded-full py-4 text-base font-semibold text-[#0a0a0f] transition-opacity hover:opacity-90"
                 style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
               >
                 Get in touch
-              </Link>
+              </button>
             </div>
           </motion.div>
         )}

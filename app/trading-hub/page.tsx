@@ -1,16 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 const ACCENT = '#cc9955'
 
 export default function TradingHubPage() {
-  const [sent, setSent] = useState(false)
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.search.includes('sent=true')) setSent(true)
-  }, [])
+  const [email, setEmail]     = useState('')
+  const [sent, setSent]       = useState(false)
+  const [loading, setLoading] = useState(false)
 
   return (
     <div
@@ -112,17 +112,21 @@ export default function TradingHubPage() {
             <p className="text-sm" style={{ color: ACCENT }}>You're on the list. We'll be in touch.</p>
           ) : (
             <form
-              method="POST"
-              action="https://formsubmit.co/contact@voidexa.com"
+              onSubmit={async e => {
+                e.preventDefault()
+                setLoading(true)
+                await supabase.from('waitlist_signups').insert({ email, product: 'trading-hub' })
+                supabase.functions.invoke('notify', { body: { type: 'waitlist', product: 'trading-hub', email } }).catch(() => {})
+                setLoading(false)
+                setSent(true)
+              }}
               className="flex flex-col sm:flex-row gap-3 justify-center"
             >
-              <input type="hidden" name="_subject" value="Trading Hub — waitlist" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="https://voidexa.com/trading-hub?sent=true" />
               <input
                 type="email"
-                name="email"
                 required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 className="px-4 py-3 rounded-full text-sm outline-none"
                 style={{
@@ -134,7 +138,8 @@ export default function TradingHubPage() {
               />
               <button
                 type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-80"
+                disabled={loading}
+                className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-50"
                 style={{
                   background: `${ACCENT}18`,
                   border: `1px solid ${ACCENT}44`,
@@ -144,7 +149,7 @@ export default function TradingHubPage() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                Join the waitlist <ArrowRight size={15} />
+                {loading ? '…' : <>Join the waitlist <ArrowRight size={15} /></>}
               </button>
             </form>
           )}

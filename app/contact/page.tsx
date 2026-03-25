@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Send, ArrowRight } from 'lucide-react'
+import { Send } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/AuthProvider'
 
 const subjects = [
   'AI Trading Bot — access request',
@@ -28,18 +30,42 @@ const inputStyle = {
 }
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', subject: subjects[0], message: '' })
-  const [sent, setSent] = useState(false)
-
-  // Detect redirect back from formsubmit.co with ?sent=true
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.search.includes('sent=true')) {
-      setSent(true)
-    }
-  }, [])
+  const { user } = useAuth()
+  const [form, setForm]   = useState({ name: '', email: user?.email ?? '', subject: subjects[0], message: '' })
+  const [sent, setSent]   = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    const { error } = await supabase.from('contact_messages').insert({
+      name: form.name,
+      email: form.email,
+      subject: form.subject,
+      message: form.message,
+      user_id: user?.id ?? null,
+    })
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return
+    }
+
+    // Fire edge function notification (best-effort)
+    supabase.functions.invoke('notify', {
+      body: { type: 'contact', email: form.email, name: form.name, subject: form.subject },
+    }).catch(() => {})
+
+    setLoading(false)
+    setSent(true)
   }
 
   return (
@@ -91,16 +117,7 @@ export default function ContactPage() {
               <p className="text-[#b0b0b0]">We'll respond within 24 hours.</p>
             </div>
           ) : (
-            <form
-              method="POST"
-              action="https://formsubmit.co/contact@voidexa.com"
-              className="space-y-5"
-            >
-              {/* FormSubmit hidden fields */}
-              <input type="hidden" name="_subject" value="voidexa.com contact" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="https://voidexa.com/contact?sent=true" />
-
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
@@ -164,9 +181,16 @@ export default function ContactPage() {
                 />
               </div>
 
+              {error && (
+                <p className="text-xs text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
+                  {error}
+                </p>
+              )}
+
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-full font-semibold text-[#0a0a0f] hover:opacity-90 transition-opacity glow-cyan-btn"
+                disabled={loading}
+                className="flex items-center justify-center gap-2 rounded-full font-semibold text-[#0a0a0f] hover:opacity-90 transition-opacity glow-cyan-btn disabled:opacity-50"
                 style={{
                   background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)',
                   width: '100%',
@@ -176,7 +200,7 @@ export default function ContactPage() {
                   boxSizing: 'border-box',
                 }}
               >
-                Send message →
+                {loading ? 'Sending…' : 'Send message →'}
               </button>
             </form>
           )}

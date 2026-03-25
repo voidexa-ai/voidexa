@@ -7,6 +7,7 @@ import {
   ArrowRight, TrendingUp, Shield, Activity, Clock, Zap,
   ChevronRight, Users, Lock, AlertTriangle, CheckCircle2,
 } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 /* ─── Pipeline stages ─── */
 const pipeline = [
@@ -335,8 +336,18 @@ const features = [
 ]
 
 export default function TradingPage() {
-  const [email, setEmail] = useState('')
+  const [email, setEmail]           = useState('')
   const [waitlisted, setWaitlisted] = useState(false)
+  const [waitlistLoading, setWaitlistLoading] = useState(false)
+
+  async function joinWaitlist() {
+    if (!email) return
+    setWaitlistLoading(true)
+    await supabase.from('waitlist_signups').insert({ email, product: 'ai-trading' })
+    supabase.functions.invoke('notify', { body: { type: 'waitlist', product: 'ai-trading', email } }).catch(() => {})
+    setWaitlistLoading(false)
+    setWaitlisted(true)
+  }
 
   return (
     <div className="min-h-screen" style={{ background: '#07070d' }}>
@@ -595,19 +606,21 @@ export default function TradingPage() {
               ) : (
                 <div className="flex gap-2">
                   <input
+                    type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && email && setWaitlisted(true)}
+                    onKeyDown={e => e.key === 'Enter' && joinWaitlist()}
                     placeholder="your@email.com"
                     className="flex-1 px-4 py-3 rounded-full text-sm outline-none placeholder-[#1e2a38]"
                     style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0' }}
                   />
                   <button
-                    onClick={() => email && setWaitlisted(true)}
-                    className="px-5 py-3 rounded-full text-sm font-semibold text-[#07070d] hover:opacity-90 transition-opacity flex-shrink-0"
+                    onClick={joinWaitlist}
+                    disabled={waitlistLoading}
+                    className="px-5 py-3 rounded-full text-sm font-semibold text-[#07070d] hover:opacity-90 transition-opacity flex-shrink-0 disabled:opacity-50"
                     style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
                   >
-                    Join waitlist
+                    {waitlistLoading ? '…' : 'Join waitlist'}
                   </button>
                 </div>
               )}
