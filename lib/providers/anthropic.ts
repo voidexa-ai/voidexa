@@ -5,9 +5,11 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { ProviderCallOptions, ProviderResponse, ProviderStreamCallbacks } from '@/types/providers';
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+let _client: Anthropic | null = null;
+function getClient() {
+  if (!_client) _client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return _client;
+}
 
 export async function callClaude(options: ProviderCallOptions): Promise<ProviderResponse> {
   const { model, messages, maxTokens = 4096 } = options;
@@ -18,7 +20,7 @@ export async function callClaude(options: ProviderCallOptions): Promise<Provider
     .filter((m) => m.role !== 'system')
     .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }));
 
-  const response = await client.messages.create({
+  const response = await getClient().messages.create({
     model,
     max_tokens: maxTokens,
     system: systemMessage?.content || undefined,
@@ -54,7 +56,7 @@ export async function streamClaude(
   let inputTokens = 0;
   let outputTokens = 0;
 
-  const stream = client.messages.stream({
+  const stream = getClient().messages.stream({
     model,
     max_tokens: maxTokens,
     system: systemMessage?.content || undefined,

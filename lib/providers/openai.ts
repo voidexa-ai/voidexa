@@ -5,14 +5,16 @@
 import OpenAI from 'openai';
 import type { ProviderCallOptions, ProviderResponse, ProviderStreamCallbacks } from '@/types/providers';
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let _client: OpenAI | null = null;
+function getClient() {
+  if (!_client) _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return _client;
+}
 
 export async function callOpenAI(options: ProviderCallOptions): Promise<ProviderResponse> {
   const { model, messages, maxTokens = 4096 } = options;
 
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model,
     max_tokens: maxTokens,
     messages: messages.map((m) => ({
@@ -42,7 +44,7 @@ export async function streamOpenAI(
   let inputTokens = 0;
   let outputTokens = 0;
 
-  const stream = await client.chat.completions.create({
+  const stream = await getClient().chat.completions.create({
     model,
     max_tokens: maxTokens,
     messages: messages.map((m) => ({

@@ -5,12 +5,16 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { ProviderCallOptions, ProviderResponse, ProviderStreamCallbacks } from '@/types/providers';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
+let _genAI: GoogleGenerativeAI | null = null;
+function getGenAI() {
+  if (!_genAI) _genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
+  return _genAI;
+}
 
 export async function callGemini(options: ProviderCallOptions): Promise<ProviderResponse> {
   const { model, messages, maxTokens = 4096 } = options;
 
-  const geminiModel = genAI.getGenerativeModel({
+  const geminiModel = getGenAI().getGenerativeModel({
     model,
     generationConfig: { maxOutputTokens: maxTokens },
   });
@@ -49,7 +53,7 @@ export async function streamGemini(
 ): Promise<void> {
   const { model, messages, maxTokens = 4096 } = options;
 
-  const geminiModel = genAI.getGenerativeModel({
+  const geminiModel = getGenAI().getGenerativeModel({
     model,
     generationConfig: { maxOutputTokens: maxTokens },
   });
