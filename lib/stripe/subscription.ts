@@ -1,5 +1,5 @@
-// src/lib/stripe/subscription.ts
-// Ghost AI Chat — Stripe Subscription Helpers
+// lib/stripe/subscription.ts
+// Void Chat — Stripe Subscription Helpers
 
 import { createClient } from '@supabase/supabase-js';
 import { stripe } from './client';

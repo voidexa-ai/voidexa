@@ -1,5 +1,5 @@
-// src/app/ghost-ai/pricing/page.tsx
-// Ghost AI Chat — Pricing page with three tiers
+// app/void-chat/pricing/page.tsx
+// Void Chat — Pricing page with three tiers
 
 'use client';
 
@@ -10,7 +10,7 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white py-20 px-4">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-4">Ghost AI Pricing</h1>
+        <h1 className="text-4xl font-bold text-center mb-4">Void Chat Pricing</h1>
         <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
           Access the world&apos;s best AI models. Pay only for what you use with GHAI tokens,
           or subscribe for unlimited access.
@@ -55,7 +55,7 @@ export default function PricingPage() {
 
           {/* Stripe Pro */}
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-            <h3 className="text-xl font-semibold mb-2">Pro</h3>
+            <h3 className="text-xl font-semibold mb-2">Void Chat Pro</h3>
             <p className="text-3xl font-bold mb-1">${STRIPE_PRO.pricePerMonth / 100}</p>
             <p className="text-gray-500 mb-6">per month</p>
             <ul className="space-y-3 text-gray-300 mb-8">

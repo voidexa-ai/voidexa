@@ -1,5 +1,5 @@
-// src/app/api/chat/conversations/route.ts
-// Ghost AI Chat — Conversation CRUD
+// app/api/chat/conversations/route.ts
+// Void Chat — Conversation CRUD
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';

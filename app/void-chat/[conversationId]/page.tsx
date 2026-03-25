@@ -1,5 +1,5 @@
-// src/app/ghost-ai/chat/[conversationId]/page.tsx
-// Ghost AI Chat — Specific conversation view
+// app/void-chat/[conversationId]/page.tsx
+// Void Chat — Specific conversation view
 
 'use client';
 

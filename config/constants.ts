@@ -1,5 +1,5 @@
-// src/config/constants.ts
-// Ghost AI Chat — Platform Constants
+// config/constants.ts
+// Void Chat — Platform Constants
 
 // GHAI Token
 export const GHAI_TOKEN = {
@@ -19,8 +19,8 @@ export const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL || 'https://api.mainnet
 
 // Platform
 export const PLATFORM = {
-  name: 'Ghost AI',
-  tagline: 'AI Chat powered by the world\'s best models',
+  name: 'Void Chat',
+  tagline: 'Multi-AI Chat powered by voidexa',
   transparencyLine: 'Powered by {provider} — orchestrated by voidexa',
   supportEmail: 'contact@voidexa.com',
   maxConversationsPerUser: 100,

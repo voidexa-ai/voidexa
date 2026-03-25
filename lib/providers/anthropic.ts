@@ -1,5 +1,5 @@
-// src/lib/providers/anthropic.ts
-// Ghost AI Chat — Claude (Anthropic) API Wrapper
+// lib/providers/anthropic.ts
+// Void Chat — Claude (Anthropic) API Wrapper
 // Server-side only. NEVER import this in client components.
 
 import Anthropic from '@anthropic-ai/sdk';

@@ -1,5 +1,5 @@
-// src/types/credits.ts
-// Ghost AI Chat — Credit & Billing Type Definitions
+// types/credits.ts
+// Void Chat — Credit & Billing Type Definitions
 
 export type SubscriptionStatus = 'none' | 'active' | 'cancelled' | 'past_due';
 

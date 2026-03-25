@@ -294,6 +294,33 @@ export default function GhostAIPage() {
           </div>
         </motion.div>
       </section>
+
+      {/* ── VOID CHAT CTA ── */}
+      <section className="relative z-10 max-w-3xl mx-auto px-6 pb-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="rounded-2xl p-8 text-center"
+          style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.2)' }}
+        >
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#7c3aed', letterSpacing: '0.15em' }}>
+            Powered by GHAI
+          </p>
+          <h3 className="text-2xl font-bold mb-3 text-white">Try Void Chat</h3>
+          <p className="text-sm mb-6" style={{ color: '#64748b' }}>
+            Access Claude, GPT-4o, and Gemini in one place — pay with GHAI tokens.
+          </p>
+          <a
+            href="/void-chat"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', color: '#fff' }}
+          >
+            Open Void Chat →
+          </a>
+        </motion.div>
+      </section>
     </div>
   )
 }

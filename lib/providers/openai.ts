@@ -1,5 +1,5 @@
-// src/lib/providers/openai.ts
-// Ghost AI Chat — OpenAI (ChatGPT) API Wrapper
+// lib/providers/openai.ts
+// Void Chat — OpenAI (ChatGPT) API Wrapper
 // Server-side only. NEVER import this in client components.
 
 import OpenAI from 'openai';

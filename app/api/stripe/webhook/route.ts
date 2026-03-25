@@ -1,5 +1,5 @@
-// src/app/api/stripe/webhook/route.ts
-// Ghost AI Chat — Stripe Webhook Handler
+// app/api/stripe/webhook/route.ts
+// Void Chat — Stripe Webhook Handler
 
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/client';

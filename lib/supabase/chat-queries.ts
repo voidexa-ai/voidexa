@@ -1,5 +1,5 @@
-// src/lib/supabase/chat-queries.ts
-// Ghost AI Chat — Database queries for conversations and messages
+// lib/supabase/chat-queries.ts
+// Void Chat — Database queries for conversations and messages
 // These use service_role key for server-side API routes.
 
 import { createClient } from '@supabase/supabase-js';

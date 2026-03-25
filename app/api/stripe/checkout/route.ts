@@ -1,5 +1,5 @@
-// src/app/api/stripe/checkout/route.ts
-// Ghost AI Chat — Create Stripe Checkout Session for Pro subscription
+// app/api/stripe/checkout/route.ts
+// Void Chat — Create Stripe Checkout Session for Pro subscription
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';

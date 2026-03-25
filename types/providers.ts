@@ -1,5 +1,5 @@
-// src/types/providers.ts
-// Ghost AI Chat — Provider Type Definitions
+// types/providers.ts
+// Void Chat — Provider Type Definitions
 
 export interface ProviderResponse {
   content: string;

@@ -1,5 +1,5 @@
-// src/lib/supabase/credit-queries.ts
-// Ghost AI Chat — Database queries for user credits
+// lib/supabase/credit-queries.ts
+// Void Chat — Database queries for user credits
 
 import { createClient } from '@supabase/supabase-js';
 import type { UserCredits } from '@/types/credits';

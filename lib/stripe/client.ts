@@ -1,5 +1,5 @@
-// src/lib/stripe/client.ts
-// Ghost AI Chat — Stripe Client
+// lib/stripe/client.ts
+// Void Chat — Stripe Client
 
 import Stripe from 'stripe';
 

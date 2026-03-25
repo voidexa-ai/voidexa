@@ -1,5 +1,5 @@
-// src/lib/providers/google.ts
-// Ghost AI Chat — Google (Gemini) API Wrapper
+// lib/providers/google.ts
+// Void Chat — Google (Gemini) API Wrapper
 // Server-side only. NEVER import this in client components.
 
 import { GoogleGenerativeAI } from '@google/generative-ai';

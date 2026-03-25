@@ -1,5 +1,5 @@
-// src/config/providers.ts
-// Ghost AI Chat — Provider & Model Definitions
+// config/providers.ts
+// Void Chat — Provider & Model Definitions
 // Single source of truth for all supported AI providers and models.
 
 export type ProviderSlug = 'claude' | 'chatgpt' | 'gemini';

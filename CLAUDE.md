@@ -1,9 +1,9 @@
-# CLAUDE.md — Ghost AI Chat MVP (Phase 2)
+# CLAUDE.md — Void Chat MVP (Phase 2)
 
 ## Project Context
 This is Phase 2 of the voidexa platform (voidexa.com).
 Phase 1 is COMPLETE: Supabase auth, wallet connection, waitlist, profiles, 10 tables with RLS.
-Phase 2 builds the Ghost AI Chat MVP — the first revenue-generating product.
+Phase 2 builds the Void Chat MVP — the first revenue-generating product.
 
 **Location**: C:\Users\Jixwu\Desktop\voidexa
 **Framework**: Next.js 14 + React + Tailwind + ShadcnUI
@@ -51,10 +51,10 @@ Phase 2 builds the Ghost AI Chat MVP — the first revenue-generating product.
 - `/api/ghai/balance` — GET: return user's GHAI platform balance + on-chain wallet balance
 
 ### Frontend Pages
-- `/ghost-ai/chat` — main chat interface (protected)
-- `/ghost-ai/chat/[conversationId]` — specific conversation view
-- `/ghost-ai/pricing` — pricing tiers and comparison
-- `/admin/ghost-ai` — admin dashboard (role=admin only)
+- `/void-chat` — main chat interface (protected)
+- `/void-chat/[conversationId]` — specific conversation view
+- `/void-chat/pricing` — pricing tiers and comparison
+- `/admin/void-chat` — admin dashboard (role=admin only)
 
 ### Key Components
 - `ChatSidebar` — conversation list, new chat, provider picker
@@ -196,7 +196,7 @@ supabase/
 4. Lib: Provider wrappers, credit logic, GHAI verification
 5. API Routes: /api/chat/*, /api/ghai/*, /api/stripe/*
 6. Components: Chat UI components
-7. Pages: /ghost-ai/chat, /ghost-ai/pricing, /admin/ghost-ai
+7. Pages: /void-chat, /void-chat/pricing, /admin/void-chat
 8. Test: End-to-end flow with free tier
 
 ## Environment Variables Needed

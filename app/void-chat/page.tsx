@@ -1,5 +1,5 @@
-// src/app/ghost-ai/chat/page.tsx
-// Ghost AI Chat — Main chat page (new conversation or conversation list)
+// app/void-chat/page.tsx
+// Void Chat — Main chat page (new conversation or conversation list)
 
 'use client';
 
@@ -7,7 +7,7 @@ export default function ChatPage() {
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="text-center max-w-md">
-        <h1 className="text-3xl font-bold mb-4">Ghost AI</h1>
+        <h1 className="text-3xl font-bold mb-4">Void Chat</h1>
         <p className="text-gray-400 mb-8">
           Choose a provider and start chatting. Powered by the world&apos;s best AI models, orchestrated by voidexa.
         </p>

@@ -1,5 +1,5 @@
-// src/config/pricing.ts
-// Ghost AI Chat — Pricing Configuration
+// config/pricing.ts
+// Void Chat — Pricing Configuration
 // ALL prices live here. NEVER hardcode prices in components or API routes.
 
 export const FREE_TIER = {

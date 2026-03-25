@@ -1,5 +1,5 @@
-// src/types/chat.ts
-// Ghost AI Chat — Chat Type Definitions
+// types/chat.ts
+// Void Chat — Chat Type Definitions
 
 import type { ProviderSlug } from '@/config/providers';
 

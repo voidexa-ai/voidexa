@@ -1,5 +1,5 @@
-// src/lib/ghai/balance.ts
-// Ghost AI Chat — Read GHAI SPL token balance from on-chain wallet
+// lib/ghai/balance.ts
+// Void Chat — Read GHAI SPL token balance from on-chain wallet
 
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress, getAccount } from '@solana/spl-token';

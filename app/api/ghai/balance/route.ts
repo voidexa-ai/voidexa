@@ -1,5 +1,5 @@
-// src/app/api/ghai/balance/route.ts
-// Ghost AI Chat — Get user's GHAI balance (platform + on-chain)
+// app/api/ghai/balance/route.ts
+// Void Chat — Get user's GHAI balance (platform + on-chain)
 
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';

@@ -1,5 +1,5 @@
-// src/lib/providers/types.ts
-// Ghost AI Chat — Provider Router
+// lib/providers/types.ts
+// Void Chat — Provider Router
 // Routes requests to the correct provider based on model ID.
 
 import type { ProviderCallOptions, ProviderResponse, ProviderStreamCallbacks } from '@/types/providers';

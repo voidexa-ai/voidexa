@@ -1,5 +1,5 @@
-// src/app/api/chat/history/[conversationId]/route.ts
-// Ghost AI Chat — Fetch messages for a conversation
+// app/api/chat/history/[conversationId]/route.ts
+// Void Chat — Fetch messages for a conversation
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';

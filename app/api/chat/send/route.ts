@@ -1,5 +1,5 @@
-// src/app/api/chat/send/route.ts
-// Ghost AI Chat — Main message endpoint
+// app/api/chat/send/route.ts
+// Void Chat — Main message endpoint
 // Auth check → Credit check → Provider call (streamed) → Log message → Deduct credits
 
 import { NextRequest } from 'next/server';

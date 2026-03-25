@@ -1,12 +1,12 @@
-// src/app/admin/ghost-ai/page.tsx
-// Ghost AI Chat — Admin Dashboard (role=admin only)
+// app/admin/void-chat/page.tsx
+// Void Chat — Admin Dashboard (role=admin only)
 
 import { redirect } from 'next/navigation';
 import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
-export default async function AdminGhostAiPage() {
+export default async function AdminVoidChatPage() {
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -28,7 +28,7 @@ export default async function AdminGhostAiPage() {
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin') redirect('/ghost-ai/chat');
+  if (profile?.role !== 'admin') redirect('/void-chat');
 
   // Fetch stats
   const { count: totalUsers } = await serviceClient
@@ -57,7 +57,7 @@ export default async function AdminGhostAiPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white p-8">
-      <h1 className="text-3xl font-bold mb-8">Ghost AI — Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-8">Void Chat — Admin Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <StatCard label="Total Users" value={totalUsers || 0} />

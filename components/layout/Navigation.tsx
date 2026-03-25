@@ -291,6 +291,23 @@ export default function Navigation() {
                 Token
               </Link>
 
+              <Link
+                href="/void-chat"
+                className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg transition-all"
+                style={{
+                  color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#7c3aed',
+                  background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.12)' : 'rgba(139,92,246,0.07)',
+                  fontWeight: 500,
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#a78bfa'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.14)' }}
+                onMouseLeave={e => { if (!pathname.startsWith('/void-chat')) { (e.currentTarget as HTMLElement).style.color = '#7c3aed'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.07)' } }}
+              >
+                Void Chat
+                <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.08em', padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.3)', color: '#c4b5fd', textTransform: 'uppercase', lineHeight: '14px' }}>
+                  NEW
+                </span>
+              </Link>
+
               <button
                 onClick={() => openModal()}
                 className="ml-2 px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
@@ -435,6 +452,21 @@ export default function Navigation() {
                 }}
               >
                 Token
+              </Link>
+              <Link
+                href="/void-chat"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full rounded-full py-3 text-sm font-semibold transition-opacity hover:opacity-90"
+                style={{
+                  background: 'rgba(139,92,246,0.15)',
+                  border: '1px solid rgba(139,92,246,0.35)',
+                  color: '#c4b5fd',
+                }}
+              >
+                Void Chat
+                <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.08em', padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.4)', color: '#ddd6fe', textTransform: 'uppercase', lineHeight: '14px' }}>
+                  NEW
+                </span>
               </Link>
               <button
                 onClick={() => { setMenuOpen(false); openModal() }}

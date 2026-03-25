@@ -1,5 +1,5 @@
-// src/lib/credits/deduct.ts
-// Ghost AI Chat — Credit Deduction
+// lib/credits/deduct.ts
+// Void Chat — Credit Deduction
 // Deducts credits after a successful message. Called from API route after provider response.
 
 import { createClient } from '@supabase/supabase-js';

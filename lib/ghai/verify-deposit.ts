@@ -1,5 +1,5 @@
-// src/lib/ghai/verify-deposit.ts
-// Ghost AI Chat — On-chain GHAI Deposit Verification
+// lib/ghai/verify-deposit.ts
+// Void Chat — On-chain GHAI Deposit Verification
 // Verifies a Solana SPL token transfer to voidexa's receiver wallet.
 
 import { Connection, PublicKey } from '@solana/web3.js';

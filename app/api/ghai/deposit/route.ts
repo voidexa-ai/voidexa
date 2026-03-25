@@ -1,5 +1,5 @@
-// src/app/api/ghai/deposit/route.ts
-// Ghost AI Chat — Verify on-chain GHAI deposit and credit user
+// app/api/ghai/deposit/route.ts
+// Void Chat — Verify on-chain GHAI deposit and credit user
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';

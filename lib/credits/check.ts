@@ -1,5 +1,5 @@
-// src/lib/credits/check.ts
-// Ghost AI Chat — Credit Validation
+// lib/credits/check.ts
+// Void Chat — Credit Validation
 // Determines if a user can send a message based on their tier.
 
 import { createClient } from '@supabase/supabase-js';
