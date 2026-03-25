@@ -41,7 +41,7 @@ export function ConversationList() {
     if (res.ok) {
       setConversations((prev) => prev.filter((c) => c.id !== conversationId));
       if (params.conversationId === conversationId) {
-        router.push('/ghost-ai/chat');
+        router.push('/void-chat');
       }
     }
   }
@@ -69,7 +69,7 @@ export function ConversationList() {
       {conversations.map((conv) => (
         <div
           key={conv.id}
-          onClick={() => router.push(`/ghost-ai/chat/${conv.id}`)}
+          onClick={() => router.push(`/void-chat/${conv.id}`)}
           className={`group flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors ${
             params.conversationId === conv.id
               ? 'bg-gray-800 text-white'
