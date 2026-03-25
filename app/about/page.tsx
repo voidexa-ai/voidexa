@@ -1,167 +1,205 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Code2, Brain, Shield, Zap } from 'lucide-react'
-import Hero            from '@/components/sections/home/Hero'
-import WhatWeBuild     from '@/components/sections/home/WhatWeBuild'
-import Sovereignty     from '@/components/sections/home/Sovereignty'
-import FeaturedProduct from '@/components/sections/home/FeaturedProduct'
+import Link from 'next/link'
 
-const values = [
+const beliefs = [
+  { text: 'Privacy is architecture, not policy' },
+  { text: 'AI should work for you — not the other way around' },
+  { text: "If it touches a third-party server, it's not secure" },
+  { text: 'European sovereignty by design' },
+]
+
+const differentiators = [
   {
-    icon: Zap,
-    title: 'Autonomy',
-    desc: 'Systems that run themselves. A system that requires constant human intervention is a system that isn\'t done yet.',
+    title: 'Compressed Intelligence',
+    desc: "Our AI systems communicate in ways that use 90% fewer resources than industry standard. We didn't optimize the pipeline — we reinvented the language.",
   },
   {
-    icon: Brain,
-    title: 'Intelligence',
-    desc: 'AI that makes real decisions — not just suggestions. Built into the architecture, not bolted on as a feature.',
+    title: 'Persistent Memory',
+    desc: "Every interaction builds on the last. Our systems don't forget — they compound knowledge over time.",
   },
   {
-    icon: Shield,
-    title: 'Privacy',
-    desc: 'Your data, your control. No surveillance, no vendor lock-in, no compromises. End-to-end or not at all.',
-  },
-  {
-    icon: Code2,
-    title: 'Innovation',
-    desc: "If it doesn't exist, we build it. We don't wait for the industry to catch up to what people actually need.",
+    title: 'Collective Verification',
+    desc: "One AI gives you an opinion. Our systems give you verified consensus — through methods nobody else has built.",
   },
 ]
 
-const stack = [
-  { name: 'Python',           role: 'Core AI systems & pipelines' },
-  { name: 'TypeScript',       role: 'Frontend and API layers' },
-  { name: 'React / Next.js',  role: 'Web products & interfaces' },
-  { name: 'Claude AI',        role: 'LLM reasoning & agent decisions' },
-  { name: 'Multi-agent arch', role: 'Custom agent orchestration' },
-  { name: 'E2E Encryption',   role: 'Privacy-first communication' },
-  { name: 'P2P Protocols',    role: 'Decentralised data transfer' },
-  { name: 'Custom Hardware',  role: 'Solar & off-grid servers' },
-]
+const fade = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6, delay },
+})
 
 export default function AboutPage() {
   return (
-    <>
-      {/* Former homepage sections */}
-      <Hero />
-      <WhatWeBuild />
-      <Sovereignty />
-      <FeaturedProduct />
+    <div className="min-h-screen" style={{ background: '#07070d' }}>
+      {/* Ambient glow */}
+      <div
+        aria-hidden
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 70% 50% at 50% 10%, rgba(0,212,255,0.06) 0%, transparent 60%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
 
-      {/* About content */}
-      <div className="min-h-screen bg-[#0a0a0f] pt-24 pb-24">
-        <div className="max-w-5xl mx-auto px-6">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-20"
-          >
-            <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
-              About
-            </p>
-            <h1
-              className="text-5xl sm:text-6xl font-bold text-[#e2e8f0] mb-6 leading-tight"
-              style={{ fontFamily: 'var(--font-space)' }}
-            >
-              Born from the{' '}
-              <span className="gradient-text">void.</span>
-            </h1>
-            <div className="space-y-4 text-[#64748b] leading-relaxed max-w-2xl">
-              <p>
-                voidexa was born from the void — the space between what technology can do
-                and what it actually does for people.
-              </p>
-              <p>
-                The philosophy is simple: technology should work autonomously, intelligently,
-                for the benefit of its owner. Not require constant supervision. Not generate
-                busy work. Not lock you in. Just run.
-              </p>
-              <p>
-                Founded by an independent developer and AI architect who got tired of tools that
-                need babysitting. The answer took the form of a trading bot that classifies market
-                regimes and executes autonomously. An encrypted messenger that leaves no trace.
-                A website builder that ships production code from a brief. Tools that work without you.
-              </p>
-              <p>
-                We operate globally. No office, no overhead — just builders who ship.
-              </p>
-            </div>
-          </motion.div>
+      <div className="relative z-10 max-w-3xl mx-auto px-6 pt-36 pb-32">
 
-          {/* Values */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mb-20"
+        {/* ── Hero ── */}
+        <motion.div {...fade()} className="mb-24">
+          <p
+            className="text-xs font-medium uppercase tracking-[0.18em] mb-5"
+            style={{ color: 'rgba(0,212,255,0.55)' }}
           >
-            <h2
-              className="text-2xl font-bold text-[#e2e8f0] mb-8"
-              style={{ fontFamily: 'var(--font-space)' }}
-            >
-              How we think
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {values.map(({ icon: Icon, title, desc }, i) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="glass-card rounded-2xl p-6"
+            About
+          </p>
+          <h1
+            className="text-6xl sm:text-7xl font-bold leading-none tracking-tight mb-0"
+            style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}
+          >
+            Born from{' '}
+            <span className="gradient-text">the void.</span>
+          </h1>
+        </motion.div>
+
+        {/* ── Section 1: Why we exist ── */}
+        <motion.section {...fade(0.05)} className="mb-20">
+          <h2
+            className="text-sm font-semibold uppercase tracking-[0.14em] mb-6"
+            style={{ color: 'rgba(0,212,255,0.6)' }}
+          >
+            Why we exist
+          </h2>
+          <p
+            className="text-xl leading-relaxed"
+            style={{ color: '#8899af', fontFamily: 'var(--font-space)' }}
+          >
+            In 2025, Denmark directed companies to exit American cloud services. Copenhagen and
+            Aarhus ended Microsoft dependencies. voidexa builds for this moment — sovereign AI
+            infrastructure, designed in Denmark.
+          </p>
+        </motion.section>
+
+        {/* ── Divider ── */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 80 }} />
+
+        {/* ── Section 2: What we believe ── */}
+        <motion.section {...fade(0.05)} className="mb-20">
+          <h2
+            className="text-sm font-semibold uppercase tracking-[0.14em] mb-8"
+            style={{ color: 'rgba(0,212,255,0.6)' }}
+          >
+            What we believe
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {beliefs.map(({ text }, i) => (
+              <motion.div
+                key={text}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.07 }}
+                style={{
+                  padding: '20px 24px',
+                  borderRadius: 12,
+                  background: 'rgba(255,255,255,0.025)',
+                  border: '1px solid rgba(0,212,255,0.08)',
+                }}
+              >
+                <p className="text-base font-medium" style={{ color: '#c8d5e3', lineHeight: 1.5 }}>
+                  {text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* ── Divider ── */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 80 }} />
+
+        {/* ── Section 3: What makes us different ── */}
+        <motion.section {...fade(0.05)} className="mb-20">
+          <h2
+            className="text-sm font-semibold uppercase tracking-[0.14em] mb-8"
+            style={{ color: 'rgba(0,212,255,0.6)' }}
+          >
+            What makes us different
+          </h2>
+          <div className="flex flex-col gap-5">
+            {differentiators.map(({ title, desc }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, x: -16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.55, delay: i * 0.1 }}
+                style={{
+                  padding: '28px 32px',
+                  borderRadius: 14,
+                  background: 'rgba(0,212,255,0.025)',
+                  border: '1px solid rgba(0,212,255,0.1)',
+                  borderLeft: '2px solid rgba(0,212,255,0.35)',
+                }}
+              >
+                <p
+                  className="text-lg font-semibold mb-3"
+                  style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                    style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.2)' }}
-                  >
-                    <Icon size={18} style={{ color: '#00d4ff' }} />
-                  </div>
-                  <h3 className="text-base font-medium text-[#e2e8f0] mb-2">{title}</h3>
-                  <p className="text-base text-[#b0b0b0] leading-relaxed">{desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                  {title}
+                </p>
+                <p className="text-base leading-relaxed" style={{ color: '#64748b' }}>
+                  {desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
 
-          {/* Tech stack */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+        {/* ── Divider ── */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 80 }} />
+
+        {/* ── Section 4: Coming soon ── */}
+        <motion.section {...fade(0.05)} className="mb-24">
+          <h2
+            className="text-sm font-semibold uppercase tracking-[0.14em] mb-6"
+            style={{ color: 'rgba(0,212,255,0.6)' }}
           >
-            <h2
-              className="text-2xl font-bold text-[#e2e8f0] mb-8"
-              style={{ fontFamily: 'var(--font-space)' }}
+            Coming soon
+          </h2>
+          <p
+            className="text-xl leading-relaxed"
+            style={{ color: '#8899af', fontFamily: 'var(--font-space)' }}
+          >
+            We're building capabilities that don't exist yet. Three undiscovered systems are in
+            development. Watch the star map.
+          </p>
+        </motion.section>
+
+        {/* ── Section 5: Footer info ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-sm" style={{ color: 'rgba(100,116,139,0.6)', letterSpacing: '0.04em' }}>
+            voidexa · CVR 46343387 · Denmark ·{' '}
+            <a
+              href="mailto:contact@voidexa.com"
+              className="hover:text-[#00d4ff] transition-colors"
+              style={{ color: 'rgba(100,116,139,0.8)' }}
             >
-              Our stack
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {stack.map(({ name, role }, i) => (
-                <motion.div
-                  key={name}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className="p-4 rounded-xl text-center"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                  }}
-                >
-                  <div className="text-sm font-medium text-[#e2e8f0] mb-1">{name}</div>
-                  <div className="text-sm text-[#334155]">{role}</div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+              contact@voidexa.com
+            </a>
+          </p>
+        </motion.div>
+
       </div>
-    </>
+    </div>
   )
 }

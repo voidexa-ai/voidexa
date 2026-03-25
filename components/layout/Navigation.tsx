@@ -143,7 +143,7 @@ export default function Navigation() {
                   voidexa
                 </span>
                 <span
-                  className="hidden sm:block text-[9px] font-medium tracking-widest uppercase"
+                  className="hidden sm:block text-[11px] font-medium tracking-widest uppercase"
                   style={{ color: '#666', letterSpacing: '0.12em' }}
                 >
                   sovereign AI infrastructure
