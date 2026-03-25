@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, FileText } from 'lucide-react'
 
 const ACCENT = '#888888'
 
@@ -158,6 +159,23 @@ export default function GhostAIPage() {
               </button>
             </form>
           )}
+        </motion.div>
+
+        {/* White paper link */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.55 }}
+          className="mt-8"
+        >
+          <Link
+            href="/whitepaper"
+            className="inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
+            style={{ color: `${ACCENT}99` }}
+          >
+            <FileText size={14} />
+            Read the White Paper
+          </Link>
         </motion.div>
       </div>
     </div>

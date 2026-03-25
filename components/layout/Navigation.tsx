@@ -263,8 +263,21 @@ export default function Navigation() {
               })}
 
               <Link
+                href="/whitepaper"
+                className="ml-2 px-3 py-2 text-sm rounded-lg transition-all"
+                style={{
+                  color: pathname === '/whitepaper' ? '#ccaa44' : '#64748b',
+                  background: pathname === '/whitepaper' ? 'rgba(204,170,68,0.08)' : 'transparent',
+                }}
+                onMouseEnter={e => { if (pathname !== '/whitepaper') (e.currentTarget as HTMLElement).style.color = '#94a3b8' }}
+                onMouseLeave={e => { if (pathname !== '/whitepaper') (e.currentTarget as HTMLElement).style.color = '#64748b' }}
+              >
+                White Paper
+              </Link>
+
+              <Link
                 href="/contact"
-                className="ml-4 px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
+                className="ml-2 px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
                 style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
               >
                 Get in touch
@@ -378,7 +391,19 @@ export default function Navigation() {
             </nav>
 
             {/* Bottom CTA */}
-            <div className="shrink-0 px-8 pb-12">
+            <div className="shrink-0 px-8 pb-12 flex flex-col gap-3">
+              <Link
+                href="/whitepaper"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center w-full rounded-full py-3 text-sm font-medium transition-opacity hover:opacity-80"
+                style={{
+                  background: 'rgba(204,170,68,0.08)',
+                  border: '1px solid rgba(204,170,68,0.25)',
+                  color: '#ccaa44',
+                }}
+              >
+                White Paper
+              </Link>
               <Link
                 href="/contact"
                 onClick={() => setMenuOpen(false)}
