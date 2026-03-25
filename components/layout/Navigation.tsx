@@ -12,19 +12,22 @@ import { useGetInTouchModal } from '@/components/GetInTouchModal'
 const BANNER_KEY = 'voidexa_beta_banner_dismissed'
 
 const links = [
-  { href: '/home',        label: 'Home',         comingSoon: false },
-  { href: '/trading',     label: 'AI Trading',   comingSoon: false },
-  { href: '/apps',        label: 'Apps',         comingSoon: false },
-  { href: '/ai-tools',    label: 'AI Tools',     comingSoon: false },
-  { href: '/services',    label: 'Services',     comingSoon: false },
-  { href: '/about',       label: 'About',        comingSoon: false },
-  { href: '/contact',     label: 'Contact',      comingSoon: false },
+  { href: '/home',        label: 'Home'       },
+  { href: '/trading',     label: 'AI Trading' },
+  { href: '/apps',        label: 'Apps'       },
+  { href: '/ai-tools',    label: 'AI Tools'   },
+  { href: '/services',    label: 'Services'   },
 ]
 
 const comingSoonLinks = [
-  { href: '/ghost-ai',    label: 'Ghost AI' },
-  { href: '/quantum',     label: 'Quantum' },
+  { href: '/ghost-ai',    label: 'Ghost AI'    },
+  { href: '/quantum',     label: 'Quantum'     },
   { href: '/trading-hub', label: 'Trading Hub' },
+]
+
+const tailLinks = [
+  { href: '/about',   label: 'About'   },
+  { href: '/contact', label: 'Contact' },
 ]
 
 // Build a map from path → emissive color (covers all nodes including undiscovered)
@@ -204,6 +207,24 @@ export default function Navigation() {
                 )
               })}
 
+              {/* Void Chat — NEW (right after main links) */}
+              <Link
+                href="/void-chat"
+                className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg transition-all"
+                style={{
+                  color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#7c3aed',
+                  background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.12)' : 'rgba(139,92,246,0.07)',
+                  fontWeight: 500,
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#a78bfa'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.14)' }}
+                onMouseLeave={e => { if (!pathname.startsWith('/void-chat')) { (e.currentTarget as HTMLElement).style.color = '#7c3aed'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.07)' } }}
+              >
+                Void Chat
+                <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.08em', padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.3)', color: '#c4b5fd', textTransform: 'uppercase', lineHeight: '14px' }}>
+                  NEW
+                </span>
+              </Link>
+
               {/* Subtle divider */}
               <div
                 style={{
@@ -265,6 +286,55 @@ export default function Navigation() {
                 )
               })}
 
+              {/* About + Contact */}
+              {tailLinks.map(({ href, label }) => {
+                const active = pathname === href
+                const isHovered = hoveredHref === href
+                const planetColor = PATH_COLOR[href] ?? '#00d4ff'
+                const r = parseInt(planetColor.slice(1, 3), 16)
+                const g = parseInt(planetColor.slice(3, 5), 16)
+                const b = parseInt(planetColor.slice(5, 7), 16)
+                return (
+                  <div key={href} style={{ position: 'relative' }}>
+                    <Link
+                      href={href}
+                      onMouseEnter={() => setHoveredHref(href)}
+                      onMouseLeave={() => setHoveredHref(null)}
+                      style={{
+                        display: 'block',
+                        padding: '6px 14px',
+                        borderRadius: '6px',
+                        fontSize: '0.875rem',
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        color: (active || isHovered) ? planetColor : '#94a3b8',
+                        backgroundColor: isHovered ? `rgba(${r},${g},${b},0.12)` : 'transparent',
+                        textShadow: (active || isHovered) ? `0 0 14px ${planetColor}` : 'none',
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      {label}
+                    </Link>
+                    {active && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: 16,
+                          height: 2,
+                          borderRadius: 2,
+                          background: planetColor,
+                          boxShadow: `0 0 8px ${planetColor}`,
+                        }}
+                      />
+                    )}
+                  </div>
+                )
+              })}
+
               <Link
                 href="/whitepaper"
                 className="ml-2 px-3 py-2 text-sm rounded-lg transition-all"
@@ -289,23 +359,6 @@ export default function Navigation() {
                 onMouseLeave={e => { if (pathname !== '/token') (e.currentTarget as HTMLElement).style.color = '#64748b' }}
               >
                 Token
-              </Link>
-
-              <Link
-                href="/void-chat"
-                className="flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg transition-all"
-                style={{
-                  color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#7c3aed',
-                  background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.12)' : 'rgba(139,92,246,0.07)',
-                  fontWeight: 500,
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#a78bfa'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.14)' }}
-                onMouseLeave={e => { if (!pathname.startsWith('/void-chat')) { (e.currentTarget as HTMLElement).style.color = '#7c3aed'; (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.07)' } }}
-              >
-                Void Chat
-                <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.08em', padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.3)', color: '#c4b5fd', textTransform: 'uppercase', lineHeight: '14px' }}>
-                  NEW
-                </span>
               </Link>
 
               <button
@@ -350,6 +403,7 @@ export default function Navigation() {
 
             {/* Nav links */}
             <nav className="flex-1 flex flex-col justify-center px-8 gap-1">
+              {/* Main links: Home → Services */}
               {links.map(({ href, label }, i) => {
                 const active = pathname === href
                 const planetColor = PATH_COLOR[href] ?? '#00d4ff'
@@ -380,6 +434,33 @@ export default function Navigation() {
                 )
               })}
 
+              {/* Void Chat — NEW */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: links.length * 0.05, duration: 0.25 }}
+              >
+                <Link
+                  href="/void-chat"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-3 w-full rounded-2xl px-5 transition-colors"
+                  style={{
+                    minHeight: '60px',
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    fontFamily: 'var(--font-space)',
+                    color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#7c3aed',
+                    background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.10)' : 'transparent',
+                    borderLeft: pathname.startsWith('/void-chat') ? '2px solid #a78bfa' : '2px solid transparent',
+                  }}
+                >
+                  Void Chat
+                  <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em', padding: '2px 6px', borderRadius: 4, background: 'rgba(139,92,246,0.35)', color: '#ddd6fe', textTransform: 'uppercase' }}>
+                    NEW
+                  </span>
+                </Link>
+              </motion.div>
+
               {/* Coming soon group */}
               <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '8px 20px' }} />
               {comingSoonLinks.map(({ href, label }, i) => {
@@ -390,7 +471,7 @@ export default function Navigation() {
                     key={href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (links.length + i) * 0.05 + 0.05, duration: 0.25 }}
+                    transition={{ delay: (links.length + 1 + i) * 0.05 + 0.05, duration: 0.25 }}
                   >
                     <Link
                       href={href}
@@ -425,6 +506,38 @@ export default function Navigation() {
                   </motion.div>
                 )
               })}
+
+              {/* About + Contact */}
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '8px 20px' }} />
+              {tailLinks.map(({ href, label }, i) => {
+                const active = pathname === href
+                const planetColor = PATH_COLOR[href] ?? '#00d4ff'
+                return (
+                  <motion.div
+                    key={href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (links.length + 1 + comingSoonLinks.length + i) * 0.05 + 0.1, duration: 0.25 }}
+                  >
+                    <Link
+                      href={href}
+                      className="flex items-center w-full rounded-2xl px-5 transition-colors"
+                      style={{
+                        minHeight: '52px',
+                        fontSize: '1.1rem',
+                        fontWeight: 500,
+                        fontFamily: 'var(--font-space)',
+                        color: active ? planetColor : '#94a3b8',
+                        background: active ? `rgba(${parseInt(planetColor.slice(1,3),16)},${parseInt(planetColor.slice(3,5),16)},${parseInt(planetColor.slice(5,7),16)},0.06)` : 'transparent',
+                        borderLeft: active ? `2px solid ${planetColor}` : '2px solid transparent',
+                        textShadow: active ? `0 0 10px ${planetColor}66` : 'none',
+                      }}
+                    >
+                      {label}
+                    </Link>
+                  </motion.div>
+                )
+              })}
             </nav>
 
             {/* Bottom CTA */}
@@ -452,21 +565,6 @@ export default function Navigation() {
                 }}
               >
                 Token
-              </Link>
-              <Link
-                href="/void-chat"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full rounded-full py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-                style={{
-                  background: 'rgba(139,92,246,0.15)',
-                  border: '1px solid rgba(139,92,246,0.35)',
-                  color: '#c4b5fd',
-                }}
-              >
-                Void Chat
-                <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.08em', padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.4)', color: '#ddd6fe', textTransform: 'uppercase', lineHeight: '14px' }}>
-                  NEW
-                </span>
               </Link>
               <button
                 onClick={() => { setMenuOpen(false); openModal() }}
