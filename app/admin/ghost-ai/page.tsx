@@ -23,7 +23,7 @@ export default async function AdminGhostAiPage() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
   const { data: profile } = await serviceClient
-    .from('users')
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single();

@@ -43,7 +43,7 @@ CREATE POLICY "Admin full access conversations"
     ON public.chat_conversations FOR ALL
     USING (
         EXISTS (
-            SELECT 1 FROM public.users
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
@@ -84,7 +84,7 @@ CREATE POLICY "Admin full access messages"
     ON public.chat_messages FOR ALL
     USING (
         EXISTS (
-            SELECT 1 FROM public.users
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
@@ -124,7 +124,7 @@ CREATE POLICY "Admin full access credits"
     ON public.user_credits FOR ALL
     USING (
         EXISTS (
-            SELECT 1 FROM public.users
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
@@ -156,7 +156,7 @@ CREATE POLICY "Admin full access deposits"
     ON public.ghai_deposits FOR ALL
     USING (
         EXISTS (
-            SELECT 1 FROM public.users
+            SELECT 1 FROM public.profiles
             WHERE id = auth.uid() AND role = 'admin'
         )
     );
