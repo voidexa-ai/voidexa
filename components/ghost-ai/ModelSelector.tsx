@@ -1,10 +1,10 @@
-// src/components/ghost-ai/ModelSelector.tsx
+// components/ghost-ai/ModelSelector.tsx
 // Dropdown for selecting AI provider and model
 
 'use client';
 
-import { useState } from 'react';
-import { PROVIDERS, MODELS, type ProviderSlug, type ModelDefinition } from '@/config/providers';
+import { useEffect, useState } from 'react';
+import { PROVIDERS, MODELS, type ProviderSlug } from '@/config/providers';
 import { GHAI_COSTS } from '@/config/pricing';
 
 interface ModelSelectorProps {
@@ -21,6 +21,24 @@ export function ModelSelector({
   onModelChange,
 }: ModelSelectorProps) {
   const providerModels = MODELS.filter((m) => m.provider === selectedProvider);
+  const [ghaiPriceUsd, setGhaiPriceUsd] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/ghai/price')
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d?.priceUsd) setGhaiPriceUsd(d.priceUsd); })
+      .catch(() => {});
+  }, []);
+
+  function formatPrice(modelId: string): string {
+    const ghaiCost = GHAI_COSTS[modelId] ?? 1;
+    if (ghaiPriceUsd !== null) {
+      const usd = ghaiCost * ghaiPriceUsd;
+      if (usd < 0.01) return `$${usd.toFixed(6)}/msg`;
+      return `$${usd.toFixed(4)}/msg`;
+    }
+    return `${ghaiCost} GHAI`;
+  }
 
   return (
     <div className="flex gap-2 items-center">
@@ -53,8 +71,7 @@ export function ModelSelector({
       >
         {providerModels.map((model) => (
           <option key={model.id} value={model.id}>
-            {model.displayName} ({GHAI_COSTS[model.id]} GHAI)
-            {model.isPremium ? ' ★' : ''}
+            {model.displayName} ({formatPrice(model.id)}{model.isPremium ? ' ★' : ''})
           </option>
         ))}
       </select>

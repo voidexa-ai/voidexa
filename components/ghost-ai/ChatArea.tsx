@@ -179,17 +179,24 @@ export function ChatArea({ conversationId, provider, model }: ChatAreaProps) {
 
         {isStreaming && !streamingContent && <StreamingIndicator />}
 
-        {/* Error display */}
-        {error && (
-          <div className="flex justify-center mb-4">
-            <div className="bg-red-900/30 border border-red-800 text-red-300 rounded-xl px-4 py-3 text-sm max-w-md">
-              {error}
-            </div>
-          </div>
-        )}
-
         <div ref={bottomRef} />
       </div>
+
+      {/* Error display — always below scroll area, never overlaps navbar */}
+      {error && (
+        <div className="px-4 py-2 border-t border-red-900/40">
+          <div className="flex items-start justify-between gap-3 bg-red-950/50 border border-red-800/60 text-red-300 rounded-xl px-4 py-3 text-sm">
+            <span>{friendlyError(error)}</span>
+            <button
+              onClick={() => setError(null)}
+              className="shrink-0 text-red-500 hover:text-red-300 transition-colors mt-0.5"
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Input */}
       <div className="border-t border-gray-800 p-4">
@@ -197,4 +204,17 @@ export function ChatArea({ conversationId, provider, model }: ChatAreaProps) {
       </div>
     </div>
   );
+}
+
+function friendlyError(msg: string): string {
+  const lower = msg.toLowerCase();
+  if (
+    lower.includes('ghai') ||
+    lower.includes('insufficient credits') ||
+    lower.includes('subscription') ||
+    lower.includes('requires')
+  ) {
+    return 'Insufficient GHAI balance. Deposit GHAI or buy credits with card.';
+  }
+  return msg;
 }

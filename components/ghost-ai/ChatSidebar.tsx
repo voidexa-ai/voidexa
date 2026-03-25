@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { ConversationList } from './ConversationList';
 import { CreditDisplay } from './CreditDisplay';
 import { ModelSelector } from './ModelSelector';
+import { GhaiTicker } from './GhaiTicker';
 import { MODELS, getDefaultModel, type ProviderSlug } from '@/config/providers';
 
 interface ChatSidebarProps {
@@ -72,9 +73,10 @@ export function ChatSidebar({
         <ConversationList />
       </div>
 
-      {/* Credits */}
-      <div className="p-4 border-t border-gray-800">
+      {/* Credits + GHAI ticker */}
+      <div className="p-4 border-t border-gray-800 space-y-3">
         <CreditDisplay />
+        <GhaiTicker />
       </div>
     </div>
   );
