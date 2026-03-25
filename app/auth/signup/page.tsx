@@ -23,7 +23,10 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name } },
+      options: {
+        data: { name },
+        emailRedirectTo: 'https://voidexa.com/auth/callback',
+      },
     })
 
     if (error) {

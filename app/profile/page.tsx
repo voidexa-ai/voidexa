@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Copy, Check, Wallet, ExternalLink } from 'lucide-react'
 import { useAuth } from '@/components/AuthProvider'
 import { supabase } from '@/lib/supabase'
-import { useWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 import bs58 from 'bs58'
 
@@ -32,17 +32,18 @@ interface WaitlistEntry {
 export default function ProfilePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const { publicKey, signMessage, connected, wallet, disconnect } = useWallet()
+  const { publicKey, signMessage, connected, wallet } = useWallet()
   const { setVisible: openWalletModal } = useWalletModal()
 
-  const [profile, setProfile]           = useState<Profile | null>(null)
-  const [wallets, setWallets]           = useState<WalletConnection[]>([])
-  const [waitlistEntries, setWaitlist]  = useState<WaitlistEntry[]>([])
-  const [name, setName]                 = useState('')
-  const [saving, setSaving]             = useState(false)
-  const [saved, setSaved]               = useState(false)
-  const [copied, setCopied]             = useState(false)
+  const [profile, setProfile]             = useState<Profile | null>(null)
+  const [wallets, setWallets]             = useState<WalletConnection[]>([])
+  const [waitlistEntries, setWaitlist]    = useState<WaitlistEntry[]>([])
+  const [name, setName]                   = useState('')
+  const [saving, setSaving]               = useState(false)
+  const [saved, setSaved]                 = useState(false)
+  const [copied, setCopied]               = useState(false)
   const [signingWallet, setSigningWallet] = useState(false)
+  const [walletError, setWalletError]     = useState('')
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -86,14 +87,38 @@ export default function ProfilePage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  async function connectAndVerifyWallet() {
-    if (!connected || !publicKey || !signMessage || !user) return
+  // Auto-verify when wallet connects (if not already saved)
+  useEffect(() => {
+    if (!connected || !publicKey || !user) return
+    const address = publicKey.toBase58()
+    const alreadySaved = wallets.some(w => w.wallet_address === address)
+    if (!alreadySaved && !signingWallet) {
+      console.log('[wallet] connected:', address, '— triggering verify')
+      verifyAndSaveWallet()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected, publicKey])
+
+  async function verifyAndSaveWallet() {
+    if (!connected || !publicKey || !user) {
+      console.log('[wallet] verifyAndSaveWallet: missing deps', { connected, publicKey: !!publicKey, user: !!user })
+      return
+    }
+    if (!signMessage) {
+      setWalletError('This wallet does not support message signing.')
+      console.warn('[wallet] signMessage not available on', wallet?.adapter.name)
+      return
+    }
     setSigningWallet(true)
+    setWalletError('')
     try {
       const timestamp = Date.now()
-      const msgBytes = new TextEncoder().encode(`Verify wallet for voidexa: ${timestamp}`)
+      const msg = `Verify wallet for voidexa: ${timestamp}`
+      console.log('[wallet] signing message:', msg)
+      const msgBytes = new TextEncoder().encode(msg)
       const sig = await signMessage(msgBytes)
       const sigBase58 = bs58.encode(sig)
+      console.log('[wallet] signed, saving to Supabase…')
 
       const { error } = await supabase.from('wallet_connections').upsert({
         user_id: user.id,
@@ -103,12 +128,21 @@ export default function ProfilePage() {
         verified: true,
       }, { onConflict: 'user_id,wallet_address' })
 
-      if (!error) {
-        const { data } = await supabase.from('wallet_connections').select('id, wallet_address, wallet_type, created_at').eq('user_id', user.id)
+      if (error) {
+        console.error('[wallet] upsert error:', error)
+        setWalletError(error.message)
+      } else {
+        console.log('[wallet] saved successfully')
+        const { data } = await supabase
+          .from('wallet_connections')
+          .select('id, wallet_address, wallet_type, created_at')
+          .eq('user_id', user.id)
         if (data) setWallets(data)
       }
-    } catch (e) {
-      // User rejected signature
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e)
+      console.warn('[wallet] signing rejected or failed:', msg)
+      setWalletError('Signing cancelled or failed.')
     }
     setSigningWallet(false)
   }
@@ -204,27 +238,30 @@ export default function ProfilePage() {
               <h2 className="text-sm font-semibold text-[#e2e8f0]">Connected wallets</h2>
               {!connected ? (
                 <button
-                  onClick={() => openWalletModal(true)}
+                  onClick={() => { setWalletError(''); openWalletModal(true) }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-opacity hover:opacity-80"
                   style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', color: '#a78bfa' }}
                 >
                   <Wallet size={12} />
                   Connect wallet
                 </button>
+              ) : signingWallet ? (
+                <span className="text-xs" style={{ color: '#64748b' }}>Signing…</span>
               ) : (
-                <button
-                  onClick={connectAndVerifyWallet}
-                  disabled={signingWallet}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-50"
-                  style={{ background: 'rgba(0,212,255,0.1)', border: '1px solid rgba(0,212,255,0.25)', color: '#00d4ff' }}
-                >
-                  {signingWallet ? 'Signing…' : 'Verify & save'}
-                </button>
+                <span className="text-xs" style={{ color: '#22c55e' }}>
+                  {publicKey?.toBase58().slice(0, 6)}… connected
+                </span>
               )}
             </div>
 
+            {walletError && (
+              <p className="text-xs mb-3 text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
+                {walletError}
+              </p>
+            )}
+
             {wallets.length === 0 ? (
-              <p className="text-xs" style={{ color: '#334155' }}>No wallets connected yet.</p>
+              <p className="text-xs" style={{ color: '#334155' }}>No wallets connected yet. Connect a wallet above to verify ownership.</p>
             ) : (
               <div className="space-y-2">
                 {wallets.map(w => (
