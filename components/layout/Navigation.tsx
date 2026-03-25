@@ -278,6 +278,19 @@ export default function Navigation() {
                 White Paper
               </Link>
 
+              <Link
+                href="/token"
+                className="px-3 py-2 text-sm rounded-lg transition-all"
+                style={{
+                  color: pathname === '/token' ? '#ccaa44' : '#64748b',
+                  background: pathname === '/token' ? 'rgba(204,170,68,0.08)' : 'transparent',
+                }}
+                onMouseEnter={e => { if (pathname !== '/token') (e.currentTarget as HTMLElement).style.color = '#94a3b8' }}
+                onMouseLeave={e => { if (pathname !== '/token') (e.currentTarget as HTMLElement).style.color = '#64748b' }}
+              >
+                Token
+              </Link>
+
               <button
                 onClick={() => openModal()}
                 className="ml-2 px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
@@ -410,6 +423,18 @@ export default function Navigation() {
                 }}
               >
                 White Paper
+              </Link>
+              <Link
+                href="/token"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center w-full rounded-full py-3 text-sm font-medium transition-opacity hover:opacity-80"
+                style={{
+                  background: 'rgba(204,170,68,0.06)',
+                  border: '1px solid rgba(204,170,68,0.2)',
+                  color: '#ccaa44',
+                }}
+              >
+                Token
               </Link>
               <button
                 onClick={() => { setMenuOpen(false); openModal() }}

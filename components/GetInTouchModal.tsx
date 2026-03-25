@@ -17,31 +17,29 @@ export function useGetInTouchModal() {
   return useContext(Ctx)
 }
 
-/* ── Products ── */
-const PRODUCTS = [
-  { value: 'ai-trading',  label: 'AI Trading Bot'  },
-  { value: 'ghost-ai',    label: 'Ghost AI'         },
-  { value: 'quantum',     label: 'Quantum'          },
-  { value: 'trading-hub', label: 'Trading Hub'      },
-  { value: 'node-system', label: 'Node System'      },
-  { value: 'comlink',     label: 'Comlink'          },
-  { value: 'apps',        label: 'Apps'             },
-  { value: 'general',     label: 'General enquiry'  },
+/* ── Interest options ── */
+const INTERESTS = [
+  { value: 'ai-trading',  label: 'AI Trading Bot' },
+  { value: 'ghost-ai',    label: 'Ghost AI Chat'  },
+  { value: 'quantum',     label: 'Quantum'         },
+  { value: 'trading-hub', label: 'Trading Hub'     },
+  { value: 'node-system', label: 'Node System'     },
+  { value: 'comlink',     label: 'Comlink'         },
+  { value: 'apps',        label: 'Apps'            },
 ]
-
-const WAITLIST_PRODUCTS = new Set(['ghost-ai', 'quantum', 'trading-hub', 'node-system', 'comlink'])
 
 /* ── Provider + Modal ── */
 export function GetInTouchProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
-  const [visible, setVisible]   = useState(false)
-  const [product, setProduct]   = useState(PRODUCTS[0].value)
-  const [name, setName]         = useState('')
-  const [email, setEmail]       = useState('')
-  const [message, setMessage]   = useState('')
-  const [sending, setSending]   = useState(false)
-  const [sent, setSent]         = useState(false)
-  const [error, setError]       = useState('')
+  const [visible, setVisible]         = useState(false)
+  const [selected, setSelected]       = useState<string[]>([])
+  const [newsletter, setNewsletter]   = useState(false)
+  const [name, setName]               = useState('')
+  const [email, setEmail]             = useState('')
+  const [message, setMessage]         = useState('')
+  const [sending, setSending]         = useState(false)
+  const [sent, setSent]               = useState(false)
+  const [error, setError]             = useState('')
   const overlayRef = useRef<HTMLDivElement>(null)
 
   // Prefill email from auth
@@ -51,7 +49,8 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
   }, [user])
 
   function open(preset?: string) {
-    if (preset) setProduct(preset)
+    setSelected(preset ? [preset] : [])
+    setNewsletter(false)
     setSent(false)
     setError('')
     setVisible(true)
@@ -61,35 +60,33 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
     setVisible(false)
   }
 
+  function toggleInterest(value: string) {
+    setSelected(prev =>
+      prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
+    )
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const allSelected = newsletter ? [...selected, 'newsletter'] : selected
+    if (allSelected.length === 0) { setError('Please select at least one interest.'); return }
+
     setSending(true)
     setError('')
 
-    const isWaitlist = WAITLIST_PRODUCTS.has(product)
+    const productStr = allSelected.join(',')
 
-    if (isWaitlist) {
-      const { error } = await supabase.from('waitlist_signups').insert({
-        email,
-        product,
-        name: name || null,
-        user_id: user?.id ?? null,
-      })
-      if (error) { setError(error.message); setSending(false); return }
-    } else {
-      const { error } = await supabase.from('contact_messages').insert({
-        name,
-        email,
-        subject: PRODUCTS.find(p => p.value === product)?.label ?? product,
-        message,
-        user_id: user?.id ?? null,
-      })
-      if (error) { setError(error.message); setSending(false); return }
-    }
+    const { error } = await supabase.from('waitlist_signups').insert({
+      email,
+      product: productStr,
+      name: name || null,
+      user_id: user?.id ?? null,
+    })
+    if (error) { setError(error.message); setSending(false); return }
 
     // Fire edge function notification (best-effort)
     supabase.functions.invoke('notify', {
-      body: { type: isWaitlist ? 'waitlist' : 'contact', product, email, name },
+      body: { type: 'waitlist', product: productStr, email, name },
     }).catch(() => {})
 
     setSending(false)
@@ -106,8 +103,6 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
     fontSize: 13,
     outline: 'none',
   }
-
-  const isWaitlist = WAITLIST_PRODUCTS.has(product)
 
   return (
     <Ctx.Provider value={{ open, close }}>
@@ -142,9 +137,11 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                 position: 'fixed',
                 top: '50%', left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '100%', maxWidth: 460,
+                width: '100%', maxWidth: 480,
                 zIndex: 201,
                 padding: '0 16px',
+                maxHeight: '90vh',
+                overflowY: 'auto',
               }}
             >
               <div
@@ -183,30 +180,74 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                       <span className="text-[#00d4ff]">✓</span>
                     </div>
                     <p className="font-semibold text-[#e2e8f0]" style={{ fontFamily: 'var(--font-space)' }}>
-                      {isWaitlist ? "You're on the list!" : 'Message sent!'}
+                      {"You're on the list!"}
                     </p>
                     <p className="text-sm mt-1" style={{ color: '#64748b' }}>
-                      {isWaitlist ? "We'll notify you when it launches." : "We'll respond within 24 hours."}
+                      {"We'll notify you when it launches."}
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-3">
-                    {/* Product selector */}
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Interest checkboxes */}
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
-                        I'm interested in
+                      <label className="block text-xs font-medium uppercase tracking-wider mb-2.5" style={{ color: '#7a8a9e' }}>
+                        {"I'm interested in"}
                       </label>
-                      <select
-                        value={product}
-                        onChange={e => setProduct(e.target.value)}
-                        style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}
-                      >
-                        {PRODUCTS.map(p => (
-                          <option key={p.value} value={p.value}>{p.label}</option>
-                        ))}
-                      </select>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {INTERESTS.map(({ value, label }) => {
+                          const checked = selected.includes(value)
+                          return (
+                            <button
+                              key={value}
+                              type="button"
+                              onClick={() => toggleInterest(value)}
+                              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-left text-xs font-medium transition-all"
+                              style={{
+                                background: checked ? 'rgba(0,212,255,0.08)' : 'rgba(255,255,255,0.03)',
+                                border: `1px solid ${checked ? 'rgba(0,212,255,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                                color: checked ? '#00d4ff' : '#64748b',
+                              }}
+                            >
+                              <span
+                                className="shrink-0 w-3.5 h-3.5 rounded flex items-center justify-center"
+                                style={{
+                                  background: checked ? 'rgba(0,212,255,0.2)' : 'rgba(255,255,255,0.05)',
+                                  border: `1px solid ${checked ? '#00d4ff' : 'rgba(255,255,255,0.15)'}`,
+                                }}
+                              >
+                                {checked && <span style={{ color: '#00d4ff', fontSize: 9, lineHeight: 1 }}>✓</span>}
+                              </span>
+                              {label}
+                            </button>
+                          )
+                        })}
+                      </div>
                     </div>
 
+                    {/* Newsletter */}
+                    <button
+                      type="button"
+                      onClick={() => setNewsletter(v => !v)}
+                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-xl text-left text-xs font-medium transition-all"
+                      style={{
+                        background: newsletter ? 'rgba(139,92,246,0.08)' : 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${newsletter ? 'rgba(139,92,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                        color: newsletter ? '#a78bfa' : '#64748b',
+                      }}
+                    >
+                      <span
+                        className="shrink-0 w-3.5 h-3.5 rounded flex items-center justify-center"
+                        style={{
+                          background: newsletter ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)',
+                          border: `1px solid ${newsletter ? '#a78bfa' : 'rgba(255,255,255,0.15)'}`,
+                        }}
+                      >
+                        {newsletter && <span style={{ color: '#a78bfa', fontSize: 9, lineHeight: 1 }}>✓</span>}
+                      </span>
+                      Subscribe to newsletter — general updates
+                    </button>
+
+                    {/* Name + Email */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
@@ -235,20 +276,19 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                       </div>
                     </div>
 
-                    {!isWaitlist && (
-                      <div>
-                        <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
-                          Message
-                        </label>
-                        <textarea
-                          rows={3}
-                          value={message}
-                          onChange={e => setMessage(e.target.value)}
-                          placeholder="Tell us what you're building…"
-                          style={{ ...inputStyle, resize: 'none' }}
-                        />
-                      </div>
-                    )}
+                    {/* Message */}
+                    <div>
+                      <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
+                        Message <span style={{ color: '#334155', fontWeight: 400 }}>(optional)</span>
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                        placeholder="Tell us what you're building…"
+                        style={{ ...inputStyle, resize: 'none' }}
+                      />
+                    </div>
 
                     {error && (
                       <p className="text-xs text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
@@ -262,7 +302,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                       className="w-full flex items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-[#0a0a0f] transition-opacity hover:opacity-90 disabled:opacity-50"
                       style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)', marginTop: 4 }}
                     >
-                      {sending ? 'Sending…' : isWaitlist ? 'Join waitlist' : 'Send message'}
+                      {sending ? 'Sending…' : 'Send'}
                       {!sending && <ArrowRight size={14} />}
                     </button>
                   </form>

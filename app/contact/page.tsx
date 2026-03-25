@@ -6,21 +6,14 @@ import { Send } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/components/AuthProvider'
 
-const subjects = [
-  'AI Trading Bot — access request',
-  'Join the Node — waitlist',
-  'Comlink — beta access',
-  'AI Book Creator — waitlist',
-  'AI Website Builder — waitlist',
-  'Ghost AI — waitlist',
-  'Quantum — waitlist',
-  'Trading Hub — waitlist',
-  'Custom app development',
-  'Data intelligence project',
-  'AI consulting',
-  'Node membership',
-  'General inquiry',
-  'Other',
+const INTERESTS = [
+  { value: 'ai-trading',  label: 'AI Trading Bot'    },
+  { value: 'ghost-ai',    label: 'Ghost AI Chat'      },
+  { value: 'quantum',     label: 'Quantum'            },
+  { value: 'trading-hub', label: 'Trading Hub'        },
+  { value: 'node-system', label: 'Node System'        },
+  { value: 'comlink',     label: 'Comlink'            },
+  { value: 'apps',        label: 'Apps'               },
 ]
 
 const inputStyle = {
@@ -31,25 +24,34 @@ const inputStyle = {
 
 export default function ContactPage() {
   const { user } = useAuth()
-  const [form, setForm]   = useState({ name: '', email: user?.email ?? '', subject: subjects[0], message: '' })
-  const [sent, setSent]   = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [name, setName]             = useState('')
+  const [email, setEmail]           = useState(user?.email ?? '')
+  const [selected, setSelected]     = useState<string[]>([])
+  const [newsletter, setNewsletter] = useState(false)
+  const [message, setMessage]       = useState('')
+  const [sent, setSent]             = useState(false)
+  const [error, setError]           = useState('')
+  const [loading, setLoading]       = useState(false)
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+  function toggleInterest(value: string) {
+    setSelected(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value])
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const allSelected = newsletter ? [...selected, 'newsletter'] : selected
+    if (allSelected.length === 0) { setError('Please select at least one interest.'); return }
+
     setError('')
     setLoading(true)
 
+    const subject = allSelected.join(', ')
+
     const { error } = await supabase.from('contact_messages').insert({
-      name: form.name,
-      email: form.email,
-      subject: form.subject,
-      message: form.message,
+      name,
+      email,
+      subject,
+      message,
       user_id: user?.id ?? null,
     })
 
@@ -61,7 +63,7 @@ export default function ContactPage() {
 
     // Fire edge function notification (best-effort)
     supabase.functions.invoke('notify', {
-      body: { type: 'contact', email: form.email, name: form.name, subject: form.subject },
+      body: { type: 'contact', email, name, subject },
     }).catch(() => {})
 
     setLoading(false)
@@ -85,11 +87,11 @@ export default function ContactPage() {
             className="text-5xl sm:text-6xl font-bold text-[#e2e8f0] mb-4"
             style={{ fontFamily: 'var(--font-space)' }}
           >
-            Let's build{' '}
+            {"Let's build "}
             <span className="gradient-text">something.</span>
           </h1>
           <p className="text-[#b0b0b0] max-w-md mx-auto">
-            Tell us what you're working on. We respond within 24 hours.
+            Tell us what you&apos;re working on. We respond within 24 hours.
           </p>
         </motion.div>
 
@@ -114,20 +116,20 @@ export default function ContactPage() {
               >
                 Message sent!
               </h2>
-              <p className="text-[#b0b0b0]">We'll respond within 24 hours.</p>
+              <p className="text-[#b0b0b0]">{"We'll respond within 24 hours."}</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Name
                   </label>
                   <input
-                    name="name"
                     required
-                    value={form.name}
-                    onChange={handleChange}
+                    value={name}
+                    onChange={e => setName(e.target.value)}
                     placeholder="Your name"
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none focus:border-[#00d4ff]/50 transition-colors placeholder-[#334155]"
                     style={inputStyle}
@@ -138,11 +140,10 @@ export default function ContactPage() {
                     Email
                   </label>
                   <input
-                    name="email"
                     type="email"
                     required
-                    value={form.email}
-                    onChange={handleChange}
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none focus:border-[#00d4ff]/50 transition-colors placeholder-[#334155]"
                     style={inputStyle}
@@ -150,31 +151,75 @@ export default function ContactPage() {
                 </div>
               </div>
 
+              {/* Interest checkboxes */}
               <div>
-                <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
-                  Subject
+                <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-3">
+                  {"I'm interested in"}
                 </label>
-                <select
-                  name="subject"
-                  value={form.subject}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none cursor-pointer"
-                  style={{ ...inputStyle, appearance: 'none' }}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {INTERESTS.map(({ value, label }) => {
+                    const checked = selected.includes(value)
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => toggleInterest(value)}
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-left text-sm transition-all"
+                        style={{
+                          background: checked ? 'rgba(0,212,255,0.06)' : 'rgba(255,255,255,0.02)',
+                          border: `1px solid ${checked ? 'rgba(0,212,255,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                          color: checked ? '#00d4ff' : '#64748b',
+                        }}
+                      >
+                        <span
+                          className="shrink-0 w-4 h-4 rounded flex items-center justify-center"
+                          style={{
+                            background: checked ? 'rgba(0,212,255,0.2)' : 'rgba(255,255,255,0.04)',
+                            border: `1px solid ${checked ? '#00d4ff' : 'rgba(255,255,255,0.12)'}`,
+                          }}
+                        >
+                          {checked && <span style={{ color: '#00d4ff', fontSize: 10, lineHeight: 1 }}>✓</span>}
+                        </span>
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Newsletter */}
+                <button
+                  type="button"
+                  onClick={() => setNewsletter(v => !v)}
+                  className="flex items-center gap-2 mt-2 px-3 py-2.5 rounded-xl text-left text-sm transition-all w-full"
+                  style={{
+                    background: newsletter ? 'rgba(139,92,246,0.06)' : 'rgba(255,255,255,0.02)',
+                    border: `1px solid ${newsletter ? 'rgba(139,92,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
+                    color: newsletter ? '#a78bfa' : '#64748b',
+                  }}
                 >
-                  {subjects.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
+                  <span
+                    className="shrink-0 w-4 h-4 rounded flex items-center justify-center"
+                    style={{
+                      background: newsletter ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.04)',
+                      border: `1px solid ${newsletter ? '#a78bfa' : 'rgba(255,255,255,0.12)'}`,
+                    }}
+                  >
+                    {newsletter && <span style={{ color: '#a78bfa', fontSize: 10, lineHeight: 1 }}>✓</span>}
+                  </span>
+                  Subscribe to newsletter — general updates
+                </button>
               </div>
 
+              {/* Message */}
               <div>
                 <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                   Message
                 </label>
                 <textarea
-                  name="message"
                   required
                   rows={5}
-                  value={form.message}
-                  onChange={handleChange}
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
                   placeholder="What are you building? What do you need?"
                   className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none focus:border-[#00d4ff]/50 transition-colors placeholder-[#334155]"
                   style={inputStyle}
@@ -196,7 +241,6 @@ export default function ContactPage() {
                   width: '100%',
                   padding: '16px 32px',
                   fontSize: '16px',
-                  overflow: 'visible',
                   boxSizing: 'border-box',
                 }}
               >
