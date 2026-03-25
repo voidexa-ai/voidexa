@@ -18,7 +18,7 @@ interface WalletConnection {
   id: string
   wallet_address: string
   wallet_type: string
-  created_at: string
+  connected_at: string
 }
 
 interface WaitlistEntry {
@@ -72,7 +72,7 @@ export default function ProfilePage() {
     async function load() {
       const [profileRes, walletsRes, waitlistRes] = await Promise.all([
         supabase.from('profiles').select('name, role, referral_code').eq('id', user!.id).single(),
-        supabase.from('wallet_connections').select('id, wallet_address, wallet_type, created_at').eq('user_id', user!.id),
+        supabase.from('wallet_connections').select('id, wallet_address, wallet_type, connected_at').eq('user_id', user!.id),
         supabase.from('waitlist_signups').select('id, product, created_at').eq('user_id', user!.id).order('created_at', { ascending: false }),
       ])
 
@@ -106,7 +106,7 @@ export default function ProfilePage() {
     if (!user) return
     const { data } = await supabase
       .from('wallet_connections')
-      .select('id, wallet_address, wallet_type, created_at')
+      .select('id, wallet_address, wallet_type, connected_at')
       .eq('user_id', user.id)
     if (data) setWallets(data)
   }
