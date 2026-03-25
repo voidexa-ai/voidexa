@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
 import CSSStarfield from './CSSStarfield'
-import MiniNav from './MiniNav'
 
 // R3F canvas — client-side only, no SSR
 const StarMapCanvas = dynamic(() => import('./StarMapCanvas'), {
@@ -34,9 +33,6 @@ export default function StarMapPage() {
 
       {/* R3F canvas — loads progressively on top */}
       <StarMapCanvas />
-
-      {/* Mini navigation overlay */}
-      <MiniNav />
 
       {/* Interaction hint */}
       <div

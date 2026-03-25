@@ -51,9 +51,6 @@ export default function Navigation() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
-  // Star map homepage has its own MiniNav — all hooks called above
-  if (pathname === '/') return null
-
   function dismissBanner() {
     localStorage.setItem(BANNER_KEY, 'true')
     setBanner(false)
