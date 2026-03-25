@@ -1,0 +1,115 @@
+// src/app/ghost-ai/pricing/page.tsx
+// Ghost AI Chat — Pricing page with three tiers
+
+'use client';
+
+import { FREE_TIER, GHAI_COSTS, STRIPE_PRO, GHAI_DISCOUNT_PERCENT } from '@/config/pricing';
+import { MODELS } from '@/config/providers';
+
+export default function PricingPage() {
+  return (
+    <div className="min-h-screen bg-gray-950 text-white py-20 px-4">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-4">Ghost AI Pricing</h1>
+        <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+          Access the world&apos;s best AI models. Pay only for what you use with GHAI tokens,
+          or subscribe for unlimited access.
+        </p>
+
+        {/* Three pricing tiers */}
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Free Tier */}
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+            <h3 className="text-xl font-semibold mb-2">Free</h3>
+            <p className="text-3xl font-bold mb-1">$0</p>
+            <p className="text-gray-500 mb-6">forever</p>
+            <ul className="space-y-3 text-gray-300 mb-8">
+              <li>✓ {FREE_TIER.messagesPerDay} messages per day</li>
+              <li>✓ Budget models only</li>
+              <li>✓ No wallet required</li>
+              <li>✗ No premium models</li>
+            </ul>
+            <button className="w-full py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors">
+              Get Started
+            </button>
+          </div>
+
+          {/* GHAI Pay-per-use */}
+          <div className="bg-gray-900 border-2 border-purple-500 rounded-2xl p-8 relative">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-sm px-3 py-1 rounded-full">
+              {GHAI_DISCOUNT_PERCENT}% cheaper
+            </span>
+            <h3 className="text-xl font-semibold mb-2">GHAI Tokens</h3>
+            <p className="text-3xl font-bold mb-1">1-5 GHAI</p>
+            <p className="text-gray-500 mb-6">per message</p>
+            <ul className="space-y-3 text-gray-300 mb-8">
+              <li>✓ All models including premium</li>
+              <li>✓ Pay only for what you use</li>
+              <li>✓ No subscription</li>
+              <li>✓ {GHAI_DISCOUNT_PERCENT}% cheaper than fiat</li>
+            </ul>
+            <button className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors">
+              Deposit GHAI
+            </button>
+          </div>
+
+          {/* Stripe Pro */}
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+            <h3 className="text-xl font-semibold mb-2">Pro</h3>
+            <p className="text-3xl font-bold mb-1">${STRIPE_PRO.pricePerMonth / 100}</p>
+            <p className="text-gray-500 mb-6">per month</p>
+            <ul className="space-y-3 text-gray-300 mb-8">
+              <li>✓ Unlimited standard models</li>
+              <li>✓ Pay with credit card</li>
+              <li>✓ No wallet needed</li>
+              <li>✗ Premium models need GHAI</li>
+            </ul>
+            <button className="w-full py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors">
+              Subscribe
+            </button>
+          </div>
+        </div>
+
+        {/* Per-model pricing table */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6 text-center">Per-Model Pricing</h2>
+          <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-800 text-gray-400 text-sm">
+                  <th className="text-left p-4">Model</th>
+                  <th className="text-left p-4">Provider</th>
+                  <th className="text-right p-4">GHAI / message</th>
+                  <th className="text-right p-4">Tier</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MODELS.map((model) => (
+                  <tr key={model.id} className="border-b border-gray-800/50">
+                    <td className="p-4 font-medium">{model.displayName}</td>
+                    <td className="p-4 text-gray-400">{model.provider}</td>
+                    <td className="p-4 text-right">{GHAI_COSTS[model.id]} GHAI</td>
+                    <td className="p-4 text-right">
+                      {model.isPremium ? (
+                        <span className="text-yellow-400 text-sm">Premium</span>
+                      ) : (
+                        <span className="text-green-400 text-sm">Standard</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Transparency notice */}
+        <p className="text-center text-gray-500 text-sm mt-12">
+          Powered by Claude, ChatGPT, and Gemini — orchestrated by voidexa.
+          <br />
+          GHAI is a utility token. Not financial advice. Not an investment.
+        </p>
+      </div>
+    </div>
+  );
+}
