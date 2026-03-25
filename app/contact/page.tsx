@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, ArrowRight } from 'lucide-react'
+import { Send, ArrowRight } from 'lucide-react'
 
 const subjects = [
   'AI Trading Bot — access request',
@@ -21,24 +21,25 @@ const subjects = [
   'Other',
 ]
 
+const inputStyle = {
+  background: 'rgba(255,255,255,0.03)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  color: '#e2e8f0',
+}
+
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', subject: subjects[0], message: '' })
   const [sent, setSent] = useState(false)
 
+  // Detect redirect back from formsubmit.co with ?sent=true
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('sent=true')) {
+      setSent(true)
+    }
+  }, [])
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    // In a real implementation this would POST to an API route
-    setSent(true)
-  }
-
-  const inputStyle = {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    color: '#e2e8f0',
   }
 
   return (
@@ -85,12 +86,21 @@ export default function ContactPage() {
                 className="text-2xl font-bold text-[#e2e8f0] mb-2"
                 style={{ fontFamily: 'var(--font-space)' }}
               >
-                Message sent.
+                Message sent!
               </h2>
-              <p className="text-[#b0b0b0]">We'll get back to you within 24 hours.</p>
+              <p className="text-[#b0b0b0]">We'll respond within 24 hours.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form
+              method="POST"
+              action="https://formsubmit.co/contact@voidexa.com"
+              className="space-y-5"
+            >
+              {/* FormSubmit hidden fields */}
+              <input type="hidden" name="_subject" value="voidexa.com contact" />
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_next" value="https://voidexa.com/contact?sent=true" />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
@@ -156,10 +166,17 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full text-sm font-semibold text-[#0a0a0f] hover:opacity-90 transition-opacity glow-cyan-btn"
-                style={{ background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)' }}
+                className="flex items-center justify-center gap-2 rounded-full font-semibold text-[#0a0a0f] hover:opacity-90 transition-opacity glow-cyan-btn"
+                style={{
+                  background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)',
+                  width: '100%',
+                  padding: '16px 32px',
+                  fontSize: '16px',
+                  overflow: 'visible',
+                  boxSizing: 'border-box',
+                }}
               >
-                Send message <ArrowRight size={15} />
+                Send message →
               </button>
             </form>
           )}
