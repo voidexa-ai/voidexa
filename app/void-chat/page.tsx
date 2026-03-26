@@ -77,6 +77,21 @@ export default function ChatPage() {
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto">
+      {/* Preview badge */}
+      <div className="flex items-center justify-center pt-4 pb-0 px-4">
+        <span
+          className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em] px-3 py-1 rounded-full"
+          style={{
+            background: 'rgba(139,92,246,0.07)',
+            border: '1px solid rgba(139,92,246,0.18)',
+            color: 'rgba(167,139,250,0.6)',
+          }}
+        >
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(139,92,246,0.7)', display: 'inline-block' }} />
+          Preview — You&apos;re among the first to experience Void Chat
+        </span>
+      </div>
+
       {/* Welcome hero */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-2xl mx-auto w-full">
         <h1 className="text-3xl font-bold mb-2 text-center">Void Chat</h1>
