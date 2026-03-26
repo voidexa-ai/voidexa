@@ -69,7 +69,18 @@ export function ChatArea({ conversationId, provider, model }: ChatAreaProps) {
       ghai_cost: 0,
       created_at: new Date().toISOString(),
     };
-    setMessages((prev) => [...prev, tempUserMsg]);
+    setMessages((prev) => {
+      // Auto-name: if this is the first message, update conversation title
+      if (prev.length === 0) {
+        const title = message.slice(0, 40).trim();
+        fetch('/api/chat/conversations', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ conversationId, title }),
+        }).catch(() => {});
+      }
+      return [...prev, tempUserMsg];
+    });
 
     try {
       const res = await fetch('/api/chat/send', {

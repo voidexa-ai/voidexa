@@ -7,7 +7,6 @@ import { cookies } from 'next/headers';
 import { getUserCredits } from '@/lib/supabase/credit-queries';
 import { getWalletGhaiBalance } from '@/lib/ghai/balance';
 import { createClient } from '@supabase/supabase-js';
-import { FREE_TIER } from '@/config/pricing';
 import type { BalanceResponse, CreditTier } from '@/types/credits';
 
 export async function GET() {
@@ -19,17 +18,12 @@ export async function GET() {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
     const credits = await getUserCredits(user.id);
-    if (!credits) {
-      return NextResponse.json({ error: 'Credits not found' }, { status: 404 });
-    }
+    if (!credits) return NextResponse.json({ error: 'Credits not found' }, { status: 404 });
 
-    // Get connected wallet address
     const serviceClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -45,21 +39,13 @@ export async function GET() {
       walletBalance = await getWalletGhaiBalance(wallet.wallet_address);
     }
 
-    // Determine free messages remaining
-    const now = new Date();
-    const resetAt = new Date(credits.free_messages_reset_at);
-    const freeUsed = now >= resetAt ? 0 : credits.free_messages_used_today;
-    const freeRemaining = Math.max(0, FREE_TIER.messagesPerDay - freeUsed);
-
-    // Determine active tier
-    let tier: CreditTier = 'free';
+    let tier: CreditTier = 'ghai';
     if (credits.subscription_status === 'active') tier = 'pro';
-    else if (credits.ghai_balance_platform > 0) tier = 'ghai';
 
     const response: BalanceResponse = {
       platformBalance: credits.ghai_balance_platform,
       walletBalance,
-      freeMessagesRemaining: freeRemaining,
+      freeMessagesRemaining: 0, // free tier removed
       subscriptionStatus: credits.subscription_status,
       tier,
     };
