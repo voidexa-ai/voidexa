@@ -26,48 +26,84 @@ function getCountdown(): string {
   return `${mins}m ${secs}s`
 }
 
-// Main nav links — center of navbar
+// FIX 2: All products visible in top nav
 const mainLinks = [
-  { href: '/home',     label: 'Home'       },
-  { href: '/trading',  label: 'AI Trading' },
-  { href: '/apps',     label: 'Apps'       },
-  { href: '/ai-tools', label: 'AI Tools'   },
-  { href: '/services', label: 'Services'   },
+  { href: '/home',        label: 'Home',        badge: null   },
+  { href: '/trading',     label: 'AI Trading',  badge: null   },
+  { href: '/trading-hub', label: 'Trading Hub', badge: null   },
+  { href: '/apps',        label: 'Apps',        badge: null   },
+  { href: '/ai-tools',    label: 'AI Tools',    badge: null   },
+  { href: '/services',    label: 'Services',    badge: null   },
+  { href: '/quantum',     label: 'Quantum',     badge: 'SOON' },
 ]
 
-// "More" dropdown items
+// "More" dropdown — Space Station only
 const moreLinks = [
-  { href: '/ghost-ai',    label: 'Ghost AI',     badge: null   },
-  { href: '/quantum',     label: 'Quantum',      badge: 'SOON' },
-  { href: '/trading-hub', label: 'Trading Hub',  badge: null   },
-  { href: '/station',     label: 'Space Station', badge: 'NEW'  },
-  null, // divider
-  { href: '/about',       label: 'About',        badge: null   },
-  { href: '/contact',     label: 'Contact',      badge: null   },
-  null, // divider
-  { href: '/whitepaper',  label: 'White Paper',  badge: null   },
-  { href: '/token',       label: 'Token',        badge: null   },
+  { href: '/station', label: 'Space Station', badge: 'NEW' },
 ] as const
 
-// Mobile: all secondary links (shown below main links in hamburger)
+// FIX 3: Info panel links (removed from top nav)
+const infoPanelLinks = [
+  { href: '/about',      label: 'About'       },
+  { href: '/contact',    label: 'Contact'     },
+  { href: '/ghost-ai',   label: 'Ghost AI'    },
+  { href: '/token',      label: 'Token'       },
+  { href: '/whitepaper', label: 'White Paper' },
+]
+
+// Mobile: secondary links
 const mobileSecondary = [
-  { href: '/ghost-ai',    label: 'Ghost AI',     badge: null   },
-  { href: '/quantum',     label: 'Quantum',      badge: 'SOON' },
-  { href: '/trading-hub', label: 'Trading Hub',  badge: null   },
-  { href: '/station',     label: 'Space Station', badge: 'NEW'  },
-  { href: '/about',       label: 'About',        badge: null   },
-  { href: '/contact',     label: 'Contact',      badge: null   },
-  { href: '/whitepaper',  label: 'White Paper',  badge: null   },
-  { href: '/token',       label: 'Token',        badge: null   },
+  { href: '/station',    label: 'Space Station', badge: 'NEW'  },
+  { href: '/about',      label: 'About',         badge: null   },
+  { href: '/contact',    label: 'Contact',       badge: null   },
+  { href: '/ghost-ai',   label: 'Ghost AI',      badge: null   },
+  { href: '/token',      label: 'Token',         badge: null   },
+  { href: '/whitepaper', label: 'White Paper',   badge: null   },
 ] as const
+
+// FIX 4: Page label map for breadcrumb
+const PAGE_LABELS: Record<string, string> = {
+  '/':             'Home',
+  '/home':         'Home',
+  '/trading':      'AI Trading',
+  '/trading-hub':  'Trading Hub',
+  '/apps':         'Apps',
+  '/ai-tools':     'AI Tools',
+  '/services':     'Services',
+  '/void-chat':    'Void Chat',
+  '/quantum':      'Quantum',
+  '/station':      'Space Station',
+  '/about':        'About',
+  '/contact':      'Contact',
+  '/ghost-ai':     'Ghost AI',
+  '/token':        'Token',
+  '/whitepaper':   'White Paper',
+  '/products':     'Products',
+  '/profile':      'Profile',
+}
+
+function getPageLabel(pathname: string): string {
+  if (pathname.startsWith('/void-chat')) return 'Void Chat'
+  if (pathname.startsWith('/trading-hub/')) return 'Trading Hub'
+  return PAGE_LABELS[pathname] ?? ''
+}
 
 const PATH_COLOR: Record<string, string> = {}
 STAR_MAP_NODES.forEach(n => { if (n.path) PATH_COLOR[n.path] = n.emissive })
+
+function hexToRgb(hex: string) {
+  return {
+    r: parseInt(hex.slice(1, 3), 16),
+    g: parseInt(hex.slice(3, 5), 16),
+    b: parseInt(hex.slice(5, 7), 16),
+  }
+}
 
 export default function Navigation() {
   const [scrolled, setScrolled]       = useState(false)
   const [menuOpen, setMenuOpen]       = useState(false)
   const [moreOpen, setMoreOpen]       = useState(false)
+  const [infoPanelOpen, setInfoPanel] = useState(false)
   const [bannerVisible, setBanner]    = useState(false)
   const [countdown, setCountdown]     = useState('')
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
@@ -84,14 +120,13 @@ export default function Navigation() {
     return () => { clearInterval(tick); window.removeEventListener('scroll', onScroll) }
   }, [])
 
-  useEffect(() => { setMenuOpen(false); setMoreOpen(false) }, [pathname])
+  useEffect(() => { setMenuOpen(false); setMoreOpen(false); setInfoPanel(false) }, [pathname])
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    document.body.style.overflow = menuOpen || infoPanelOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [menuOpen])
+  }, [menuOpen, infoPanelOpen])
 
-  // Close "More" on outside click
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
@@ -105,20 +140,11 @@ export default function Navigation() {
   function dismissBanner() {
     localStorage.setItem(BANNER_KEY, 'true')
     setBanner(false)
-    // Notify VoidChatShell if open
     window.dispatchEvent(new CustomEvent('banner-dismissed'))
   }
 
-  function linkColor(href: string): string {
-    return (pathname === href || hoveredHref === href) ? (PATH_COLOR[href] ?? '#00d4ff') : '#94a3b8'
-  }
-
-  function linkBg(href: string): string {
-    if (hoveredHref !== href) return 'transparent'
-    const col = PATH_COLOR[href] ?? '#00d4ff'
-    const r = parseInt(col.slice(1,3),16), g = parseInt(col.slice(3,5),16), b = parseInt(col.slice(5,7),16)
-    return `rgba(${r},${g},${b},0.10)`
-  }
+  const isMoreActive = pathname === '/station'
+  const pageLabel = getPageLabel(pathname)
 
   return (
     <>
@@ -165,7 +191,7 @@ export default function Navigation() {
             boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.4),0 1px 0 rgba(0,212,255,0.06)' : 'none',
           }}
         >
-          <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+          <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group shrink-0">
@@ -179,18 +205,20 @@ export default function Navigation() {
                 <span className="text-lg font-bold tracking-tight gradient-text" style={{ fontFamily: 'var(--font-space)' }}>
                   voidexa
                 </span>
-                <span className="hidden sm:block text-[11px] font-medium tracking-widest uppercase" style={{ color: '#666', letterSpacing: '0.12em' }}>
-                  sovereign AI infrastructure
+                <span className="hidden xl:block text-[10px] font-medium tracking-widest uppercase" style={{ color: '#555', letterSpacing: '0.1em' }}>
+                  sovereign AI
                 </span>
               </div>
             </Link>
 
-            {/* Desktop: main links */}
-            <div className="hidden md:flex items-center gap-0.5 flex-1 justify-center">
-              {mainLinks.map(({ href, label }) => {
-                const active = pathname === href
+            {/* Desktop: main links — FIX 1 + FIX 2 */}
+            <div className="hidden lg:flex items-center gap-0 flex-1 justify-center">
+              {mainLinks.map(({ href, label, badge }) => {
+                const active = href === '/trading-hub'
+                  ? pathname.startsWith('/trading-hub')
+                  : pathname === href
                 const planetColor = PATH_COLOR[href] ?? '#00d4ff'
-                const r = parseInt(planetColor.slice(1,3),16), g = parseInt(planetColor.slice(3,5),16), b = parseInt(planetColor.slice(5,7),16)
+                const { r, g, b } = hexToRgb(planetColor)
                 return (
                   <div key={href} style={{ position: 'relative' }}>
                     <Link
@@ -198,16 +226,30 @@ export default function Navigation() {
                       onMouseEnter={() => setHoveredHref(href)}
                       onMouseLeave={() => setHoveredHref(null)}
                       style={{
-                        display: 'block', padding: '6px 12px', borderRadius: 6,
-                        fontSize: '0.875rem', fontWeight: 500, textDecoration: 'none',
+                        display: 'flex', alignItems: 'center', gap: 3,
+                        padding: '5px 9px', borderRadius: 6,
+                        fontSize: '0.8rem', fontWeight: 500, textDecoration: 'none',
                         color: (active || hoveredHref === href) ? planetColor : '#94a3b8',
-                        background: hoveredHref === href ? `rgba(${r},${g},${b},0.10)` : 'transparent',
-                        textShadow: (active || hoveredHref === href) ? `0 0 14px ${planetColor}` : 'none',
+                        background: active
+                          ? `rgba(${r},${g},${b},0.10)`
+                          : hoveredHref === href ? `rgba(${r},${g},${b},0.07)` : 'transparent',
+                        textShadow: (active || hoveredHref === href) ? `0 0 12px ${planetColor}` : 'none',
                         transition: 'all 0.25s ease',
                       }}
                     >
                       {label}
+                      {badge && (
+                        <span style={{
+                          fontSize: '7px', fontWeight: 700, letterSpacing: '0.08em',
+                          padding: '1px 4px', borderRadius: 3,
+                          background: `rgba(${r},${g},${b},0.18)`, color: planetColor,
+                          textTransform: 'uppercase', lineHeight: '12px',
+                        }}>
+                          {badge}
+                        </span>
+                      )}
                     </Link>
+                    {/* FIX 1: active indicator — animated underline */}
                     {active && (
                       <motion.div
                         layoutId="nav-indicator"
@@ -223,42 +265,86 @@ export default function Navigation() {
                 )
               })}
 
-              {/* Void Chat — NEW */}
-              <Link
-                href="/void-chat"
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-all ml-1"
-                style={{
-                  color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#8b5cf6',
-                  background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.14)' : 'rgba(139,92,246,0.08)',
-                  fontWeight: 500,
-                  border: '1px solid rgba(139,92,246,0.25)',
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.18)'; (e.currentTarget as HTMLElement).style.color = '#c4b5fd' }}
-                onMouseLeave={e => { if (!pathname.startsWith('/void-chat')) { (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.08)'; (e.currentTarget as HTMLElement).style.color = '#8b5cf6' } }}
-              >
-                Void Chat
-                <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.1em', padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.35)', color: '#ddd6fe', textTransform: 'uppercase', lineHeight: '14px' }}>
-                  NEW
-                </span>
-              </Link>
+              {/* Void Chat */}
+              <div style={{ position: 'relative', marginLeft: 2 }}>
+                <Link
+                  href="/void-chat"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 4,
+                    padding: '5px 9px', borderRadius: 6,
+                    fontSize: '0.8rem', fontWeight: 500, textDecoration: 'none',
+                    color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#8b5cf6',
+                    background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.14)' : 'rgba(139,92,246,0.07)',
+                    border: '1px solid rgba(139,92,246,0.22)',
+                    transition: 'all 0.25s ease',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.18)'; (e.currentTarget as HTMLElement).style.color = '#c4b5fd' }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement
+                    if (pathname.startsWith('/void-chat')) {
+                      el.style.background = 'rgba(139,92,246,0.14)'; el.style.color = '#a78bfa'
+                    } else {
+                      el.style.background = 'rgba(139,92,246,0.07)'; el.style.color = '#8b5cf6'
+                    }
+                  }}
+                >
+                  Void Chat
+                  <span style={{
+                    fontSize: '7px', fontWeight: 700, letterSpacing: '0.08em',
+                    padding: '1px 4px', borderRadius: 3,
+                    background: 'rgba(139,92,246,0.35)', color: '#ddd6fe',
+                    textTransform: 'uppercase', lineHeight: '12px',
+                  }}>
+                    NEW
+                  </span>
+                </Link>
+                {/* FIX 1: active indicator for Void Chat */}
+                {pathname.startsWith('/void-chat') && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    style={{
+                      position: 'absolute', bottom: 0, left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: 16, height: 2, borderRadius: 2,
+                      background: '#8b5cf6', boxShadow: '0 0 8px #8b5cf6',
+                    }}
+                  />
+                )}
+              </div>
 
-              {/* More dropdown */}
-              <div ref={moreRef} style={{ position: 'relative', marginLeft: 4 }}>
+              {/* More dropdown (Space Station only) */}
+              <div ref={moreRef} style={{ position: 'relative', marginLeft: 2 }}>
                 <button
                   onClick={() => setMoreOpen(v => !v)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
                   style={{
-                    color: moreOpen ? '#e2e8f0' : '#64748b',
-                    background: moreOpen ? 'rgba(255,255,255,0.06)' : 'transparent',
+                    display: 'flex', alignItems: 'center', gap: 3,
+                    padding: '5px 9px', borderRadius: 6,
+                    fontSize: '0.8rem', fontWeight: 500,
+                    cursor: 'pointer',
+                    color: isMoreActive ? '#44aacc' : moreOpen ? '#e2e8f0' : '#64748b',
+                    background: isMoreActive ? 'rgba(68,170,204,0.10)' : moreOpen ? 'rgba(255,255,255,0.06)' : 'transparent',
+                    border: 'none', transition: 'all 0.2s ease',
                   }}
-                  onMouseEnter={e => { if (!moreOpen) (e.currentTarget as HTMLElement).style.color = '#94a3b8' }}
-                  onMouseLeave={e => { if (!moreOpen) (e.currentTarget as HTMLElement).style.color = '#64748b' }}
+                  onMouseEnter={e => { if (!moreOpen && !isMoreActive) (e.currentTarget as HTMLElement).style.color = '#94a3b8' }}
+                  onMouseLeave={e => { if (!moreOpen && !isMoreActive) (e.currentTarget as HTMLElement).style.color = '#64748b' }}
                 >
                   More
                   <motion.span animate={{ rotate: moreOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown size={14} />
+                    <ChevronDown size={13} />
                   </motion.span>
                 </button>
+                {/* FIX 1: active indicator when Space Station is current page */}
+                {isMoreActive && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    style={{
+                      position: 'absolute', bottom: 0, left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: 16, height: 2, borderRadius: 2,
+                      background: '#44aacc', boxShadow: '0 0 8px #44aacc',
+                    }}
+                  />
+                )}
 
                 <AnimatePresence>
                   {moreOpen && (
@@ -269,7 +355,7 @@ export default function Navigation() {
                       transition={{ duration: 0.15 }}
                       style={{
                         position: 'absolute', top: '100%', right: 0, marginTop: 8,
-                        minWidth: 200, borderRadius: 12, padding: '6px 0',
+                        minWidth: 180, borderRadius: 12, padding: '6px 0',
                         background: 'rgba(12,8,28,0.97)',
                         border: '1px solid rgba(139,92,246,0.2)',
                         backdropFilter: 'blur(20px)',
@@ -277,12 +363,10 @@ export default function Navigation() {
                         zIndex: 100,
                       }}
                     >
-                      {moreLinks.map((item, i) => {
-                        if (item === null) return (
-                          <div key={`div-${i}`} style={{ height: 1, margin: '6px 12px', background: 'rgba(255,255,255,0.06)' }} />
-                        )
+                      {moreLinks.map(item => {
                         const active = pathname === item.href
                         const col = PATH_COLOR[item.href] ?? '#94a3b8'
+                        const { r, g, b } = hexToRgb(col)
                         return (
                           <Link
                             key={item.href}
@@ -291,14 +375,18 @@ export default function Navigation() {
                             className="flex items-center justify-between px-4 py-2.5 text-sm transition-colors"
                             style={{
                               color: active ? col : 'rgba(148,163,184,0.85)',
-                              background: active ? `rgba(${parseInt(col.slice(1,3),16)},${parseInt(col.slice(3,5),16)},${parseInt(col.slice(5,7),16)},0.08)` : 'transparent',
+                              background: active ? `rgba(${r},${g},${b},0.08)` : 'transparent',
                             }}
                             onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.08)'}
-                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = active ? `rgba(${parseInt(col.slice(1,3),16)},${parseInt(col.slice(3,5),16)},${parseInt(col.slice(5,7),16)},0.08)` : 'transparent'}
+                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = active ? `rgba(${r},${g},${b},0.08)` : 'transparent'}
                           >
                             <span>{item.label}</span>
                             {item.badge && (
-                              <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.1em', padding: '1px 5px', borderRadius: 3, background: `rgba(${parseInt(col.slice(1,3),16)},${parseInt(col.slice(3,5),16)},${parseInt(col.slice(5,7),16)},0.18)`, color: col, textTransform: 'uppercase' }}>
+                              <span style={{
+                                fontSize: '8px', fontWeight: 700, letterSpacing: '0.1em',
+                                padding: '1px 5px', borderRadius: 3,
+                                background: `rgba(${r},${g},${b},0.18)`, color: col, textTransform: 'uppercase',
+                              }}>
                                 {item.badge}
                               </span>
                             )}
@@ -312,10 +400,10 @@ export default function Navigation() {
             </div>
 
             {/* Desktop right: CTA + auth */}
-            <div className="hidden md:flex items-center gap-2 shrink-0">
+            <div className="hidden lg:flex items-center gap-2 shrink-0">
               <button
                 onClick={() => openModal()}
-                className="px-4 py-2 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
+                className="px-3 py-1.5 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
                 style={{ background: 'linear-gradient(135deg,#00d4ff,#8b5cf6)' }}
               >
                 Get in touch
@@ -326,7 +414,7 @@ export default function Navigation() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 rounded-lg text-[#94a3b8] hover:text-white transition-colors"
+              className="lg:hidden p-2 rounded-lg text-[#94a3b8] hover:text-white transition-colors"
               style={{ background: 'rgba(7,4,18,0.95)' }}
               aria-label="Toggle menu"
             >
@@ -334,7 +422,205 @@ export default function Navigation() {
             </button>
           </nav>
         </header>
+
+        {/* FIX 4: Page name breadcrumb — subtle label below nav */}
+        {pageLabel && (
+          <div
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.03), transparent)',
+              borderBottom: '1px solid rgba(255,255,255,0.04)',
+              padding: '2px 0 3px',
+              textAlign: 'center',
+            }}
+          >
+            <span style={{
+              fontSize: '10px',
+              fontWeight: 500,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(148,163,184,0.45)',
+              fontFamily: 'var(--font-space)',
+              userSelect: 'none',
+            }}>
+              {pageLabel}
+            </span>
+          </div>
+        )}
       </div>
+
+      {/* FIX 3: Floating side button — right edge, vertically centered, pulsing glow */}
+      <motion.button
+        onClick={() => setInfoPanel(true)}
+        animate={{
+          boxShadow: [
+            '-2px 0 12px rgba(139,92,246,0.15), inset 0 0 8px rgba(139,92,246,0.05)',
+            '-4px 0 24px rgba(139,92,246,0.45), inset 0 0 12px rgba(139,92,246,0.1)',
+            '-2px 0 12px rgba(139,92,246,0.15), inset 0 0 8px rgba(139,92,246,0.05)',
+          ],
+        }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+        whileHover={{ x: -3, background: 'rgba(22,12,42,0.98)' }}
+        style={{
+          position: 'fixed',
+          right: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 39,
+          background: 'rgba(12,8,28,0.95)',
+          border: '1px solid rgba(139,92,246,0.35)',
+          borderRight: 'none',
+          borderRadius: '10px 0 0 10px',
+          padding: '22px 10px',
+          cursor: 'pointer',
+          backdropFilter: 'blur(12px)',
+        }}
+        aria-label="Open info panel"
+      >
+        <span style={{
+          writingMode: 'vertical-rl',
+          display: 'block',
+          fontSize: '9px',
+          color: 'rgba(167,139,250,0.8)',
+          letterSpacing: '0.22em',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          fontFamily: 'var(--font-space)',
+          userSelect: 'none',
+        }}>
+          INFO
+        </span>
+      </motion.button>
+
+      {/* FIX 3: Info slide-out panel */}
+      <AnimatePresence>
+        {infoPanelOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setInfoPanel(false)}
+              style={{
+                position: 'fixed', inset: 0, zIndex: 45,
+                background: 'rgba(0,0,0,0.55)',
+                backdropFilter: 'blur(4px)',
+              }}
+            />
+            {/* Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+              style={{
+                position: 'fixed', right: 0, top: 0, bottom: 0,
+                width: 300, zIndex: 50,
+                background: 'rgba(9,5,22,0.99)',
+                borderLeft: '1px solid rgba(139,92,246,0.22)',
+                backdropFilter: 'blur(24px)',
+                boxShadow: '-20px 0 60px rgba(0,0,0,0.7)',
+                display: 'flex', flexDirection: 'column',
+              }}
+            >
+              {/* Panel header */}
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '22px 24px 16px',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+              }}>
+                <div>
+                  <p style={{
+                    fontSize: 10, fontWeight: 700, letterSpacing: '0.18em',
+                    textTransform: 'uppercase', color: 'rgba(139,92,246,0.65)',
+                    marginBottom: 3, fontFamily: 'var(--font-space)',
+                  }}>
+                    VOIDEXA
+                  </p>
+                  <h2 style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', fontFamily: 'var(--font-space)' }}>
+                    Info &amp; Links
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setInfoPanel(false)}
+                  style={{
+                    width: 32, height: 32, borderRadius: 8,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+                    color: '#64748b', cursor: 'pointer', transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#e2e8f0'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)' }}
+                >
+                  <X size={15} />
+                </button>
+              </div>
+
+              {/* Panel links */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+                {infoPanelLinks.map(({ href, label }, i) => {
+                  const active = pathname === href
+                  const col = PATH_COLOR[href] ?? '#94a3b8'
+                  const { r, g, b } = hexToRgb(col)
+                  return (
+                    <motion.div
+                      key={href}
+                      initial={{ opacity: 0, x: 16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 + 0.05, duration: 0.2 }}
+                    >
+                      <Link
+                        href={href}
+                        onClick={() => setInfoPanel(false)}
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '14px 24px',
+                          fontSize: 14, fontWeight: active ? 600 : 400,
+                          color: active ? col : '#94a3b8',
+                          background: active ? `rgba(${r},${g},${b},0.08)` : 'transparent',
+                          borderLeft: active ? `2px solid ${col}` : '2px solid transparent',
+                          textDecoration: 'none', transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={e => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.background = `rgba(${r},${g},${b},0.06)`
+                          el.style.color = col
+                        }}
+                        onMouseLeave={e => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.background = active ? `rgba(${r},${g},${b},0.08)` : 'transparent'
+                          el.style.color = active ? col : '#94a3b8'
+                        }}
+                      >
+                        <span>{label}</span>
+                        {active && (
+                          <span style={{
+                            width: 6, height: 6, borderRadius: '50%',
+                            background: col, boxShadow: `0 0 8px ${col}`,
+                            display: 'inline-block',
+                          }} />
+                        )}
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+              </div>
+
+              {/* Panel footer */}
+              <div style={{ padding: '16px 24px 24px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <button
+                  onClick={() => { setInfoPanel(false); openModal() }}
+                  className="w-full py-3 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg,#00d4ff,#8b5cf6)' }}
+                >
+                  Get in touch
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* ── Mobile full-screen overlay ── */}
       <AnimatePresence>
@@ -344,24 +630,26 @@ export default function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 md:hidden flex flex-col"
+            className="fixed inset-0 z-40 lg:hidden flex flex-col"
             style={{ background: 'rgba(7,4,18,0.98)', backdropFilter: 'blur(24px)' }}
           >
             <div className="shrink-0" style={{ height: bannerVisible ? '105px' : '72px' }} />
 
             <nav className="flex-1 flex flex-col justify-center px-8 gap-0.5 overflow-y-auto py-4">
               {/* Main links */}
-              {mainLinks.map(({ href, label }, i) => {
-                const active = pathname === href
+              {mainLinks.map(({ href, label, badge }, i) => {
+                const active = href === '/trading-hub'
+                  ? pathname.startsWith('/trading-hub')
+                  : pathname === href
                 const planetColor = PATH_COLOR[href] ?? '#00d4ff'
-                const r = parseInt(planetColor.slice(1,3),16), g = parseInt(planetColor.slice(3,5),16), b = parseInt(planetColor.slice(5,7),16)
+                const { r, g, b } = hexToRgb(planetColor)
                 return (
                   <motion.div key={href} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04, duration: 0.22 }}>
                     <Link
                       href={href}
-                      className="flex items-center w-full rounded-2xl px-5 transition-colors"
+                      className="flex items-center gap-3 w-full rounded-2xl px-5 transition-colors"
                       style={{
-                        minHeight: 56, fontSize: '1.2rem', fontWeight: 600,
+                        minHeight: 52, fontSize: '1.1rem', fontWeight: 600,
                         fontFamily: 'var(--font-space)',
                         color: active ? planetColor : '#94a3b8',
                         background: active ? `rgba(${r},${g},${b},0.06)` : 'transparent',
@@ -370,6 +658,15 @@ export default function Navigation() {
                       }}
                     >
                       {label}
+                      {badge && (
+                        <span style={{
+                          fontSize: '9px', fontWeight: 600, letterSpacing: '0.1em',
+                          padding: '2px 6px', borderRadius: 4,
+                          background: `rgba(${r},${g},${b},0.2)`, color: planetColor, textTransform: 'uppercase',
+                        }}>
+                          {badge}
+                        </span>
+                      )}
                     </Link>
                   </motion.div>
                 )
@@ -382,14 +679,18 @@ export default function Navigation() {
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 w-full rounded-2xl px-5 transition-colors"
                   style={{
-                    minHeight: 56, fontSize: '1.2rem', fontWeight: 600, fontFamily: 'var(--font-space)',
+                    minHeight: 52, fontSize: '1.1rem', fontWeight: 600, fontFamily: 'var(--font-space)',
                     color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#7c3aed',
                     background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.10)' : 'transparent',
                     borderLeft: pathname.startsWith('/void-chat') ? '2px solid #a78bfa' : '2px solid transparent',
                   }}
                 >
                   Void Chat
-                  <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em', padding: '2px 6px', borderRadius: 4, background: 'rgba(139,92,246,0.35)', color: '#ddd6fe', textTransform: 'uppercase' }}>
+                  <span style={{
+                    fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em',
+                    padding: '2px 6px', borderRadius: 4,
+                    background: 'rgba(139,92,246,0.35)', color: '#ddd6fe', textTransform: 'uppercase',
+                  }}>
                     NEW
                   </span>
                 </Link>
@@ -402,15 +703,15 @@ export default function Navigation() {
               {mobileSecondary.map(({ href, label, badge }, i) => {
                 const active = pathname === href
                 const planetColor = PATH_COLOR[href] ?? '#888'
-                const r = parseInt(planetColor.slice(1,3),16), g = parseInt(planetColor.slice(3,5),16), b = parseInt(planetColor.slice(5,7),16)
+                const { r, g, b } = hexToRgb(planetColor)
                 return (
                   <motion.div key={href} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: (mainLinks.length + 1 + i) * 0.04 + 0.04, duration: 0.22 }}>
                     <Link
                       href={href}
                       className="flex items-center gap-3 w-full rounded-2xl px-5 transition-colors"
                       style={{
-                        minHeight: 48, fontSize: '1rem', fontWeight: 500, fontFamily: 'var(--font-space)',
-                        opacity: active ? 1 : (badge === 'SOON' ? 0.5 : 0.75),
+                        minHeight: 44, fontSize: '1rem', fontWeight: 500, fontFamily: 'var(--font-space)',
+                        opacity: active ? 1 : 0.75,
                         color: active ? planetColor : '#94a3b8',
                         background: active ? `rgba(${r},${g},${b},0.06)` : 'transparent',
                         borderLeft: active ? `2px solid ${planetColor}` : '2px solid transparent',
@@ -418,7 +719,11 @@ export default function Navigation() {
                     >
                       {label}
                       {badge && (
-                        <span style={{ fontSize: '9px', fontWeight: 600, letterSpacing: '0.1em', padding: '2px 6px', borderRadius: 4, background: `rgba(${r},${g},${b},0.2)`, color: planetColor, textTransform: 'uppercase' }}>
+                        <span style={{
+                          fontSize: '9px', fontWeight: 600, letterSpacing: '0.1em',
+                          padding: '2px 6px', borderRadius: 4,
+                          background: `rgba(${r},${g},${b},0.2)`, color: planetColor, textTransform: 'uppercase',
+                        }}>
                           {badge}
                         </span>
                       )}
