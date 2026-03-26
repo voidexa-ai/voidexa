@@ -156,13 +156,25 @@ export default function GhostAIPage() {
         </div>
 
         {/* GHAI LOGO IMAGE WATERMARK — ghost face lurking behind text */}
+        {/* Cyan glow behind the image to make the blue eyes pop */}
         <div aria-hidden style={{
           position: 'absolute',
           top: '50%', left: '50%',
           transform: 'translate(-50%, -52%)',
-          width: 'min(65vw, 580px)',
+          width: 'min(80vw, 720px)',
+          height: 'min(80vw, 720px)',
+          borderRadius: '50%',
+          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(6,182,212,0.18) 0%, rgba(139,92,246,0.10) 45%, transparent 70%)',
           pointerEvents: 'none',
           zIndex: 0,
+        }} />
+        <div aria-hidden style={{
+          position: 'absolute',
+          top: '50%', left: '50%',
+          transform: 'translate(-50%, -52%)',
+          width: 'min(80vw, 720px)',
+          pointerEvents: 'none',
+          zIndex: 1,
         }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -172,10 +184,10 @@ export default function GhostAIPage() {
               width: '100%',
               height: 'auto',
               display: 'block',
-              opacity: 0.18,
-              filter: 'brightness(0.65) saturate(1.2)',
-              maskImage: 'radial-gradient(ellipse 60% 55% at 50% 48%, black 35%, transparent 72%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 60% 55% at 50% 48%, black 35%, transparent 72%)',
+              opacity: 0.42,
+              filter: 'brightness(1.0) saturate(1.3) contrast(1.05)',
+              maskImage: 'radial-gradient(ellipse 70% 65% at 50% 48%, black 45%, rgba(0,0,0,0.5) 62%, transparent 78%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at 50% 48%, black 45%, rgba(0,0,0,0.5) 62%, transparent 78%)',
             }}
           />
         </div>
