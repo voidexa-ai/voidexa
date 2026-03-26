@@ -140,14 +140,14 @@ export default function GhostAIPage() {
       <section className="relative flex flex-col items-center justify-center text-center px-6"
         style={{ minHeight: '100vh', paddingTop: 80 }}
       >
-        {/* GHOST WATERMARK — absolutely positioned behind text */}
+        {/* GHOST SVG WATERMARK — faint circuit ghost behind everything */}
         <div aria-hidden style={{
           position: 'absolute',
           top: '50%', left: '50%',
-          transform: 'translate(-50%, -54%)',
+          transform: 'translate(-50%, -50%)',
           width: 'min(70vw, 520px)',
           height: 'min(90vh, 650px)',
-          opacity: 0.07,
+          opacity: 0.05,
           pointerEvents: 'none',
           zIndex: 0,
           filter: 'blur(0.5px)',
@@ -155,62 +155,25 @@ export default function GhostAIPage() {
           <GhostWatermark />
         </div>
 
-        {/* GHAI LOGO IMAGE WATERMARK — ghost face lurking behind text */}
-        {/* Cyan glow behind the image to make the blue eyes pop */}
+        {/* Ambient glow */}
         <div aria-hidden style={{
           position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -52%)',
-          width: 'min(80vw, 720px)',
-          height: 'min(80vw, 720px)',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(6,182,212,0.18) 0%, rgba(139,92,246,0.10) 45%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }} />
-        <div aria-hidden style={{
-          position: 'absolute',
-          top: '50%', left: '50%',
-          transform: 'translate(-50%, -52%)',
-          width: 'min(80vw, 720px)',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/GHAI.jpg"
-            alt=""
-            style={{
-              width: '100%',
-              height: 'auto',
-              display: 'block',
-              opacity: 0.42,
-              filter: 'brightness(1.0) saturate(1.3) contrast(1.05)',
-              maskImage: 'radial-gradient(ellipse 70% 65% at 50% 48%, black 45%, rgba(0,0,0,0.5) 62%, transparent 78%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at 50% 48%, black 45%, rgba(0,0,0,0.5) 62%, transparent 78%)',
-            }}
-          />
-        </div>
-
-        {/* Glow behind watermark */}
-        <div aria-hidden style={{
-          position: 'absolute',
-          top: '38%', left: '50%',
+          top: '30%', left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 500, height: 500,
+          width: 600, height: 600,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(6,182,212,0.06) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.10) 0%, rgba(6,182,212,0.05) 40%, transparent 70%)',
           pointerEvents: 'none', zIndex: 0,
         }} />
 
-        {/* HERO TEXT — above watermark */}
-        <div className="relative z-10 max-w-3xl mx-auto">
+        {/* HERO TEXT — stacked in document flow */}
+        <div className="relative z-10 max-w-3xl mx-auto w-full">
           {/* Badge row */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-10 flex-wrap justify-center"
+            className="inline-flex items-center gap-2 mb-8 flex-wrap justify-center"
           >
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#888', background: 'rgba(136,136,136,0.1)', border: '1px solid rgba(136,136,136,0.25)' }}>
@@ -227,17 +190,48 @@ export default function GhostAIPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.05 }}
-            className="text-xs font-bold uppercase tracking-[0.35em] mb-5"
+            className="text-xs font-bold uppercase tracking-[0.35em] mb-4"
             style={{ color: 'rgba(139,92,246,0.6)', letterSpacing: '0.35em' }}
           >
             Ghost AI
           </motion.p>
 
-          {/* GHAI — giant gradient text with pulse */}
+          {/* GHAI.jpg — in document flow, ABOVE the GHAI text */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.08 }}
+            style={{ margin: '0 auto', width: 'min(80vw, 660px)', position: 'relative' }}
+          >
+            {/* Cyan glow halo behind image */}
+            <div aria-hidden style={{
+              position: 'absolute', inset: 0,
+              borderRadius: '50%',
+              background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(6,182,212,0.20) 0%, rgba(139,92,246,0.12) 45%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/GHAI.jpg"
+              alt=""
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                opacity: 0.45,
+                filter: 'brightness(1.0) saturate(1.3) contrast(1.05)',
+                maskImage: 'radial-gradient(ellipse 72% 68% at 50% 46%, black 38%, rgba(0,0,0,0.5) 60%, transparent 76%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 72% 68% at 50% 46%, black 38%, rgba(0,0,0,0.5) 60%, transparent 76%)',
+              }}
+            />
+          </motion.div>
+
+          {/* GHAI — giant gradient text, sits BELOW the image (overlaps chin/neck only) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.1 }}
+            style={{ marginTop: '-72px' }}
             className="mb-6"
           >
             <motion.h1
