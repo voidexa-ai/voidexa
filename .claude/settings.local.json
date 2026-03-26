@@ -1,5 +1,11 @@
 {
   "env": {
     "TWENTYFIRST_API_KEY": "PASTE_YOUR_KEY_HERE"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
   }
 }
