@@ -155,6 +155,31 @@ export default function GhostAIPage() {
           <GhostWatermark />
         </div>
 
+        {/* GHAI LOGO IMAGE WATERMARK — ghost face lurking behind text */}
+        <div aria-hidden style={{
+          position: 'absolute',
+          top: '50%', left: '50%',
+          transform: 'translate(-50%, -52%)',
+          width: 'min(65vw, 580px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/GHAI.jpg"
+            alt=""
+            style={{
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+              opacity: 0.18,
+              filter: 'brightness(0.65) saturate(1.2)',
+              maskImage: 'radial-gradient(ellipse 60% 55% at 50% 48%, black 35%, transparent 72%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 60% 55% at 50% 48%, black 35%, transparent 72%)',
+            }}
+          />
+        </div>
+
         {/* Glow behind watermark */}
         <div aria-hidden style={{
           position: 'absolute',
