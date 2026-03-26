@@ -37,26 +37,28 @@ const mainLinks = [
 
 // "More" dropdown items
 const moreLinks = [
-  { href: '/ghost-ai',    label: 'Ghost AI',    badge: null   },
-  { href: '/quantum',     label: 'Quantum',     badge: 'SOON' },
-  { href: '/trading-hub', label: 'Trading Hub', badge: 'SOON' },
+  { href: '/ghost-ai',    label: 'Ghost AI',     badge: null   },
+  { href: '/quantum',     label: 'Quantum',      badge: 'SOON' },
+  { href: '/trading-hub', label: 'Trading Hub',  badge: null   },
+  { href: '/station',     label: 'Space Station', badge: 'NEW'  },
   null, // divider
-  { href: '/about',       label: 'About',       badge: null   },
-  { href: '/contact',     label: 'Contact',     badge: null   },
+  { href: '/about',       label: 'About',        badge: null   },
+  { href: '/contact',     label: 'Contact',      badge: null   },
   null, // divider
-  { href: '/whitepaper',  label: 'White Paper', badge: null   },
-  { href: '/token',       label: 'Token',       badge: null   },
+  { href: '/whitepaper',  label: 'White Paper',  badge: null   },
+  { href: '/token',       label: 'Token',        badge: null   },
 ] as const
 
 // Mobile: all secondary links (shown below main links in hamburger)
 const mobileSecondary = [
-  { href: '/ghost-ai',    label: 'Ghost AI',    badge: null   },
-  { href: '/quantum',     label: 'Quantum',     badge: 'SOON' },
-  { href: '/trading-hub', label: 'Trading Hub', badge: 'SOON' },
-  { href: '/about',       label: 'About',       badge: null   },
-  { href: '/contact',     label: 'Contact',     badge: null   },
-  { href: '/whitepaper',  label: 'White Paper', badge: null   },
-  { href: '/token',       label: 'Token',       badge: null   },
+  { href: '/ghost-ai',    label: 'Ghost AI',     badge: null   },
+  { href: '/quantum',     label: 'Quantum',      badge: 'SOON' },
+  { href: '/trading-hub', label: 'Trading Hub',  badge: null   },
+  { href: '/station',     label: 'Space Station', badge: 'NEW'  },
+  { href: '/about',       label: 'About',        badge: null   },
+  { href: '/contact',     label: 'Contact',      badge: null   },
+  { href: '/whitepaper',  label: 'White Paper',  badge: null   },
+  { href: '/token',       label: 'Token',        badge: null   },
 ] as const
 
 const PATH_COLOR: Record<string, string> = {}
