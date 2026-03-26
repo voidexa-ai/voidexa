@@ -2,11 +2,7 @@
 // Void Chat — Pricing Configuration
 // ALL prices live here. NEVER hardcode prices in components or API routes.
 
-export const FREE_TIER = {
-  messagesPerDay: 10,
-  resetTimeUTC: '00:00', // midnight UTC
-  allowedModels: ['claude-sonnet', 'gpt-4o-mini', 'gemini-flash'], // free tier = budget models only
-} as const;
+// Free tier is intentionally removed. Platform requires GHAI balance or Pro subscription.
 
 export const STRIPE_PRO = {
   pricePerMonth: 500, // $5.00 in cents

@@ -131,11 +131,50 @@ export default function QuantumPage() {
           ))}
         </motion.div>
 
+        {/* Next-Gen AI Communication teaser */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.42 }}
+          className="rounded-2xl p-6 mb-12 text-left"
+          style={{
+            background: `rgba(${parseInt(ACCENT.slice(1,3),16)},${parseInt(ACCENT.slice(3,5),16)},${parseInt(ACCENT.slice(5,7),16)},0.06)`,
+            border: `1px solid ${ACCENT}33`,
+            backdropFilter: 'blur(12px)',
+            boxShadow: `0 0 40px ${ACCENT}0a`,
+          }}
+        >
+          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}88` }}>
+            Next-Gen AI Communication
+          </p>
+          <p className="text-sm leading-relaxed mb-5" style={{ color: '#64748b' }}>
+            Built on a proprietary AI-to-AI communication protocol with shared memory architecture
+            and integrated binary encoding. Reducing token consumption by over 90% compared to
+            standard approaches.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {['Compressed Intelligence', 'Shared Memory', 'Binary Protocol'].map((badge) => (
+              <span
+                key={badge}
+                className="text-xs font-medium px-3 py-1.5 rounded-full"
+                style={{
+                  color: `${ACCENT}cc`,
+                  background: `${ACCENT}12`,
+                  border: `1px solid ${ACCENT}30`,
+                  letterSpacing: '0.03em',
+                }}
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.46 }}
+          transition={{ duration: 0.5, delay: 0.52 }}
         >
           {sent ? (
             <p className="text-sm" style={{ color: ACCENT }}>You're on the list. We'll be in touch.</p>

@@ -34,11 +34,11 @@ export function CreditDisplay() {
       {/* Tier badge */}
       <div className="flex items-center gap-2">
         <span
-          className="px-2 py-0.5 rounded text-xs font-medium"
+          className="px-2 py-0.5 rounded text-xs font-semibold"
           style={
             balance.tier === 'pro'
-              ? { background: 'rgba(234,179,8,0.15)', color: '#facc15' }
-              : { background: 'rgba(139,92,246,0.15)', color: '#a78bfa' }
+              ? { background: 'rgba(234,179,8,0.15)', color: '#facc15', border: '1px solid rgba(234,179,8,0.2)' }
+              : { background: 'rgba(139,92,246,0.15)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.2)' }
           }
         >
           {balance.tier === 'pro' ? 'PRO' : 'GHAI'}
@@ -48,30 +48,38 @@ export function CreditDisplay() {
       {/* GHAI balance */}
       {balance.platformBalance > 0 ? (
         <p className="text-gray-300">
-          <span className="text-purple-400 font-medium">
+          <span className="text-purple-400 font-semibold">
             {balance.platformBalance.toFixed(2)}
           </span>{' '}
           GHAI
         </p>
       ) : balance.tier !== 'pro' ? (
-        <p className="text-gray-500 text-xs">No GHAI balance</p>
+        <p className="text-xs" style={{ color: '#64748b' }}>No GHAI balance</p>
       ) : null}
 
       {/* Wallet balance */}
       {balance.walletBalance !== null && balance.walletBalance > 0 && (
-        <p className="text-gray-500 text-xs">
+        <p className="text-xs" style={{ color: '#475569' }}>
           Wallet: {balance.walletBalance.toFixed(0)} GHAI
         </p>
       )}
 
-      {/* Deposit CTA when empty */}
+      {/* Deposit CTA — prominent when empty */}
       {balance.tier !== 'pro' && balance.platformBalance <= 0 && (
         <a
           href="/void-chat/pricing"
-          className="block w-full mt-1 px-3 py-2 rounded-lg text-xs font-medium text-center transition-colors"
-          style={{ background: 'rgba(139,92,246,0.2)', color: '#c4b5fd', border: '1px solid rgba(139,92,246,0.3)' }}
+          className="flex items-center justify-center w-full mt-2 px-3 py-2.5 rounded-xl text-xs font-bold text-center transition-all"
+          style={{
+            background: 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(6,182,212,0.3))',
+            color: '#e2d9ff',
+            border: '1px solid rgba(139,92,246,0.45)',
+            boxShadow: '0 0 16px rgba(139,92,246,0.2)',
+            letterSpacing: '0.02em',
+          }}
+          onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 24px rgba(139,92,246,0.4)'}
+          onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 16px rgba(139,92,246,0.2)'}
         >
-          Deposit GHAI or buy credits
+          Deposit GHAI or buy credits →
         </a>
       )}
     </div>

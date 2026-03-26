@@ -138,7 +138,7 @@ export default function GhostAIPage() {
           HERO — full viewport
       ══════════════════════════════════════════ */}
       <section className="relative flex flex-col items-center justify-center text-center px-6"
-        style={{ minHeight: '100vh', paddingTop: 80 }}
+        style={{ minHeight: '100vh', paddingTop: 120 }}
       >
         {/* GHOST SVG WATERMARK — faint circuit ghost behind everything */}
         <div aria-hidden style={{

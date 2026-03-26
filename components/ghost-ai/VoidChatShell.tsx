@@ -1,9 +1,9 @@
 // components/ghost-ai/VoidChatShell.tsx
-// Client shell — holds provider/model state, fixes chat viewport below navbar
+// Client shell — holds provider/model state, fixes chat viewport below navbar + banner
 
 'use client';
 
-import { useState, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { ChatSidebar } from './ChatSidebar';
 import { getDefaultModel, type ProviderSlug } from '@/config/providers';
 
@@ -25,12 +25,24 @@ export function useChatState() {
   return useContext(ChatState);
 }
 
-// Navbar is fixed at top — measured from Navigation.tsx py-5 + logo ≈ 72px
-const NAVBAR_HEIGHT = 72;
+const BANNER_KEY = 'voidexa_beta_banner_dismissed';
+const NAV_HEIGHT = 72;
+const BANNER_HEIGHT = 33;
 
 export function VoidChatShell({ children }: { children: React.ReactNode }) {
   const [provider, setProviderRaw] = useState<ProviderSlug>('claude');
   const [model, setModel] = useState(getDefaultModel('claude').id);
+  const [topOffset, setTopOffset] = useState(NAV_HEIGHT);
+
+  useEffect(() => {
+    function calcOffset() {
+      const bannerDismissed = localStorage.getItem(BANNER_KEY) === 'true';
+      setTopOffset(bannerDismissed ? NAV_HEIGHT : NAV_HEIGHT + BANNER_HEIGHT);
+    }
+    calcOffset();
+    window.addEventListener('banner-dismissed', calcOffset);
+    return () => window.removeEventListener('banner-dismissed', calcOffset);
+  }, []);
 
   function setProvider(p: ProviderSlug) {
     setProviderRaw(p);
@@ -39,25 +51,20 @@ export function VoidChatShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ChatState.Provider value={{ provider, model, setProvider, setModel }}>
-      {/*
-        position: fixed — removes from normal flow, no body scroll
-        top: NAVBAR_HEIGHT — starts exactly below the fixed navbar
-        inset 0 on other sides — fills remaining viewport
-        overflow: hidden — nothing bleeds out
-      */}
       <div
         style={{
           position: 'fixed',
-          top: NAVBAR_HEIGHT,
+          top: topOffset,
           left: 0,
           right: 0,
           bottom: 0,
           overflow: 'hidden',
           display: 'flex',
           background: '#030712',
+          transition: 'top 0.3s ease',
         }}
       >
-        {/* Sidebar — scrolls internally */}
+        {/* Sidebar */}
         <aside
           style={{
             width: 272,
@@ -77,7 +84,7 @@ export function VoidChatShell({ children }: { children: React.ReactNode }) {
           />
         </aside>
 
-        {/* Main chat area — three-zone layout enforced by children */}
+        {/* Main area */}
         <main
           style={{
             flex: 1,

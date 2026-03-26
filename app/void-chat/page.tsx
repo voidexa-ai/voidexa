@@ -1,9 +1,9 @@
 // app/void-chat/page.tsx
-// Void Chat — Landing page: provider picker, model selector, new chat, recent conversations
+// Void Chat — Landing: provider picker, model selector, new chat button
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   PROVIDERS,
@@ -14,7 +14,6 @@ import {
 } from '@/config/providers';
 import { GHAI_COSTS } from '@/config/pricing';
 import { useChatState } from '@/components/ghost-ai/VoidChatShell';
-import type { Conversation } from '@/types/chat';
 
 const PROVIDER_COLORS: Record<ProviderSlug, string> = {
   claude:  '#cc785c',
@@ -26,31 +25,11 @@ export default function ChatPage() {
   const router = useRouter();
   const { provider, model, setProvider, setModel } = useChatState();
 
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loadingConvs, setLoadingConvs] = useState(true);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const providerModels = getModelsByProvider(provider);
   const color = PROVIDER_COLORS[provider];
-
-  useEffect(() => {
-    fetchConversations();
-  }, []);
-
-  async function fetchConversations() {
-    try {
-      const res = await fetch('/api/chat/conversations');
-      if (res.ok) {
-        const data = await res.json();
-        setConversations(data.conversations || []);
-      }
-    } catch {
-      // silent
-    } finally {
-      setLoadingConvs(false);
-    }
-  }
 
   async function handleNewChat() {
     setCreating(true);
@@ -77,23 +56,24 @@ export default function ChatPage() {
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto">
-      {/* Preview badge */}
-      <div className="flex items-center justify-center pt-4 pb-0 px-4">
+
+      {/* Preview badge — inside chat area, below provider area */}
+      <div className="flex items-center justify-center pt-5 pb-0 px-4">
         <span
-          className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em] px-3 py-1 rounded-full"
+          className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.16em] px-3 py-1 rounded-full"
           style={{
-            background: 'rgba(139,92,246,0.07)',
-            border: '1px solid rgba(139,92,246,0.18)',
-            color: 'rgba(167,139,250,0.6)',
+            background: 'rgba(139,92,246,0.06)',
+            border: '1px solid rgba(139,92,246,0.14)',
+            color: 'rgba(139,92,246,0.5)',
           }}
         >
-          <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(139,92,246,0.7)', display: 'inline-block' }} />
+          <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(139,92,246,0.6)', display: 'inline-block' }} />
           Preview — You&apos;re among the first to experience Void Chat
         </span>
       </div>
 
       {/* Welcome hero */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-2xl mx-auto w-full">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 max-w-2xl mx-auto w-full">
         <h1 className="text-3xl font-bold mb-2 text-center">Void Chat</h1>
         <p className="text-gray-400 text-center mb-10 text-sm">
           Choose a provider and model, then start chatting.
@@ -115,10 +95,7 @@ export default function ChatPage() {
                   boxShadow: selected ? `0 0 20px rgba(${hexToRgb(c)},0.15)` : 'none',
                 }}
               >
-                <div
-                  className="text-2xl font-bold mb-1"
-                  style={{ color: selected ? c : '#6b7280' }}
-                >
+                <div className="text-2xl font-bold mb-1" style={{ color: selected ? c : '#6b7280' }}>
                   {PROVIDERS[slug].displayName}
                 </div>
                 <div className="text-xs" style={{ color: selected ? c : '#374151' }}>
@@ -146,9 +123,7 @@ export default function ChatPage() {
         </div>
 
         {/* New Chat button */}
-        {error && (
-          <p className="text-red-400 text-sm mb-3">{error}</p>
-        )}
+        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
         <button
           onClick={handleNewChat}
           disabled={creating}
@@ -161,38 +136,6 @@ export default function ChatPage() {
           {creating ? 'Creating...' : '+ New Chat'}
         </button>
       </div>
-
-      {/* Recent conversations */}
-      {(loadingConvs || conversations.length > 0) && (
-        <div className="border-t border-gray-800 px-6 py-6 max-w-2xl mx-auto w-full">
-          <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-4">Recent</h2>
-          {loadingConvs ? (
-            <div className="space-y-2">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-12 bg-gray-800 rounded-xl animate-pulse" />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {conversations.slice(0, 8).map((conv) => (
-                <button
-                  key={conv.id}
-                  onClick={() => router.push(`/void-chat/${conv.id}?provider=${conv.provider}&model=${conv.model}`)}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors hover:bg-gray-800/60 border border-transparent hover:border-gray-700"
-                >
-                  <div className="min-w-0">
-                    <p className="text-sm text-white truncate">{conv.title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {PROVIDERS[conv.provider as ProviderSlug]?.displayName ?? conv.provider} · {conv.message_count ?? 0} msgs
-                    </p>
-                  </div>
-                  <span className="text-gray-600 text-lg ml-3">›</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 
 'use client';
 
-import { FREE_TIER, GHAI_COSTS, STRIPE_PRO, GHAI_DISCOUNT_PERCENT } from '@/config/pricing';
+import { GHAI_COSTS, STRIPE_PRO, GHAI_DISCOUNT_PERCENT } from '@/config/pricing';
 import { MODELS } from '@/config/providers';
 
 export default function PricingPage() {
@@ -16,24 +16,8 @@ export default function PricingPage() {
           or subscribe for unlimited access.
         </p>
 
-        {/* Three pricing tiers */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Free Tier */}
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-            <h3 className="text-xl font-semibold mb-2">Free</h3>
-            <p className="text-3xl font-bold mb-1">$0</p>
-            <p className="text-gray-500 mb-6">forever</p>
-            <ul className="space-y-3 text-gray-300 mb-8">
-              <li>✓ {FREE_TIER.messagesPerDay} messages per day</li>
-              <li>✓ Budget models only</li>
-              <li>✓ No wallet required</li>
-              <li>✗ No premium models</li>
-            </ul>
-            <button className="w-full py-3 border border-gray-600 rounded-lg hover:bg-gray-800 transition-colors">
-              Get Started
-            </button>
-          </div>
-
+        {/* Two pricing tiers */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {/* GHAI Pay-per-use */}
           <div className="bg-gray-900 border-2 border-purple-500 rounded-2xl p-8 relative">
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-sm px-3 py-1 rounded-full">

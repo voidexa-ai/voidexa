@@ -38,9 +38,10 @@ export function GhaiTicker() {
 
   if (loading) {
     return (
-      <div className="animate-pulse space-y-1">
-        <div className="h-3 bg-gray-800 rounded w-20" />
-        <div className="h-3 bg-gray-800 rounded w-14" />
+      <div className="animate-pulse space-y-2 p-1">
+        <div className="h-5 bg-gray-800 rounded w-28" />
+        <div className="h-4 bg-gray-800 rounded w-20" />
+        <div className="h-3 bg-gray-800 rounded w-24" />
       </div>
     );
   }
@@ -53,44 +54,50 @@ export function GhaiTicker() {
 
   return (
     <div
-      className="rounded-xl p-3 space-y-2"
-      style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)' }}
+      className="rounded-xl space-y-3"
+      style={{
+        background: 'rgba(139,92,246,0.07)',
+        border: '1px solid rgba(139,92,246,0.25)',
+        padding: '12px 14px',
+        boxShadow: '0 0 20px rgba(139,92,246,0.06)',
+      }}
     >
-      {/* Header */}
+      {/* Header row */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <div
-            className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold"
-            style={{ background: 'rgba(139,92,246,0.4)', color: '#c4b5fd' }}
+            className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+            style={{ background: 'linear-gradient(135deg,#7c3aed,#06b6d4)', color: '#fff' }}
           >
             G
           </div>
-          <span className="text-xs font-semibold text-gray-300">GHAI</span>
+          <span className="text-sm font-bold text-gray-200">GHAI</span>
+          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(34,197,94,0.12)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}>
+            Live
+          </span>
         </div>
-        <span
-          className="text-[10px] font-medium flex items-center gap-0.5"
-          style={{ color: changeColor }}
-        >
+        <span className="text-sm font-semibold flex items-center gap-1" style={{ color: changeColor }}>
           {arrow} {Math.abs(data.priceChange24h).toFixed(2)}%
         </span>
       </div>
 
       {/* Price */}
       <div>
-        <p className="text-sm font-bold text-white">
-          ${data.priceUsd.toFixed(6)}
+        <p className="font-bold text-white tabular-nums" style={{ fontSize: 18 }}>
+          ${data.priceUsd.toFixed(8)}
         </p>
+        <p className="text-xs mt-0.5" style={{ color: '#475569' }}>per GHAI · Solana</p>
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 gap-1 pt-1 border-t border-gray-800/60">
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div>
-          <p className="text-[9px] text-gray-500 uppercase tracking-wider">Vol 24h</p>
-          <p className="text-[10px] text-gray-300 font-medium">{formatCompact(data.volume24h)}</p>
+          <p className="uppercase tracking-wider mb-0.5" style={{ fontSize: 10, color: '#334155' }}>Vol 24h</p>
+          <p className="font-medium text-gray-300 tabular-nums" style={{ fontSize: 12 }}>{formatCompact(data.volume24h)}</p>
         </div>
         <div>
-          <p className="text-[9px] text-gray-500 uppercase tracking-wider">Liquidity</p>
-          <p className="text-[10px] text-gray-300 font-medium">{formatCompact(data.liquidity)}</p>
+          <p className="uppercase tracking-wider mb-0.5" style={{ fontSize: 10, color: '#334155' }}>Liquidity</p>
+          <p className="font-medium text-gray-300 tabular-nums" style={{ fontSize: 12 }}>{formatCompact(data.liquidity)}</p>
         </div>
       </div>
     </div>
