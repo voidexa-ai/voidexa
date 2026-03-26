@@ -55,7 +55,7 @@ export default function UploadBotTab() {
   const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true) }
   const onDragLeave = () => setDragging(false)
 
-  const stepIndex = { uploading: -1, scanning: 0, analyzing: 1, done: 2 }[step] ?? -1
+  const stepIndex = ({ uploading: -1, scanning: 0, analyzing: 1, done: 2, idle: -1, error: -1 } as Record<Step, number>)[step] ?? -1
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
