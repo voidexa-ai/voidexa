@@ -65,8 +65,8 @@ export default function TeamPage() {
   return (
     <div className="relative" style={{ background: 'transparent', minHeight: '100vh' }}>
 
-      {/* ── Hero: group photo ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: 600 }}>
+      {/* ── Hero: group photo — clean, no text overlay ── */}
+      <div className="relative overflow-hidden" style={{ height: 700, marginTop: 80 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/cast/gruppe billede.jpg"
@@ -74,53 +74,56 @@ export default function TeamPage() {
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center 15%',
+            objectFit: 'cover', objectPosition: 'center 10%',
           }}
         />
+        {/* Light bottom fade only — no text sits on the photo */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(7,7,13,1) 0%, rgba(7,7,13,0.5) 60%, rgba(7,7,13,0.15) 100%)',
+          background: 'linear-gradient(to top, rgba(7,7,13,0.85) 0%, rgba(7,7,13,0.1) 40%, transparent 100%)',
         }} />
+      </div>
 
-        <div
-          className="relative flex flex-col items-center justify-end text-center px-6"
-          style={{ minHeight: 600, paddingBottom: 48, paddingTop: 140 }}
+      {/* ── Title + subtitle below the photo ── */}
+      <div className="text-center px-6 pt-12 pb-4">
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="font-mono uppercase tracking-[0.28em] mb-4"
+          style={{ fontSize: 13, color: 'rgba(119,119,187,0.65)' }}
         >
-          {/* spacer — keep text low so faces stay clear */}
-          <div style={{ flex: 1 }} />
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08 }}
-            style={{
-              fontFamily: 'var(--font-space)',
-              fontSize: 'clamp(36px, 7vw, 72px)',
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-              color: '#e2e8f0',
-              marginBottom: '0.3em',
-            }}
-          >
-            The team behind the code
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            style={{ fontSize: 18, color: 'rgba(148,163,184,0.8)', maxWidth: 480 }}
-          >
-            Six personalities. One goal. Endless disagreement.
-          </motion.p>
-        </div>
+          The Cast
+        </motion.p>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.08 }}
+          style={{
+            fontFamily: 'var(--font-space)',
+            fontSize: 'clamp(32px, 6vw, 60px)',
+            fontWeight: 800,
+            lineHeight: 1.05,
+            letterSpacing: '-0.02em',
+            color: '#e2e8f0',
+            marginBottom: '0.3em',
+          }}
+        >
+          The team behind the code
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          style={{ fontSize: 18, color: 'rgba(148,163,184,0.8)', maxWidth: 480, margin: '0 auto' }}
+        >
+          Six personalities. One goal. Endless disagreement.
+        </motion.p>
       </div>
 
       {/* ── Character cards ── */}
-      <section className="relative z-10 py-16 px-6">
+      <section className="relative z-10 py-12 px-6">
         <div className="max-w-5xl mx-auto">
-          <p className="font-mono uppercase tracking-[0.28em] mb-10 text-center" style={{ fontSize: 13, color: 'rgba(119,119,187,0.65)' }}>
-            The Cast
-          </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {CAST.map((char, i) => (
               <motion.div

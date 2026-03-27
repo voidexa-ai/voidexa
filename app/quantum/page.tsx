@@ -130,7 +130,7 @@ export default function QuantumPage() {
           HERO
       ══════════════════════ */}
       <section
-        className="relative flex flex-col items-center justify-center text-center px-6"
+        className="relative w-full flex flex-col items-center justify-center text-center px-6"
         style={{ minHeight: '100vh', paddingTop: 120, paddingBottom: 80 }}
       >
         {/* Space station faint bg */}
@@ -159,7 +159,7 @@ export default function QuantumPage() {
           pointerEvents: 'none', zIndex: 0,
         }} />
 
-        <div className="relative z-10 max-w-3xl mx-auto w-full">
+        <div className="relative z-10 max-w-3xl mx-auto w-full text-center">
 
           {/* Badges */}
           <motion.div
@@ -276,7 +276,7 @@ export default function QuantumPage() {
           TWO-COLUMN LAYOUT
       ══════════════════════ */}
       <div className="relative z-10 max-w-[1200px] mx-auto px-6">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
 
           {/* ── LEFT: sticky origin story + protocol box ── */}
           <div className="w-full lg:w-[360px] shrink-0 lg:sticky lg:top-24 flex flex-col gap-6">
