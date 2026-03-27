@@ -30,15 +30,15 @@ function MiniSolarSystem({
 
     const planets = isMystery
       ? [
-          { r: 38, speed: 0.0015, size: 4, color: 'rgba(0,212,255,0.4)', phase: 0 },
-          { r: 60, speed: 0.0009, size: 5, color: 'rgba(139,92,246,0.4)', phase: 1.2 },
-          { r: 82, speed: 0.0005, size: 3, color: 'rgba(0,212,255,0.3)', phase: 2.5 },
+          { r: 38, speed: 0.0003, size: 4, color: 'rgba(0,212,255,0.4)', phase: 0 },
+          { r: 60, speed: 0.00018, size: 5, color: 'rgba(139,92,246,0.4)', phase: 1.2 },
+          { r: 82, speed: 0.0001, size: 3, color: 'rgba(0,212,255,0.3)', phase: 2.5 },
         ]
       : [
-          { r: 38, speed: 0.002, size: 5, color: '#ff6600', phase: 0 },
-          { r: 56, speed: 0.00125, size: 4, color: '#cc00ff', phase: 0.8 },
-          { r: 74, speed: 0.00075, size: 6, color: '#00ff44', phase: 1.6 },
-          { r: 92, speed: 0.00045, size: 3, color: '#ff0044', phase: 2.4 },
+          { r: 38, speed: 0.0004, size: 5, color: '#ff6600', phase: 0 },
+          { r: 56, speed: 0.00025, size: 4, color: '#cc00ff', phase: 0.8 },
+          { r: 74, speed: 0.00015, size: 6, color: '#00ff44', phase: 1.6 },
+          { r: 92, speed: 0.00009, size: 3, color: '#ff0044', phase: 2.4 },
         ]
 
     let raf: number
@@ -209,7 +209,7 @@ export default function ClaimYourPlanetPage() {
           <img
             src="/images/claaming a planet.jpg"
             alt=""
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', opacity: 0.70, zIndex: 0 }}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center', opacity: 0.55, zIndex: 0 }}
           />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,7,13,0.25) 0%, rgba(7,7,13,0.08) 50%, rgba(7,7,13,0.45) 100%)', zIndex: 1 }} />
 

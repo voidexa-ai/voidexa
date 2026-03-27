@@ -88,6 +88,8 @@ export default function Navigation() {
   const [infoPanelOpen, setInfoPanel] = useState(false)
   const [bannerVisible, setBanner]    = useState(false)
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
+  const [countdown, setCountdown]     = useState('')
+  const [isLive, setIsLive]           = useState(false)
   const pathname = usePathname()
   const { open: openModal } = useGetInTouchModal()
 
@@ -96,6 +98,26 @@ export default function Navigation() {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => { window.removeEventListener('scroll', onScroll) }
+  }, [])
+
+  useEffect(() => {
+    const TARGET = new Date('2026-04-05T00:00:00Z').getTime()
+    function tick() {
+      const diff = TARGET - Date.now()
+      if (diff <= 0) {
+        setIsLive(true)
+        setCountdown('')
+        return
+      }
+      const d = Math.floor(diff / 86400000)
+      const h = Math.floor((diff % 86400000) / 3600000)
+      const m = Math.floor((diff % 3600000) / 60000)
+      const s = Math.floor((diff % 60000) / 1000)
+      setCountdown(`${d}d ${h}h ${m}m ${s}s`)
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
   }, [])
 
   useEffect(() => { setMenuOpen(false); setInfoPanel(false) }, [pathname])
@@ -130,8 +152,19 @@ export default function Navigation() {
             }}
           >
             <p className="text-center select-none" style={{ color: 'rgba(200,190,230,0.9)', fontSize: '15px', fontWeight: 500 }}>
-              <span style={{ color: 'rgba(220,210,255,0.98)', fontWeight: 600 }}>Early Access</span>
-              {' '}— Limited slots available. We onboard users personally to ensure quality.
+              {isLive ? (
+                <span style={{ color: 'rgba(220,210,255,0.98)', fontWeight: 600 }}>We are live. Welcome to voidexa.</span>
+              ) : (
+                <>
+                  <span style={{ color: 'rgba(220,210,255,0.98)', fontWeight: 600 }}>Early Access</span>
+                  {' '}— Limited slots available. We onboard users personally to ensure quality.
+                  {countdown && (
+                    <span style={{ color: 'rgba(139,92,246,0.85)', fontWeight: 600, marginLeft: 10 }}>
+                      | {countdown}
+                    </span>
+                  )}
+                </>
+              )}
             </p>
             <button
               onClick={dismissBanner}
