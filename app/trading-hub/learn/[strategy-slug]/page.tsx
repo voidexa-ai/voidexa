@@ -26,7 +26,7 @@ export default async function StrategyPage({ params }: PageProps) {
   if (!strategy) notFound()
 
   return (
-    <div className="min-h-screen" style={{ background: '#07070d' }}>
+    <div className="min-h-screen">
       <div className="max-w-2xl mx-auto px-6 pt-32 pb-24">
         {/* Back */}
         <Link

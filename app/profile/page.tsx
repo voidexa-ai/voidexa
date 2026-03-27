@@ -198,7 +198,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#07070d' }}>
+    <div className="min-h-screen">
       <div className="max-w-2xl mx-auto px-6 pt-32 pb-24">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <p className="text-sm font-medium uppercase tracking-widest mb-2" style={{ color: '#334155' }}>Your account</p>

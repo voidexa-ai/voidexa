@@ -66,7 +66,7 @@ export default function TeamPage() {
     <div className="relative" style={{ background: 'transparent', minHeight: '100vh' }}>
 
       {/* ── Hero: group photo ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: 500 }}>
+      <div className="relative overflow-hidden" style={{ minHeight: 600 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/cast/gruppe billede.jpg"
@@ -74,27 +74,20 @@ export default function TeamPage() {
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center 20%',
+            objectFit: 'cover', objectPosition: 'center 15%',
           }}
         />
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(7,7,13,1) 0%, rgba(7,7,13,0.6) 50%, rgba(7,7,13,0.25) 100%)',
+          background: 'linear-gradient(to top, rgba(7,7,13,1) 0%, rgba(7,7,13,0.5) 60%, rgba(7,7,13,0.15) 100%)',
         }} />
 
         <div
           className="relative flex flex-col items-center justify-end text-center px-6"
-          style={{ minHeight: 500, paddingBottom: 80, paddingTop: 140 }}
+          style={{ minHeight: 600, paddingBottom: 48, paddingTop: 140 }}
         >
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="font-mono uppercase tracking-[0.28em] mb-4"
-            style={{ fontSize: 13, color: 'rgba(119,119,187,0.75)' }}
-          >
-            The Cast
-          </motion.p>
+          {/* spacer — keep text low so faces stay clear */}
+          <div style={{ flex: 1 }} />
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -123,8 +116,11 @@ export default function TeamPage() {
       </div>
 
       {/* ── Character cards ── */}
-      <section className="relative z-10 py-20 px-6">
+      <section className="relative z-10 py-16 px-6">
         <div className="max-w-5xl mx-auto">
+          <p className="font-mono uppercase tracking-[0.28em] mb-10 text-center" style={{ fontSize: 13, color: 'rgba(119,119,187,0.65)' }}>
+            The Cast
+          </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {CAST.map((char, i) => (
               <motion.div

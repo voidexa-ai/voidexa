@@ -98,7 +98,7 @@ function StatusBadge({ status, color }: { status: string; color: string }) {
 
 export default function ProductsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f] pt-32 pb-24">
+    <div className="min-h-screen pt-32 pb-24">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <motion.div
