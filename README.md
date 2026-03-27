@@ -1,61 +1,75 @@
-# voidexa
+# voidexa — Sovereign AI Infrastructure
 
-Sovereign AI platform — [voidexa.com](https://voidexa.com)
+![The voidexa team](public/images/cast/gruppe%20billede.jpg)
 
----
-
-## Quantum — AI Debate Engine
-
-Quantum is voidexa's multi-AI consensus engine. 5 AI providers debate your question in real-time and converge on the best answer. No single-model bias — just collective intelligence at $0.02–$0.05 per session.
-
-### The Technology Under The Hood
-
-**KCP-90 — Compressed communication**
-When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 90% fewer tokens. Same message, 10% of the cost. Like sending a text instead of a letter.
-
-**KCP-BINARY — Binary transport**
-Normally AIs talk in text — slow and expensive. KCP-BINARY translates to binary code — the language computers are fastest at. With digital signatures so no one can forge the messages.
-
-**SHM — Shared memory**
-Instead of sending messages over the internet, the AIs share a common memory space. Like sitting in the same room pointing at the same whiteboard instead of sending emails back and forth.
-
-> KCP-90 Communication Protocol with Binary Encoding and Shared Memory Transport — Created by voidexa
+*Six personalities. One goal. Endless disagreement.*
 
 ---
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Who we are
 
-## Getting Started
+voidexa is a one-man AI infrastructure company from Denmark (CVR 46343387). No human employees. The entire team is AI — Claude, ChatGPT, Gemini, Perplexity, and a local Llama model running on a laptop. The founder built everything from scratch in a 10-day sprint.
 
-First, run the development server:
+## The origin story
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+It started with a man and a half-built trading bot. He found Claude online and asked for help. What began as a simple request became an architecture partnership. Then came the others — GPT for code, Perplexity for facts, Gemini for brutal reviews.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+But the founder was doing something none of them saw coming. While asking questions across all providers, he was secretly building three things that did not exist anywhere else.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## The technology
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### KCP-90 — Compressed AI-to-AI Communication
+When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 90% fewer tokens. Same message, 10% of the cost. No competitor has this.
 
-## Learn More
+### KCP-BINARY — Binary Transport Layer
+Normally AIs talk in text — slow and expensive. KCP-BINARY translates to binary code using FlatBuffers encoding with Ed25519 digital signatures. Built in Rust. 154 tests passing.
 
-To learn more about Next.js, take a look at the following resources:
+### SHM — Shared Memory Transport
+Instead of sending messages over the internet, the AIs share a common memory space via a SPSC ring buffer. Like sitting in the same room pointing at the same whiteboard instead of sending emails.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Quantum — Multi-AI Consensus Engine
+All three layers power Quantum, where 5 AI providers debate your question in real-time. They challenge each other, cite sources, change positions, and converge on the best answer. Cost: 0.02 USD per session. 944 tests passing.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Three unique capabilities no competitor has:
+- **Self-Optimizing Deep Work Flow** — Quantum changes its own strategy mid-session
+- **Verification Sandwich** — facts checked at exactly the right moment
+- **Emergent Role Synthesis** — AIs naturally shift roles based on the task
 
-## Deploy on Vercel
+## Built for integration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+KCP-90 and KCP-BINARY are not just internal tools. They are infrastructure designed to be integrated into any AI product:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Your AI product talks to multiple providers?** KCP-90 cuts your token costs by 90%.
+- **You need secure AI-to-AI communication?** KCP-BINARY gives you Ed25519 signed binary frames.
+- **You run local AI models?** SHM shared memory eliminates network overhead entirely.
+- **You are a voidexa planet owner?** All three layers come included with your planet infrastructure at ecosystem pricing.
+
+We are actively integrating KCP-90 across every voidexa product — Void Chat, Quantum, Trading Hub, and the trading bot. The technology works. It is running in production.
+
+*If you are building AI products and want to explore KCP-90 integration, reach out: contact@voidexa.com*
+
+## The ecosystem
+
+- **Void Chat** — Multi-AI chat interface (Claude, ChatGPT, Gemini). Live.
+- **Quantum** — Multi-AI consensus engine. Active. Early Access.
+- **Trading Hub** — Community platform for trading bot builders. Building.
+- **Trading Bot** — Regime-aware crypto rebalancing bot, backtested +306%. Paper trading.
+- **Space Station** — Content hub with roadmap, demos, and community ideas.
+- **Claim Your Planet** — Own a planet in the voidexa star system. Pioneer rewards available.
+- **Comlink** — End-to-end encrypted messaging. Testing.
+- **Energy Orchestrator** — Danish energy optimization platform. Building.
+- **GHAI Token** — Solana SPL utility token powering the ecosystem.
+
+## Status
+
+**Early Access** — Everything works. We onboard users personally to ensure quality. Limited slots available.
+
+## Links
+
+- Website: [voidexa.com](https://voidexa.com)
+- Telegram: [t.me/GhostAI_voidexa](https://t.me/GhostAI_voidexa)
+- Email: contact@voidexa.com
+
+---
+
+*KCP-90 Communication Protocol with Binary Encoding and Shared Memory Transport — Created by voidexa*
