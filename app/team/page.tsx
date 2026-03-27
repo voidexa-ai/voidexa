@@ -65,23 +65,20 @@ export default function TeamPage() {
   return (
     <div className="relative" style={{ background: 'transparent', minHeight: '100vh' }}>
 
-      {/* ── Hero: group photo — clean, no text overlay ── */}
-      <div className="relative overflow-hidden" style={{ height: 700, marginTop: 80 }}>
+      {/* ── Hero: group photo — full image, no crop ── */}
+      <div className="w-full" style={{ marginTop: 80, maxHeight: '80vh', overflow: 'hidden', background: '#07070d' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/cast/gruppe billede.jpg"
           alt="The Quantum Team"
           style={{
-            position: 'absolute', inset: 0,
-            width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center 10%',
+            width: '100%',
+            height: 'auto',
+            maxHeight: '80vh',
+            objectFit: 'contain',
+            display: 'block',
           }}
         />
-        {/* Light bottom fade only — no text sits on the photo */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(7,7,13,0.85) 0%, rgba(7,7,13,0.1) 40%, transparent 100%)',
-        }} />
       </div>
 
       {/* ── Title + subtitle below the photo ── */}

@@ -102,6 +102,55 @@ const ROADMAP: RoadmapItem[] = [
     status: 'active',
     phase: 'Infra',
   },
+  {
+    title: 'TINE Secretary AI',
+    desc: 'AI secretary that manages scheduling, follow-ups, and task delegation.',
+    tooltip: 'AI secretary that manages scheduling, follow-ups, and task delegation.',
+    status: 'planned',
+    phase: 'AI',
+  },
+  {
+    title: 'Sentient AI Scaffold',
+    desc: 'Persistent AI agent framework with long-term memory and goal tracking.',
+    tooltip: 'Persistent AI agent framework with long-term memory and goal tracking.',
+    status: 'planned',
+    phase: 'AI',
+  },
+  {
+    title: 'BOSSO',
+    desc: 'Autonomous business operations AI — decisions, reports, and execution.',
+    tooltip: 'Autonomous business operations AI — decisions, reports, and execution.',
+    status: 'planned',
+    phase: 'AI',
+  },
+  {
+    title: 'ContextSynch',
+    desc: 'Cross-session memory synchronisation across all voidexa AI products.',
+    tooltip: 'Cross-session memory synchronisation across all voidexa AI products.',
+    status: 'planned',
+    phase: 'Infra',
+  },
+  {
+    title: 'DIY Mechanic',
+    desc: 'AI-powered repair guide engine — diagnose and fix anything step by step.',
+    tooltip: 'AI-powered repair guide engine — diagnose and fix anything step by step.',
+    status: 'planned',
+    phase: 'Product',
+  },
+  {
+    title: 'Jarvis',
+    desc: 'Personal AI assistant with voice, context, and proactive suggestions.',
+    tooltip: 'Personal AI assistant with voice, context, and proactive suggestions.',
+    status: 'planned',
+    phase: 'Product',
+  },
+  {
+    title: 'Book Scaffold Engine',
+    desc: 'AI-assisted book writing — outline, draft, and structure from a prompt.',
+    tooltip: 'AI-assisted book writing — outline, draft, and structure from a prompt.',
+    status: 'planned',
+    phase: 'Product',
+  },
 ]
 
 const STATUS_CONFIG: Record<
