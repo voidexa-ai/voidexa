@@ -350,7 +350,7 @@ export default function TradingPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#07070d' }}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
 
       {/* ── HERO ── */}
       <section className="relative pt-36 pb-20 overflow-hidden">

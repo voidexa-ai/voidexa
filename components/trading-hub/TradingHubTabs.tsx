@@ -25,7 +25,7 @@ export default function TradingHubTabs() {
   const [active, setActive] = useState<TabId>('leaderboard')
 
   return (
-    <div className="min-h-screen" style={{ background: '#07070d' }}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       {/* Tab bar */}
       <div
         className="sticky top-0 z-30 border-b"

@@ -1,30 +1,15 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, Info } from 'lucide-react'
 import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 import AuthButton from '@/components/AuthButton'
 import { useGetInTouchModal } from '@/components/GetInTouchModal'
 
 const BANNER_KEY = 'voidexa_beta_banner_dismissed'
-const LAUNCH_DATE = new Date('2026-04-05T00:00:00Z')
-
-function getCountdown(): string {
-  const now = new Date()
-  const diff = LAUNCH_DATE.getTime() - now.getTime()
-  if (diff <= 0) return 'Live now!'
-  const totalSeconds = Math.floor(diff / 1000)
-  const days  = Math.floor(totalSeconds / 86400)
-  const hours = Math.floor((totalSeconds % 86400) / 3600)
-  const mins  = Math.floor((totalSeconds % 3600) / 60)
-  const secs  = totalSeconds % 60
-  if (days > 0) return `${days}d ${hours}h ${mins}m ${secs}s`
-  if (hours > 0) return `${hours}h ${mins}m ${secs}s`
-  return `${mins}m ${secs}s`
-}
 
 // FIX 2: All products visible in top nav
 const mainLinks = [
@@ -34,13 +19,9 @@ const mainLinks = [
   { href: '/apps',        label: 'Apps',        badge: null   },
   { href: '/ai-tools',    label: 'AI Tools',    badge: null   },
   { href: '/services',    label: 'Services',    badge: null   },
+  { href: '/station',     label: 'Station',     badge: null   },
   { href: '/quantum',     label: 'Quantum',     badge: 'SOON' },
 ]
-
-// "More" dropdown — Space Station only
-const moreLinks = [
-  { href: '/station', label: 'Space Station', badge: 'NEW' },
-] as const
 
 // FIX 3: Info panel links (removed from top nav)
 const infoPanelLinks = [
@@ -102,40 +83,25 @@ function hexToRgb(hex: string) {
 export default function Navigation() {
   const [scrolled, setScrolled]       = useState(false)
   const [menuOpen, setMenuOpen]       = useState(false)
-  const [moreOpen, setMoreOpen]       = useState(false)
   const [infoPanelOpen, setInfoPanel] = useState(false)
   const [bannerVisible, setBanner]    = useState(false)
-  const [countdown, setCountdown]     = useState('')
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
   const pathname = usePathname()
   const { open: openModal } = useGetInTouchModal()
-  const moreRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setBanner(localStorage.getItem(BANNER_KEY) !== 'true')
-    setCountdown(getCountdown())
-    const tick = setInterval(() => setCountdown(getCountdown()), 1000)
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { clearInterval(tick); window.removeEventListener('scroll', onScroll) }
+    return () => { window.removeEventListener('scroll', onScroll) }
   }, [])
 
-  useEffect(() => { setMenuOpen(false); setMoreOpen(false); setInfoPanel(false) }, [pathname])
+  useEffect(() => { setMenuOpen(false); setInfoPanel(false) }, [pathname])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen || infoPanelOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [menuOpen, infoPanelOpen])
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
-        setMoreOpen(false)
-      }
-    }
-    if (moreOpen) document.addEventListener('mousedown', onClickOutside)
-    return () => document.removeEventListener('mousedown', onClickOutside)
-  }, [moreOpen])
 
   function dismissBanner() {
     localStorage.setItem(BANNER_KEY, 'true')
@@ -143,7 +109,6 @@ export default function Navigation() {
     window.dispatchEvent(new CustomEvent('banner-dismissed'))
   }
 
-  const isMoreActive = pathname === '/station'
   const pageLabel = getPageLabel(pathname)
 
   return (
@@ -153,19 +118,18 @@ export default function Navigation() {
         {/* ── Countdown banner ── */}
         {bannerVisible && (
           <div
-            className="relative flex items-center justify-center px-10 py-2"
+            className="relative flex items-center justify-center px-10"
             style={{
               background: 'linear-gradient(90deg,rgba(10,8,20,0.98) 0%,rgba(22,10,45,0.98) 50%,rgba(10,8,20,0.98) 100%)',
               borderBottom: '1px solid rgba(139,92,246,0.18)',
               backdropFilter: 'blur(16px)',
+              paddingTop: '12px',
+              paddingBottom: '12px',
             }}
           >
-            <p className="text-center text-[11px] tracking-wide select-none" style={{ color: 'rgba(200,190,230,0.85)' }}>
-              <span className="font-semibold" style={{ color: 'rgba(220,210,255,0.95)' }}>Early Access</span>
-              {' '}—{' '}We&apos;re building something big.{' '}
-              <span className="font-bold tabular-nums" style={{ color: 'rgba(180,145,255,0.95)' }}>
-                {countdown}
-              </span>
+            <p className="text-center select-none" style={{ color: 'rgba(200,190,230,0.9)', fontSize: '15px', fontWeight: 500 }}>
+              <span style={{ color: 'rgba(220,210,255,0.98)', fontWeight: 600 }}>Early Access</span>
+              {' '}— Limited slots available. We onboard users personally to ensure quality.
             </p>
             <button
               onClick={dismissBanner}
@@ -312,91 +276,6 @@ export default function Navigation() {
                 )}
               </div>
 
-              {/* More dropdown (Space Station only) */}
-              <div ref={moreRef} style={{ position: 'relative', marginLeft: 2 }}>
-                <button
-                  onClick={() => setMoreOpen(v => !v)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 3,
-                    padding: '5px 9px', borderRadius: 6,
-                    fontSize: '0.8rem', fontWeight: 500,
-                    cursor: 'pointer',
-                    color: isMoreActive ? '#44aacc' : moreOpen ? '#e2e8f0' : '#64748b',
-                    background: isMoreActive ? 'rgba(68,170,204,0.10)' : moreOpen ? 'rgba(255,255,255,0.06)' : 'transparent',
-                    border: 'none', transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={e => { if (!moreOpen && !isMoreActive) (e.currentTarget as HTMLElement).style.color = '#94a3b8' }}
-                  onMouseLeave={e => { if (!moreOpen && !isMoreActive) (e.currentTarget as HTMLElement).style.color = '#64748b' }}
-                >
-                  More
-                  <motion.span animate={{ rotate: moreOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown size={13} />
-                  </motion.span>
-                </button>
-                {/* FIX 1: active indicator when Space Station is current page */}
-                {isMoreActive && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    style={{
-                      position: 'absolute', bottom: 0, left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: 16, height: 2, borderRadius: 2,
-                      background: '#44aacc', boxShadow: '0 0 8px #44aacc',
-                    }}
-                  />
-                )}
-
-                <AnimatePresence>
-                  {moreOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 4, scale: 0.97 }}
-                      transition={{ duration: 0.15 }}
-                      style={{
-                        position: 'absolute', top: '100%', right: 0, marginTop: 8,
-                        minWidth: 180, borderRadius: 12, padding: '6px 0',
-                        background: 'rgba(12,8,28,0.97)',
-                        border: '1px solid rgba(139,92,246,0.2)',
-                        backdropFilter: 'blur(20px)',
-                        boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.08)',
-                        zIndex: 100,
-                      }}
-                    >
-                      {moreLinks.map(item => {
-                        const active = pathname === item.href
-                        const col = PATH_COLOR[item.href] ?? '#94a3b8'
-                        const { r, g, b } = hexToRgb(col)
-                        return (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setMoreOpen(false)}
-                            className="flex items-center justify-between px-4 py-2.5 text-sm transition-colors"
-                            style={{
-                              color: active ? col : 'rgba(148,163,184,0.85)',
-                              background: active ? `rgba(${r},${g},${b},0.08)` : 'transparent',
-                            }}
-                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.08)'}
-                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = active ? `rgba(${r},${g},${b},0.08)` : 'transparent'}
-                          >
-                            <span>{item.label}</span>
-                            {item.badge && (
-                              <span style={{
-                                fontSize: '8px', fontWeight: 700, letterSpacing: '0.1em',
-                                padding: '1px 5px', borderRadius: 3,
-                                background: `rgba(${r},${g},${b},0.18)`, color: col, textTransform: 'uppercase',
-                              }}>
-                                {item.badge}
-                              </span>
-                            )}
-                          </Link>
-                        )
-                      })}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
             </div>
 
             {/* Desktop right: CTA + auth */}
@@ -453,34 +332,40 @@ export default function Navigation() {
         onClick={() => setInfoPanel(true)}
         animate={{
           boxShadow: [
-            '-2px 0 12px rgba(139,92,246,0.15), inset 0 0 8px rgba(139,92,246,0.05)',
-            '-4px 0 24px rgba(139,92,246,0.45), inset 0 0 12px rgba(139,92,246,0.1)',
-            '-2px 0 12px rgba(139,92,246,0.15), inset 0 0 8px rgba(139,92,246,0.05)',
+            '-2px 0 12px rgba(0,212,255,0.15), inset 0 0 8px rgba(0,212,255,0.05)',
+            '-4px 0 28px rgba(0,212,255,0.5), inset 0 0 14px rgba(0,212,255,0.12)',
+            '-2px 0 12px rgba(0,212,255,0.15), inset 0 0 8px rgba(0,212,255,0.05)',
           ],
         }}
         transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-        whileHover={{ x: -3, background: 'rgba(22,12,42,0.98)' }}
+        whileHover={{ x: -3, background: 'rgba(0,30,45,0.98)' }}
         style={{
           position: 'fixed',
           right: 0,
           top: '50%',
           transform: 'translateY(-50%)',
           zIndex: 39,
-          background: 'rgba(12,8,28,0.95)',
-          border: '1px solid rgba(139,92,246,0.35)',
+          background: 'rgba(7,15,25,0.95)',
+          border: '1px solid rgba(0,212,255,0.35)',
           borderRight: 'none',
           borderRadius: '10px 0 0 10px',
-          padding: '22px 10px',
+          padding: '18px 0',
+          width: '44px',
           cursor: 'pointer',
           backdropFilter: 'blur(12px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '8px',
         }}
         aria-label="Open info panel"
       >
+        <Info size={16} style={{ color: 'rgba(0,212,255,0.85)' }} />
         <span style={{
           writingMode: 'vertical-rl',
           display: 'block',
-          fontSize: '9px',
-          color: 'rgba(167,139,250,0.8)',
+          fontSize: '10px',
+          color: 'rgba(0,212,255,0.7)',
           letterSpacing: '0.22em',
           fontWeight: 700,
           textTransform: 'uppercase',

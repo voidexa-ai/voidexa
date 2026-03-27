@@ -21,7 +21,7 @@ export default function QuantumPage() {
   return (
     <div
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: '#07070d' }}
+      style={{ background: 'transparent' }}
     >
       {/* Radial glow */}
       <div

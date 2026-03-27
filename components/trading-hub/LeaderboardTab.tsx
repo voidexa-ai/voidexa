@@ -77,17 +77,21 @@ export default function LeaderboardTab() {
   })
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" style={{ paddingTop: '40px' }}>
       {/* House bot banner */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="rounded-2xl p-6 sm:p-8"
+        className="rounded-2xl"
         style={{
           background: `linear-gradient(135deg, rgba(204,153,85,0.12) 0%, rgba(204,153,85,0.04) 100%)`,
           border: `1px solid ${ACCENT}33`,
           boxShadow: `0 0 60px ${ACCENT}0a`,
+          paddingTop: '24px',
+          paddingBottom: '24px',
+          paddingLeft: '24px',
+          paddingRight: '24px',
         }}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

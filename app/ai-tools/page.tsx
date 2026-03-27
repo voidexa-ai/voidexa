@@ -59,7 +59,7 @@ function WaitlistInput({ label }: { label: string }) {
 
 export default function AIToolsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-transparent">
 
       {/* ── PAGE HERO ── */}
       <section className="relative pt-36 pb-20 overflow-hidden">
@@ -160,7 +160,7 @@ export default function AIToolsPage() {
       {/* ═══════════════════════════════════════════ */}
       {/* ── AI WEBSITE & STORE BUILDER ── */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="section-pad" style={{ background: 'linear-gradient(180deg, #0a0a0f 0%, #0f0520 50%, #0a0a0f 100%)' }}>
+      <section className="section-pad" style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(15,5,32,0.6) 50%, transparent 100%)' }}>
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}>

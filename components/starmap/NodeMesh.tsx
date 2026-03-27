@@ -18,6 +18,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   const meshRef  = useRef<THREE.Mesh>(null)
   const glowRef  = useRef<THREE.Mesh>(null)
   const ringRef  = useRef<THREE.Mesh>(null)
+  const stationRingRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
   const router = useRouter()
   const { camera } = useThree()
@@ -71,6 +72,11 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
     if (ringRef.current && isCenter) {
       ringRef.current.rotation.y = t * 0.25
       ringRef.current.rotation.x = Math.sin(t * 0.15) * 0.3 + 0.4
+    }
+
+    if (stationRingRef.current && node.id === 'station') {
+      stationRingRef.current.rotation.y = t * 0.4
+      stationRingRef.current.rotation.x = Math.sin(t * 0.25) * 0.5 + Math.PI / 4
     }
 
     // Warp travel animation toward clicked node
@@ -154,7 +160,10 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
-        <sphereGeometry args={[size, 48, 48]} />
+        {node.id === 'station'
+          ? <octahedronGeometry args={[size * 1.4, 0]} />
+          : <sphereGeometry args={[size, 48, 48]} />
+        }
         <meshStandardMaterial
           color={color}
           emissive={emissive}
@@ -187,6 +196,14 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         distance={isCenter ? 12 : 6}
         decay={2}
       />
+
+      {/* Space station ring — only for station node */}
+      {node.id === 'station' && (
+        <mesh ref={stationRingRef} raycast={() => null} rotation={[Math.PI / 3, 0, 0]}>
+          <torusGeometry args={[size * 2.2, 0.018, 8, 48]} />
+          <meshBasicMaterial color={emissive} transparent opacity={0.5} toneMapped={false} />
+        </mesh>
+      )}
 
       {/* Center orbital ring */}
       {isCenter && (
