@@ -432,6 +432,27 @@ export default function QuantumPage() {
             </p>
           </motion.div>
 
+          {/* Group photo banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="relative overflow-hidden rounded-2xl mb-12"
+            style={{ height: 260 }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/cast/gruppe billede.jpg"
+              alt="The Quantum Team"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+            />
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(7,7,13,0.85) 0%, rgba(7,7,13,0.35) 60%, transparent 100%)',
+            }} />
+          </motion.div>
+
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {CAST.map((char, i) => (
               <motion.div

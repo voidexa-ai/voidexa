@@ -4,6 +4,7 @@ import Sovereignty        from '@/components/sections/home/Sovereignty'
 import FeaturedProduct    from '@/components/sections/home/FeaturedProduct'
 import CoreTech           from '@/components/sections/home/CoreTech'
 import ClaimPlanetTeaser  from '@/components/sections/home/ClaimPlanetTeaser'
+import MeetTheTeam        from '@/components/sections/home/MeetTheTeam'
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
       <Sovereignty />
       <FeaturedProduct />
       <CoreTech />
+      <MeetTheTeam />
       <ClaimPlanetTeaser />
     </>
   )
