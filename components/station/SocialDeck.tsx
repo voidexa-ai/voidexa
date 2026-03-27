@@ -47,14 +47,14 @@ const BEHIND_THE_SCENES = [
   },
   {
     date: 'Mar 2026',
-    update: 'Void Chat deployed to production. First paying users onboarded.',
+    update: 'Void Chat deployed to production.',
   },
   {
-    date: 'Feb 2026',
+    date: 'Mar 2026',
     update: 'GHAI token live on Solana. Platform credit system integrated.',
   },
   {
-    date: 'Jan 2026',
+    date: 'Mar 2026',
     update: 'voidexa.com launched. Auth, profiles, waitlist, and star map all live.',
   },
 ]
