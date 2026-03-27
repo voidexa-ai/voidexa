@@ -16,7 +16,7 @@ export function ProviderBadge({ provider, model }: ProviderBadgeProps) {
   if (!providerInfo) return null;
 
   return (
-    <p className="text-xs text-gray-500 mt-2 select-none">
+    <p className="text-sm text-gray-500 mt-2 select-none">
       Powered by {providerInfo.displayName}
       {model ? ` (${model})` : ''} — orchestrated by voidexa
     </p>

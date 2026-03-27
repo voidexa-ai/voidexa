@@ -39,7 +39,7 @@ function CategoryBadge({ cat }: { cat: Category }) {
   const cfg = CAT_CONFIG[cat]
   return (
     <span
-      className="text-xs px-2 py-0.5 rounded-full font-medium"
+      className="text-sm px-2 py-0.5 rounded-full font-medium"
       style={{ color: cfg.color, background: `${cfg.color}14`, border: `1px solid ${cfg.color}28`, fontSize: '0.8125rem' }}
     >
       {cfg.label}

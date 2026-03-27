@@ -18,7 +18,7 @@ export default function SocialProof() {
           viewport={{ once: true }}
           className="text-center mb-14"
         >
-          <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+          <p className="text-sm font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
             Early signal
           </p>
           <h2
@@ -44,7 +44,7 @@ export default function SocialProof() {
               </p>
               <div>
                 <div className="text-sm font-medium text-[#e2e8f0]">{name}</div>
-                <div className="text-xs text-[#475569]">{role}</div>
+                <div className="text-sm text-[#475569]">{role}</div>
               </div>
             </motion.div>
           ))}

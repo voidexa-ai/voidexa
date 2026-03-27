@@ -34,7 +34,7 @@ export function CreditDisplay() {
       {/* Tier badge */}
       <div className="flex items-center gap-2">
         <span
-          className="px-2 py-0.5 rounded text-xs font-semibold"
+          className="px-2 py-0.5 rounded text-sm font-semibold"
           style={
             balance.tier === 'pro'
               ? { background: 'rgba(234,179,8,0.15)', color: '#facc15', border: '1px solid rgba(234,179,8,0.2)' }
@@ -54,12 +54,12 @@ export function CreditDisplay() {
           GHAI
         </p>
       ) : balance.tier !== 'pro' ? (
-        <p className="text-xs" style={{ color: '#64748b' }}>No GHAI balance</p>
+        <p className="text-sm" style={{ color: '#64748b' }}>No GHAI balance</p>
       ) : null}
 
       {/* Wallet balance */}
       {balance.walletBalance !== null && balance.walletBalance > 0 && (
-        <p className="text-xs" style={{ color: '#475569' }}>
+        <p className="text-sm" style={{ color: '#475569' }}>
           Wallet: {balance.walletBalance.toFixed(0)} GHAI
         </p>
       )}
@@ -68,7 +68,7 @@ export function CreditDisplay() {
       {balance.tier !== 'pro' && balance.platformBalance <= 0 && (
         <a
           href="/void-chat/pricing"
-          className="flex items-center justify-center w-full mt-2 px-3 py-2.5 rounded-xl text-xs font-bold text-center transition-all"
+          className="flex items-center justify-center w-full mt-2 px-3 py-2.5 rounded-xl text-sm font-bold text-center transition-all"
           style={{
             background: 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(6,182,212,0.3))',
             color: '#e2d9ff',

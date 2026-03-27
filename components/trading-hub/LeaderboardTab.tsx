@@ -44,7 +44,7 @@ function RegimeBadge({ regime }: { regime: RegimeKey }) {
   const cfg = REGIME_CONFIG[regime]
   return (
     <span
-      className="inline-block text-xs font-medium px-2 py-0.5 rounded-full"
+      className="inline-block text-sm font-medium px-2 py-0.5 rounded-full"
       style={{ color: cfg.color, background: cfg.bg, fontSize: '0.8125rem', letterSpacing: '0.02em' }}
     >
       {cfg.label}
@@ -99,7 +99,7 @@ export default function LeaderboardTab() {
             <div className="flex items-center gap-2 mb-2">
               <Shield size={16} style={{ color: ACCENT }} />
               <span
-                className="text-xs font-medium uppercase tracking-widest"
+                className="text-sm font-medium uppercase tracking-widest"
                 style={{ color: `${ACCENT}88`, letterSpacing: '0.14em' }}
               >
                 House Bot · All-Season
@@ -158,7 +158,7 @@ export default function LeaderboardTab() {
       >
         {/* Table header */}
         <div
-          className="grid gap-0 px-4 py-3 text-xs font-medium uppercase tracking-wider"
+          className="grid gap-0 px-4 py-3 text-sm font-medium uppercase tracking-wider"
           style={{
             gridTemplateColumns: '48px 1fr 120px 120px 120px 140px',
             background: 'rgba(255,255,255,0.03)',
@@ -205,7 +205,7 @@ export default function LeaderboardTab() {
                 <span style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '0.9375rem' }}>{bot.name}</span>
                 {bot.isHouse && (
                   <span
-                    className="text-xs px-2 py-0.5 rounded-full"
+                    className="text-sm px-2 py-0.5 rounded-full"
                     style={{ background: `${ACCENT}18`, color: ACCENT, fontSize: '0.75rem', border: `1px solid ${ACCENT}30` }}
                   >
                     house

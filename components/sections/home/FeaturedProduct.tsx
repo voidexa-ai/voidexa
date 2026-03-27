@@ -48,7 +48,7 @@ export default function FeaturedProduct() {
             transition={{ duration: 0.7 }}
           >
             <span
-              className="inline-block mb-4 text-xs font-medium uppercase tracking-widest px-3 py-1 rounded-full"
+              className="inline-block mb-4 text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
               style={{
                 background: 'rgba(0,212,255,0.08)',
                 border: '1px solid rgba(0,212,255,0.25)',
@@ -82,8 +82,8 @@ export default function FeaturedProduct() {
                       border: '1px solid rgba(0,212,255,0.15)',
                     }}
                   >
-                    <div className="text-xs font-medium text-[#e2e8f0]">{step.name}</div>
-                    <div className="text-[10px] text-[#7a8a9e]">{step.sub}</div>
+                    <div className="text-sm font-medium text-[#e2e8f0]">{step.name}</div>
+                    <div className="text-sm text-[#7a8a9e]">{step.sub}</div>
                   </div>
                   {i < pipeline.length - 1 && (
                     <ArrowRight size={12} className="text-[#334155] flex-shrink-0" />
@@ -145,7 +145,7 @@ export default function FeaturedProduct() {
                 >
                   {value}
                 </div>
-                <div className="text-xs text-[#8899af] tracking-wide">{label}</div>
+                <div className="text-sm text-[#8899af] tracking-wide">{label}</div>
               </motion.div>
             ))}
           </motion.div>

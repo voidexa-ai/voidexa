@@ -184,12 +184,12 @@ function NetworkViz() {
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-[#00d4ff]"
               style={{ boxShadow: '0 0 6px #00d4ff', animation: 'breathe 2s ease-in-out infinite' }} />
-            <span className="text-xs text-[#7a8a9e]">7 active nodes</span>
+            <span className="text-sm text-[#7a8a9e]">7 active nodes</span>
           </div>
-          <span className="text-[10px] text-[#334155]">next tier opens at 20</span>
+          <span className="text-sm text-[#334155]">next tier opens at 20</span>
           <div className="flex items-center gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6] opacity-40" />
-            <span className="text-[10px] text-[#334155]">13 open slots</span>
+            <span className="text-sm text-[#334155]">13 open slots</span>
           </div>
         </div>
       </div>
@@ -290,16 +290,16 @@ function BacktestChart() {
         >
           +306%
         </div>
-        <div className="text-[10px] text-[#334155]">All-Season Bot</div>
+        <div className="text-sm text-[#334155]">All-Season Bot</div>
       </div>
       <div className="absolute bottom-14 right-10 text-right">
-        <div className="text-[10px] text-[#334155]">--- buy & hold</div>
+        <div className="text-sm text-[#334155]">--- buy & hold</div>
       </div>
 
       {/* X axis labels */}
       <div className="absolute bottom-3 left-4 right-4 flex justify-between">
         {['Apr', 'Jun', 'Aug', 'Oct', 'Dec', 'Feb', 'Mar'].map(m => (
-          <span key={m} className="text-[9px]" style={{ color: '#283040' }}>{m}</span>
+          <span key={m} className="text-sm" style={{ color: '#283040' }}>{m}</span>
         ))}
       </div>
 
@@ -313,7 +313,7 @@ function BacktestChart() {
         ].map(({ label, color }) => (
           <div key={label} className="flex items-center gap-1">
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: color, opacity: 0.7 }} />
-            <span style={{ color: '#283040', fontSize: 11, fontWeight: 500 }}>{label}</span>
+            <span style={{ color: '#283040', fontSize: 14, fontWeight: 500 }}>{label}</span>
           </div>
         ))}
       </div>
@@ -373,7 +373,7 @@ export default function TradingPage() {
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
               <span
-                className="inline-flex items-center gap-2 mb-6 text-xs font-medium uppercase tracking-widest px-3 py-1.5 rounded-full"
+                className="inline-flex items-center gap-2 mb-6 text-sm font-medium uppercase tracking-widest px-3 py-1.5 rounded-full"
                 style={{ background: 'rgba(0,212,255,0.07)', border: '1px solid rgba(0,212,255,0.22)', color: '#00d4ff', fontFamily: 'var(--font-space)' }}
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-[#00d4ff]"
@@ -441,7 +441,7 @@ export default function TradingPage() {
                   WebkitTextFillColor: 'transparent',
                 }}
               >{value}</div>
-              <div className="text-xs text-[#8899af] tracking-wide">{label}</div>
+              <div className="text-sm text-[#8899af] tracking-wide">{label}</div>
             </motion.div>
           ))}
         </div>
@@ -454,7 +454,7 @@ export default function TradingPage() {
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="text-center mb-14">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] mb-3"
+            <p className="text-sm font-medium uppercase tracking-[0.2em] mb-3"
               style={{ color: 'rgba(0,212,255,0.6)', fontFamily: 'var(--font-space)' }}>
               Flagship product
             </p>
@@ -474,7 +474,7 @@ export default function TradingPage() {
           {/* Pipeline */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="mb-16">
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-center mb-6"
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-center mb-6"
               style={{ color: '#2a3a4a', fontFamily: 'var(--font-space)' }}>
               5-stage execution pipeline
             </p>
@@ -494,7 +494,7 @@ export default function TradingPage() {
                       minWidth: 120,
                     }}
                   >
-                    <div className="text-xs font-medium text-[#e2e8f0]">{step.name}</div>
+                    <div className="text-sm font-medium text-[#e2e8f0]">{step.name}</div>
                     <div className="text-sm mt-0.5" style={{ color: step.color }}>{step.sub}</div>
                   </motion.div>
                   {i < pipeline.length - 1 && (
@@ -526,7 +526,7 @@ export default function TradingPage() {
                 </h3>
                 <p className="text-[15px] text-[#8899af] leading-relaxed mb-3">{s.desc}</p>
                 <div
-                  className="text-[10px] font-medium px-2 py-1 rounded-lg"
+                  className="text-sm font-medium px-2 py-1 rounded-lg"
                   style={{ background: `${s.color}08`, color: s.color, border: `1px solid ${s.color}18` }}
                 >
                   {s.alloc}
@@ -712,7 +712,7 @@ export default function TradingPage() {
                   </li>
                 ))}
               </ul>
-              <div className="text-xs text-[#1e2a38]">Join the waitlist above to get notified when this launches.</div>
+              <div className="text-sm text-[#1e2a38]">Join the waitlist above to get notified when this launches.</div>
             </motion.div>
           </div>
         </div>

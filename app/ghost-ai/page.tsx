@@ -175,11 +175,11 @@ export default function GhostAIPage() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 mb-8 flex-wrap justify-center"
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+            <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#888', background: 'rgba(136,136,136,0.1)', border: '1px solid rgba(136,136,136,0.25)' }}>
               Coming Soon
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+            <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#ccaa44', background: 'rgba(204,170,68,0.1)', border: '1px solid rgba(204,170,68,0.3)' }}>
               Powered by GHAI Token
             </span>
@@ -190,7 +190,7 @@ export default function GhostAIPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.05 }}
-            className="text-xs font-bold uppercase tracking-[0.35em] mb-4"
+            className="text-sm font-bold uppercase tracking-[0.35em] mb-4"
             style={{ color: 'rgba(139,92,246,0.6)', letterSpacing: '0.35em' }}
           >
             Ghost AI
@@ -416,10 +416,10 @@ export default function GhostAIPage() {
               }}>G</div>
               <div>
                 <p className="text-sm font-bold text-white">GHAI</p>
-                <p className="text-[11px]" style={{ color: '#475569' }}>Ghost AI Token · Solana</p>
+                <p className="text-sm" style={{ color: '#475569' }}>Ghost AI Token · Solana</p>
               </div>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full"
+            <span className="text-sm font-bold uppercase tracking-widest px-2 py-1 rounded-full"
               style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}>
               Live
             </span>
@@ -441,7 +441,7 @@ export default function GhostAIPage() {
                   <span className="text-sm font-semibold">
                     {priceUp ? '+' : ''}{price.priceChange24h.toFixed(2)}%
                   </span>
-                  <span className="text-xs" style={{ color: '#475569' }}>24h</span>
+                  <span className="text-sm" style={{ color: '#475569' }}>24h</span>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
@@ -451,7 +451,7 @@ export default function GhostAIPage() {
                   { label: 'Market Cap',  value: formatCompact(price.marketCap) },
                 ].map(({ label, value }) => (
                   <div key={label}>
-                    <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#334155' }}>{label}</p>
+                    <p className="text-sm uppercase tracking-wider mb-1" style={{ color: '#334155' }}>{label}</p>
                     <p className="text-sm font-semibold text-gray-300">{value}</p>
                   </div>
                 ))}
@@ -476,7 +476,7 @@ export default function GhostAIPage() {
             boxShadow: '0 0 24px rgba(204,170,68,0.04)',
           }}
         >
-          <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: '#64748b' }}>
+          <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#64748b' }}>
             Contract Address · Solana
           </p>
           <div className="flex items-center gap-3 flex-wrap">
@@ -484,7 +484,7 @@ export default function GhostAIPage() {
             <a
               href={`https://solscan.io/token/${GHAI_CONTRACT}`}
               target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-bold transition-opacity hover:opacity-80 shrink-0"
+              className="inline-flex items-center gap-1 text-sm font-bold transition-opacity hover:opacity-80 shrink-0"
               style={{ color: '#ccaa44' }}
             >
               Solscan <ExternalLink size={11} />
@@ -515,7 +515,7 @@ export default function GhostAIPage() {
                 backdropFilter: 'blur(4px)',
               }}
             >
-              <p className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#334155' }}>{label}</p>
+              <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#334155' }}>{label}</p>
               <p className="text-sm font-semibold" style={{ color: accent }}>{value}</p>
             </div>
           ))}
@@ -534,8 +534,8 @@ export default function GhostAIPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'rgba(139,92,246,0.5)' }}>Rewards</p>
-            <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+            <p className="text-sm font-bold uppercase tracking-[0.2em]" style={{ color: 'rgba(139,92,246,0.5)' }}>Rewards</p>
+            <span className="text-sm font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
               style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.25)', color: '#a78bfa' }}>
               Coming Soon
             </span>
@@ -562,7 +562,7 @@ export default function GhostAIPage() {
             >
               <div>
                 <p className="text-sm font-medium" style={{ color: '#cbd5e1' }}>{action}</p>
-                <p className="text-xs mt-0.5" style={{ color: '#475569' }}>{desc}</p>
+                <p className="text-sm mt-0.5" style={{ color: '#475569' }}>{desc}</p>
               </div>
               <span className="text-sm font-bold shrink-0" style={{ color: '#ccaa44' }}>{reward}</span>
             </motion.div>
@@ -592,7 +592,7 @@ export default function GhostAIPage() {
             background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(139,92,246,0.08) 0%, transparent 70%)',
           }} />
 
-          <p className="relative text-xs font-bold uppercase tracking-[0.25em] mb-4" style={{ color: '#7c3aed' }}>
+          <p className="relative text-sm font-bold uppercase tracking-[0.25em] mb-4" style={{ color: '#7c3aed' }}>
             Powered by GHAI
           </p>
           <h3 className="relative text-3xl font-bold mb-3 text-white" style={{ fontFamily: 'var(--font-space)' }}>

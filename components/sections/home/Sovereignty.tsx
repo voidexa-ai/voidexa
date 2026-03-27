@@ -28,7 +28,7 @@ export default function Sovereignty() {
           />
 
           <p
-            className="text-xs font-medium uppercase tracking-widest mb-6"
+            className="text-sm font-medium uppercase tracking-widest mb-6"
             style={{ color: 'rgba(139,92,246,0.7)' }}
           >
             Built for sovereignty

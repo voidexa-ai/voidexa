@@ -70,7 +70,7 @@ export function ConversationList() {
 
   if (conversations.length === 0) {
     return (
-      <p className="text-xs text-center py-6" style={{ color: '#374151' }}>
+      <p className="text-sm text-center py-6" style={{ color: '#374151' }}>
         No conversations yet
       </p>
     );
@@ -103,10 +103,10 @@ export function ConversationList() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium truncate" style={{ color: active ? '#e2e8f0' : '#9ca3af' }}>
+              <p className="text-sm font-medium truncate" style={{ color: active ? '#e2e8f0' : '#9ca3af' }}>
                 {conv.title}
               </p>
-              <p className="text-[10px] mt-0.5" style={{ color: '#374151' }}>
+              <p className="text-sm mt-0.5" style={{ color: '#374151' }}>
                 {conv.message_count ?? 0} msgs
               </p>
             </div>

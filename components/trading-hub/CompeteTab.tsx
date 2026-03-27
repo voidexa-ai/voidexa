@@ -67,7 +67,7 @@ export default function CompeteTab() {
             <span style={{ color: '#94a3b8', fontSize: '0.875rem', fontWeight: 500 }}>Monthly Competition</span>
           </div>
           <span
-            className="text-xs px-2.5 py-1 rounded-full font-medium uppercase"
+            className="text-sm px-2.5 py-1 rounded-full font-medium uppercase"
             style={{ background: `${statusColor}14`, color: statusColor, border: `1px solid ${statusColor}33`, letterSpacing: '0.08em', fontSize: '0.75rem' }}
           >
             {comp.status}

@@ -51,7 +51,7 @@ export function ModelSelector({
               const def = MODELS.find((m) => m.provider === slug && !m.isPremium);
               if (def) onModelChange(def.id);
             }}
-            className="flex-1 py-1.5 text-xs font-medium transition-colors"
+            className="flex-1 py-1.5 text-sm font-medium transition-colors"
             style={{
               color: selectedProvider === slug ? '#fff' : '#6b7280',
               background: selectedProvider === slug ? '#7c3aed' : 'transparent',
@@ -66,7 +66,7 @@ export function ModelSelector({
       <select
         value={selectedModel}
         onChange={(e) => onModelChange(e.target.value)}
-        className="w-full text-xs text-white rounded-lg px-2 py-2 focus:outline-none focus:border-purple-500 transition-colors"
+        className="w-full text-sm text-white rounded-lg px-2 py-2 focus:outline-none focus:border-purple-500 transition-colors"
         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
       >
         {providerModels.map((m) => (

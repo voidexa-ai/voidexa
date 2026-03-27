@@ -39,7 +39,7 @@ export default function ComingSoon({ label, title, subtitle, description, accent
           className="inline-flex items-center gap-2 mb-8"
         >
           <span
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] px-3 py-1 rounded-full"
+            className="text-sm font-semibold uppercase tracking-[0.18em] px-3 py-1 rounded-full"
             style={{
               color: accentColor,
               background: `${accentColor}18`,
@@ -55,7 +55,7 @@ export default function ComingSoon({ label, title, subtitle, description, accent
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="text-xs font-medium uppercase tracking-[0.18em] mb-4"
+          className="text-sm font-medium uppercase tracking-[0.18em] mb-4"
           style={{ color: `${accentColor}99` }}
         >
           {label}

@@ -199,7 +199,7 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         style={{ color: '#2a3a4a' }}
       >
-        <span className="text-[10px] tracking-[0.25em] uppercase font-medium">scroll</span>
+        <span className="text-sm tracking-[0.25em] uppercase font-medium">scroll</span>
         <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
           <ChevronDown size={14} />
         </motion.div>

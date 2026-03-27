@@ -60,7 +60,7 @@ export default function ChatPage() {
       {/* Preview badge — inside chat area, below provider area */}
       <div className="flex items-center justify-center pt-5 pb-0 px-4">
         <span
-          className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.16em] px-3 py-1 rounded-full"
+          className="inline-flex items-center gap-1.5 text-sm font-medium uppercase tracking-[0.16em] px-3 py-1 rounded-full"
           style={{
             background: 'rgba(139,92,246,0.06)',
             border: '1px solid rgba(139,92,246,0.14)',
@@ -98,7 +98,7 @@ export default function ChatPage() {
                 <div className="text-2xl font-bold mb-1" style={{ color: selected ? c : '#6b7280' }}>
                   {PROVIDERS[slug].displayName}
                 </div>
-                <div className="text-xs" style={{ color: selected ? c : '#374151' }}>
+                <div className="text-sm" style={{ color: selected ? c : '#374151' }}>
                   {getModelsByProvider(slug).length} models
                 </div>
               </button>
@@ -108,7 +108,7 @@ export default function ChatPage() {
 
         {/* Model selector */}
         <div className="w-full mb-6">
-          <label className="block text-xs text-gray-500 mb-2 uppercase tracking-widest">Model</label>
+          <label className="block text-sm text-gray-500 mb-2 uppercase tracking-widest">Model</label>
           <select
             value={model}
             onChange={(e) => setModel(e.target.value)}

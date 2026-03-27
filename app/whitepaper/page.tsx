@@ -16,7 +16,7 @@ export default function WhitepaperPage() {
         <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div>
             <p
-              className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
+              className="text-sm font-semibold uppercase tracking-[0.18em] mb-3"
               style={{ color: `${ACCENT}88` }}
             >
               Ghost AI · GHAI Token
@@ -69,7 +69,7 @@ export default function WhitepaperPage() {
         </div>
 
         {/* Fallback for browsers that block iframes */}
-        <p className="mt-4 text-xs text-center" style={{ color: '#475569' }}>
+        <p className="mt-4 text-sm text-center" style={{ color: '#475569' }}>
           If the PDF does not render,{' '}
           <a
             href="/GHAI_WHITE_PAPER_v1.pdf"

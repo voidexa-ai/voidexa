@@ -80,7 +80,7 @@ export default function ContactPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+          <p className="text-sm font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
             Contact
           </p>
           <h1
@@ -123,7 +123,7 @@ export default function ContactPage() {
               {/* Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
+                  <label className="block text-sm font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Name
                   </label>
                   <input
@@ -136,7 +136,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
+                  <label className="block text-sm font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                     Email
                   </label>
                   <input
@@ -153,7 +153,7 @@ export default function ContactPage() {
 
               {/* Interest checkboxes */}
               <div>
-                <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-3">
+                <label className="block text-sm font-medium text-[#7a8a9e] uppercase tracking-wider mb-3">
                   {"I'm interested in"}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -178,7 +178,7 @@ export default function ContactPage() {
                             border: `1px solid ${checked ? '#00d4ff' : 'rgba(255,255,255,0.12)'}`,
                           }}
                         >
-                          {checked && <span style={{ color: '#00d4ff', fontSize: 10, lineHeight: 1 }}>✓</span>}
+                          {checked && <span style={{ color: '#00d4ff', fontSize: 14, lineHeight: 1 }}>✓</span>}
                         </span>
                         {label}
                       </button>
@@ -204,7 +204,7 @@ export default function ContactPage() {
                       border: `1px solid ${newsletter ? '#a78bfa' : 'rgba(255,255,255,0.12)'}`,
                     }}
                   >
-                    {newsletter && <span style={{ color: '#a78bfa', fontSize: 10, lineHeight: 1 }}>✓</span>}
+                    {newsletter && <span style={{ color: '#a78bfa', fontSize: 14, lineHeight: 1 }}>✓</span>}
                   </span>
                   Subscribe to newsletter — general updates
                 </button>
@@ -212,7 +212,7 @@ export default function ContactPage() {
 
               {/* Message */}
               <div>
-                <label className="block text-xs font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
+                <label className="block text-sm font-medium text-[#7a8a9e] uppercase tracking-wider mb-2">
                   Message
                 </label>
                 <textarea
@@ -227,7 +227,7 @@ export default function ContactPage() {
               </div>
 
               {error && (
-                <p className="text-xs text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
+                <p className="text-sm text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
                   {error}
                 </p>
               )}
@@ -257,13 +257,13 @@ export default function ContactPage() {
           transition={{ delay: 0.4 }}
           className="mt-8 text-center"
         >
-          <p className="text-xs text-[#334155]">
+          <p className="text-sm text-[#334155]">
             Prefer email?{' '}
             <a href="mailto:contact@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
               contact@voidexa.com
             </a>
           </p>
-          <p className="text-xs text-[#334155] mt-2">
+          <p className="text-sm text-[#334155] mt-2">
             Management:{' '}
             <a href="mailto:ceo@voidexa.com" className="text-[#7a8a9e] hover:text-[#00d4ff] transition-colors">
               ceo@voidexa.com

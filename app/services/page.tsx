@@ -70,7 +70,7 @@ export default function ServicesPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+          <p className="text-sm font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
             Services
           </p>
           <h1
@@ -111,7 +111,7 @@ export default function ServicesPage() {
               <p className="text-base text-[#b0b0b0] mb-3">{tagline}</p>
               <p className="text-base text-[#b0b0b0] leading-relaxed mb-5">{desc}</p>
               <div className="mt-auto">
-                <p className="text-[10px] font-medium uppercase tracking-widest text-[#b0b0b0] mb-3">
+                <p className="text-sm font-medium uppercase tracking-widest text-[#b0b0b0] mb-3">
                   Includes
                 </p>
                 <ul className="space-y-2">

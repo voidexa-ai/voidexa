@@ -70,7 +70,7 @@ export function DepositModal({ isOpen, onClose, onSuccess }: DepositModalProps) 
           {/* Instructions */}
           <div className="bg-gray-800 rounded-lg p-3 text-sm text-gray-300">
             <p className="mb-2">1. Send GHAI tokens to this wallet:</p>
-            <code className="block bg-gray-950 p-2 rounded text-xs text-purple-400 break-all select-all">
+            <code className="block bg-gray-950 p-2 rounded text-sm text-purple-400 break-all select-all">
               {VOIDEXA_RECEIVER_WALLET || 'Receiver wallet not configured'}
             </code>
             <p className="mt-2">2. Copy the transaction signature below.</p>

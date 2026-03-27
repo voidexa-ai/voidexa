@@ -100,7 +100,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
     background: 'rgba(255,255,255,0.04)',
     border: '1px solid rgba(255,255,255,0.08)',
     color: '#e2e8f0',
-    fontSize: 13,
+    fontSize: 14,
     outline: 'none',
   }
 
@@ -158,7 +158,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                     <h2 className="text-lg font-bold text-[#e2e8f0]" style={{ fontFamily: 'var(--font-space)' }}>
                       Get in touch
                     </h2>
-                    <p className="text-xs mt-0.5" style={{ color: '#475569' }}>
+                    <p className="text-sm mt-0.5" style={{ color: '#475569' }}>
                       We respond within 24 hours.
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Interest checkboxes */}
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider mb-2.5" style={{ color: '#7a8a9e' }}>
+                      <label className="block text-sm font-medium uppercase tracking-wider mb-2.5" style={{ color: '#7a8a9e' }}>
                         {"I'm interested in"}
                       </label>
                       <div className="grid grid-cols-2 gap-1.5">
@@ -201,7 +201,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                               key={value}
                               type="button"
                               onClick={() => toggleInterest(value)}
-                              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-left text-xs font-medium transition-all"
+                              className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-left text-sm font-medium transition-all"
                               style={{
                                 background: checked ? 'rgba(0,212,255,0.08)' : 'rgba(255,255,255,0.03)',
                                 border: `1px solid ${checked ? 'rgba(0,212,255,0.3)' : 'rgba(255,255,255,0.07)'}`,
@@ -228,7 +228,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                     <button
                       type="button"
                       onClick={() => setNewsletter(v => !v)}
-                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-xl text-left text-xs font-medium transition-all"
+                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-xl text-left text-sm font-medium transition-all"
                       style={{
                         background: newsletter ? 'rgba(139,92,246,0.08)' : 'rgba(255,255,255,0.03)',
                         border: `1px solid ${newsletter ? 'rgba(139,92,246,0.3)' : 'rgba(255,255,255,0.07)'}`,
@@ -250,7 +250,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                     {/* Name + Email */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
+                        <label className="block text-sm font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
                           Name
                         </label>
                         <input
@@ -262,7 +262,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
+                        <label className="block text-sm font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
                           Email *
                         </label>
                         <input
@@ -278,7 +278,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
 
                     {/* Message */}
                     <div>
-                      <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
+                      <label className="block text-sm font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>
                         Message <span style={{ color: '#334155', fontWeight: 400 }}>(optional)</span>
                       </label>
                       <textarea
@@ -291,7 +291,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                     </div>
 
                     {error && (
-                      <p className="text-xs text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
+                      <p className="text-sm text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
                         {error}
                       </p>
                     )}

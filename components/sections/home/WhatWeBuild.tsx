@@ -93,7 +93,7 @@ function Card({ item, i }: { item: typeof items[0]; i: number }) {
             <Icon size={18} style={{ color: item.color }} />
           </motion.div>
           <span
-            className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1 rounded-full"
+            className="text-sm font-medium uppercase tracking-widest px-2.5 py-1 rounded-full"
             style={{
               background: `${item.color}10`,
               border: `1px solid ${item.color}28`,
@@ -111,7 +111,7 @@ function Card({ item, i }: { item: typeof items[0]; i: number }) {
         </h3>
         <p className="text-sm text-[#b0b0b0] leading-relaxed mb-5">{item.desc}</p>
         <span
-          className="text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all"
+          className="text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all"
           style={{ color: item.color }}
         >
           Learn more <span className="text-base leading-none">→</span>
@@ -136,7 +136,7 @@ export default function WhatWeBuild() {
           className="text-center mb-16"
         >
           <p
-            className="text-xs font-medium uppercase tracking-[0.2em] mb-4"
+            className="text-sm font-medium uppercase tracking-[0.2em] mb-4"
             style={{ color: 'rgba(0,212,255,0.6)', fontFamily: 'var(--font-space)' }}
           >
             What we build

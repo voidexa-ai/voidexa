@@ -52,7 +52,7 @@ export default function LearnTab() {
                   {s.tags.map(tag => (
                     <span
                       key={tag}
-                      className="text-xs px-2 py-0.5 rounded-full"
+                      className="text-sm px-2 py-0.5 rounded-full"
                       style={{
                         background: s.isEdge ? `${ACCENT}14` : 'rgba(255,255,255,0.05)',
                         color: s.isEdge ? ACCENT : '#64748b',
@@ -89,7 +89,7 @@ export default function LearnTab() {
               style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
             >
               <span
-                className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full h-fit"
+                className="shrink-0 text-sm font-medium px-2.5 py-1 rounded-full h-fit"
                 style={{ background: `${ACCENT}12`, color: ACCENT, border: `1px solid ${ACCENT}28`, fontSize: '0.8125rem', whiteSpace: 'nowrap' }}
               >
                 {f.tag}

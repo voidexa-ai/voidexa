@@ -128,7 +128,7 @@ export default function ScienceDeck() {
                   <p style={{ color: '#64748b', fontSize: '0.875rem', lineHeight: 1.5 }}>{item.desc}</p>
                 </div>
                 <span
-                  className="shrink-0 text-xs px-2 py-0.5 rounded-full"
+                  className="shrink-0 text-sm px-2 py-0.5 rounded-full"
                   style={{ background: `${color}14`, color, border: `1px solid ${color}28`, fontSize: '0.8125rem', whiteSpace: 'nowrap' }}
                 >
                   {label}

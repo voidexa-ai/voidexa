@@ -101,7 +101,7 @@ export default function MiniNav() {
               style={{
                 padding: '5px 11px',
                 borderRadius: 6,
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: (active || isHovered) ? 500 : 400,
                 color: (active || isHovered) ? planetColor : 'rgba(148,163,184,0.7)',
                 textDecoration: 'none',

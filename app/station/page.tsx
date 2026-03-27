@@ -49,7 +49,7 @@ export default function StationPage() {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-medium uppercase tracking-widest mb-3"
+            className="text-sm font-medium uppercase tracking-widest mb-3"
             style={{ color: `${ACCENT}88`, letterSpacing: '0.18em' }}
           >
             voidexa

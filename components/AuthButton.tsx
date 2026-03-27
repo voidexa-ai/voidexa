@@ -58,7 +58,7 @@ export default function AuthButton() {
         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
         <div
-          className="flex items-center justify-center rounded-full text-[10px] font-bold"
+          className="flex items-center justify-center rounded-full text-sm font-bold"
           style={{
             width: 26, height: 26,
             background: 'linear-gradient(135deg, #00d4ff, #8b5cf6)',

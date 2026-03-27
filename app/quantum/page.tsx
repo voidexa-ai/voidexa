@@ -167,11 +167,11 @@ export default function QuantumPage() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 mb-8 flex-wrap justify-center"
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+            <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: ACCENT, background: `${ACCENT}18`, border: `1px solid ${ACCENT}44` }}>
               Coming Soon
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+            <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#4ade80', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.22)' }}>
               $0.02 – $0.05 / session
             </span>
@@ -182,7 +182,7 @@ export default function QuantumPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.06 }}
-            className="text-xs font-bold uppercase tracking-[0.35em] mb-5"
+            className="text-sm font-bold uppercase tracking-[0.35em] mb-5"
             style={{ color: `${ACCENT}77` }}
           >
             Quantum by voidexa
@@ -212,7 +212,7 @@ export default function QuantumPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="text-xl sm:text-2xl font-light mb-5"
+            className="text-xl sm:text-2xl font-normal mb-5"
             style={{ color: `${ACCENT}cc` }}
           >
             Where AIs debate, disagree, and find truth.
@@ -249,7 +249,7 @@ export default function QuantumPage() {
           >
             {['Self-optimizing workflow', 'Verification sandwich', 'Emergent roles'].map(h => (
               <span key={h}
-                className="text-xs font-medium px-3 py-1.5 rounded-full"
+                className="text-sm font-medium px-3 py-1.5 rounded-full"
                 style={{ color: `${ACCENT}bb`, background: `${ACCENT}10`, border: `1px solid ${ACCENT}28` }}
               >{h}</span>
             ))}
@@ -268,7 +268,7 @@ export default function QuantumPage() {
               boxShadow: `0 0 40px ${ACCENT}08`,
             }}
           >
-            <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}77` }}>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}77` }}>
               Next-Gen AI Communication
             </p>
             <p className="text-sm leading-relaxed mb-5" style={{ color: '#64748b' }}>
@@ -278,7 +278,7 @@ export default function QuantumPage() {
             <div className="flex flex-wrap gap-2">
               {['Compressed Intelligence', 'Shared Memory', 'Binary Protocol'].map(b => (
                 <span key={b}
-                  className="text-xs font-medium px-3 py-1.5 rounded-full"
+                  className="text-sm font-medium px-3 py-1.5 rounded-full"
                   style={{ color: `${ACCENT}cc`, background: `${ACCENT}12`, border: `1px solid ${ACCENT}2e` }}
                 >{b}</span>
               ))}
@@ -353,7 +353,7 @@ export default function QuantumPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>The Cast</p>
+            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>The Cast</p>
             <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
               Meet the Team
             </h2>
@@ -394,7 +394,7 @@ export default function QuantumPage() {
                 }}
               >
                 {/* Avatar with ring */}
-                <div className="relative mb-4" style={{ width: 80, height: 80 }}>
+                <div className="relative mb-4" style={{ width: 100, height: 100 }}>
                   <div style={{
                     position: 'absolute', inset: -2, borderRadius: '50%',
                     background: `conic-gradient(${char.color}70, transparent 60%, ${char.color}70)`,
@@ -405,7 +405,7 @@ export default function QuantumPage() {
                     src={char.image}
                     alt={char.name}
                     style={{
-                      width: 80, height: 80, borderRadius: '50%',
+                      width: 100, height: 100, borderRadius: '50%',
                       objectFit: 'cover',
                       border: `2.5px solid ${char.color}55`,
                       position: 'relative', display: 'block',
@@ -413,9 +413,9 @@ export default function QuantumPage() {
                   />
                 </div>
 
-                <p className="text-sm font-bold mb-0.5" style={{ color: char.color }}>{char.name}</p>
-                <p className="text-[10px] font-bold uppercase tracking-wider mb-3" style={{ color: '#475569' }}>{char.role}</p>
-                <p className="text-[11px] leading-snug italic" style={{ color: '#334155' }}>
+                <p className="text-lg font-medium mb-0.5" style={{ color: char.color }}>{char.name}</p>
+                <p className="text-[15px] font-bold uppercase tracking-wider mb-3" style={{ color: '#475569' }}>{char.role}</p>
+                <p className="text-[15px] leading-snug italic" style={{ color: '#334155' }}>
                   &ldquo;{char.oneliner}&rdquo;
                 </p>
               </motion.div>
@@ -437,7 +437,7 @@ export default function QuantumPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Interface Preview</p>
+            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Interface Preview</p>
             <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
               Watch Them Debate
             </h2>
@@ -467,17 +467,17 @@ export default function QuantumPage() {
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b', opacity: 0.7 }} />
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', opacity: 0.7 }} />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: `${ACCENT}88` }}>
+              <span className="text-base font-bold uppercase tracking-wider" style={{ color: `${ACCENT}88` }}>
                 Quantum — Live Session
               </span>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   <Clock size={11} style={{ color: '#475569' }} />
-                  <span className="text-[11px] font-mono" style={{ color: '#475569' }}>{fmtTime(sessionTime)}</span>
+                  <span className="text-base font-mono" style={{ color: '#475569' }}>{fmtTime(sessionTime)}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <DollarSign size={11} style={{ color: '#4ade80' }} />
-                  <span className="text-[11px] font-mono" style={{ color: '#4ade80' }}>${sessionCost.toFixed(4)}</span>
+                  <span className="text-base font-mono" style={{ color: '#4ade80' }}>${sessionCost.toFixed(4)}</span>
                 </div>
               </div>
             </div>
@@ -497,7 +497,7 @@ export default function QuantumPage() {
                       textAlign: 'center', zIndex: 10,
                       pointerEvents: 'none',
                     }}>
-                      <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: `${ACCENT}77` }}>QUANTUM</p>
+                      <p className="text-sm font-bold uppercase tracking-widest" style={{ color: `${ACCENT}77` }}>QUANTUM</p>
                     </div>
 
                     {/* Connection lines SVG */}
@@ -550,7 +550,7 @@ export default function QuantumPage() {
                   {/* Consensus meter */}
                   <div className="w-full">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#334155' }}>Consensus</span>
+                      <span className="text-lg font-bold uppercase tracking-wider" style={{ color: '#334155' }}>Consensus</span>
                       <span className="text-sm font-bold" style={{ color: '#4ade80' }}>{consensus}%</span>
                     </div>
                     <div className="rounded-full overflow-hidden" style={{ height: 6, background: 'rgba(255,255,255,0.05)' }}>
@@ -564,14 +564,14 @@ export default function QuantumPage() {
                         transition={{ duration: 0.04 }}
                       />
                     </div>
-                    <p className="text-[10px] mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
+                    <p className="text-sm mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
                   </div>
                 </div>
 
                 {/* Right — debate messages */}
                 <div className="flex-1 min-w-0">
                   <div className="rounded-xl p-4 mb-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <p className="text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: '#334155' }}>Question</p>
+                    <p className="text-base font-bold uppercase tracking-wider mb-1.5" style={{ color: '#334155' }}>Question</p>
                     <p className="text-sm font-medium leading-snug" style={{ color: '#94a3b8' }}>
                       What&apos;s the most efficient sorting algorithm for nearly-sorted data?
                     </p>
@@ -601,8 +601,8 @@ export default function QuantumPage() {
                             style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${msg.color}55`, flexShrink: 0 }}
                           />
                           <div>
-                            <span className="text-[11px] font-bold" style={{ color: msg.color }}>{msg.char}</span>
-                            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: '#64748b', fontSize: 13 }}>{msg.text}</p>
+                            <span className="text-base font-bold" style={{ color: msg.color }}>{msg.char}</span>
+                            <p className="text-base mt-0.5 leading-relaxed" style={{ color: '#64748b' }}>{msg.text}</p>
                           </div>
                         </motion.div>
                       )
@@ -615,7 +615,7 @@ export default function QuantumPage() {
             {/* Bottom CTA bar */}
             <div className="px-6 pb-6 pt-1 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
               style={{ borderColor: `${ACCENT}14` }}>
-              <p className="text-xs" style={{ color: '#334155' }}>
+              <p className="text-sm" style={{ color: '#334155' }}>
                 Preview only — join the waitlist for early access.
               </p>
               <button
@@ -647,7 +647,7 @@ export default function QuantumPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Process</p>
+            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Process</p>
             <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
               How It Works
             </h2>
@@ -717,7 +717,7 @@ export default function QuantumPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>What Makes It Different</p>
+            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>What Makes It Different</p>
             <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
               Unique Features
             </h2>

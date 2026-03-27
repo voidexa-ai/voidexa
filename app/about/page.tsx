@@ -53,7 +53,7 @@ export default function AboutPage() {
         {/* ── Hero ── */}
         <motion.div {...fade()} className="mb-24">
           <p
-            className="text-xs font-medium uppercase tracking-[0.18em] mb-5"
+            className="text-sm font-medium uppercase tracking-[0.18em] mb-5"
             style={{ color: 'rgba(0,212,255,0.55)' }}
           >
             About

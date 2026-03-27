@@ -84,7 +84,7 @@ const products = [
 function StatusBadge({ status, color }: { status: string; color: string }) {
   return (
     <span
-      className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1 rounded-full"
+      className="text-sm font-medium uppercase tracking-widest px-2.5 py-1 rounded-full"
       style={{
         background: `${color}12`,
         border: `1px solid ${color}35`,
@@ -107,7 +107,7 @@ export default function ProductsPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <p className="text-xs font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
+          <p className="text-sm font-medium uppercase tracking-widest text-[#00d4ff]/70 mb-3">
             Products
           </p>
           <h1
@@ -168,7 +168,7 @@ export default function ProductsPage() {
 
                 {/* Right — features */}
                 <div className="lg:col-span-3">
-                  <p className="text-xs font-medium uppercase tracking-widest text-[#475569] mb-4">
+                  <p className="text-sm font-medium uppercase tracking-widest text-[#475569] mb-4">
                     Features
                   </p>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

@@ -162,14 +162,14 @@ export default function Navigation() {
               <div className="relative w-8 h-8">
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#00d4ff] to-[#8b5cf6] opacity-20 group-hover:opacity-40 transition-opacity" />
                 <div className="absolute inset-[2px] rounded-md bg-[#0a0a0f] flex items-center justify-center">
-                  <span className="text-[10px] font-bold gradient-text">VX</span>
+                  <span className="text-sm font-bold gradient-text">VX</span>
                 </div>
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-lg font-bold tracking-tight gradient-text" style={{ fontFamily: 'var(--font-space)' }}>
                   voidexa
                 </span>
-                <span className="hidden xl:block text-[10px] font-medium tracking-widest uppercase" style={{ color: '#555', letterSpacing: '0.1em' }}>
+                <span className="hidden xl:block text-sm font-medium tracking-widest uppercase" style={{ color: '#555', letterSpacing: '0.1em' }}>
                   sovereign AI
                 </span>
               </div>
@@ -313,7 +313,7 @@ export default function Navigation() {
             }}
           >
             <span style={{
-              fontSize: '10px',
+              fontSize: '14px',
               fontWeight: 500,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
@@ -364,7 +364,7 @@ export default function Navigation() {
         <span style={{
           writingMode: 'vertical-rl',
           display: 'block',
-          fontSize: '10px',
+          fontSize: '14px',
           color: 'rgba(0,212,255,0.7)',
           letterSpacing: '0.22em',
           fontWeight: 700,
@@ -417,7 +417,7 @@ export default function Navigation() {
               }}>
                 <div>
                   <p style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: '0.18em',
+                    fontSize: 14, fontWeight: 700, letterSpacing: '0.18em',
                     textTransform: 'uppercase', color: 'rgba(139,92,246,0.65)',
                     marginBottom: 3, fontFamily: 'var(--font-space)',
                   }}>

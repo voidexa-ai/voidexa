@@ -155,7 +155,7 @@ export default function JarvisAssistant() {
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
           <span
-            className="relative text-[11px] font-bold tracking-widest"
+            className="relative text-sm font-bold tracking-widest"
             style={{
               fontFamily: 'var(--font-space)',
               background: 'linear-gradient(135deg, #00d4ff, #a78bfa)',
@@ -194,7 +194,7 @@ export default function JarvisAssistant() {
                 <span className="text-sm font-medium text-[#00d4ff]" style={{ fontFamily: 'var(--font-space)' }}>
                   JARVIS
                 </span>
-                <span className="text-xs text-[#7a8a9e]">voidexa AI</span>
+                <span className="text-sm text-[#7a8a9e]">voidexa AI</span>
               </div>
               <div className="flex items-center gap-1">
                 <button
@@ -225,7 +225,7 @@ export default function JarvisAssistant() {
                   className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed ${
+                    className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed ${
                       m.role === 'user' ? 'text-[#e2e8f0]' : 'text-[#94a3b8]'
                     }`}
                     style={m.role === 'user' ? {
@@ -241,7 +241,7 @@ export default function JarvisAssistant() {
                   {m.nav && (
                     <button
                       onClick={() => handleNav(m.nav!)}
-                      className="mt-1.5 text-[10px] font-medium px-3 py-1 rounded-full transition-colors"
+                      className="mt-1.5 text-sm font-medium px-3 py-1 rounded-full transition-colors"
                       style={{
                         background: 'rgba(0,212,255,0.08)',
                         border: '1px solid rgba(0,212,255,0.2)',
@@ -266,7 +266,7 @@ export default function JarvisAssistant() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && send()}
                 placeholder="Ask about products, services..."
-                className="flex-1 bg-transparent text-xs text-[#e2e8f0] placeholder-[#334155] outline-none"
+                className="flex-1 bg-transparent text-sm text-[#e2e8f0] placeholder-[#334155] outline-none"
               />
               <button
                 onClick={send}

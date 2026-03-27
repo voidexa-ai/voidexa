@@ -58,7 +58,7 @@ export default function LoginPage() {
               voidexa
             </span>
           </Link>
-          <p className="text-xs font-medium uppercase tracking-widest mt-2" style={{ color: '#334155' }}>
+          <p className="text-sm font-medium uppercase tracking-widest mt-2" style={{ color: '#334155' }}>
             Sign in to your account
           </p>
         </div>
@@ -70,7 +70,7 @@ export default function LoginPage() {
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#7a8a9e' }}>
+              <label className="block text-sm font-medium uppercase tracking-wider mb-2" style={{ color: '#7a8a9e' }}>
                 Email
               </label>
               <input
@@ -84,7 +84,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#7a8a9e' }}>
+              <label className="block text-sm font-medium uppercase tracking-wider mb-2" style={{ color: '#7a8a9e' }}>
                 Password
               </label>
               <input
@@ -98,7 +98,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-xs text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
+              <p className="text-sm text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
                 {error}
               </p>
             )}
@@ -114,7 +114,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-xs mt-6" style={{ color: '#475569' }}>
+        <p className="text-center text-sm mt-6" style={{ color: '#475569' }}>
           Don't have an account?{' '}
           <Link href="/auth/signup" className="hover:text-[#00d4ff] transition-colors" style={{ color: '#94a3b8' }}>
             Create one

@@ -66,13 +66,13 @@ export function GhaiTicker() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div
-            className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+            className="w-5 h-5 rounded-full flex items-center justify-center text-sm font-bold"
             style={{ background: 'linear-gradient(135deg,#7c3aed,#06b6d4)', color: '#fff' }}
           >
             G
           </div>
           <span className="text-sm font-bold text-gray-200">GHAI</span>
-          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(34,197,94,0.12)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}>
+          <span className="text-sm uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(34,197,94,0.12)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}>
             Live
           </span>
         </div>
@@ -86,18 +86,18 @@ export function GhaiTicker() {
         <p className="font-bold text-white tabular-nums" style={{ fontSize: 18 }}>
           ${data.priceUsd.toFixed(8)}
         </p>
-        <p className="text-xs mt-0.5" style={{ color: '#475569' }}>per GHAI · Solana</p>
+        <p className="text-sm mt-0.5" style={{ color: '#475569' }}>per GHAI · Solana</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div>
-          <p className="uppercase tracking-wider mb-0.5" style={{ fontSize: 10, color: '#334155' }}>Vol 24h</p>
-          <p className="font-medium text-gray-300 tabular-nums" style={{ fontSize: 12 }}>{formatCompact(data.volume24h)}</p>
+          <p className="uppercase tracking-wider mb-0.5" style={{ fontSize: 14, color: '#334155' }}>Vol 24h</p>
+          <p className="font-medium text-gray-300 tabular-nums" style={{ fontSize: 14 }}>{formatCompact(data.volume24h)}</p>
         </div>
         <div>
-          <p className="uppercase tracking-wider mb-0.5" style={{ fontSize: 10, color: '#334155' }}>Liquidity</p>
-          <p className="font-medium text-gray-300 tabular-nums" style={{ fontSize: 12 }}>{formatCompact(data.liquidity)}</p>
+          <p className="uppercase tracking-wider mb-0.5" style={{ fontSize: 14, color: '#334155' }}>Liquidity</p>
+          <p className="font-medium text-gray-300 tabular-nums" style={{ fontSize: 14 }}>{formatCompact(data.liquidity)}</p>
         </div>
       </div>
     </div>

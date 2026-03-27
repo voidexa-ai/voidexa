@@ -125,7 +125,7 @@ export default function UploadBotTab() {
           >
             <div className="flex items-center gap-3" style={{ marginBottom: 8 }}>
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium"
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium"
                 style={{ background: `${ACCENT}14`, color: ACCENT, border: `1px solid ${ACCENT}28` }}
               >
                 .py

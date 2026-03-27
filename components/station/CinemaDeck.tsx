@@ -33,7 +33,7 @@ function VideoCard({ title, desc, duration, isFeatured = false }: { title: strin
             <Play size={22} style={{ color: ACCENT, marginLeft: 3 }} />
           </div>
           <span
-            className="text-xs font-medium uppercase tracking-widest px-3 py-1 rounded-full"
+            className="text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
             style={{ background: 'rgba(0,0,0,0.6)', color: `${ACCENT}99`, border: `1px solid ${ACCENT}22`, letterSpacing: '0.14em', fontSize: '0.75rem' }}
           >
             Coming Soon
@@ -92,7 +92,7 @@ export default function CinemaDeck() {
             <div className="text-center">
               <p style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '1.125rem', marginBottom: 4 }}>CEO Introduction</p>
               <span
-                className="text-xs font-medium uppercase tracking-widest px-3 py-1 rounded-full"
+                className="text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
                 style={{ background: 'rgba(0,0,0,0.6)', color: `${ACCENT}aa`, border: `1px solid ${ACCENT}33`, letterSpacing: '0.14em', fontSize: '0.75rem' }}
               >
                 Coming Soon

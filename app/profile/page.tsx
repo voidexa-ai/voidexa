@@ -201,7 +201,7 @@ export default function ProfilePage() {
     <div className="min-h-screen" style={{ background: '#07070d' }}>
       <div className="max-w-2xl mx-auto px-6 pt-32 pb-24">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <p className="text-xs font-medium uppercase tracking-widest mb-2" style={{ color: '#334155' }}>Your account</p>
+          <p className="text-sm font-medium uppercase tracking-widest mb-2" style={{ color: '#334155' }}>Your account</p>
           <h1 className="text-3xl font-bold text-[#e2e8f0] mb-8" style={{ fontFamily: 'var(--font-space)' }}>
             Profile
           </h1>
@@ -214,14 +214,14 @@ export default function ProfilePage() {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>Email</label>
+                <label className="block text-sm font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>Email</label>
                 <div className="px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: '#64748b' }}>
                   {user.email}
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>Name</label>
+                <label className="block text-sm font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>Name</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -234,7 +234,7 @@ export default function ProfilePage() {
                   <button
                     onClick={saveName}
                     disabled={saving}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
                     style={{ background: saved ? 'rgba(34,197,94,0.15)' : 'rgba(0,212,255,0.1)', border: `1px solid ${saved ? 'rgba(34,197,94,0.3)' : 'rgba(0,212,255,0.2)'}`, color: saved ? '#22c55e' : '#00d4ff' }}
                   >
                     {saved ? <Check size={14} /> : saving ? '…' : 'Save'}
@@ -244,8 +244,8 @@ export default function ProfilePage() {
 
               {profile?.role && (
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>Role</label>
-                  <span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#a78bfa' }}>
+                  <label className="block text-sm font-medium uppercase tracking-wider mb-1.5" style={{ color: '#7a8a9e' }}>Role</label>
+                  <span className="inline-flex px-3 py-1 rounded-full text-sm font-semibold" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#a78bfa' }}>
                     {profile.role}
                   </span>
                 </div>
@@ -277,7 +277,7 @@ export default function ProfilePage() {
             <h2 className="text-sm font-semibold text-[#e2e8f0] mb-4">Connected wallets</h2>
 
             {walletError && (
-              <p className="text-xs mb-3 text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
+              <p className="text-sm mb-3 text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
                 {walletError}
               </p>
             )}
@@ -287,8 +287,8 @@ export default function ProfilePage() {
                 {wallets.map(w => (
                   <div key={w.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
                     <div>
-                      <p className="text-xs font-mono text-[#94a3b8]">{w.wallet_address.slice(0, 8)}…{w.wallet_address.slice(-6)}</p>
-                      <p className="text-[11px] mt-0.5" style={{ color: '#334155' }}>{w.wallet_type}</p>
+                      <p className="text-sm font-mono text-[#94a3b8]">{w.wallet_address.slice(0, 8)}…{w.wallet_address.slice(-6)}</p>
+                      <p className="text-sm mt-0.5" style={{ color: '#334155' }}>{w.wallet_type}</p>
                     </div>
                     <a
                       href={`https://explorer.solana.com/address/${w.wallet_address}`}
@@ -308,7 +308,7 @@ export default function ProfilePage() {
               <button
                 onClick={connectPhantom}
                 disabled={connectingWallet !== null}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
                 style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)', color: '#a78bfa' }}
               >
                 {connectingWallet === 'phantom' ? 'Connecting…' : 'Connect Phantom'}
@@ -316,7 +316,7 @@ export default function ProfilePage() {
               <button
                 onClick={connectSolflare}
                 disabled={connectingWallet !== null}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
                 style={{ background: 'rgba(251,146,60,0.08)', border: '1px solid rgba(251,146,60,0.2)', color: '#fb923c' }}
               >
                 {connectingWallet === 'solflare' ? 'Connecting…' : 'Connect Solflare'}
@@ -324,7 +324,7 @@ export default function ProfilePage() {
             </div>
 
             {wallets.length === 0 && !walletError && (
-              <p className="text-xs mt-3" style={{ color: '#334155' }}>No wallets connected yet. Connect a wallet above to verify ownership.</p>
+              <p className="text-sm mt-3" style={{ color: '#334155' }}>No wallets connected yet. Connect a wallet above to verify ownership.</p>
             )}
           </motion.div>
 
@@ -336,7 +336,7 @@ export default function ProfilePage() {
                 {waitlistEntries.map(e => (
                   <div key={e.id} className="flex items-center justify-between text-sm">
                     <span className="capitalize" style={{ color: '#94a3b8' }}>{e.product.replace(/-/g, ' ')}</span>
-                    <span className="text-xs" style={{ color: '#334155' }}>
+                    <span className="text-sm" style={{ color: '#334155' }}>
                       {new Date(e.created_at).toLocaleDateString()}
                     </span>
                   </div>

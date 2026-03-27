@@ -41,7 +41,7 @@ export default function CoreTech() {
           className="text-center mb-14"
         >
           <p
-            className="text-xs font-medium uppercase tracking-[0.18em] mb-4"
+            className="text-sm font-medium uppercase tracking-[0.18em] mb-4"
             style={{ color: 'rgba(0,212,255,0.55)' }}
           >
             Under the hood
