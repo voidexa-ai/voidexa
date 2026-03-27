@@ -30,15 +30,15 @@ function MiniSolarSystem({
 
     const planets = isMystery
       ? [
-          { r: 38, speed: 0.0000075, size: 4, color: 'rgba(0,212,255,0.4)', phase: 0 },
-          { r: 60, speed: 0.0000045, size: 5, color: 'rgba(139,92,246,0.4)', phase: 1.2 },
-          { r: 82, speed: 0.0000025, size: 3, color: 'rgba(0,212,255,0.3)', phase: 2.5 },
+          { r: 38, speed: 0.0000001, size: 4, color: 'rgba(0,212,255,0.4)', phase: 0 },
+          { r: 60, speed: 0.0000001, size: 5, color: 'rgba(139,92,246,0.4)', phase: 1.2 },
+          { r: 82, speed: 0.0000001, size: 3, color: 'rgba(0,212,255,0.3)', phase: 2.5 },
         ]
       : [
-          { r: 38, speed: 0.00001,    size: 5, color: '#ff6600', phase: 0 },
-          { r: 56, speed: 0.00000625, size: 4, color: '#cc00ff', phase: 0.8 },
-          { r: 74, speed: 0.00000375, size: 6, color: '#00ff44', phase: 1.6 },
-          { r: 92, speed: 0.00000225, size: 3, color: '#ff0044', phase: 2.4 },
+          { r: 38, speed: 0.0000001, size: 5, color: '#ff6600', phase: 0 },
+          { r: 56, speed: 0.0000001, size: 4, color: '#cc00ff', phase: 0.8 },
+          { r: 74, speed: 0.0000001, size: 6, color: '#00ff44', phase: 1.6 },
+          { r: 92, speed: 0.0000001, size: 3, color: '#ff0044', phase: 2.4 },
         ]
 
     let raf: number
