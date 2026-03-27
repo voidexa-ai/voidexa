@@ -157,6 +157,19 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Content Hub',
     isDiscovered: true,
   },
+  {
+    id: 'claim-your-planet',
+    label: 'Yours?',
+    path: '/claim-your-planet',
+    position: [-6, -2, -20],
+    color: '#001a1a',
+    emissive: '#00d4ff',
+    emissiveIntensity: 0.4,
+    size: 0.22,
+    isCenter: false,
+    sublabel: 'Claim your planet',
+    isDiscovered: false,
+  },
 ]
 
 // Legacy export for any components still using NODES

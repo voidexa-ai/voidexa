@@ -99,10 +99,11 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   })
 
   const onEnter = useCallback(() => {
-    if (!isDiscovered && !path) return
+    if (!isDiscovered && !path && node.id !== 'claim-your-planet') return
+    if (!path) return
     setHovered(true)
     document.body.style.cursor = 'pointer'
-  }, [isDiscovered, path])
+  }, [isDiscovered, path, node.id])
 
   const onLeave = useCallback(() => {
     setHovered(false)
@@ -257,6 +258,32 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         </mesh>
       )}
 
+      {/* Dashed ring overlay for claim-your-planet mystery node */}
+      {node.id === 'claim-your-planet' && (
+        <Html
+          center
+          distanceFactor={16}
+          position={[0, 0, 0]}
+          style={{ pointerEvents: 'none', userSelect: 'none' }}
+          zIndexRange={[1, 2]}
+        >
+          <div style={{
+            width: 36, height: 36, borderRadius: '50%',
+            border: '1.5px dashed rgba(0,212,255,0.35)',
+            boxShadow: '0 0 12px rgba(0,212,255,0.18), inset 0 0 8px rgba(0,212,255,0.06)',
+            animation: 'claimPulse 2.5s ease-in-out infinite',
+            pointerEvents: 'none',
+          }}>
+            <style>{`
+              @keyframes claimPulse {
+                0%,100%{box-shadow:0 0 8px rgba(0,212,255,0.15),inset 0 0 6px rgba(0,212,255,0.04)}
+                50%{box-shadow:0 0 22px rgba(0,212,255,0.45),inset 0 0 12px rgba(0,212,255,0.1)}
+              }
+            `}</style>
+          </div>
+        </Html>
+      )}
+
       {/* Labels */}
       <Html
         center
@@ -267,9 +294,9 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         <div
           onClick={handleNodeClick}
           style={{
-            pointerEvents: isDiscovered ? 'auto' : 'none',
-            cursor: isDiscovered ? 'pointer' : 'default',
-            color: isDiscovered ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.4)',
+            pointerEvents: (isDiscovered || node.id === 'claim-your-planet') ? 'auto' : 'none',
+            cursor: (isDiscovered || node.id === 'claim-your-planet') ? 'pointer' : 'default',
+            color: isDiscovered ? 'rgba(255,255,255,0.95)' : node.id === 'claim-your-planet' ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.4)',
             fontSize: isCenter ? '18px' : '15px',
             fontWeight: 600,
             fontFamily: 'var(--font-space, system-ui)',
@@ -277,7 +304,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
             letterSpacing: '-0.01em',
             textShadow: isDiscovered
               ? `0 2px 12px rgba(0,0,0,0.9), 0 0 18px ${emissive}, 0 0 6px ${emissive}88`
-              : '0 2px 8px rgba(0,0,0,0.8)',
+              : node.id === 'claim-your-planet' ? '0 0 14px rgba(0,212,255,0.4), 0 2px 8px rgba(0,0,0,0.8)' : '0 2px 8px rgba(0,0,0,0.8)',
             transition: 'color 0.2s',
             lineHeight: 1.2,
           }}
