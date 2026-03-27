@@ -209,9 +209,9 @@ export default function ClaimYourPlanetPage() {
           <img
             src="/images/claaming a planet.jpg"
             alt=""
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', opacity: 0.25, zIndex: 0 }}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', opacity: 0.55, zIndex: 0 }}
           />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,7,13,0.55) 0%, rgba(7,7,13,0.3) 50%, rgba(7,7,13,0.7) 100%)', zIndex: 1 }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,7,13,0.35) 0%, rgba(7,7,13,0.15) 50%, rgba(7,7,13,0.55) 100%)', zIndex: 1 }} />
 
           {/* Decorative rings */}
           <div aria-hidden style={{
