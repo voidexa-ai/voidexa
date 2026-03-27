@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Film, FlaskConical, Share2 } from 'lucide-react'
 import CinemaDeck from '@/components/station/CinemaDeck'
@@ -19,29 +20,33 @@ export default function StationPage() {
     <div style={{ background: 'transparent', minHeight: '100vh' }}>
       {/* Hero — full-width banner with space station image */}
       <div
-        className="relative overflow-hidden"
-        style={{
-          minHeight: '420px',
-          backgroundImage: `url('/images/space-station.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 30%',
-          backgroundRepeat: 'no-repeat',
-        }}
+        className="relative overflow-hidden w-full"
+        style={{ minHeight: '420px' }}
       >
-        {/* Dark gradient overlay for text readability */}
+        {/* Next.js Image — fills the container, priority-loaded */}
+        <Image
+          src="/images/space-station.png"
+          alt="Space Station"
+          fill
+          priority
+          style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+        />
+        {/* Dark gradient overlay — dark at bottom, transparent at top, for text readability */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(to bottom, rgba(7,7,13,0.55) 0%, rgba(7,7,13,0.75) 60%, rgba(7,7,13,1.0) 100%)',
+            background: 'linear-gradient(to top, rgba(7,7,13,1.0) 0%, rgba(7,7,13,0.65) 50%, rgba(7,7,13,0.2) 100%)',
+            zIndex: 1,
           }}
         />
-        {/* Fallback atmospheric glow (visible whether or not image exists) */}
+        {/* Atmospheric glow accent */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(68,170,204,0.18) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(68,170,204,0.15) 0%, transparent 70%)',
+            zIndex: 1,
           }}
         />
         {/* Hero content — positioned above overlays */}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, Zap, Shield, Brain, Clock, DollarSign } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -232,8 +233,8 @@ export default function QuantumPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="leading-relaxed mb-10 mx-auto max-w-lg"
-            style={{ color: '#64748b', fontSize: 15 }}
+            className="text-base leading-relaxed mb-10 mx-auto max-w-lg"
+            style={{ color: '#64748b' }}
           >
             5 AI providers debate your question in real-time. They challenge each other,
             cite sources, change positions, and converge on the best answer.
@@ -271,7 +272,7 @@ export default function QuantumPage() {
             <p className="text-sm font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}77` }}>
               Next-Gen AI Communication
             </p>
-            <p className="text-sm leading-relaxed mb-5" style={{ color: '#64748b' }}>
+            <p className="text-base leading-relaxed mb-5" style={{ color: '#64748b' }}>
               Built on a proprietary AI-to-AI communication protocol with shared memory architecture
               and integrated binary encoding — reducing token consumption by over 90% compared to standard approaches.
             </p>
@@ -357,7 +358,7 @@ export default function QuantumPage() {
             <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
               Meet the Team
             </h2>
-            <p style={{ color: '#475569', fontSize: 15 }}>
+            <p className="text-base" style={{ color: '#475569' }}>
               Six personalities. One goal. Endless disagreement.
             </p>
           </motion.div>
@@ -394,7 +395,7 @@ export default function QuantumPage() {
                 }}
               >
                 {/* Avatar with ring */}
-                <div className="relative mb-4" style={{ width: 100, height: 100 }}>
+                <div className="relative mb-4" style={{ width: 120, height: 120 }}>
                   <div style={{
                     position: 'absolute', inset: -2, borderRadius: '50%',
                     background: `conic-gradient(${char.color}70, transparent 60%, ${char.color}70)`,
@@ -405,8 +406,10 @@ export default function QuantumPage() {
                     src={char.image}
                     alt={char.name}
                     style={{
-                      width: 100, height: 100, borderRadius: '50%',
+                      width: 120, height: 120, borderRadius: '50%',
                       objectFit: 'cover',
+                      objectPosition: 'center top',
+                      imageRendering: 'crisp-edges',
                       border: `2.5px solid ${char.color}55`,
                       position: 'relative', display: 'block',
                     }}
@@ -428,20 +431,20 @@ export default function QuantumPage() {
           SECTION 3 — LIVE DEMO PREVIEW
       ══════════════════════ */}
       <section className="relative z-10 py-20 px-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto w-full">
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-12 mx-auto"
           >
             <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Interface Preview</p>
             <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
               Watch Them Debate
             </h2>
-            <p style={{ color: '#475569', fontSize: 15 }}>
+            <p className="text-base" style={{ color: '#475569' }}>
               Real-time consensus emerging from genuine disagreement.
             </p>
           </motion.div>
@@ -551,7 +554,7 @@ export default function QuantumPage() {
                   <div className="w-full">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-lg font-bold uppercase tracking-wider" style={{ color: '#334155' }}>Consensus</span>
-                      <span className="text-sm font-bold" style={{ color: '#4ade80' }}>{consensus}%</span>
+                      <span className="text-base font-bold" style={{ color: '#4ade80' }}>{consensus}%</span>
                     </div>
                     <div className="rounded-full overflow-hidden" style={{ height: 6, background: 'rgba(255,255,255,0.05)' }}>
                       <motion.div
@@ -564,7 +567,7 @@ export default function QuantumPage() {
                         transition={{ duration: 0.04 }}
                       />
                     </div>
-                    <p className="text-sm mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
+                    <p className="text-base mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
                   </div>
                 </div>
 
@@ -572,7 +575,7 @@ export default function QuantumPage() {
                 <div className="flex-1 min-w-0">
                   <div className="rounded-xl p-4 mb-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <p className="text-base font-bold uppercase tracking-wider mb-1.5" style={{ color: '#334155' }}>Question</p>
-                    <p className="text-sm font-medium leading-snug" style={{ color: '#94a3b8' }}>
+                    <p className="text-base font-medium leading-snug" style={{ color: '#94a3b8' }}>
                       What&apos;s the most efficient sorting algorithm for nearly-sorted data?
                     </p>
                   </div>
@@ -615,7 +618,7 @@ export default function QuantumPage() {
             {/* Bottom CTA bar */}
             <div className="px-6 pb-6 pt-1 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
               style={{ borderColor: `${ACCENT}14` }}>
-              <p className="text-sm" style={{ color: '#334155' }}>
+              <p className="text-base" style={{ color: '#334155' }}>
                 Preview only — join the waitlist for early access.
               </p>
               <button
@@ -630,6 +633,70 @@ export default function QuantumPage() {
                 Try Quantum <ArrowRight size={14} />
               </button>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ══════════════════════
+          SECTION 4A — ORIGIN STORY BILLBOARD
+      ══════════════════════ */}
+      <section className="relative z-10 py-20 px-6">
+        <div className="max-w-3xl mx-auto w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="rounded-2xl p-8 sm:p-10 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0,40,50,0.45) 0%, rgba(8,8,18,0.7) 100%)',
+              border: `1px solid rgba(0,255,200,0.15)`,
+              backdropFilter: 'blur(16px)',
+              boxShadow: '0 0 0 1px rgba(0,255,200,0.06), 0 0 60px rgba(0,255,200,0.04)',
+            }}
+          >
+            {/* Animated glowing top edge */}
+            <motion.div
+              aria-hidden
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                position: 'absolute', top: 0, left: '10%', right: '10%', height: 1,
+                background: 'linear-gradient(to right, transparent, rgba(0,255,200,0.5), transparent)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Decorative label */}
+            <p className="font-mono text-sm font-normal uppercase tracking-[0.22em] mb-4" style={{ color: '#22d3ba' }}>
+              CAPTAIN&apos;S LOG — TRANSMISSION 001
+            </p>
+
+            {/* Section heading */}
+            <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              The Origin Story
+            </h2>
+
+            {/* Body text */}
+            <p className="font-mono text-base leading-[1.85] mb-8" style={{ color: '#94a3b8' }}>
+              It started with a trading bot. One man asked Claude for help. What began as a simple
+              request became an architecture partnership. Then came the others — GPT for code,
+              Perplexity for facts, Gemini for brutal reviews. But the founder was doing something
+              none of them saw coming. While asking questions across all providers, he was secretly
+              building a compression protocol that reduced AI-to-AI communication by 90 percent.
+              Then he layered binary encoding with shared memory on top. Three inventions that did
+              not exist anywhere else. Built by one person using the very AIs it was designed to
+              connect. Now they debate in the same room for 0.02 dollars per session.
+            </p>
+
+            {/* CTA button */}
+            <Link
+              href="/station#science"
+              className="inline-flex items-center gap-2 text-base font-medium transition-opacity hover:opacity-75"
+              style={{ color: '#22d3ba' }}
+            >
+              Read the full story <ArrowRight size={16} />
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -697,7 +764,7 @@ export default function QuantumPage() {
                   {item.step}
                 </div>
                 <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{item.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>{item.desc}</p>
+                <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -767,7 +834,7 @@ export default function QuantumPage() {
                   {feat.icon}
                 </div>
                 <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{feat.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>{feat.desc}</p>
+                <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{feat.desc}</p>
               </motion.div>
             ))}
           </div>

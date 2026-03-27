@@ -2,35 +2,117 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle, Hammer, Circle, ChevronUp, Send } from 'lucide-react'
+import { CheckCircle, Hammer, Circle, ChevronUp, Send, Wrench, Zap } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 const ACCENT = '#44aacc'
 
-type RoadmapStatus = 'live' | 'building' | 'planned'
+type RoadmapStatus = 'live' | 'active' | 'building' | 'testing' | 'planned'
 
 interface RoadmapItem {
   title: string
   desc: string
+  tooltip?: string
   status: RoadmapStatus
   phase: string
 }
 
 const ROADMAP: RoadmapItem[] = [
-  { title: 'Void Chat',    desc: 'Multi-provider AI chat — Claude, GPT-4o, Gemini in one interface.',    status: 'live',     phase: 'Phase 2' },
-  { title: 'Trading Hub',  desc: 'Bot upload, leaderboard, competitions, and the community forum.',       status: 'building', phase: 'Phase 3' },
-  { title: 'Node System',  desc: 'Validator nodes earning GHAI for powering the network.',                status: 'planned',  phase: 'Phase 4' },
-  { title: 'Competitions', desc: 'Monthly GHAI prize pools for top-performing trading bots.',             status: 'planned',  phase: 'Phase 5' },
-  { title: 'Quantum',      desc: 'Multi-AI debate — emergent intelligence from provider disagreement.',   status: 'planned',  phase: 'Phase 6' },
-  { title: 'Referrals',    desc: 'Earn GHAI for bringing new builders into the voidexa ecosystem.',       status: 'planned',  phase: 'Phase 7' },
-  { title: 'Comlink',      desc: 'Encrypted AI-powered messaging protocol for the community.',            status: 'planned',  phase: 'Phase 9' },
-  { title: 'Copy Trading', desc: 'One-click replication of top bot strategies.',                          status: 'planned',  phase: 'Phase 10' },
+  {
+    title: 'Void Chat',
+    desc: 'Multi-provider AI chat — Claude, GPT-4o, Gemini in one interface.',
+    tooltip: undefined,
+    status: 'live',
+    phase: 'Phase 2',
+  },
+  {
+    title: 'Trading Hub',
+    desc: 'Bot upload, leaderboard, competitions, and the community forum.',
+    tooltip: 'Bot upload, leaderboard, competitions, community forum',
+    status: 'building',
+    phase: 'Phase 3',
+  },
+  {
+    title: 'Node System',
+    desc: 'Validator nodes earning GHAI for powering the network.',
+    tooltip: undefined,
+    status: 'planned',
+    phase: 'Phase 4',
+  },
+  {
+    title: 'Competitions',
+    desc: 'Monthly GHAI prize pools for top-performing trading bots.',
+    tooltip: undefined,
+    status: 'planned',
+    phase: 'Phase 5',
+  },
+  {
+    title: 'Quantum',
+    desc: 'Multi-AI debate — emergent intelligence from provider disagreement.',
+    tooltip: 'Multi-AI debate engine running. 944 tests. KCP-BINARY SHM active. $0.02 per session.',
+    status: 'active',
+    phase: 'Phase 6',
+  },
+  {
+    title: 'Referrals',
+    desc: 'Earn GHAI for bringing new builders into the voidexa ecosystem.',
+    tooltip: undefined,
+    status: 'planned',
+    phase: 'Phase 7',
+  },
+  {
+    title: 'Comlink',
+    desc: 'Encrypted AI-powered messaging protocol for the community.',
+    tooltip: 'Confirming build and encryption security',
+    status: 'testing',
+    phase: 'Phase 9',
+  },
+  {
+    title: 'Copy Trading',
+    desc: 'One-click replication of top bot strategies.',
+    tooltip: undefined,
+    status: 'planned',
+    phase: 'Phase 10',
+  },
+  {
+    title: 'Energy Orchestrator',
+    desc: 'Danish energy optimization platform. Nord Pool integration.',
+    tooltip: 'Danish energy optimization platform. Nord Pool integration. 49 tests.',
+    status: 'building',
+    phase: 'Platform',
+  },
+  {
+    title: 'Claim Your Planet',
+    desc: 'Own a planet in the voidexa star system.',
+    tooltip: 'Own a planet in the voidexa star system. Pioneer rewards available.',
+    status: 'planned',
+    phase: 'Platform',
+  },
+  {
+    title: 'KCP-90 Protocol',
+    desc: 'Semantic AI compression. 90% token reduction.',
+    tooltip: 'Semantic AI compression. 90% token reduction. No competitor has this.',
+    status: 'active',
+    phase: 'Infra',
+  },
+  {
+    title: 'KCP-BINARY',
+    desc: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory.',
+    tooltip: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory. 154 tests.',
+    status: 'active',
+    phase: 'Infra',
+  },
 ]
 
-const STATUS_CONFIG: Record<RoadmapStatus, { label: string; color: string; Icon: typeof CheckCircle }> = {
-  live:     { label: 'Live',     color: '#22c55e', Icon: CheckCircle },
-  building: { label: 'Building', color: ACCENT,    Icon: Hammer },
-  planned:  { label: 'Planned',  color: '#475569', Icon: Circle },
+const STATUS_CONFIG: Record<
+  RoadmapStatus,
+  { label: string; color: string; Icon: typeof CheckCircle; pulse?: boolean }
+> = {
+  live:     { label: 'LIVE',     color: '#22c55e', Icon: CheckCircle },
+  active:   { label: 'ACTIVE',   color: '#22c55e', Icon: Zap,         pulse: true },
+  building: { label: 'BUILDING', color: '#f97316', Icon: Wrench },
+  testing:  { label: 'TESTING',  color: '#eab308', Icon: Hammer },
+  planned:  { label: 'PLANNED',  color: '#475569', Icon: Circle },
 }
 
 interface Idea {
@@ -92,7 +174,7 @@ export default function ScienceDeck() {
     <div className="space-y-12">
       {/* Roadmap */}
       <div>
-        <p style={{ color: `${ACCENT}88`, fontSize: '0.75rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
+        <p style={{ color: `${ACCENT}88`, fontSize: '0.875rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
           Science Deck
         </p>
         <h2 style={{ color: '#e2e8f0', fontSize: '1.75rem', fontFamily: 'var(--font-space)', fontWeight: 500, marginBottom: 8 }}>
@@ -104,35 +186,102 @@ export default function ScienceDeck() {
 
         <div className="space-y-3">
           {ROADMAP.map((item, i) => {
-            const { label, color, Icon } = STATUS_CONFIG[item.status]
+            const { label, color, Icon, pulse } = STATUS_CONFIG[item.status]
+
+            const rowBg =
+              item.status === 'live'
+                ? 'rgba(34,197,94,0.04)'
+                : item.status === 'active'
+                ? 'rgba(34,197,94,0.04)'
+                : item.status === 'building'
+                ? `rgba(249,115,22,0.04)`
+                : item.status === 'testing'
+                ? 'rgba(234,179,8,0.04)'
+                : 'rgba(255,255,255,0.02)'
+
+            const rowBorder =
+              item.status === 'building'
+                ? `1px solid rgba(249,115,22,0.14)`
+                : item.status === 'active'
+                ? `1px solid rgba(34,197,94,0.14)`
+                : item.status === 'testing'
+                ? `1px solid rgba(234,179,8,0.14)`
+                : item.status === 'live'
+                ? `1px solid rgba(34,197,94,0.14)`
+                : '1px solid rgba(255,255,255,0.05)'
+
             return (
               <motion.div
                 key={item.title}
                 initial={{ opacity: 0, x: -12 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="flex gap-4 px-5 py-4 rounded-xl items-start"
-                style={{
-                  background: item.status === 'live' ? 'rgba(34,197,94,0.04)' : item.status === 'building' ? `rgba(68,170,204,0.04)` : 'rgba(255,255,255,0.02)',
-                  border: item.status === 'building' ? `1px solid ${ACCENT}22` : '1px solid rgba(255,255,255,0.05)',
-                }}
+                transition={{ delay: i * 0.04 }}
+                className="flex gap-4 px-5 py-4 rounded-xl items-start group relative"
+                style={{ background: rowBg, border: rowBorder }}
               >
                 <Icon size={18} style={{ color, marginTop: 2, flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '0.9375rem' }}>{item.title}</span>
-                    <span style={{ color: '#334155', fontSize: '0.8125rem' }}>·</span>
-                    <span style={{ color: '#475569', fontSize: '0.8125rem' }}>{item.phase}</span>
+                    <span style={{ color: '#334155', fontSize: '0.875rem' }}>·</span>
+                    <span style={{ color: '#475569', fontSize: '0.875rem' }}>{item.phase}</span>
                   </div>
                   <p style={{ color: '#64748b', fontSize: '0.875rem', lineHeight: 1.5 }}>{item.desc}</p>
                 </div>
-                <span
-                  className="shrink-0 text-sm px-2 py-0.5 rounded-full"
-                  style={{ background: `${color}14`, color, border: `1px solid ${color}28`, fontSize: '0.8125rem', whiteSpace: 'nowrap' }}
-                >
-                  {label}
-                </span>
+
+                {/* Status badge — with tooltip on hover if tooltip text exists */}
+                <div className="shrink-0 relative">
+                  <span
+                    className="text-sm px-2 py-0.5 rounded-full flex items-center gap-1.5"
+                    style={{
+                      background: `${color}14`,
+                      color,
+                      border: `1px solid ${color}28`,
+                      fontSize: '0.875rem',
+                      whiteSpace: 'nowrap',
+                      fontWeight: 500,
+                    }}
+                    title={item.tooltip}
+                  >
+                    {pulse && (
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          width: 7,
+                          height: 7,
+                          borderRadius: '50%',
+                          background: color,
+                          boxShadow: `0 0 5px ${color}`,
+                          animation: 'pulse-dot 1.8s ease-in-out infinite',
+                          flexShrink: 0,
+                        }}
+                      />
+                    )}
+                    {label}
+                  </span>
+                  {/* Tooltip bubble (shows on hover) */}
+                  {item.tooltip && (
+                    <div
+                      className="absolute right-0 bottom-full mb-2 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                      style={{
+                        background: 'rgba(15,15,25,0.97)',
+                        border: `1px solid ${color}33`,
+                        borderRadius: 8,
+                        padding: '8px 12px',
+                        minWidth: 200,
+                        maxWidth: 300,
+                        color: '#94a3b8',
+                        fontSize: '0.875rem',
+                        lineHeight: 1.5,
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                        whiteSpace: 'normal',
+                      }}
+                    >
+                      {item.tooltip}
+                    </div>
+                  )}
+                </div>
               </motion.div>
             )
           })}
@@ -159,7 +308,7 @@ export default function ScienceDeck() {
             onChange={e => setNewTitle(e.target.value)}
             placeholder="Idea title"
             maxLength={100}
-            className="w-full rounded-xl px-4 py-3 text-sm outline-none"
+            className="w-full rounded-xl px-4 py-3 outline-none"
             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#e2e8f0', fontSize: '0.9375rem' }}
           />
           <div className="flex gap-3">
@@ -168,16 +317,16 @@ export default function ScienceDeck() {
               onChange={e => setNewDesc(e.target.value)}
               placeholder="Short description (optional)"
               maxLength={200}
-              className="flex-1 rounded-xl px-4 py-3 text-sm outline-none"
+              className="flex-1 rounded-xl px-4 py-3 outline-none"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#e2e8f0', fontSize: '0.9375rem' }}
             />
             <button
               type="submit"
               disabled={submitting || !newTitle.trim()}
               className="px-4 py-2 rounded-xl flex items-center gap-2 transition-opacity hover:opacity-80 disabled:opacity-40"
-              style={{ background: `${ACCENT}14`, border: `1px solid ${ACCENT}33`, color: ACCENT, fontSize: '0.875rem', fontWeight: 500 }}
+              style={{ background: `${ACCENT}14`, border: `1px solid ${ACCENT}33`, color: ACCENT, fontSize: '0.9375rem', fontWeight: 500 }}
             >
-              <Send size={14} />
+              <Send size={15} />
               Submit
             </button>
           </div>
@@ -211,6 +360,14 @@ export default function ScienceDeck() {
           ))}
         </div>
       </div>
+
+      {/* Pulse animation keyframes */}
+      <style>{`
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.75); }
+        }
+      `}</style>
     </div>
   )
 }

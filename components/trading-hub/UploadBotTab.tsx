@@ -165,7 +165,7 @@ export default function UploadBotTab() {
                       {s.label}
                     </p>
                     {(done || active) && (
-                      <p style={{ color: '#475569', fontSize: '0.8125rem' }}>{s.desc}</p>
+                      <p style={{ color: '#475569', fontSize: '0.875rem' }}>{s.desc}</p>
                     )}
                   </div>
                 </div>
@@ -182,7 +182,7 @@ export default function UploadBotTab() {
                 <p style={{ color: '#22c55e', fontWeight: 500, fontSize: '0.9375rem', marginBottom: 4 }}>
                   Bot submitted successfully
                 </p>
-                <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
+                <p style={{ color: '#64748b', fontSize: '0.9375rem' }}>
                   Our team will review your bot before it appears on the leaderboard.
                 </p>
                 <button

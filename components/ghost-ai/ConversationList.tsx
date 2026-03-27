@@ -96,7 +96,7 @@ export function ConversationList() {
           >
             {/* Provider indicator dot */}
             <div
-              className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold"
+              className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-sm font-bold"
               style={{ background: `${color}22`, color, border: `1px solid ${color}44` }}
             >
               {initial}

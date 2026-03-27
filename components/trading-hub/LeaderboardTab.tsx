@@ -44,8 +44,8 @@ function RegimeBadge({ regime }: { regime: RegimeKey }) {
   const cfg = REGIME_CONFIG[regime]
   return (
     <span
-      className="inline-block text-sm font-medium px-2 py-0.5 rounded-full"
-      style={{ color: cfg.color, background: cfg.bg, fontSize: '0.8125rem', letterSpacing: '0.02em' }}
+      className="inline-block font-medium px-2 py-0.5 rounded-full"
+      style={{ color: cfg.color, background: cfg.bg, fontSize: '0.875rem', letterSpacing: '0.02em' }}
     >
       {cfg.label}
     </span>
@@ -77,7 +77,7 @@ export default function LeaderboardTab() {
   })
 
   return (
-    <div className="space-y-8" style={{ paddingTop: '40px' }}>
+    <div className="space-y-8 mt-10">
       {/* House bot banner */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -123,7 +123,7 @@ export default function LeaderboardTab() {
             >
               +306%
             </div>
-            <div style={{ color: '#64748b', fontSize: '0.875rem' }}>All-time return</div>
+            <div style={{ color: '#64748b', fontSize: '0.9375rem' }}>All-time return</div>
             <div
               className="mt-2 px-4 py-2 rounded-full text-sm font-medium"
               style={{ background: `${ACCENT}14`, border: `1px solid ${ACCENT}33`, color: ACCENT }}
@@ -134,15 +134,15 @@ export default function LeaderboardTab() {
         </div>
         <div className="flex flex-wrap gap-4 mt-6 pt-6" style={{ borderTop: `1px solid ${ACCENT}18` }}>
           <div>
-            <div style={{ color: '#64748b', fontSize: '0.8125rem' }}>Sharpe Ratio</div>
+            <div style={{ color: '#64748b', fontSize: '0.875rem' }}>Sharpe Ratio</div>
             <div style={{ color: '#e2e8f0', fontSize: '1.25rem', fontWeight: 500, letterSpacing: '0.02em' }}>3.21</div>
           </div>
           <div>
-            <div style={{ color: '#64748b', fontSize: '0.8125rem' }}>Max Drawdown</div>
+            <div style={{ color: '#64748b', fontSize: '0.875rem' }}>Max Drawdown</div>
             <div style={{ color: '#f87171', fontSize: '1.25rem', fontWeight: 500, letterSpacing: '0.02em' }}>-8.4%</div>
           </div>
           <div>
-            <div style={{ color: '#64748b', fontSize: '0.8125rem' }}>Regime</div>
+            <div style={{ color: '#64748b', fontSize: '0.875rem' }}>Regime</div>
             <RegimeBadge regime="all" />
           </div>
         </div>
@@ -158,13 +158,13 @@ export default function LeaderboardTab() {
       >
         {/* Table header */}
         <div
-          className="grid gap-0 px-4 py-3 text-sm font-medium uppercase tracking-wider"
+          className="grid gap-0 px-4 py-3 font-medium uppercase tracking-wider"
           style={{
             gridTemplateColumns: '48px 1fr 120px 120px 120px 140px',
             background: 'rgba(255,255,255,0.03)',
             color: '#475569',
             letterSpacing: '0.1em',
-            fontSize: '0.75rem',
+            fontSize: '0.875rem',
           }}
         >
           <div>#</div>
@@ -205,14 +205,14 @@ export default function LeaderboardTab() {
                 <span style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '0.9375rem' }}>{bot.name}</span>
                 {bot.isHouse && (
                   <span
-                    className="text-sm px-2 py-0.5 rounded-full"
-                    style={{ background: `${ACCENT}18`, color: ACCENT, fontSize: '0.75rem', border: `1px solid ${ACCENT}30` }}
+                    className="px-2 py-0.5 rounded-full"
+                    style={{ background: `${ACCENT}18`, color: ACCENT, fontSize: '0.875rem', border: `1px solid ${ACCENT}30` }}
                   >
                     house
                   </span>
                 )}
               </div>
-              <div style={{ color: '#475569', fontSize: '0.8125rem' }}>@{bot.creator}</div>
+              <div style={{ color: '#475569', fontSize: '0.875rem' }}>@{bot.creator}</div>
             </div>
             <div style={{ color: '#22c55e', fontWeight: 500, fontSize: '1rem', letterSpacing: '0.02em' }}>
               +{bot.return_pct.toFixed(1)}%
@@ -228,7 +228,7 @@ export default function LeaderboardTab() {
         ))}
       </motion.div>
 
-      <p style={{ color: '#334155', fontSize: '0.8125rem', textAlign: 'center' }}>
+      <p style={{ color: '#475569', fontSize: '0.875rem', textAlign: 'center' }}>
         Live data coming soon. Mock data shown above.
       </p>
     </div>

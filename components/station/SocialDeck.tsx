@@ -63,7 +63,7 @@ export default function SocialDeck() {
   return (
     <div className="space-y-12">
       <div>
-        <p style={{ color: `${ACCENT}88`, fontSize: '0.75rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
+        <p style={{ color: `${ACCENT}88`, fontSize: '0.875rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
           Social Deck
         </p>
         <h2 style={{ color: '#e2e8f0', fontSize: '1.75rem', fontFamily: 'var(--font-space)', fontWeight: 500, marginBottom: 8 }}>
@@ -137,7 +137,7 @@ export default function SocialDeck() {
                 className="absolute -left-[21px] w-3 h-3 rounded-full"
                 style={{ background: '#07070d', border: `2px solid ${ACCENT}66`, top: 3 }}
               />
-              <span style={{ color: ACCENT, fontSize: '0.8125rem', fontWeight: 500, display: 'block', marginBottom: 4 }}>
+              <span style={{ color: ACCENT, fontSize: '0.875rem', fontWeight: 500, display: 'block', marginBottom: 4 }}>
                 {item.date}
               </span>
               <p style={{ color: '#94a3b8', fontSize: '0.9375rem', lineHeight: 1.6 }}>{item.update}</p>

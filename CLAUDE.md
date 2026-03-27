@@ -230,3 +230,47 @@ SOLANA_RPC_URL=                   # Helius or QuickNode RPC
 - Image/file upload in chat
 - Chat sharing / public conversations
 - Conversation search
+
+---
+
+## Phase 2.5 — Claim Your Planet (Teaser)
+
+**Feature**: Claim Your Planet — planet ownership in the voidexa star system.
+**Page**: `/claim-your-planet` (teaser only — no forms, no Supabase, no payments)
+**Full spec**: See `docs/BUILD_COMMAND.md` (if present)
+
+### Overview
+Users can claim a planet in the voidexa star system. Each planet requires GHAI deposits and monthly contributions. Planets go through a board review process. First 5 pioneers receive a special vesting reward.
+
+### Pioneer Reward Vesting
+- 5M GHAI paid monthly over 6 months after the 6-month milestone
+- 5M GHAI paid monthly over 6 months after the 12-month milestone
+- 18 months total vesting period
+- Planet owner must maintain habitable status throughout
+
+### Abandoned Planet Policy
+- 90 days: warning issued
+- 180 days: planet reassigned to new owner
+- Content stays live; deposits are non-refundable
+
+### Page Sections (teaser)
+1. Hero — "Claim Your Planet" with shimmer effect
+2. GHAI Banner — token requirement callout
+3. Solar System Demo — two side-by-side animated solar systems
+4. Pioneer Reward — first 5 planets, 5M+5M GHAI vesting over 18 months
+5. Fuel Your Planet — deposit + monthly (no amounts shown)
+6. Protected Ecosystem — smart contract governed, transparent allocation
+7. Planet Owner Benefits — Quantum access, trading infra, shared scaling, community network
+8. Habitability Grid — 4 milestones
+9. How to Claim — 3 steps
+10. CTA — apply button linking to contact@voidexa.com
+
+### Integration Points
+- Homepage: teaser section before footer
+- Star map: mystery node labeled "Yours?" linking to `/claim-your-planet`
+- Navigation: add "Claim Planet" link
+
+### Constraints
+- Dark space theme matching voidexa aesthetic
+- Minimum 14px text throughout
+- No forms, no Supabase integration, no payments — marketing teaser only

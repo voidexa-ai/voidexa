@@ -11,7 +11,7 @@ import { GetInTouchProvider } from '@/components/GetInTouchModal'
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-inter',
-  weight: ['300', '400', '500'],
+  weight: ['400', '500'],
   display: 'swap',
 })
 

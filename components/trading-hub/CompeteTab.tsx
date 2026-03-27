@@ -67,8 +67,8 @@ export default function CompeteTab() {
             <span style={{ color: '#94a3b8', fontSize: '0.875rem', fontWeight: 500 }}>Monthly Competition</span>
           </div>
           <span
-            className="text-sm px-2.5 py-1 rounded-full font-medium uppercase"
-            style={{ background: `${statusColor}14`, color: statusColor, border: `1px solid ${statusColor}33`, letterSpacing: '0.08em', fontSize: '0.75rem' }}
+            className="px-2.5 py-1 rounded-full font-medium uppercase"
+            style={{ background: `${statusColor}14`, color: statusColor, border: `1px solid ${statusColor}33`, letterSpacing: '0.08em', fontSize: '0.875rem' }}
           >
             {comp.status}
           </span>
@@ -101,7 +101,7 @@ export default function CompeteTab() {
                 <div style={{ color: '#e2e8f0', fontSize: '1.375rem', fontWeight: 500, letterSpacing: '0.02em', lineHeight: 1 }}>
                   {amount.toLocaleString()}
                 </div>
-                <div style={{ color: '#475569', fontSize: '0.8125rem', marginTop: 2 }}>GHAI</div>
+                <div style={{ color: '#475569', fontSize: '0.875rem', marginTop: 2 }}>GHAI</div>
               </div>
             ))}
           </div>
@@ -109,7 +109,7 @@ export default function CompeteTab() {
           {/* Meta row */}
           <div className="flex flex-wrap gap-6 mb-6">
             <div>
-              <div style={{ color: '#475569', fontSize: '0.8125rem', marginBottom: 2 }}>Duration</div>
+              <div style={{ color: '#475569', fontSize: '0.875rem', marginBottom: 2 }}>Duration</div>
               <div style={{ color: '#94a3b8', fontWeight: 500, fontSize: '0.9375rem' }}>
                 {new Date(comp.start_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                 {' — '}
@@ -117,7 +117,7 @@ export default function CompeteTab() {
               </div>
             </div>
             <div>
-              <div style={{ color: '#475569', fontSize: '0.8125rem', marginBottom: 2 }}>Days remaining</div>
+              <div style={{ color: '#475569', fontSize: '0.875rem', marginBottom: 2 }}>Days remaining</div>
               <div style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '1.375rem', letterSpacing: '0.02em', lineHeight: 1 }}>
                 {daysLeft}
               </div>
@@ -129,7 +129,7 @@ export default function CompeteTab() {
             className="rounded-xl p-4 mb-6"
             style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <p style={{ color: '#475569', fontSize: '0.8125rem', fontWeight: 500, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            <p style={{ color: '#475569', fontSize: '0.875rem', fontWeight: 500, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
               Rules
             </p>
             {[
@@ -174,15 +174,15 @@ export default function CompeteTab() {
         </p>
         <div className="flex flex-wrap gap-4">
           <div>
-            <div style={{ color: '#475569', fontSize: '0.8125rem' }}>Target to beat</div>
+            <div style={{ color: '#475569', fontSize: '0.875rem' }}>Target to beat</div>
             <div style={{ color: '#22c55e', fontWeight: 500, fontSize: '1.5rem', letterSpacing: '0.02em' }}>+306%</div>
           </div>
           <div>
-            <div style={{ color: '#475569', fontSize: '0.8125rem' }}>Hall of Fame entries</div>
+            <div style={{ color: '#475569', fontSize: '0.875rem' }}>Hall of Fame entries</div>
             <div style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '1.5rem', letterSpacing: '0.02em' }}>0</div>
           </div>
           <div>
-            <div style={{ color: '#475569', fontSize: '0.8125rem' }}>Reward</div>
+            <div style={{ color: '#475569', fontSize: '0.875rem' }}>Reward</div>
             <div style={{ color: ACCENT, fontWeight: 500, fontSize: '1.5rem', letterSpacing: '0.02em' }}>5,000 GHAI</div>
           </div>
         </div>

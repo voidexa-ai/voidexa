@@ -34,7 +34,7 @@ function VideoCard({ title, desc, duration, isFeatured = false }: { title: strin
           </div>
           <span
             className="text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
-            style={{ background: 'rgba(0,0,0,0.6)', color: `${ACCENT}99`, border: `1px solid ${ACCENT}22`, letterSpacing: '0.14em', fontSize: '0.75rem' }}
+            style={{ background: 'rgba(0,0,0,0.6)', color: `${ACCENT}99`, border: `1px solid ${ACCENT}22`, letterSpacing: '0.14em', fontSize: '0.875rem' }}
           >
             Coming Soon
           </span>
@@ -45,8 +45,8 @@ function VideoCard({ title, desc, duration, isFeatured = false }: { title: strin
       <div className="px-4 py-4">
         <div className="flex items-start justify-between gap-2">
           <p style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '0.9375rem', lineHeight: 1.4 }}>{title}</p>
-          <span className="flex items-center gap-1 shrink-0" style={{ color: '#475569', fontSize: '0.8125rem' }}>
-            <Clock size={12} /> {duration}
+          <span className="flex items-center gap-1 shrink-0" style={{ color: '#475569', fontSize: '0.875rem' }}>
+            <Clock size={14} /> {duration}
           </span>
         </div>
         <p style={{ color: '#64748b', fontSize: '0.875rem', marginTop: 4, lineHeight: 1.5 }}>{desc}</p>
@@ -59,7 +59,7 @@ export default function CinemaDeck() {
   return (
     <div className="space-y-8">
       <div>
-        <p style={{ color: `${ACCENT}88`, fontSize: '0.75rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
+        <p style={{ color: `${ACCENT}88`, fontSize: '0.875rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 6 }}>
           Cinema Deck
         </p>
         <h2 style={{ color: '#e2e8f0', fontSize: '1.75rem', fontFamily: 'var(--font-space)', fontWeight: 500, marginBottom: 8 }}>
@@ -93,7 +93,7 @@ export default function CinemaDeck() {
               <p style={{ color: '#e2e8f0', fontWeight: 500, fontSize: '1.125rem', marginBottom: 4 }}>CEO Introduction</p>
               <span
                 className="text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
-                style={{ background: 'rgba(0,0,0,0.6)', color: `${ACCENT}aa`, border: `1px solid ${ACCENT}33`, letterSpacing: '0.14em', fontSize: '0.75rem' }}
+                style={{ background: 'rgba(0,0,0,0.6)', color: `${ACCENT}aa`, border: `1px solid ${ACCENT}33`, letterSpacing: '0.14em', fontSize: '0.875rem' }}
               >
                 Coming Soon
               </span>

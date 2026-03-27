@@ -161,21 +161,65 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
         onPointerUp={onPointerUp}
       >
         {node.id === 'station'
-          ? <octahedronGeometry args={[size * 1.4, 0]} />
+          ? <boxGeometry args={[size * 2.8, size * 1.8, size * 0.3]} />
           : <sphereGeometry args={[size, 48, 48]} />
         }
         <meshStandardMaterial
           color={color}
           emissive={emissive}
-          emissiveIntensity={isDiscovered ? emissiveIntensity : 0.3}
+          emissiveIntensity={node.id === 'station' ? 0 : (isDiscovered ? emissiveIntensity : 0.3)}
           toneMapped={false}
-          transparent={!isDiscovered}
-          opacity={isDiscovered ? 1 : 0.4}
-          depthWrite={isDiscovered}
+          transparent
+          opacity={node.id === 'station' ? 0 : (isDiscovered ? 1 : 0.4)}
+          depthWrite={node.id === 'station' ? false : isDiscovered}
           roughness={0.3}
           metalness={0.1}
         />
       </mesh>
+
+      {/* Station: rectangular image thumbnail instead of a planet shape */}
+      {node.id === 'station' && (
+        <Html
+          center
+          distanceFactor={16}
+          position={[0, 0, 0]}
+          style={{ pointerEvents: 'none', userSelect: 'none' }}
+          zIndexRange={[1, 2]}
+        >
+          <div
+            onClick={handleNodeClick}
+            style={{
+              pointerEvents: isDiscovered ? 'auto' : 'none',
+              cursor: isDiscovered ? 'pointer' : 'default',
+              width: 60,
+              height: 40,
+              borderRadius: 4,
+              overflow: 'hidden',
+              border: `1px solid ${emissive}66`,
+              boxShadow: `0 0 12px ${emissive}55, 0 0 4px ${emissive}33`,
+              background: '#001322',
+              transition: 'box-shadow 0.2s, border-color 0.2s',
+            }}
+            onMouseEnter={e => {
+              const el = e.currentTarget as HTMLElement
+              el.style.boxShadow = `0 0 20px ${emissive}99, 0 0 8px ${emissive}66`
+              el.style.borderColor = `${emissive}cc`
+            }}
+            onMouseLeave={e => {
+              const el = e.currentTarget as HTMLElement
+              el.style.boxShadow = `0 0 12px ${emissive}55, 0 0 4px ${emissive}33`
+              el.style.borderColor = `${emissive}66`
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/space-station.png"
+              alt="Space Station"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
+        </Html>
+      )}
 
       {/* Outer glow sphere — excluded from raycasting so it can't block clicks */}
       <mesh ref={glowRef} scale={1.65} raycast={() => null}>
@@ -246,7 +290,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
             pointerEvents: isDiscovered ? 'auto' : 'none',
             cursor: isDiscovered ? 'pointer' : 'default',
             color: isDiscovered ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
-            fontSize: isCenter ? '14px' : '12px',
+            fontSize: '14px',
             fontWeight: 500,
             fontFamily: 'var(--font-inter, system-ui)',
             whiteSpace: 'nowrap',

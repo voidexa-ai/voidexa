@@ -39,8 +39,8 @@ function CategoryBadge({ cat }: { cat: Category }) {
   const cfg = CAT_CONFIG[cat]
   return (
     <span
-      className="text-sm px-2 py-0.5 rounded-full font-medium"
-      style={{ color: cfg.color, background: `${cfg.color}14`, border: `1px solid ${cfg.color}28`, fontSize: '0.8125rem' }}
+      className="px-2 py-0.5 rounded-full font-medium"
+      style={{ color: cfg.color, background: `${cfg.color}14`, border: `1px solid ${cfg.color}28`, fontSize: '0.875rem' }}
     >
       {cfg.label}
     </span>
@@ -132,13 +132,13 @@ export default function ForumTab() {
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 <CategoryBadge cat={thread.category} />
-                <span style={{ color: '#475569', fontSize: '0.8125rem' }}>@{thread.author}</span>
-                <span style={{ color: '#334155', fontSize: '0.8125rem' }}>·</span>
-                <span className="flex items-center gap-1" style={{ color: '#475569', fontSize: '0.8125rem' }}>
-                  <MessageSquare size={12} /> {thread.reply_count}
+                <span style={{ color: '#475569', fontSize: '0.875rem' }}>@{thread.author}</span>
+                <span style={{ color: '#475569', fontSize: '0.875rem' }}>·</span>
+                <span className="flex items-center gap-1" style={{ color: '#475569', fontSize: '0.875rem' }}>
+                  <MessageSquare size={14} /> {thread.reply_count}
                 </span>
-                <span className="flex items-center gap-1" style={{ color: '#475569', fontSize: '0.8125rem' }}>
-                  <Clock size={12} /> {timeAgo(thread.created_at)}
+                <span className="flex items-center gap-1" style={{ color: '#475569', fontSize: '0.875rem' }}>
+                  <Clock size={14} /> {timeAgo(thread.created_at)}
                 </span>
               </div>
             </div>

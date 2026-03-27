@@ -139,7 +139,7 @@ export default function Navigation() {
               onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'rgba(200,180,255,0.8)'}
               onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(139,92,246,0.45)'}
             >
-              <X size={12} />
+              <X size={14} />
             </button>
           </div>
         )}
@@ -192,7 +192,7 @@ export default function Navigation() {
                       style={{
                         display: 'flex', alignItems: 'center', gap: 3,
                         padding: '5px 9px', borderRadius: 6,
-                        fontSize: '0.8rem', fontWeight: 500, textDecoration: 'none',
+                        fontSize: '0.875rem', fontWeight: 500, textDecoration: 'none',
                         color: (active || hoveredHref === href) ? planetColor : '#94a3b8',
                         background: active
                           ? `rgba(${r},${g},${b},0.10)`
@@ -204,10 +204,10 @@ export default function Navigation() {
                       {label}
                       {badge && (
                         <span style={{
-                          fontSize: '7px', fontWeight: 700, letterSpacing: '0.08em',
-                          padding: '1px 4px', borderRadius: 3,
+                          fontSize: '14px', fontWeight: 700, letterSpacing: '0.04em',
+                          padding: '1px 5px', borderRadius: 3,
                           background: `rgba(${r},${g},${b},0.18)`, color: planetColor,
-                          textTransform: 'uppercase', lineHeight: '12px',
+                          textTransform: 'uppercase', lineHeight: '16px',
                         }}>
                           {badge}
                         </span>
@@ -236,7 +236,7 @@ export default function Navigation() {
                   style={{
                     display: 'flex', alignItems: 'center', gap: 4,
                     padding: '5px 9px', borderRadius: 6,
-                    fontSize: '0.8rem', fontWeight: 500, textDecoration: 'none',
+                    fontSize: '0.875rem', fontWeight: 500, textDecoration: 'none',
                     color: pathname.startsWith('/void-chat') ? '#a78bfa' : '#8b5cf6',
                     background: pathname.startsWith('/void-chat') ? 'rgba(139,92,246,0.14)' : 'rgba(139,92,246,0.07)',
                     border: '1px solid rgba(139,92,246,0.22)',
@@ -254,10 +254,10 @@ export default function Navigation() {
                 >
                   Void Chat
                   <span style={{
-                    fontSize: '7px', fontWeight: 700, letterSpacing: '0.08em',
-                    padding: '1px 4px', borderRadius: 3,
+                    fontSize: '14px', fontWeight: 700, letterSpacing: '0.04em',
+                    padding: '1px 5px', borderRadius: 3,
                     background: 'rgba(139,92,246,0.35)', color: '#ddd6fe',
-                    textTransform: 'uppercase', lineHeight: '12px',
+                    textTransform: 'uppercase', lineHeight: '16px',
                   }}>
                     NEW
                   </span>
@@ -338,7 +338,7 @@ export default function Navigation() {
           ],
         }}
         transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-        whileHover={{ x: -3, background: 'rgba(0,30,45,0.98)' }}
+        whileHover={{ x: -3, background: 'rgba(0,30,45,0.98)', animationPlayState: 'paused' }}
         style={{
           position: 'fixed',
           right: 0,
@@ -349,30 +349,28 @@ export default function Navigation() {
           border: '1px solid rgba(0,212,255,0.35)',
           borderRight: 'none',
           borderRadius: '10px 0 0 10px',
-          padding: '18px 0',
-          width: '44px',
+          padding: '14px 0',
+          width: '52px',
           cursor: 'pointer',
           backdropFilter: 'blur(12px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '8px',
+          gap: '6px',
+          minWidth: '44px',
         }}
         aria-label="Open info panel"
       >
-        <Info size={16} style={{ color: 'rgba(0,212,255,0.85)' }} />
+        <Info size={18} style={{ color: 'rgba(0,212,255,0.85)' }} />
         <span style={{
-          writingMode: 'vertical-rl',
           display: 'block',
           fontSize: '14px',
           color: 'rgba(0,212,255,0.7)',
-          letterSpacing: '0.22em',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          fontFamily: 'var(--font-space)',
+          fontWeight: 500,
+          letterSpacing: '0.04em',
           userSelect: 'none',
         }}>
-          INFO
+          Menu
         </span>
       </motion.button>
 
@@ -545,7 +543,7 @@ export default function Navigation() {
                       {label}
                       {badge && (
                         <span style={{
-                          fontSize: '9px', fontWeight: 600, letterSpacing: '0.1em',
+                          fontSize: '14px', fontWeight: 600, letterSpacing: '0.06em',
                           padding: '2px 6px', borderRadius: 4,
                           background: `rgba(${r},${g},${b},0.2)`, color: planetColor, textTransform: 'uppercase',
                         }}>
@@ -572,7 +570,7 @@ export default function Navigation() {
                 >
                   Void Chat
                   <span style={{
-                    fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em',
+                    fontSize: '14px', fontWeight: 700, letterSpacing: '0.04em',
                     padding: '2px 6px', borderRadius: 4,
                     background: 'rgba(139,92,246,0.35)', color: '#ddd6fe', textTransform: 'uppercase',
                   }}>
@@ -605,7 +603,7 @@ export default function Navigation() {
                       {label}
                       {badge && (
                         <span style={{
-                          fontSize: '9px', fontWeight: 600, letterSpacing: '0.1em',
+                          fontSize: '14px', fontWeight: 600, letterSpacing: '0.06em',
                           padding: '2px 6px', borderRadius: 4,
                           background: `rgba(${r},${g},${b},0.2)`, color: planetColor, textTransform: 'uppercase',
                         }}>
