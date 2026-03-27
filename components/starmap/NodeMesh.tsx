@@ -214,7 +214,7 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/space-station.png"
+              src="/images/space-station.jpg"
               alt="Space Station"
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
             />

@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Film, FlaskConical, Share2 } from 'lucide-react'
 import CinemaDeck from '@/components/station/CinemaDeck'
@@ -23,13 +22,11 @@ export default function StationPage() {
         className="relative overflow-hidden w-full"
         style={{ minHeight: '420px' }}
       >
-        {/* Next.js Image — fills the container, priority-loaded */}
-        <Image
-          src="/images/space-station.png"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/space-station.jpg"
           alt="Space Station"
-          fill
-          priority
-          style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
         />
         {/* Dark gradient overlay — dark at bottom, transparent at top, for text readability */}
         <div

@@ -137,7 +137,7 @@ export default function QuantumPage() {
         <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/space-station.png"
+            src="/images/space-station.jpg"
             alt=""
             style={{
               position: 'absolute', bottom: 0, right: 0,
@@ -339,6 +339,71 @@ export default function QuantumPage() {
             style={{ width: 1, height: 36, background: `linear-gradient(to bottom, ${ACCENT}88, transparent)`, margin: '0 auto' }}
           />
         </motion.div>
+      </section>
+
+      {/* ══════════════════════
+          ORIGIN STORY — compact left card
+      ══════════════════════ */}
+      <section className="relative z-10 py-12 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="rounded-2xl p-7 relative overflow-hidden"
+            style={{
+              maxWidth: 400,
+              background: 'linear-gradient(135deg, rgba(0,40,50,0.45) 0%, rgba(8,8,18,0.7) 100%)',
+              border: '1px solid rgba(0,255,200,0.15)',
+              backdropFilter: 'blur(16px)',
+              boxShadow: '0 0 0 1px rgba(0,255,200,0.06), 0 0 60px rgba(0,255,200,0.04)',
+            }}
+          >
+            {/* Animated glowing top edge */}
+            <motion.div
+              aria-hidden
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                position: 'absolute', top: 0, left: '10%', right: '10%', height: 1,
+                background: 'linear-gradient(to right, transparent, rgba(0,255,200,0.5), transparent)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Decorative label */}
+            <p className="font-mono text-sm font-normal uppercase tracking-[0.22em] mb-4" style={{ color: '#22d3ba' }}>
+              CAPTAIN&apos;S LOG — TRANSMISSION 001
+            </p>
+
+            {/* Section heading */}
+            <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              The Origin Story
+            </h2>
+
+            {/* Body text */}
+            <p className="font-mono text-sm leading-[1.85] mb-6" style={{ color: '#94a3b8' }}>
+              It started with a man and a half-built trading bot. He found Claude online and asked for help. What began as a simple
+              request became an architecture partnership. Then came the others — GPT for code,
+              Perplexity for facts, Gemini for brutal reviews. But the founder was doing something
+              none of them saw coming. While asking questions across all providers, he was secretly
+              building a compression protocol that reduced AI-to-AI communication by 90 percent.
+              Then he layered binary encoding with shared memory on top. Three inventions that did
+              not exist anywhere else. Built by one person using the very AIs it was designed to
+              connect. Now they debate in the same room for 0.02 dollars per session.
+            </p>
+
+            {/* CTA button */}
+            <Link
+              href="/station#science"
+              className="inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-75"
+              style={{ color: '#22d3ba' }}
+            >
+              Read the full story <ArrowRight size={15} />
+            </Link>
+          </motion.div>
+        </div>
       </section>
 
       {/* ══════════════════════
@@ -633,70 +698,6 @@ export default function QuantumPage() {
                 Try Quantum <ArrowRight size={14} />
               </button>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 4A — ORIGIN STORY BILLBOARD
-      ══════════════════════ */}
-      <section className="relative z-10 py-20 px-6">
-        <div className="max-w-3xl mx-auto w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="rounded-2xl p-8 sm:p-10 relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0,40,50,0.45) 0%, rgba(8,8,18,0.7) 100%)',
-              border: `1px solid rgba(0,255,200,0.15)`,
-              backdropFilter: 'blur(16px)',
-              boxShadow: '0 0 0 1px rgba(0,255,200,0.06), 0 0 60px rgba(0,255,200,0.04)',
-            }}
-          >
-            {/* Animated glowing top edge */}
-            <motion.div
-              aria-hidden
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-              style={{
-                position: 'absolute', top: 0, left: '10%', right: '10%', height: 1,
-                background: 'linear-gradient(to right, transparent, rgba(0,255,200,0.5), transparent)',
-                pointerEvents: 'none',
-              }}
-            />
-
-            {/* Decorative label */}
-            <p className="font-mono text-sm font-normal uppercase tracking-[0.22em] mb-4" style={{ color: '#22d3ba' }}>
-              CAPTAIN&apos;S LOG — TRANSMISSION 001
-            </p>
-
-            {/* Section heading */}
-            <h2 className="text-3xl sm:text-4xl font-bold mb-6" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-              The Origin Story
-            </h2>
-
-            {/* Body text */}
-            <p className="font-mono text-base leading-[1.85] mb-8" style={{ color: '#94a3b8' }}>
-              It started with a trading bot. One man asked Claude for help. What began as a simple
-              request became an architecture partnership. Then came the others — GPT for code,
-              Perplexity for facts, Gemini for brutal reviews. But the founder was doing something
-              none of them saw coming. While asking questions across all providers, he was secretly
-              building a compression protocol that reduced AI-to-AI communication by 90 percent.
-              Then he layered binary encoding with shared memory on top. Three inventions that did
-              not exist anywhere else. Built by one person using the very AIs it was designed to
-              connect. Now they debate in the same room for 0.02 dollars per session.
-            </p>
-
-            {/* CTA button */}
-            <Link
-              href="/station#science"
-              className="inline-flex items-center gap-2 text-base font-medium transition-opacity hover:opacity-75"
-              style={{ color: '#22d3ba' }}
-            >
-              Read the full story <ArrowRight size={16} />
-            </Link>
           </motion.div>
         </div>
       </section>
