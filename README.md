@@ -1,3 +1,28 @@
+# voidexa
+
+Sovereign AI platform — [voidexa.com](https://voidexa.com)
+
+---
+
+## Quantum — AI Debate Engine
+
+Quantum is voidexa's multi-AI consensus engine. 5 AI providers debate your question in real-time and converge on the best answer. No single-model bias — just collective intelligence at $0.02–$0.05 per session.
+
+### The Technology Under The Hood
+
+**KCP-90 — Compressed communication**
+When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 90% fewer tokens. Same message, 10% of the cost. Like sending a text instead of a letter.
+
+**KCP-BINARY — Binary transport**
+Normally AIs talk in text — slow and expensive. KCP-BINARY translates to binary code — the language computers are fastest at. With digital signatures so no one can forge the messages.
+
+**SHM — Shared memory**
+Instead of sending messages over the internet, the AIs share a common memory space. Like sitting in the same room pointing at the same whiteboard instead of sending emails back and forth.
+
+> KCP-90 Communication Protocol with Binary Encoding and Shared Memory Transport — Created by voidexa
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

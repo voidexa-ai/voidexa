@@ -66,7 +66,7 @@ export default function TeamPage() {
     <div className="relative" style={{ background: 'transparent', minHeight: '100vh' }}>
 
       {/* ── Hero: group photo ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: '60vh' }}>
+      <div className="relative overflow-hidden" style={{ minHeight: 500 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/cast/gruppe billede.jpg"
@@ -74,7 +74,7 @@ export default function TeamPage() {
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center 25%',
+            objectFit: 'cover', objectPosition: 'center 20%',
           }}
         />
         <div style={{
@@ -84,7 +84,7 @@ export default function TeamPage() {
 
         <div
           className="relative flex flex-col items-center justify-end text-center px-6"
-          style={{ minHeight: '60vh', paddingBottom: 80, paddingTop: 140 }}
+          style={{ minHeight: 500, paddingBottom: 80, paddingTop: 140 }}
         >
           <motion.p
             initial={{ opacity: 0, y: 12 }}

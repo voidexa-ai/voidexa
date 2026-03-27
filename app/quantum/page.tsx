@@ -275,11 +275,11 @@ export default function QuantumPage() {
       {/* ══════════════════════
           TWO-COLUMN LAYOUT
       ══════════════════════ */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
 
           {/* ── LEFT: sticky origin story + protocol box ── */}
-          <div className="w-full lg:w-[380px] shrink-0 lg:sticky lg:top-24 flex flex-col gap-6">
+          <div className="w-full lg:w-[360px] shrink-0 lg:sticky lg:top-24 flex flex-col gap-6">
 
             {/* Captain's Log card */}
             <motion.div
@@ -592,7 +592,7 @@ export default function QuantumPage() {
       {/* ══════════════════════
           HOW IT WORKS — full width
       ══════════════════════ */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6">
         <section className="relative py-16">
           <div className="max-w-full">
 
@@ -728,6 +728,83 @@ export default function QuantumPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* ══════════════════════
+            KCP-90 — TECHNOLOGY EXPLAINER
+        ══════════════════════ */}
+        <section className="relative py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Under The Hood</p>
+            <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              The technology under the hood
+            </h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-3 gap-6 mb-10">
+            {[
+              {
+                tag: 'KCP-90',
+                label: 'Compressed communication',
+                color: '#22d3ba',
+                bg: 'rgba(34,211,186,0.06)',
+                border: 'rgba(34,211,186,0.18)',
+                desc: 'When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 90% fewer tokens. Same message, 10% of the cost. Like sending a text instead of a letter.',
+              },
+              {
+                tag: 'KCP-BINARY',
+                label: 'Binary transport',
+                color: '#60a5fa',
+                bg: 'rgba(96,165,250,0.06)',
+                border: 'rgba(96,165,250,0.18)',
+                desc: 'Normally AIs talk in text — slow and expensive. KCP-BINARY translates to binary code — the language computers are fastest at. With digital signatures so no one can forge the messages.',
+              },
+              {
+                tag: 'SHM',
+                label: 'Shared memory',
+                color: '#c084fc',
+                bg: 'rgba(192,132,252,0.06)',
+                border: 'rgba(192,132,252,0.18)',
+                desc: 'Instead of sending messages over the internet, the AIs share a common memory space. Like sitting in the same room pointing at the same whiteboard instead of sending emails back and forth.',
+              },
+            ].map((card, i) => (
+              <motion.div
+                key={card.tag}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="rounded-2xl p-7"
+                style={{ background: card.bg, border: `1px solid ${card.border}`, backdropFilter: 'blur(8px)' }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] px-2.5 py-1 rounded-md"
+                    style={{ color: card.color, background: `${card.border}`, border: `1px solid ${card.border}` }}>
+                    {card.tag}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{card.label}</h3>
+                <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{card.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center font-mono"
+            style={{ fontSize: 12, color: 'rgba(148,163,184,0.35)', letterSpacing: '0.06em' }}
+          >
+            KCP-90 Communication Protocol with Binary Encoding and Shared Memory Transport — Created by voidexa
+          </motion.p>
         </section>
 
         {/* ══════════════════════
