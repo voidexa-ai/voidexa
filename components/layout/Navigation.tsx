@@ -28,7 +28,7 @@ const mainLinks = [
 const infoPanelLinks = [
   { href: '/about',              label: 'About'            },
   { href: '/contact',            label: 'Contact'          },
-  { href: '/token',              label: 'Token'            },
+  { href: '/ghost-ai',           label: 'Ghost AI'         },
   { href: '/whitepaper',         label: 'White Paper'      },
   { href: '/claim-your-planet',  label: 'Claim Your Planet' },
 ]
