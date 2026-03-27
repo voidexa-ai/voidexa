@@ -21,6 +21,7 @@ const mainLinks = [
   { href: '/services',    label: 'Services',    badge: null   },
   { href: '/station',     label: 'Station',     badge: null   },
   { href: '/quantum',     label: 'Quantum',     badge: 'SOON' },
+  { href: '/team',        label: 'Team',        badge: null   },
 ]
 
 // FIX 3: Info panel links (removed from top nav)
@@ -62,6 +63,7 @@ const PAGE_LABELS: Record<string, string> = {
   '/products':     'Products',
   '/profile':              'Profile',
   '/claim-your-planet':    'Claim Your Planet',
+  '/team':                 'The Team',
 }
 
 function getPageLabel(pathname: string): string {

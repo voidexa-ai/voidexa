@@ -114,7 +114,7 @@ export default function QuantumPage() {
   const fmtTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
   return (
-    <div className="relative overflow-hidden" style={{ background: '#07070d' }}>
+    <div className="relative overflow-hidden" style={{ background: 'transparent' }}>
 
       {/* Fixed background glows */}
       <div aria-hidden style={{
@@ -246,7 +246,7 @@ export default function QuantumPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.36 }}
-            className="flex flex-wrap items-center justify-center gap-2 mb-12"
+            className="flex flex-wrap items-center justify-center gap-2"
           >
             {['Self-optimizing workflow', 'Verification sandwich', 'Emergent roles'].map(h => (
               <span key={h}
@@ -254,75 +254,6 @@ export default function QuantumPage() {
                 style={{ color: `${ACCENT}bb`, background: `${ACCENT}10`, border: `1px solid ${ACCENT}28` }}
               >{h}</span>
             ))}
-          </motion.div>
-
-          {/* Protocol teaser card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.42 }}
-            className="rounded-2xl p-6 mb-12 text-left"
-            style={{
-              background: `${ACCENT}08`,
-              border: `1px solid ${ACCENT}2e`,
-              backdropFilter: 'blur(12px)',
-              boxShadow: `0 0 40px ${ACCENT}08`,
-            }}
-          >
-            <p className="text-sm font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}77` }}>
-              Next-Gen AI Communication
-            </p>
-            <p className="text-base leading-relaxed mb-5" style={{ color: '#64748b' }}>
-              Built on a proprietary AI-to-AI communication protocol with shared memory architecture
-              and integrated binary encoding — reducing token consumption by over 90% compared to standard approaches.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {['Compressed Intelligence', 'Shared Memory', 'Binary Protocol'].map(b => (
-                <span key={b}
-                  className="text-sm font-medium px-3 py-1.5 rounded-full"
-                  style={{ color: `${ACCENT}cc`, background: `${ACCENT}12`, border: `1px solid ${ACCENT}2e` }}
-                >{b}</span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Waitlist form */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.52 }}
-            id="waitlist"
-          >
-            {sent ? (
-              <p className="text-sm" style={{ color: ACCENT }}>You&apos;re on the list. We&apos;ll be in touch.</p>
-            ) : (
-              <form
-                onSubmit={async e => {
-                  e.preventDefault()
-                  setLoading(true)
-                  await supabase.from('waitlist_signups').insert({ email, product: 'quantum' })
-                  supabase.functions.invoke('notify', { body: { type: 'waitlist', product: 'quantum', email } }).catch(() => {})
-                  setLoading(false)
-                  setSent(true)
-                }}
-                className="flex flex-col sm:flex-row gap-3 justify-center"
-              >
-                <input
-                  type="email" required value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="px-4 py-3 rounded-full text-sm outline-none"
-                  style={{ background: `${ACCENT}10`, border: `1px solid ${ACCENT}33`, color: '#e2e8f0', minWidth: 220 }}
-                />
-                <button
-                  type="submit" disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-50 whitespace-nowrap"
-                  style={{ background: `${ACCENT}22`, border: `1px solid ${ACCENT}55`, color: ACCENT, padding: '12px 28px' }}
-                >
-                  {loading ? '…' : <>Join the waitlist <ArrowRight size={15} /></>}
-                </button>
-              </form>
-            )}
           </motion.div>
         </div>
 
@@ -342,13 +273,15 @@ export default function QuantumPage() {
       </section>
 
       {/* ══════════════════════
-          TWO-COLUMN LAYOUT: origin story left, sections right
+          TWO-COLUMN LAYOUT
       ══════════════════════ */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
 
-          {/* ── LEFT: sticky origin story card ── */}
-          <div className="w-full lg:w-[380px] shrink-0 lg:sticky lg:top-24">
+          {/* ── LEFT: sticky origin story + protocol box ── */}
+          <div className="w-full lg:w-[380px] shrink-0 lg:sticky lg:top-24 flex flex-col gap-6">
+
+            {/* Captain's Log card */}
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -405,471 +338,477 @@ export default function QuantumPage() {
                 Read the full story <ArrowRight size={14} />
               </Link>
             </motion.div>
+
+            {/* Next-Gen AI Communication box */}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="rounded-2xl p-6 text-left"
+              style={{
+                background: `${ACCENT}08`,
+                border: `1px solid ${ACCENT}2e`,
+                backdropFilter: 'blur(12px)',
+                boxShadow: `0 0 40px ${ACCENT}08`,
+              }}
+            >
+              <p className="text-sm font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}77` }}>
+                Next-Gen AI Communication
+              </p>
+              <p className="text-base leading-relaxed mb-5" style={{ color: '#64748b' }}>
+                Built on a proprietary AI-to-AI communication protocol with shared memory architecture
+                and integrated binary encoding — reducing token consumption by over 90% compared to standard approaches.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {['Compressed Intelligence', 'Shared Memory', 'Binary Protocol'].map(b => (
+                  <span key={b}
+                    className="text-sm font-medium px-3 py-1.5 rounded-full"
+                    style={{ color: `${ACCENT}cc`, background: `${ACCENT}12`, border: `1px solid ${ACCENT}2e` }}
+                  >{b}</span>
+                ))}
+              </div>
+            </motion.div>
+
           </div>
 
-          {/* ── RIGHT: page sections ── */}
+          {/* ── RIGHT: Watch Them Debate ── */}
           <div className="flex-1 min-w-0">
 
-      {/* ══════════════════════
-          SECTION 2 — THE TEAM
-      ══════════════════════ */}
-      <section className="relative py-20">
-        <div className="max-w-full">
+            {/* ══════════════════════
+                WATCH THEM DEBATE
+            ══════════════════════ */}
+            <section className="relative py-16">
+              <div className="max-w-full w-full">
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>The Cast</p>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-              Meet the Team
-            </h2>
-            <p className="text-base" style={{ color: '#475569' }}>
-              Six personalities. One goal. Endless disagreement.
-            </p>
-          </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="text-center mb-12 mx-auto"
+                >
+                  <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Interface Preview</p>
+                  <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+                    Watch Them Debate
+                  </h2>
+                  <p className="text-base" style={{ color: '#475569' }}>
+                    Real-time consensus emerging from genuine disagreement.
+                  </p>
+                </motion.div>
 
-          {/* Group photo banner */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="relative overflow-hidden rounded-2xl mb-12"
-            style={{ height: 260 }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/cast/gruppe billede.jpg"
-              alt="The Quantum Team"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
-            />
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to top, rgba(7,7,13,0.85) 0%, rgba(7,7,13,0.35) 60%, transparent 100%)',
-            }} />
-          </motion.div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {CAST.map((char, i) => (
-              <motion.div
-                key={char.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="flex flex-col items-center text-center p-5 rounded-2xl"
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  backdropFilter: 'blur(8px)',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
-                  cursor: 'default',
-                }}
-                onMouseEnter={e => {
-                  const el = e.currentTarget as HTMLElement
-                  el.style.transform = 'translateY(-5px)'
-                  el.style.boxShadow = `0 0 36px ${char.glow}`
-                  el.style.background = char.glow.replace('0.35)', '0.06)')
-                  el.style.borderColor = `${char.color}44`
-                }}
-                onMouseLeave={e => {
-                  const el = e.currentTarget as HTMLElement
-                  el.style.transform = 'translateY(0)'
-                  el.style.boxShadow = 'none'
-                  el.style.background = 'rgba(255,255,255,0.02)'
-                  el.style.borderColor = 'rgba(255,255,255,0.06)'
-                }}
-              >
-                {/* Avatar with ring */}
-                <div className="relative mb-4" style={{ width: 120, height: 120 }}>
-                  <div style={{
-                    position: 'absolute', inset: -2, borderRadius: '50%',
-                    background: `conic-gradient(${char.color}70, transparent 60%, ${char.color}70)`,
-                    opacity: 0.65,
-                  }} />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={char.image}
-                    alt={char.name}
-                    style={{
-                      width: 120, height: 120, borderRadius: '50%',
-                      objectFit: 'cover',
-                      objectPosition: 'center top',
-                      imageRendering: 'crisp-edges',
-                      border: `2.5px solid ${char.color}55`,
-                      position: 'relative', display: 'block',
-                    }}
-                  />
-                </div>
-
-                <p className="text-lg font-medium mb-0.5" style={{ color: char.color }}>{char.name}</p>
-                <p className="text-[15px] font-bold uppercase tracking-wider mb-3" style={{ color: '#475569' }}>{char.role}</p>
-                <p className="text-[15px] leading-snug italic" style={{ color: '#334155' }}>
-                  &ldquo;{char.oneliner}&rdquo;
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 3 — LIVE DEMO PREVIEW
-      ══════════════════════ */}
-      <section className="relative py-16">
-        <div className="max-w-full w-full">
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12 mx-auto"
-          >
-            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Interface Preview</p>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-              Watch Them Debate
-            </h2>
-            <p className="text-base" style={{ color: '#475569' }}>
-              Real-time consensus emerging from genuine disagreement.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="rounded-3xl overflow-hidden"
-            style={{
-              background: 'rgba(8,8,18,0.92)',
-              border: `1px solid ${ACCENT}30`,
-              backdropFilter: 'blur(24px)',
-              boxShadow: `0 0 60px ${ACCENT}12, 0 0 120px ${ACCENT}06`,
-            }}
-          >
-            {/* Title bar */}
-            <div className="flex items-center justify-between px-5 py-3 border-b"
-              style={{ borderColor: `${ACCENT}1e`, background: `${ACCENT}05` }}>
-              <div className="flex items-center gap-2">
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444', opacity: 0.7 }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b', opacity: 0.7 }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', opacity: 0.7 }} />
-              </div>
-              <span className="text-base font-bold uppercase tracking-wider" style={{ color: `${ACCENT}88` }}>
-                Quantum — Live Session
-              </span>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <Clock size={11} style={{ color: '#475569' }} />
-                  <span className="text-base font-mono" style={{ color: '#475569' }}>{fmtTime(sessionTime)}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <DollarSign size={11} style={{ color: '#4ade80' }} />
-                  <span className="text-base font-mono" style={{ color: '#4ade80' }}>${sessionCost.toFixed(4)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 lg:p-8">
-              <div className="flex flex-col lg:flex-row gap-8">
-
-                {/* Left — avatar orbit + consensus */}
-                <div className="flex flex-col items-center gap-6 lg:w-52 shrink-0">
-
-                  {/* Orbit layout */}
-                  <div className="relative" style={{ width: 168, height: 168 }}>
-                    {/* Center label */}
-                    <div style={{
-                      position: 'absolute', top: '50%', left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      textAlign: 'center', zIndex: 10,
-                      pointerEvents: 'none',
-                    }}>
-                      <p className="text-sm font-bold uppercase tracking-widest" style={{ color: `${ACCENT}77` }}>QUANTUM</p>
-                    </div>
-
-                    {/* Connection lines SVG */}
-                    <svg
-                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.12 }}
-                      viewBox="0 0 168 168"
-                    >
-                      {CAST.map((char, i) => {
-                        const a1 = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
-                        const a2 = ((i + 2) / CAST.length) * 2 * Math.PI - Math.PI / 2
-                        const r = 72
-                        return (
-                          <line key={i}
-                            x1={84 + r * Math.cos(a1)} y1={84 + r * Math.sin(a1)}
-                            x2={84 + r * Math.cos(a2)} y2={84 + r * Math.sin(a2)}
-                            stroke={char.color} strokeWidth="1"
-                          />
-                        )
-                      })}
-                    </svg>
-
-                    {/* Avatars */}
-                    {CAST.map((char, i) => {
-                      const angle = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
-                      const r = 72
-                      const cx = 84 + r * Math.cos(angle)
-                      const cy = 84 + r * Math.sin(angle)
-                      return (
-                        <div key={char.id} style={{
-                          position: 'absolute',
-                          left: cx - 23, top: cy - 23,
-                          width: 46, height: 46,
-                        }}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={char.image}
-                            alt={char.name}
-                            style={{
-                              width: 46, height: 46, borderRadius: '50%',
-                              objectFit: 'cover',
-                              border: `2px solid ${char.color}88`,
-                              boxShadow: `0 0 14px ${char.glow}`,
-                            }}
-                          />
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  {/* Consensus meter */}
-                  <div className="w-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-lg font-bold uppercase tracking-wider" style={{ color: '#334155' }}>Consensus</span>
-                      <span className="text-base font-bold" style={{ color: '#4ade80' }}>{consensus}%</span>
-                    </div>
-                    <div className="rounded-full overflow-hidden" style={{ height: 6, background: 'rgba(255,255,255,0.05)' }}>
-                      <motion.div
-                        style={{
-                          height: '100%',
-                          background: 'linear-gradient(to right, #60a5fa, #4ade80)',
-                          borderRadius: 99,
-                        }}
-                        animate={{ width: `${consensus}%` }}
-                        transition={{ duration: 0.04 }}
-                      />
-                    </div>
-                    <p className="text-base mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
-                  </div>
-                </div>
-
-                {/* Right — debate messages */}
-                <div className="flex-1 min-w-0">
-                  <div className="rounded-xl p-4 mb-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <p className="text-base font-bold uppercase tracking-wider mb-1.5" style={{ color: '#334155' }}>Question</p>
-                    <p className="text-base font-medium leading-snug" style={{ color: '#94a3b8' }}>
-                      What&apos;s the most efficient sorting algorithm for nearly-sorted data?
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {DEBATE.map((msg, i) => {
-                      const char = CAST.find(c => c.name === msg.char)
-                      return (
-                        <motion.div
-                          key={i}
-                          animate={{
-                            opacity: i <= activeMsg ? 1 : 0.12,
-                            background: i === activeMsg ? `${msg.color}0a` : 'transparent',
-                          }}
-                          transition={{ duration: 0.35 }}
-                          className="flex items-start gap-3 p-3 rounded-xl"
-                          style={{
-                            border: i === activeMsg ? `1px solid ${msg.color}22` : '1px solid transparent',
-                            transition: 'border-color 0.35s ease',
-                          }}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={char?.image || ''}
-                            alt={msg.char}
-                            style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${msg.color}55`, flexShrink: 0 }}
-                          />
-                          <div>
-                            <span className="text-base font-bold" style={{ color: msg.color }}>{msg.char}</span>
-                            <p className="text-base mt-0.5 leading-relaxed" style={{ color: '#64748b' }}>{msg.text}</p>
-                          </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom CTA bar */}
-            <div className="px-6 pb-6 pt-1 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
-              style={{ borderColor: `${ACCENT}14` }}>
-              <p className="text-base" style={{ color: '#334155' }}>
-                Preview only — join the waitlist for early access.
-              </p>
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all"
-                style={{
-                  background: `linear-gradient(135deg, ${ACCENT}, #60a5fa)`,
-                  color: '#fff',
-                  boxShadow: `0 0 24px ${ACCENT}44`,
-                }}
-              >
-                Try Quantum <ArrowRight size={14} />
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ══════════════════════
-          SECTION 4 — HOW IT WORKS
-      ══════════════════════ */}
-      <section className="relative py-16">
-        <div className="max-w-full">
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Process</p>
-            <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-              How It Works
-            </h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              {
-                step: '01',
-                title: 'Ask Anything',
-                desc: 'Your question goes to all AI providers simultaneously. No waiting. No routing. Everyone gets it at once.',
-              },
-              {
-                step: '02',
-                title: 'They Debate',
-                desc: 'AIs challenge each other, cite sources, change positions. Disagreement is the feature, not the bug.',
-              },
-              {
-                step: '03',
-                title: 'Consensus Emerges',
-                desc: 'The best answer rises from genuine disagreement — weighted by confidence, verified by peers.',
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl p-7"
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${ACCENT}20`,
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                <div
-                  className="text-6xl font-bold mb-5 leading-none select-none"
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: 0.1 }}
+                  className="rounded-3xl overflow-hidden"
                   style={{
-                    fontFamily: 'var(--font-space)',
-                    background: `linear-gradient(135deg, ${ACCENT}55, ${ACCENT}18)`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
+                    background: 'rgba(8,8,18,0.92)',
+                    border: `1px solid ${ACCENT}30`,
+                    backdropFilter: 'blur(24px)',
+                    boxShadow: `0 0 60px ${ACCENT}12, 0 0 120px ${ACCENT}06`,
                   }}
                 >
-                  {item.step}
-                </div>
-                <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{item.title}</h3>
-                <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                  {/* Title bar */}
+                  <div className="flex items-center justify-between px-5 py-3 border-b"
+                    style={{ borderColor: `${ACCENT}1e`, background: `${ACCENT}05` }}>
+                    <div className="flex items-center gap-2">
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444', opacity: 0.7 }} />
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b', opacity: 0.7 }} />
+                      <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', opacity: 0.7 }} />
+                    </div>
+                    <span className="text-base font-bold uppercase tracking-wider" style={{ color: `${ACCENT}88` }}>
+                      Quantum — Live Session
+                    </span>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1.5">
+                        <Clock size={11} style={{ color: '#475569' }} />
+                        <span className="text-base font-mono" style={{ color: '#475569' }}>{fmtTime(sessionTime)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <DollarSign size={11} style={{ color: '#4ade80' }} />
+                        <span className="text-base font-mono" style={{ color: '#4ade80' }}>${sessionCost.toFixed(4)}</span>
+                      </div>
+                    </div>
+                  </div>
 
-      {/* ══════════════════════
-          SECTION 5 — UNIQUE FEATURES
-      ══════════════════════ */}
-      <section className="relative py-16 pb-24">
-        <div className="max-w-full">
+                  <div className="p-6 lg:p-8">
+                    <div className="flex flex-col lg:flex-row gap-8">
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>What Makes It Different</p>
-            <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-              Unique Features
-            </h2>
-          </motion.div>
+                      {/* Left — avatar orbit + consensus */}
+                      <div className="flex flex-col items-center gap-6 lg:w-52 shrink-0">
 
-          <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              {
-                icon: <Zap size={22} />,
-                iconColor: '#f59e0b',
-                iconBg: 'rgba(245,158,11,0.10)',
-                title: 'Self-Optimizing Workflow',
-                desc: 'Quantum changes its own strategy mid-session. If the debate stalls, it restructures the problem and reframes the question automatically.',
-              },
-              {
-                icon: <Shield size={22} />,
-                iconColor: '#4ade80',
-                iconBg: 'rgba(74,222,128,0.10)',
-                title: 'Verification Sandwich',
-                desc: 'Facts are checked at exactly the right moment — not too early to waste tokens, not too late to matter. Precision timing baked in.',
-              },
-              {
-                icon: <Brain size={22} />,
-                iconColor: ACCENT,
-                iconBg: `${ACCENT}12`,
-                title: 'Emergent Roles',
-                desc: 'AIs naturally shift roles based on the task. Claude becomes the architect, GPT the executor, Perplexity the auditor — without being told.',
-              },
-            ].map((feat, i) => (
-              <motion.div
-                key={feat.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl p-7"
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                <div
-                  className="inline-flex items-center justify-center rounded-xl mb-5"
-                  style={{ width: 50, height: 50, background: feat.iconBg, color: feat.iconColor }}
-                >
-                  {feat.icon}
-                </div>
-                <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{feat.title}</h3>
-                <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{feat.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                        {/* Orbit layout */}
+                        <div className="relative" style={{ width: 168, height: 168 }}>
+                          {/* Center label */}
+                          <div style={{
+                            position: 'absolute', top: '50%', left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            textAlign: 'center', zIndex: 10,
+                            pointerEvents: 'none',
+                          }}>
+                            <p className="text-sm font-bold uppercase tracking-widest" style={{ color: `${ACCENT}77` }}>QUANTUM</p>
+                          </div>
+
+                          {/* Connection lines SVG */}
+                          <svg
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.12 }}
+                            viewBox="0 0 168 168"
+                          >
+                            {CAST.map((char, i) => {
+                              const a1 = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
+                              const a2 = ((i + 2) / CAST.length) * 2 * Math.PI - Math.PI / 2
+                              const r = 72
+                              return (
+                                <line key={i}
+                                  x1={84 + r * Math.cos(a1)} y1={84 + r * Math.sin(a1)}
+                                  x2={84 + r * Math.cos(a2)} y2={84 + r * Math.sin(a2)}
+                                  stroke={char.color} strokeWidth="1"
+                                />
+                              )
+                            })}
+                          </svg>
+
+                          {/* Avatars */}
+                          {CAST.map((char, i) => {
+                            const angle = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
+                            const r = 72
+                            const cx = 84 + r * Math.cos(angle)
+                            const cy = 84 + r * Math.sin(angle)
+                            return (
+                              <div key={char.id} style={{
+                                position: 'absolute',
+                                left: cx - 23, top: cy - 23,
+                                width: 46, height: 46,
+                              }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={char.image}
+                                  alt={char.name}
+                                  style={{
+                                    width: 46, height: 46, borderRadius: '50%',
+                                    objectFit: 'cover',
+                                    border: `2px solid ${char.color}88`,
+                                    boxShadow: `0 0 14px ${char.glow}`,
+                                  }}
+                                />
+                              </div>
+                            )
+                          })}
+                        </div>
+
+                        {/* Consensus meter */}
+                        <div className="w-full">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-lg font-bold uppercase tracking-wider" style={{ color: '#334155' }}>Consensus</span>
+                            <span className="text-base font-bold" style={{ color: '#4ade80' }}>{consensus}%</span>
+                          </div>
+                          <div className="rounded-full overflow-hidden" style={{ height: 6, background: 'rgba(255,255,255,0.05)' }}>
+                            <motion.div
+                              style={{
+                                height: '100%',
+                                background: 'linear-gradient(to right, #60a5fa, #4ade80)',
+                                borderRadius: 99,
+                              }}
+                              animate={{ width: `${consensus}%` }}
+                              transition={{ duration: 0.04 }}
+                            />
+                          </div>
+                          <p className="text-base mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
+                        </div>
+                      </div>
+
+                      {/* Right — debate messages */}
+                      <div className="flex-1 min-w-0">
+                        <div className="rounded-xl p-4 mb-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                          <p className="text-base font-bold uppercase tracking-wider mb-1.5" style={{ color: '#334155' }}>Question</p>
+                          <p className="text-base font-medium leading-snug" style={{ color: '#94a3b8' }}>
+                            What&apos;s the most efficient sorting algorithm for nearly-sorted data?
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          {DEBATE.map((msg, i) => {
+                            const char = CAST.find(c => c.name === msg.char)
+                            return (
+                              <motion.div
+                                key={i}
+                                animate={{
+                                  opacity: i <= activeMsg ? 1 : 0.12,
+                                  background: i === activeMsg ? `${msg.color}0a` : 'transparent',
+                                }}
+                                transition={{ duration: 0.35 }}
+                                className="flex items-start gap-3 p-3 rounded-xl"
+                                style={{
+                                  border: i === activeMsg ? `1px solid ${msg.color}22` : '1px solid transparent',
+                                  transition: 'border-color 0.35s ease',
+                                }}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={char?.image || ''}
+                                  alt={msg.char}
+                                  style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${msg.color}55`, flexShrink: 0 }}
+                                />
+                                <div>
+                                  <span className="text-base font-bold" style={{ color: msg.color }}>{msg.char}</span>
+                                  <p className="text-base mt-0.5 leading-relaxed" style={{ color: '#64748b' }}>{msg.text}</p>
+                                </div>
+                              </motion.div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom CTA bar */}
+                  <div className="px-6 pb-6 pt-1 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
+                    style={{ borderColor: `${ACCENT}14` }}>
+                    <p className="text-base" style={{ color: '#334155' }}>
+                      Preview only — join the waitlist for early access.
+                    </p>
+                    <button
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all"
+                      style={{
+                        background: `linear-gradient(135deg, ${ACCENT}, #60a5fa)`,
+                        color: '#fff',
+                        boxShadow: `0 0 24px ${ACCENT}44`,
+                      }}
+                    >
+                      Try Quantum <ArrowRight size={14} />
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </section>
 
           </div>{/* end right column */}
         </div>{/* end flex row */}
       </div>{/* end two-column wrapper */}
+
+      {/* ══════════════════════
+          HOW IT WORKS — full width
+      ══════════════════════ */}
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-16">
+          <div className="max-w-full">
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Process</p>
+              <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+                How It Works
+              </h2>
+            </motion.div>
+
+            <div className="grid sm:grid-cols-3 gap-6">
+              {[
+                {
+                  step: '01',
+                  title: 'Ask Anything',
+                  desc: 'Your question goes to all AI providers simultaneously. No waiting. No routing. Everyone gets it at once.',
+                },
+                {
+                  step: '02',
+                  title: 'They Debate',
+                  desc: 'AIs challenge each other, cite sources, change positions. Disagreement is the feature, not the bug.',
+                },
+                {
+                  step: '03',
+                  title: 'Consensus Emerges',
+                  desc: 'The best answer rises from genuine disagreement — weighted by confidence, verified by peers.',
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={item.step}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="rounded-2xl p-7"
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: `1px solid ${ACCENT}20`,
+                    backdropFilter: 'blur(8px)',
+                  }}
+                >
+                  <div
+                    className="text-6xl font-bold mb-5 leading-none select-none"
+                    style={{
+                      fontFamily: 'var(--font-space)',
+                      background: `linear-gradient(135deg, ${ACCENT}55, ${ACCENT}18)`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    {item.step}
+                  </div>
+                  <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{item.title}</h3>
+                  <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════
+            UNIQUE FEATURES — full width
+        ══════════════════════ */}
+        <section className="relative py-16">
+          <div className="max-w-full">
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>What Makes It Different</p>
+              <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+                Unique Features
+              </h2>
+            </motion.div>
+
+            <div className="grid sm:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: <Zap size={22} />,
+                  iconColor: '#f59e0b',
+                  iconBg: 'rgba(245,158,11,0.10)',
+                  title: 'Self-Optimizing Workflow',
+                  desc: 'Quantum changes its own strategy mid-session. If the debate stalls, it restructures the problem and reframes the question automatically.',
+                },
+                {
+                  icon: <Shield size={22} />,
+                  iconColor: '#4ade80',
+                  iconBg: 'rgba(74,222,128,0.10)',
+                  title: 'Verification Sandwich',
+                  desc: 'Facts are checked at exactly the right moment — not too early to waste tokens, not too late to matter. Precision timing baked in.',
+                },
+                {
+                  icon: <Brain size={22} />,
+                  iconColor: ACCENT,
+                  iconBg: `${ACCENT}12`,
+                  title: 'Emergent Roles',
+                  desc: 'AIs naturally shift roles based on the task. Claude becomes the architect, GPT the executor, Perplexity the auditor — without being told.',
+                },
+              ].map((feat, i) => (
+                <motion.div
+                  key={feat.title}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="rounded-2xl p-7"
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    backdropFilter: 'blur(8px)',
+                  }}
+                >
+                  <div
+                    className="inline-flex items-center justify-center rounded-xl mb-5"
+                    style={{ width: 50, height: 50, background: feat.iconBg, color: feat.iconColor }}
+                  >
+                    {feat.icon}
+                  </div>
+                  <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{feat.title}</h3>
+                  <p className="text-base leading-relaxed" style={{ color: '#475569' }}>{feat.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════
+            WAITLIST — full width, centered
+        ══════════════════════ */}
+        <section className="relative py-16 pb-24">
+          <div className="max-w-xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-8"
+            >
+              <p className="text-sm font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Early Access</p>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+                Join the Waitlist
+              </h2>
+              <p className="text-base leading-relaxed" style={{ color: '#475569' }}>
+                Be first to access Quantum when it launches.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              id="waitlist"
+            >
+              {sent ? (
+                <p className="text-sm" style={{ color: ACCENT }}>You&apos;re on the list. We&apos;ll be in touch.</p>
+              ) : (
+                <form
+                  onSubmit={async e => {
+                    e.preventDefault()
+                    setLoading(true)
+                    await supabase.from('waitlist_signups').insert({ email, product: 'quantum' })
+                    supabase.functions.invoke('notify', { body: { type: 'waitlist', product: 'quantum', email } }).catch(() => {})
+                    setLoading(false)
+                    setSent(true)
+                  }}
+                  className="flex flex-col sm:flex-row gap-3 justify-center"
+                >
+                  <input
+                    type="email" required value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="px-4 py-3 rounded-full text-sm outline-none"
+                    style={{ background: `${ACCENT}10`, border: `1px solid ${ACCENT}33`, color: '#e2e8f0', minWidth: 220 }}
+                  />
+                  <button
+                    type="submit" disabled={loading}
+                    className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-50 whitespace-nowrap"
+                    style={{ background: `${ACCENT}22`, border: `1px solid ${ACCENT}55`, color: ACCENT, padding: '12px 28px' }}
+                  >
+                    {loading ? '…' : <>Join the waitlist <ArrowRight size={15} /></>}
+                  </button>
+                </form>
+              )}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-8"
+            >
+              <Link
+                href="/team"
+                className="text-sm transition-opacity hover:opacity-75"
+                style={{ color: `${ACCENT}88` }}
+              >
+                Meet the team behind Quantum →
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
+      </div>{/* end full-width sections wrapper */}
 
       {/* Bottom edge glow */}
       <div aria-hidden style={{

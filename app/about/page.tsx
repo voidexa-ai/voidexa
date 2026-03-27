@@ -34,7 +34,7 @@ const fade = (delay = 0) => ({
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#07070d' }}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       {/* Ambient glow */}
       <div
         aria-hidden

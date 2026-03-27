@@ -205,22 +205,30 @@ export default function ClaimYourPlanetPage() {
           position: 'relative', overflow: 'hidden',
           background: 'radial-gradient(ellipse 70% 60% at 50% 30%, rgba(0,212,255,0.06) 0%, transparent 70%)',
         }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/claaming a planet.jpg"
+            alt=""
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', opacity: 0.25, zIndex: 0 }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(7,7,13,0.55) 0%, rgba(7,7,13,0.3) 50%, rgba(7,7,13,0.7) 100%)', zIndex: 1 }} />
+
           {/* Decorative rings */}
           <div aria-hidden style={{
             position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%,-50%)',
             width: 600, height: 600, borderRadius: '50%',
-            border: '1px dashed rgba(0,212,255,0.06)', pointerEvents: 'none',
+            border: '1px dashed rgba(0,212,255,0.06)', pointerEvents: 'none', zIndex: 2,
           }} />
           <div aria-hidden style={{
             position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%,-50%)',
             width: 400, height: 400, borderRadius: '50%',
-            border: '1px dashed rgba(139,92,246,0.08)', pointerEvents: 'none',
+            border: '1px dashed rgba(139,92,246,0.08)', pointerEvents: 'none', zIndex: 2,
           }} />
 
           <motion.div
             initial="hidden" whileInView="visible" viewport={{ once: true }}
             variants={fadeUp}
-            style={{ textAlign: 'center', maxWidth: 760 }}
+            style={{ textAlign: 'center', maxWidth: 760, position: 'relative', zIndex: 2 }}
           >
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,

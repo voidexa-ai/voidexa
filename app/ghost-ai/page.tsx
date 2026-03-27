@@ -120,7 +120,7 @@ export default function GhostAIPage() {
   const priceUp = (price?.priceChange24h ?? 0) >= 0
 
   return (
-    <div className="relative overflow-hidden" style={{ background: '#07070d' }}>
+    <div className="relative overflow-hidden" style={{ background: 'transparent' }}>
 
       {/* ── BACKGROUND LAYERS ── */}
       {/* Deep space radial */}

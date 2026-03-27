@@ -9,7 +9,7 @@ const ACCENT = '#888888'
 
 export default function WhitepaperPage() {
   return (
-    <div className="min-h-screen" style={{ background: '#07070d' }}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       <div className="max-w-5xl mx-auto px-6 pt-32 pb-16">
 
         {/* Header */}
