@@ -342,75 +342,79 @@ export default function QuantumPage() {
       </section>
 
       {/* ══════════════════════
-          ORIGIN STORY — compact left card
+          TWO-COLUMN LAYOUT: origin story left, sections right
       ══════════════════════ */}
-      <section className="relative z-10 py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="rounded-2xl p-7 relative overflow-hidden"
-            style={{
-              maxWidth: 400,
-              background: 'linear-gradient(135deg, rgba(0,40,50,0.45) 0%, rgba(8,8,18,0.7) 100%)',
-              border: '1px solid rgba(0,255,200,0.15)',
-              backdropFilter: 'blur(16px)',
-              boxShadow: '0 0 0 1px rgba(0,255,200,0.06), 0 0 60px rgba(0,255,200,0.04)',
-            }}
-          >
-            {/* Animated glowing top edge */}
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+
+          {/* ── LEFT: sticky origin story card ── */}
+          <div className="w-full lg:w-[380px] shrink-0 lg:sticky lg:top-24">
             <motion.div
-              aria-hidden
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="rounded-2xl p-6 relative overflow-hidden"
               style={{
-                position: 'absolute', top: 0, left: '10%', right: '10%', height: 1,
-                background: 'linear-gradient(to right, transparent, rgba(0,255,200,0.5), transparent)',
-                pointerEvents: 'none',
+                background: 'linear-gradient(135deg, rgba(0,40,50,0.45) 0%, rgba(8,8,18,0.7) 100%)',
+                border: '1px solid rgba(0,255,200,0.15)',
+                backdropFilter: 'blur(16px)',
+                boxShadow: '0 0 0 1px rgba(0,255,200,0.06), 0 0 60px rgba(0,255,200,0.04)',
               }}
-            />
-
-            {/* Decorative label */}
-            <p className="font-mono text-sm font-normal uppercase tracking-[0.22em] mb-4" style={{ color: '#22d3ba' }}>
-              CAPTAIN&apos;S LOG — TRANSMISSION 001
-            </p>
-
-            {/* Section heading */}
-            <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-              The Origin Story
-            </h2>
-
-            {/* Body text */}
-            <p className="font-mono text-sm leading-[1.85] mb-6" style={{ color: '#94a3b8' }}>
-              It started with a man and a half-built trading bot. He found Claude online and asked for help. What began as a simple
-              request became an architecture partnership. Then came the others — GPT for code,
-              Perplexity for facts, Gemini for brutal reviews. But the founder was doing something
-              none of them saw coming. While asking questions across all providers, he was secretly
-              building a compression protocol that reduced AI-to-AI communication by 90 percent.
-              Then he layered binary encoding with shared memory on top. Three inventions that did
-              not exist anywhere else. Built by one person using the very AIs it was designed to
-              connect. Now they debate in the same room for 0.02 dollars per session.
-            </p>
-
-            {/* CTA button */}
-            <Link
-              href="/station#science"
-              className="inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-75"
-              style={{ color: '#22d3ba' }}
             >
-              Read the full story <ArrowRight size={15} />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+              {/* Animated glowing top edge */}
+              <motion.div
+                aria-hidden
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                style={{
+                  position: 'absolute', top: 0, left: '10%', right: '10%', height: 1,
+                  background: 'linear-gradient(to right, transparent, rgba(0,255,200,0.5), transparent)',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Decorative label */}
+              <p className="font-mono uppercase tracking-[0.22em] mb-3" style={{ fontSize: 12, color: '#22d3ba' }}>
+                CAPTAIN&apos;S LOG — TRANSMISSION 001
+              </p>
+
+              {/* Heading */}
+              <h2 className="font-bold mb-3" style={{ fontSize: 16, fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+                The Origin Story
+              </h2>
+
+              {/* Body */}
+              <p className="font-mono leading-[1.8] mb-5" style={{ fontSize: 14, color: '#94a3b8' }}>
+                It started with a man and a half-built trading bot. He found Claude online and asked for help.
+                What began as a simple request became an architecture partnership. Then came the others — GPT for code,
+                Perplexity for facts, Gemini for brutal reviews. But the founder was doing something
+                none of them saw coming. While asking questions across all providers, he was secretly
+                building a compression protocol that reduced AI-to-AI communication by 90 percent.
+                Then he layered binary encoding with shared memory on top. Three inventions that did
+                not exist anywhere else. Built by one person using the very AIs it was designed to
+                connect. Now they debate in the same room for 0.02 dollars per session.
+              </p>
+
+              {/* CTA */}
+              <Link
+                href="/station#science"
+                className="inline-flex items-center gap-2 font-medium transition-opacity hover:opacity-75"
+                style={{ fontSize: 14, color: '#22d3ba' }}
+              >
+                Read the full story <ArrowRight size={14} />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* ── RIGHT: page sections ── */}
+          <div className="flex-1 min-w-0">
 
       {/* ══════════════════════
           SECTION 2 — THE TEAM
       ══════════════════════ */}
-      <section className="relative z-10 py-28 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative py-20">
+        <div className="max-w-full">
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -495,8 +499,8 @@ export default function QuantumPage() {
       {/* ══════════════════════
           SECTION 3 — LIVE DEMO PREVIEW
       ══════════════════════ */}
-      <section className="relative z-10 py-20 px-6">
-        <div className="max-w-4xl mx-auto w-full">
+      <section className="relative py-16">
+        <div className="max-w-full w-full">
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -705,8 +709,8 @@ export default function QuantumPage() {
       {/* ══════════════════════
           SECTION 4 — HOW IT WORKS
       ══════════════════════ */}
-      <section className="relative z-10 py-24 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-16">
+        <div className="max-w-full">
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -775,8 +779,8 @@ export default function QuantumPage() {
       {/* ══════════════════════
           SECTION 5 — UNIQUE FEATURES
       ══════════════════════ */}
-      <section className="relative z-10 py-24 px-6 pb-36">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-16 pb-24">
+        <div className="max-w-full">
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -841,6 +845,10 @@ export default function QuantumPage() {
           </div>
         </div>
       </section>
+
+          </div>{/* end right column */}
+        </div>{/* end flex row */}
+      </div>{/* end two-column wrapper */}
 
       {/* Bottom edge glow */}
       <div aria-hidden style={{

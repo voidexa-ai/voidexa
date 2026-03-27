@@ -149,11 +149,11 @@ export default function Navigation() {
         <header
           className="transition-all duration-500"
           style={{
-            background: scrolled ? 'rgba(7,4,18,0.88)' : 'transparent',
-            backdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
-            WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(180%)' : 'none',
-            borderBottom: scrolled ? '1px solid rgba(0,212,255,0.1)' : 'none',
-            boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.4),0 1px 0 rgba(0,212,255,0.06)' : 'none',
+            background: scrolled ? 'rgba(7,4,18,0.92)' : 'rgba(7,4,18,0.60)',
+            backdropFilter: 'blur(20px) saturate(160%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+            borderBottom: scrolled ? '1px solid rgba(0,212,255,0.1)' : '1px solid rgba(255,255,255,0.04)',
+            boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.4),0 1px 0 rgba(0,212,255,0.06)' : '0 2px 16px rgba(0,0,0,0.3)',
           }}
         >
           <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
