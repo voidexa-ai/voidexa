@@ -9,8 +9,6 @@ import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 import AuthButton from '@/components/AuthButton'
 import { useGetInTouchModal } from '@/components/GetInTouchModal'
 
-const BANNER_KEY = 'voidexa_beta_banner_dismissed'
-
 // FIX 2: All products visible in top nav
 const mainLinks = [
   { href: '/home',        label: 'Home',        badge: null   },
@@ -86,38 +84,14 @@ export default function Navigation() {
   const [scrolled, setScrolled]       = useState(false)
   const [menuOpen, setMenuOpen]       = useState(false)
   const [infoPanelOpen, setInfoPanel] = useState(false)
-  const [bannerVisible, setBanner]    = useState(false)
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
-  const [countdown, setCountdown]     = useState('')
-  const [isLive, setIsLive]           = useState(false)
   const pathname = usePathname()
   const { open: openModal } = useGetInTouchModal()
 
   useEffect(() => {
-    setBanner(localStorage.getItem(BANNER_KEY) !== 'true')
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => { window.removeEventListener('scroll', onScroll) }
-  }, [])
-
-  useEffect(() => {
-    const TARGET = new Date('2026-04-05T00:00:00Z').getTime()
-    function tick() {
-      const diff = TARGET - Date.now()
-      if (diff <= 0) {
-        setIsLive(true)
-        setCountdown('')
-        return
-      }
-      const d = Math.floor(diff / 86400000)
-      const h = Math.floor((diff % 86400000) / 3600000)
-      const m = Math.floor((diff % 3600000) / 60000)
-      const s = Math.floor((diff % 60000) / 1000)
-      setCountdown(`${d}d ${h}h ${m}m ${s}s`)
-    }
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
   }, [])
 
   useEffect(() => { setMenuOpen(false); setInfoPanel(false) }, [pathname])
@@ -127,57 +101,12 @@ export default function Navigation() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen, infoPanelOpen])
 
-  function dismissBanner() {
-    localStorage.setItem(BANNER_KEY, 'true')
-    setBanner(false)
-    window.dispatchEvent(new CustomEvent('banner-dismissed'))
-  }
 
   const pageLabel = getPageLabel(pathname)
 
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
-
-        {/* ── Countdown banner ── */}
-        {bannerVisible && (
-          <div
-            className="relative flex items-center justify-center px-10"
-            style={{
-              background: 'linear-gradient(90deg,rgba(10,8,20,0.98) 0%,rgba(22,10,45,0.98) 50%,rgba(10,8,20,0.98) 100%)',
-              borderBottom: '1px solid rgba(139,92,246,0.18)',
-              backdropFilter: 'blur(16px)',
-              paddingTop: '12px',
-              paddingBottom: '12px',
-            }}
-          >
-            <p className="text-center select-none" style={{ color: 'rgba(200,190,230,0.9)', fontSize: '15px', fontWeight: 500 }}>
-              {isLive ? (
-                <span style={{ color: 'rgba(220,210,255,0.98)', fontWeight: 600 }}>We are live. Welcome to voidexa.</span>
-              ) : (
-                <>
-                  <span style={{ color: 'rgba(220,210,255,0.98)', fontWeight: 600 }}>Early Access</span>
-                  {' '}— Limited slots available. We onboard users personally to ensure quality.
-                  {countdown && (
-                    <span style={{ color: 'rgba(139,92,246,0.85)', fontWeight: 600, marginLeft: 10 }}>
-                      | {countdown}
-                    </span>
-                  )}
-                </>
-              )}
-            </p>
-            <button
-              onClick={dismissBanner}
-              aria-label="Dismiss"
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 transition-colors"
-              style={{ color: 'rgba(139,92,246,0.45)' }}
-              onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = 'rgba(200,180,255,0.8)'}
-              onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(139,92,246,0.45)'}
-            >
-              <X size={14} />
-            </button>
-          </div>
-        )}
 
         {/* ── Nav bar ── */}
         <header
@@ -551,7 +480,7 @@ export default function Navigation() {
             className="fixed inset-0 z-40 lg:hidden flex flex-col"
             style={{ background: 'rgba(7,4,18,0.98)', backdropFilter: 'blur(24px)' }}
           >
-            <div className="shrink-0" style={{ height: bannerVisible ? '105px' : '72px' }} />
+            <div className="shrink-0" style={{ height: '105px' }} />
 
             <nav className="flex-1 flex flex-col justify-center px-8 gap-0.5 overflow-y-auto py-4">
               {/* Main links */}

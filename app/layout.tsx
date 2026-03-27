@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { DM_Sans, Syne } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layout/Navigation'
+import EarlyAccessBanner from '@/components/layout/EarlyAccessBanner'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import GlobalStarfield from '@/components/layout/GlobalStarfield'
 import JarvisAssistant from '@/components/ui/JarvisAssistant'
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <GetInTouchProvider>
             <GlobalStarfield />
+            <EarlyAccessBanner />
             <Navigation />
             <main className="relative">{children}</main>
             <ConditionalFooter />
