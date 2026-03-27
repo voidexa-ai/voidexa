@@ -60,7 +60,7 @@ export function VoidChatShell({ children }: { children: React.ReactNode }) {
           bottom: 0,
           overflow: 'hidden',
           display: 'flex',
-          background: '#030712',
+          background: 'transparent',
           transition: 'top 0.3s ease',
         }}
       >

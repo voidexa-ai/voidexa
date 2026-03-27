@@ -189,24 +189,41 @@ export default function QuantumPage() {
             Quantum by voidexa
           </motion.p>
 
-          {/* Title */}
-          <motion.h1
+          {/* Hero image with Quantum label */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            style={{
-              fontFamily: 'var(--font-space)',
-              fontSize: 'clamp(72px, 13vw, 136px)',
-              fontWeight: 800,
-              lineHeight: 1,
-              letterSpacing: '-0.02em',
-              color: '#e2e8f0',
-              textShadow: `0 0 90px ${ACCENT}44`,
-              marginBottom: '0.3em',
-            }}
+            style={{ position: 'relative', width: '100%', height: 500, borderRadius: 16, overflow: 'hidden', marginBottom: '1.2em' }}
           >
-            Quantum
-          </motion.h1>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/quantum-room.jpg"
+              alt="Quantum conference room"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+            />
+            {/* Bottom gradient so text is readable */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to bottom, transparent 40%, rgba(7,4,18,0.85) 100%)',
+            }} />
+            {/* "Quantum" label at bottom center */}
+            <div style={{
+              position: 'absolute', bottom: 28, left: 0, right: 0,
+              display: 'flex', justifyContent: 'center',
+            }}>
+              <span style={{
+                fontFamily: 'var(--font-space)',
+                fontSize: 36,
+                fontWeight: 700,
+                letterSpacing: '-0.01em',
+                color: '#e2e8f0',
+                textShadow: `0 0 40px ${ACCENT}88`,
+              }}>
+                Quantum
+              </span>
+            </div>
+          </motion.div>
 
           {/* Subtitle */}
           <motion.p
