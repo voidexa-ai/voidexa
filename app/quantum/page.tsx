@@ -1,228 +1,785 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Zap, Shield, Brain, Clock, DollarSign } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 const ACCENT = '#7777bb'
 
-const hints = [
-  'Self-adapting workflows',
-  'Selective verification',
-  'Emergent specialization',
+const CAST = [
+  {
+    id: 'jix',
+    name: 'Jix',
+    role: 'CEO',
+    oneliner: '47 ideas per minute, remembers 3',
+    image: '/images/cast/jix.jpg',
+    color: '#f59e0b',
+    glow: 'rgba(245,158,11,0.35)',
+  },
+  {
+    id: 'claude',
+    name: 'Claude',
+    role: 'Chief Architect',
+    oneliner: 'Overthinks everything, usually right',
+    image: '/images/cast/claude.jpg',
+    color: '#60a5fa',
+    glow: 'rgba(96,165,250,0.35)',
+  },
+  {
+    id: 'gpt',
+    name: 'GPT',
+    role: 'Lead Developer',
+    oneliner: 'Never wrong, except when he is',
+    image: '/images/cast/gpt.jpg',
+    color: '#4ade80',
+    glow: 'rgba(74,222,128,0.35)',
+  },
+  {
+    id: 'perplexity',
+    name: 'Perplexity',
+    role: 'Fact Checker',
+    oneliner: 'Actually, according to my sources…',
+    image: '/images/cast/perplexity.jpg',
+    color: '#fb923c',
+    glow: 'rgba(251,146,60,0.35)',
+  },
+  {
+    id: 'gemini',
+    name: 'Gemini',
+    role: 'Senior Reviewer',
+    oneliner: 'Namaste. Your code is garbage.',
+    image: '/images/cast/gemini.jpg',
+    color: '#c084fc',
+    glow: 'rgba(192,132,252,0.35)',
+  },
+  {
+    id: 'llama',
+    name: 'Llama',
+    role: 'Trainee',
+    oneliner: 'Loading… 12% complete',
+    image: '/images/cast/llama.jpg',
+    color: '#94a3b8',
+    glow: 'rgba(148,163,184,0.25)',
+  },
+]
+
+const DEBATE = [
+  { char: 'Claude',     color: '#60a5fa', text: 'The optimal solution is Timsort — O(n log n) worst case with near-O(n) on nearly sorted data.' },
+  { char: 'GPT',        color: '#4ade80', text: 'Correct. I arrived at that conclusion 2 seconds ago. Also insertion sort for n < 64.' },
+  { char: 'Perplexity', color: '#fb923c', text: 'Actually, per Python\'s CPython source, Timsort runs insertion on runs ≤ 64 elements. You\'re both partly right.' },
+  { char: 'Gemini',     color: '#c084fc', text: 'Your benchmarks are from 2019. Modern CPU branch predictors change the picture significantly.' },
+  { char: 'Llama',      color: '#94a3b8', text: '…still reading the Wikipedia article on sorting…' },
 ]
 
 export default function QuantumPage() {
-  const [email, setEmail]     = useState('')
-  const [sent, setSent]       = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail]           = useState('')
+  const [sent, setSent]             = useState(false)
+  const [loading, setLoading]       = useState(false)
+  const [consensus, setConsensus]   = useState(0)
+  const [sessionTime, setSessionTime] = useState(47)
+  const [sessionCost, setSessionCost] = useState(0.0118)
+  const [activeMsg, setActiveMsg]   = useState(0)
+
+  // Animate consensus meter to 72
+  useEffect(() => {
+    const t = setTimeout(() => {
+      let v = 0
+      const iv = setInterval(() => {
+        v += 1
+        setConsensus(v)
+        if (v >= 72) clearInterval(iv)
+      }, 18)
+      return () => clearInterval(iv)
+    }, 600)
+    return () => clearTimeout(t)
+  }, [])
+
+  // Live session counters
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setSessionTime(t => t + 1)
+      setSessionCost(c => parseFloat((c + 0.00013).toFixed(5)))
+    }, 1000)
+    return () => clearInterval(iv)
+  }, [])
+
+  // Cycle debate messages
+  useEffect(() => {
+    const iv = setInterval(() => setActiveMsg(m => (m + 1) % DEBATE.length), 2600)
+    return () => clearInterval(iv)
+  }, [])
+
+  const fmtTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
   return (
-    <div
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: 'transparent' }}
-    >
-      {/* Radial glow */}
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: `radial-gradient(ellipse 65% 55% at 50% 40%, ${ACCENT}1a 0%, transparent 70%)`,
-          pointerEvents: 'none',
-        }}
-      />
+    <div className="relative overflow-hidden" style={{ background: '#07070d' }}>
 
-      <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 mb-8"
-        >
-          <span
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] px-3 py-1 rounded-full"
-            style={{ color: ACCENT, background: `${ACCENT}18`, border: `1px solid ${ACCENT}40` }}
+      {/* Fixed background glows */}
+      <div aria-hidden style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        background: `radial-gradient(ellipse 70% 50% at 50% 0%, ${ACCENT}14 0%, transparent 60%)`,
+      }} />
+      <div aria-hidden style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        background: 'radial-gradient(ellipse 40% 35% at 85% 80%, rgba(96,165,250,0.04) 0%, transparent 60%)',
+      }} />
+
+      {/* ══════════════════════
+          HERO
+      ══════════════════════ */}
+      <section
+        className="relative flex flex-col items-center justify-center text-center px-6"
+        style={{ minHeight: '100vh', paddingTop: 120, paddingBottom: 80 }}
+      >
+        {/* Space station faint bg */}
+        <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/space-station.png"
+            alt=""
+            style={{
+              position: 'absolute', bottom: 0, right: 0,
+              width: 'clamp(240px, 38vw, 520px)',
+              opacity: 0.035,
+              filter: 'saturate(0) blur(1px)',
+              maskImage: 'radial-gradient(ellipse 65% 65% at 85% 85%, black 10%, transparent 70%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 65% 65% at 85% 85%, black 10%, transparent 70%)',
+            }}
+          />
+        </div>
+
+        {/* Ambient radial glow */}
+        <div aria-hidden style={{
+          position: 'absolute', top: '38%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 720, height: 720, borderRadius: '50%',
+          background: `radial-gradient(circle, ${ACCENT}14 0%, ${ACCENT}06 45%, transparent 70%)`,
+          pointerEvents: 'none', zIndex: 0,
+        }} />
+
+        <div className="relative z-10 max-w-3xl mx-auto w-full">
+
+          {/* Badges */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 mb-8 flex-wrap justify-center"
           >
-            Coming Soon
-          </span>
-        </motion.div>
-
-        {/* Label */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="text-xs font-medium uppercase tracking-[0.18em] mb-4"
-          style={{ color: `${ACCENT}88` }}
-        >
-          Quantum
-        </motion.p>
-
-        {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-6xl sm:text-7xl font-bold mb-5 leading-none tracking-tight"
-          style={{
-            fontFamily: 'var(--font-space)',
-            color: '#e2e8f0',
-            textShadow: `0 0 60px ${ACCENT}33`,
-          }}
-        >
-          Quantum
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
-          className="text-xl sm:text-2xl font-light mb-8"
-          style={{ color: `${ACCENT}cc` }}
-        >
-          When one AI isn't enough.
-        </motion.p>
-
-        {/* Divider */}
-        <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.24 }}
-          className="mx-auto mb-8"
-          style={{ width: 40, height: 1, background: `${ACCENT}55` }}
-        />
-
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-base leading-relaxed mb-10 mx-auto max-w-lg"
-          style={{ color: '#64748b' }}
-        >
-          A system where multiple AI providers debate, disagree, and converge on the best answer.
-          With capabilities that exist nowhere else.
-        </motion.p>
-
-        {/* Teaser hints */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.38 }}
-          className="flex flex-wrap items-center justify-center gap-2 mb-12"
-        >
-          {hints.map((hint) => (
-            <span
-              key={hint}
-              className="text-xs font-medium px-3 py-1.5 rounded-full"
-              style={{
-                color: `${ACCENT}bb`,
-                background: `${ACCENT}10`,
-                border: `1px solid ${ACCENT}28`,
-                letterSpacing: '0.03em',
-              }}
-            >
-              {hint}
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+              style={{ color: ACCENT, background: `${ACCENT}18`, border: `1px solid ${ACCENT}44` }}>
+              Coming Soon
             </span>
-          ))}
-        </motion.div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
+              style={{ color: '#4ade80', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.22)' }}>
+              $0.02 – $0.05 / session
+            </span>
+          </motion.div>
 
-        {/* Next-Gen AI Communication teaser */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.42 }}
-          className="rounded-2xl p-6 mb-12 text-left"
-          style={{
-            background: `rgba(${parseInt(ACCENT.slice(1,3),16)},${parseInt(ACCENT.slice(3,5),16)},${parseInt(ACCENT.slice(5,7),16)},0.06)`,
-            border: `1px solid ${ACCENT}33`,
-            backdropFilter: 'blur(12px)',
-            boxShadow: `0 0 40px ${ACCENT}0a`,
-          }}
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}88` }}>
-            Next-Gen AI Communication
-          </p>
-          <p className="text-sm leading-relaxed mb-5" style={{ color: '#64748b' }}>
-            Built on a proprietary AI-to-AI communication protocol with shared memory architecture
-            and integrated binary encoding. Reducing token consumption by over 90% compared to
-            standard approaches.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {['Compressed Intelligence', 'Shared Memory', 'Binary Protocol'].map((badge) => (
-              <span
-                key={badge}
+          {/* Eyebrow */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.06 }}
+            className="text-xs font-bold uppercase tracking-[0.35em] mb-5"
+            style={{ color: `${ACCENT}77` }}
+          >
+            Quantum by voidexa
+          </motion.p>
+
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            style={{
+              fontFamily: 'var(--font-space)',
+              fontSize: 'clamp(72px, 13vw, 136px)',
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
+              color: '#e2e8f0',
+              textShadow: `0 0 90px ${ACCENT}44`,
+              marginBottom: '0.3em',
+            }}
+          >
+            Quantum
+          </motion.h1>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.18 }}
+            className="text-xl sm:text-2xl font-light mb-5"
+            style={{ color: `${ACCENT}cc` }}
+          >
+            Where AIs debate, disagree, and find truth.
+          </motion.p>
+
+          {/* Rule */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="mx-auto mb-6"
+            style={{ width: 48, height: 1, background: `${ACCENT}55` }}
+          />
+
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="leading-relaxed mb-10 mx-auto max-w-lg"
+            style={{ color: '#64748b', fontSize: 15 }}
+          >
+            5 AI providers debate your question in real-time. They challenge each other,
+            cite sources, change positions, and converge on the best answer.
+            No single-model bias — just collective intelligence.
+          </motion.p>
+
+          {/* Hint tags */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.36 }}
+            className="flex flex-wrap items-center justify-center gap-2 mb-12"
+          >
+            {['Self-optimizing workflow', 'Verification sandwich', 'Emergent roles'].map(h => (
+              <span key={h}
                 className="text-xs font-medium px-3 py-1.5 rounded-full"
+                style={{ color: `${ACCENT}bb`, background: `${ACCENT}10`, border: `1px solid ${ACCENT}28` }}
+              >{h}</span>
+            ))}
+          </motion.div>
+
+          {/* Protocol teaser card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.42 }}
+            className="rounded-2xl p-6 mb-12 text-left"
+            style={{
+              background: `${ACCENT}08`,
+              border: `1px solid ${ACCENT}2e`,
+              backdropFilter: 'blur(12px)',
+              boxShadow: `0 0 40px ${ACCENT}08`,
+            }}
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: `${ACCENT}77` }}>
+              Next-Gen AI Communication
+            </p>
+            <p className="text-sm leading-relaxed mb-5" style={{ color: '#64748b' }}>
+              Built on a proprietary AI-to-AI communication protocol with shared memory architecture
+              and integrated binary encoding — reducing token consumption by over 90% compared to standard approaches.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {['Compressed Intelligence', 'Shared Memory', 'Binary Protocol'].map(b => (
+                <span key={b}
+                  className="text-xs font-medium px-3 py-1.5 rounded-full"
+                  style={{ color: `${ACCENT}cc`, background: `${ACCENT}12`, border: `1px solid ${ACCENT}2e` }}
+                >{b}</span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Waitlist form */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.52 }}
+            id="waitlist"
+          >
+            {sent ? (
+              <p className="text-sm" style={{ color: ACCENT }}>You&apos;re on the list. We&apos;ll be in touch.</p>
+            ) : (
+              <form
+                onSubmit={async e => {
+                  e.preventDefault()
+                  setLoading(true)
+                  await supabase.from('waitlist_signups').insert({ email, product: 'quantum' })
+                  supabase.functions.invoke('notify', { body: { type: 'waitlist', product: 'quantum', email } }).catch(() => {})
+                  setLoading(false)
+                  setSent(true)
+                }}
+                className="flex flex-col sm:flex-row gap-3 justify-center"
+              >
+                <input
+                  type="email" required value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="px-4 py-3 rounded-full text-sm outline-none"
+                  style={{ background: `${ACCENT}10`, border: `1px solid ${ACCENT}33`, color: '#e2e8f0', minWidth: 220 }}
+                />
+                <button
+                  type="submit" disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-50 whitespace-nowrap"
+                  style={{ background: `${ACCENT}22`, border: `1px solid ${ACCENT}55`, color: ACCENT, padding: '12px 28px' }}
+                >
+                  {loading ? '…' : <>Join the waitlist <ArrowRight size={15} /></>}
+                </button>
+              </form>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.3, duration: 0.6 }}
+          style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}
+        >
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ width: 1, height: 36, background: `linear-gradient(to bottom, ${ACCENT}88, transparent)`, margin: '0 auto' }}
+          />
+        </motion.div>
+      </section>
+
+      {/* ══════════════════════
+          SECTION 2 — THE TEAM
+      ══════════════════════ */}
+      <section className="relative z-10 py-28 px-6">
+        <div className="max-w-6xl mx-auto">
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>The Cast</p>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              Meet the Team
+            </h2>
+            <p style={{ color: '#475569', fontSize: 15 }}>
+              Six personalities. One goal. Endless disagreement.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {CAST.map((char, i) => (
+              <motion.div
+                key={char.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="flex flex-col items-center text-center p-5 rounded-2xl"
                 style={{
-                  color: `${ACCENT}cc`,
-                  background: `${ACCENT}12`,
-                  border: `1px solid ${ACCENT}30`,
-                  letterSpacing: '0.03em',
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  backdropFilter: 'blur(8px)',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
+                  cursor: 'default',
+                }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.transform = 'translateY(-5px)'
+                  el.style.boxShadow = `0 0 36px ${char.glow}`
+                  el.style.background = char.glow.replace('0.35)', '0.06)')
+                  el.style.borderColor = `${char.color}44`
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.transform = 'translateY(0)'
+                  el.style.boxShadow = 'none'
+                  el.style.background = 'rgba(255,255,255,0.02)'
+                  el.style.borderColor = 'rgba(255,255,255,0.06)'
                 }}
               >
-                {badge}
-              </span>
+                {/* Avatar with ring */}
+                <div className="relative mb-4" style={{ width: 80, height: 80 }}>
+                  <div style={{
+                    position: 'absolute', inset: -2, borderRadius: '50%',
+                    background: `conic-gradient(${char.color}70, transparent 60%, ${char.color}70)`,
+                    opacity: 0.65,
+                  }} />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={char.image}
+                    alt={char.name}
+                    style={{
+                      width: 80, height: 80, borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: `2.5px solid ${char.color}55`,
+                      position: 'relative', display: 'block',
+                    }}
+                  />
+                </div>
+
+                <p className="text-sm font-bold mb-0.5" style={{ color: char.color }}>{char.name}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider mb-3" style={{ color: '#475569' }}>{char.role}</p>
+                <p className="text-[11px] leading-snug italic" style={{ color: '#334155' }}>
+                  &ldquo;{char.oneliner}&rdquo;
+                </p>
+              </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.52 }}
-        >
-          {sent ? (
-            <p className="text-sm" style={{ color: ACCENT }}>You're on the list. We'll be in touch.</p>
-          ) : (
-            <form
-              onSubmit={async e => {
-                e.preventDefault()
-                setLoading(true)
-                await supabase.from('waitlist_signups').insert({ email, product: 'quantum' })
-                supabase.functions.invoke('notify', { body: { type: 'waitlist', product: 'quantum', email } }).catch(() => {})
-                setLoading(false)
-                setSent(true)
-              }}
-              className="flex flex-col sm:flex-row gap-3 justify-center"
-            >
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="px-4 py-3 rounded-full text-sm outline-none"
-                style={{
-                  background: `${ACCENT}10`,
-                  border: `1px solid ${ACCENT}33`,
-                  color: '#e2e8f0',
-                  minWidth: 220,
-                }}
-              />
+      {/* ══════════════════════
+          SECTION 3 — LIVE DEMO PREVIEW
+      ══════════════════════ */}
+      <section className="relative z-10 py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Interface Preview</p>
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              Watch Them Debate
+            </h2>
+            <p style={{ color: '#475569', fontSize: 15 }}>
+              Real-time consensus emerging from genuine disagreement.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="rounded-3xl overflow-hidden"
+            style={{
+              background: 'rgba(8,8,18,0.92)',
+              border: `1px solid ${ACCENT}30`,
+              backdropFilter: 'blur(24px)',
+              boxShadow: `0 0 60px ${ACCENT}12, 0 0 120px ${ACCENT}06`,
+            }}
+          >
+            {/* Title bar */}
+            <div className="flex items-center justify-between px-5 py-3 border-b"
+              style={{ borderColor: `${ACCENT}1e`, background: `${ACCENT}05` }}>
+              <div className="flex items-center gap-2">
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444', opacity: 0.7 }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b', opacity: 0.7 }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', opacity: 0.7 }} />
+              </div>
+              <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: `${ACCENT}88` }}>
+                Quantum — Live Session
+              </span>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Clock size={11} style={{ color: '#475569' }} />
+                  <span className="text-[11px] font-mono" style={{ color: '#475569' }}>{fmtTime(sessionTime)}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <DollarSign size={11} style={{ color: '#4ade80' }} />
+                  <span className="text-[11px] font-mono" style={{ color: '#4ade80' }}>${sessionCost.toFixed(4)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 lg:p-8">
+              <div className="flex flex-col lg:flex-row gap-8">
+
+                {/* Left — avatar orbit + consensus */}
+                <div className="flex flex-col items-center gap-6 lg:w-52 shrink-0">
+
+                  {/* Orbit layout */}
+                  <div className="relative" style={{ width: 168, height: 168 }}>
+                    {/* Center label */}
+                    <div style={{
+                      position: 'absolute', top: '50%', left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      textAlign: 'center', zIndex: 10,
+                      pointerEvents: 'none',
+                    }}>
+                      <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: `${ACCENT}77` }}>QUANTUM</p>
+                    </div>
+
+                    {/* Connection lines SVG */}
+                    <svg
+                      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.12 }}
+                      viewBox="0 0 168 168"
+                    >
+                      {CAST.map((char, i) => {
+                        const a1 = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
+                        const a2 = ((i + 2) / CAST.length) * 2 * Math.PI - Math.PI / 2
+                        const r = 72
+                        return (
+                          <line key={i}
+                            x1={84 + r * Math.cos(a1)} y1={84 + r * Math.sin(a1)}
+                            x2={84 + r * Math.cos(a2)} y2={84 + r * Math.sin(a2)}
+                            stroke={char.color} strokeWidth="1"
+                          />
+                        )
+                      })}
+                    </svg>
+
+                    {/* Avatars */}
+                    {CAST.map((char, i) => {
+                      const angle = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
+                      const r = 72
+                      const cx = 84 + r * Math.cos(angle)
+                      const cy = 84 + r * Math.sin(angle)
+                      return (
+                        <div key={char.id} style={{
+                          position: 'absolute',
+                          left: cx - 23, top: cy - 23,
+                          width: 46, height: 46,
+                        }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={char.image}
+                            alt={char.name}
+                            style={{
+                              width: 46, height: 46, borderRadius: '50%',
+                              objectFit: 'cover',
+                              border: `2px solid ${char.color}88`,
+                              boxShadow: `0 0 14px ${char.glow}`,
+                            }}
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* Consensus meter */}
+                  <div className="w-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#334155' }}>Consensus</span>
+                      <span className="text-sm font-bold" style={{ color: '#4ade80' }}>{consensus}%</span>
+                    </div>
+                    <div className="rounded-full overflow-hidden" style={{ height: 6, background: 'rgba(255,255,255,0.05)' }}>
+                      <motion.div
+                        style={{
+                          height: '100%',
+                          background: 'linear-gradient(to right, #60a5fa, #4ade80)',
+                          borderRadius: 99,
+                        }}
+                        animate={{ width: `${consensus}%` }}
+                        transition={{ duration: 0.04 }}
+                      />
+                    </div>
+                    <p className="text-[10px] mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
+                  </div>
+                </div>
+
+                {/* Right — debate messages */}
+                <div className="flex-1 min-w-0">
+                  <div className="rounded-xl p-4 mb-5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <p className="text-[11px] font-bold uppercase tracking-wider mb-1.5" style={{ color: '#334155' }}>Question</p>
+                    <p className="text-sm font-medium leading-snug" style={{ color: '#94a3b8' }}>
+                      What&apos;s the most efficient sorting algorithm for nearly-sorted data?
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    {DEBATE.map((msg, i) => {
+                      const char = CAST.find(c => c.name === msg.char)
+                      return (
+                        <motion.div
+                          key={i}
+                          animate={{
+                            opacity: i <= activeMsg ? 1 : 0.12,
+                            background: i === activeMsg ? `${msg.color}0a` : 'transparent',
+                          }}
+                          transition={{ duration: 0.35 }}
+                          className="flex items-start gap-3 p-3 rounded-xl"
+                          style={{
+                            border: i === activeMsg ? `1px solid ${msg.color}22` : '1px solid transparent',
+                            transition: 'border-color 0.35s ease',
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={char?.image || ''}
+                            alt={msg.char}
+                            style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${msg.color}55`, flexShrink: 0 }}
+                          />
+                          <div>
+                            <span className="text-[11px] font-bold" style={{ color: msg.color }}>{msg.char}</span>
+                            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: '#64748b', fontSize: 13 }}>{msg.text}</p>
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom CTA bar */}
+            <div className="px-6 pb-6 pt-1 flex flex-col sm:flex-row items-center justify-between gap-4 border-t"
+              style={{ borderColor: `${ACCENT}14` }}>
+              <p className="text-xs" style={{ color: '#334155' }}>
+                Preview only — join the waitlist for early access.
+              </p>
               <button
-                type="submit"
-                disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-50"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all"
                 style={{
-                  background: `${ACCENT}22`,
-                  border: `1px solid ${ACCENT}55`,
-                  color: ACCENT,
-                  padding: '12px 28px',
-                  overflow: 'visible',
-                  whiteSpace: 'nowrap',
+                  background: `linear-gradient(135deg, ${ACCENT}, #60a5fa)`,
+                  color: '#fff',
+                  boxShadow: `0 0 24px ${ACCENT}44`,
                 }}
               >
-                {loading ? '…' : <>Join the waitlist <ArrowRight size={15} /></>}
+                Try Quantum <ArrowRight size={14} />
               </button>
-            </form>
-          )}
-        </motion.div>
-      </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ══════════════════════
+          SECTION 4 — HOW IT WORKS
+      ══════════════════════ */}
+      <section className="relative z-10 py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>Process</p>
+            <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              How It Works
+            </h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                step: '01',
+                title: 'Ask Anything',
+                desc: 'Your question goes to all AI providers simultaneously. No waiting. No routing. Everyone gets it at once.',
+              },
+              {
+                step: '02',
+                title: 'They Debate',
+                desc: 'AIs challenge each other, cite sources, change positions. Disagreement is the feature, not the bug.',
+              },
+              {
+                step: '03',
+                title: 'Consensus Emerges',
+                desc: 'The best answer rises from genuine disagreement — weighted by confidence, verified by peers.',
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="rounded-2xl p-7"
+                style={{
+                  background: 'rgba(255,255,255,0.02)',
+                  border: `1px solid ${ACCENT}20`,
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <div
+                  className="text-6xl font-bold mb-5 leading-none select-none"
+                  style={{
+                    fontFamily: 'var(--font-space)',
+                    background: `linear-gradient(135deg, ${ACCENT}55, ${ACCENT}18)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  {item.step}
+                </div>
+                <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{item.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════
+          SECTION 5 — UNIQUE FEATURES
+      ══════════════════════ */}
+      <section className="relative z-10 py-24 px-6 pb-36">
+        <div className="max-w-4xl mx-auto">
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: `${ACCENT}66` }}>What Makes It Different</p>
+            <h2 className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+              Unique Features
+            </h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                icon: <Zap size={22} />,
+                iconColor: '#f59e0b',
+                iconBg: 'rgba(245,158,11,0.10)',
+                title: 'Self-Optimizing Workflow',
+                desc: 'Quantum changes its own strategy mid-session. If the debate stalls, it restructures the problem and reframes the question automatically.',
+              },
+              {
+                icon: <Shield size={22} />,
+                iconColor: '#4ade80',
+                iconBg: 'rgba(74,222,128,0.10)',
+                title: 'Verification Sandwich',
+                desc: 'Facts are checked at exactly the right moment — not too early to waste tokens, not too late to matter. Precision timing baked in.',
+              },
+              {
+                icon: <Brain size={22} />,
+                iconColor: ACCENT,
+                iconBg: `${ACCENT}12`,
+                title: 'Emergent Roles',
+                desc: 'AIs naturally shift roles based on the task. Claude becomes the architect, GPT the executor, Perplexity the auditor — without being told.',
+              },
+            ].map((feat, i) => (
+              <motion.div
+                key={feat.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="rounded-2xl p-7"
+                style={{
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <div
+                  className="inline-flex items-center justify-center rounded-xl mb-5"
+                  style={{ width: 50, height: 50, background: feat.iconBg, color: feat.iconColor }}
+                >
+                  {feat.icon}
+                </div>
+                <h3 className="text-lg font-bold mb-3" style={{ color: '#e2e8f0' }}>{feat.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>{feat.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom edge glow */}
+      <div aria-hidden style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 1,
+        background: `linear-gradient(to right, transparent, ${ACCENT}44, transparent)`,
+        pointerEvents: 'none',
+      }} />
     </div>
   )
 }
