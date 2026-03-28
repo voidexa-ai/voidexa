@@ -19,8 +19,8 @@ const pipeline = [
 ]
 
 const stats = [
-  { icon: TrendingUp, value: '+306%',   label: '12-month backtest',     color: '#00d4ff' },
-  { icon: Activity,   value: '+312%',   label: 'vs buy-and-hold alpha', color: '#8b5cf6' },
+  { icon: TrendingUp, value: '+357%',   label: '12-month backtest',     color: '#00d4ff' },
+  { icon: Activity,   value: '359',     label: 'tests passing',         color: '#8b5cf6' },
   { icon: Shield,     value: '11',      label: 'coins tracked',         color: '#00d4ff' },
   { icon: Clock,      value: '4',       label: 'market phases',         color: '#8b5cf6' },
 ]
@@ -288,9 +288,9 @@ function BacktestChart() {
             fontFamily: 'var(--font-space)',
           }}
         >
-          +306%
+          +357%
         </div>
-        <div className="text-sm text-[#334155]">All-Season Bot</div>
+        <div className="text-sm text-[#334155]">All-Season Bot v4.1.0</div>
       </div>
       <div className="absolute bottom-14 right-10 text-right">
         <div className="text-sm text-[#334155]">--- buy & hold</div>
@@ -329,6 +329,7 @@ const features = [
   'Risk Gate is the final authority — every order must pass before execution',
   'Futures overlay: adaptive leverage 1x–5x based on signal confidence + volume',
   'Trailing stops, breakeven logic, funding rate harvester in RISK_OFF',
+  'KCP-90 context compression — 78–88% token reduction on AI reasoning chains',
   'Telegram notifications for every signal, trade, and daily summary',
   'Paper trading simulator runs in parallel with live bot',
   'KuCoin spot + futures integration via ccxt',
@@ -398,7 +399,7 @@ export default function TradingPage() {
               <p className="text-[#8899af] leading-relaxed mb-8 text-lg max-w-lg">
                 An autonomous trading system that reads the market in real time, adjusts strategy
                 across four phases, and executes through a five-stage risk pipeline.
-                Set it once — it runs itself.
+                v4.1.0 · 359 tests · KCP-90 integrated · Set it once — it runs itself.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a href="#node" className="btn-primary glow-cyan-btn">

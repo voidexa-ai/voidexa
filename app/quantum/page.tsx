@@ -168,9 +168,14 @@ export default function QuantumPage() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 mb-8 flex-wrap justify-center"
           >
+            <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full flex items-center gap-1.5"
+              style={{ color: '#4ade80', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.28)' }}>
+              <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 6px #4ade80', animation: 'quantum-pulse 2s ease-in-out infinite' }} />
+              LIVE
+            </span>
             <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: ACCENT, background: `${ACCENT}18`, border: `1px solid ${ACCENT}44` }}>
-              Coming Soon
+              960 tests
             </span>
             <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#4ade80', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.22)' }}>
@@ -772,7 +777,7 @@ export default function QuantumPage() {
                 color: '#22d3ba',
                 bg: 'rgba(34,211,186,0.06)',
                 border: 'rgba(34,211,186,0.18)',
-                desc: '78–88% byte compression, benchmarked on 248 tests across 20 diverse sentences covering software, trading, energy, and business domains. Fine-tuned Llama 3.1 8B running locally via Ollama. ~200ms response time. Built and proven March 28, 2026.',
+                desc: '78–88% byte compression integrated as middleware in Quantum — every debate message compressed before transmission. 248 protocol benchmarks. Fine-tuned Llama 3.1 8B via Ollama. ~200ms. Built and proven March 28, 2026.',
               },
               {
                 tag: 'KCP-BINARY',
@@ -820,7 +825,7 @@ export default function QuantumPage() {
             className="text-center font-mono"
             style={{ fontSize: 12, color: 'rgba(148,163,184,0.35)', letterSpacing: '0.06em' }}
           >
-            KCP-90 Communication Protocol — 78–88% compression · 248 tests · ~200ms · Built by voidexa · March 28, 2026
+            KCP-90 middleware active · 78–88% compression · 960 Quantum tests passed · Built by voidexa · March 28, 2026
           </motion.p>
         </section>
 
@@ -910,6 +915,13 @@ export default function QuantumPage() {
         background: `linear-gradient(to right, transparent, ${ACCENT}44, transparent)`,
         pointerEvents: 'none',
       }} />
+
+      <style>{`
+        @keyframes quantum-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.35; }
+        }
+      `}</style>
     </div>
   )
 }
