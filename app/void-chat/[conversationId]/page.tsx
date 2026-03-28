@@ -31,6 +31,8 @@ export default function ConversationPage() {
         title: '',
         user_id: '',
         message_count: 0,
+        tokens_saved: 0,
+        compression_enabled: false,
         created_at: '',
         updated_at: '',
       });
@@ -52,6 +54,8 @@ export default function ConversationPage() {
           title: '',
           user_id: '',
           message_count: 0,
+          tokens_saved: 0,
+          compression_enabled: false,
           created_at: '',
           updated_at: '',
         });
@@ -64,6 +68,8 @@ export default function ConversationPage() {
           title: '',
           user_id: '',
           message_count: 0,
+          tokens_saved: 0,
+          compression_enabled: false,
           created_at: '',
           updated_at: '',
         });
