@@ -88,10 +88,10 @@ function Kcp90FloatingPanel() {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: 'fixed',
         bottom: 72,
         right: 20,
-        zIndex: 30,
+        zIndex: 50,
         background: 'rgba(7,4,18,0.82)',
         border: '1px solid rgba(0,212,255,0.18)',
         borderRadius: 14,

@@ -79,7 +79,10 @@ export default function Navigation() {
     if (!user) { setIsAdmin(false); return }
     fetch('/api/auth/role')
       .then(r => r.json())
-      .then(({ role }) => setIsAdmin(role === 'admin'))
+      .then(({ role }) => {
+        console.log('admin check:', role)
+        setIsAdmin(role === 'admin')
+      })
       .catch(() => setIsAdmin(false))
   }, [user?.id])
 

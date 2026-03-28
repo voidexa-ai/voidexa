@@ -28,7 +28,7 @@ interface BotRow {
 }
 
 const MOCK_BOTS: BotRow[] = [
-  { rank: 1, name: 'voidexa All-Season',  creator: 'voidexa',   return_pct: 306.4, sharpe: 3.21, max_drawdown: 8.4,  regime: 'all',      isHouse: true },
+  { rank: 1, name: 'voidexa All-Season',  creator: 'voidexa',   return_pct: 357.0, sharpe: 3.21, max_drawdown: 8.4,  regime: 'all',      isHouse: true },
   { rank: 2, name: 'BTC Momentum Alpha',  creator: 'cryptovoid', return_pct: 218.7, sharpe: 2.44, max_drawdown: 14.2, regime: 'btc'  },
   { rank: 3, name: 'ETH Grid Master',     creator: 'gridlord',   return_pct: 187.3, sharpe: 2.11, max_drawdown: 11.8, regime: 'eth'  },
   { rank: 4, name: 'AltSeason Hunter',    creator: 'moonbase9',  return_pct: 155.9, sharpe: 1.88, max_drawdown: 22.1, regime: 'alt'  },
@@ -121,7 +121,7 @@ export default function LeaderboardTab() {
               className="font-medium"
               style={{ color: '#22c55e', fontSize: '2.5rem', letterSpacing: '0.02em', lineHeight: 1 }}
             >
-              +306%
+              +357%
             </div>
             <div style={{ color: '#64748b', fontSize: '0.9375rem' }}>All-time return</div>
             <div

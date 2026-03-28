@@ -18,6 +18,7 @@ interface RoadmapItem {
 }
 
 const ROADMAP: RoadmapItem[] = [
+  // ── LIVE ─────────────────────────────────────────────────────────────────
   {
     title: 'Trading Bot',
     desc: 'Autonomous trading bot — APEX + SCALPER strategies, defense layer, KCP-90 integrated.',
@@ -33,12 +34,57 @@ const ROADMAP: RoadmapItem[] = [
     phase: 'Phase 2',
   },
   {
+    title: 'Quantum',
+    desc: 'Multi-AI debate — emergent intelligence from provider disagreement.',
+    tooltip: '960 tests. KCP-90 middleware integrated. Multi-provider debate engine live.',
+    status: 'live',
+    phase: 'Phase 6',
+  },
+  {
+    title: 'Control Plane',
+    desc: 'KCP-90 dashboard — compression stats across all voidexa products.',
+    tooltip: 'Live dashboard at /control-plane. Auto-refresh. Encoder breakdown, daily trends, recent events.',
+    status: 'live',
+    phase: 'Infra',
+  },
+  {
+    title: 'KCP-90 Protocol',
+    desc: 'Semantic AI compression. 78–88% token reduction across all products.',
+    tooltip: 'v0.8.0. 248 tests. 78–88% compression proven across 20 domains. Integrated in Void Chat, Quantum, Trading Bot.',
+    status: 'live',
+    phase: 'Infra',
+  },
+  {
+    title: 'KCP-BINARY',
+    desc: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory.',
+    tooltip: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory. 154 tests.',
+    status: 'active',
+    phase: 'Infra',
+  },
+  // ── NEXT ─────────────────────────────────────────────────────────────────
+  {
+    title: 'Jarvis',
+    desc: 'Personal AI assistant with voice, context, and proactive suggestions.',
+    tooltip: 'Building next. Voice interface, persistent context, proactive task suggestions.',
+    status: 'next',
+    phase: 'Product',
+  },
+  // ── BUILDING ─────────────────────────────────────────────────────────────
+  {
     title: 'Trading Hub',
     desc: 'Bot upload, leaderboard, competitions, and the community forum.',
     tooltip: 'Bot upload, leaderboard, competitions, community forum',
     status: 'building',
     phase: 'Phase 3',
   },
+  {
+    title: 'Energy Orchestrator',
+    desc: 'Danish energy optimization platform. Nord Pool integration.',
+    tooltip: 'Danish energy optimization platform. Nord Pool integration. 49 tests.',
+    status: 'building',
+    phase: 'Platform',
+  },
+  // ── PLANNED ──────────────────────────────────────────────────────────────
   {
     title: 'Node System',
     desc: 'Validator nodes earning GHAI for powering the network.',
@@ -52,13 +98,6 @@ const ROADMAP: RoadmapItem[] = [
     tooltip: undefined,
     status: 'planned',
     phase: 'Phase 5',
-  },
-  {
-    title: 'Quantum',
-    desc: 'Multi-AI debate — emergent intelligence from provider disagreement.',
-    tooltip: '960 tests. KCP-90 middleware integrated. Multi-provider debate engine live.',
-    status: 'live',
-    phase: 'Phase 6',
   },
   {
     title: 'Referrals',
@@ -82,46 +121,11 @@ const ROADMAP: RoadmapItem[] = [
     phase: 'Phase 10',
   },
   {
-    title: 'Control Plane',
-    desc: 'KCP-90 dashboard — compression stats across all voidexa products.',
-    tooltip: 'Live dashboard at /control-plane. Auto-refresh. Encoder breakdown, daily trends, recent events.',
-    status: 'live',
-    phase: 'Infra',
-  },
-  {
-    title: 'KCP-90 Protocol',
-    desc: 'Semantic AI compression. 78–88% token reduction across all products.',
-    tooltip: 'v0.8.0. 248 tests. 78–88% compression proven across 20 domains. Integrated in Void Chat, Quantum, Trading Bot.',
-    status: 'live',
-    phase: 'Infra',
-  },
-  {
-    title: 'KCP-BINARY',
-    desc: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory.',
-    tooltip: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory. 154 tests.',
-    status: 'active',
-    phase: 'Infra',
-  },
-  {
-    title: 'Energy Orchestrator',
-    desc: 'Danish energy optimization platform. Nord Pool integration.',
-    tooltip: 'Danish energy optimization platform. Nord Pool integration. 49 tests.',
-    status: 'building',
-    phase: 'Platform',
-  },
-  {
     title: 'Claim Your Planet',
     desc: 'Own a planet in the voidexa star system.',
     tooltip: 'Own a planet in the voidexa star system. Pioneer rewards available.',
     status: 'planned',
     phase: 'Platform',
-  },
-  {
-    title: 'Jarvis',
-    desc: 'Personal AI assistant with voice, context, and proactive suggestions.',
-    tooltip: 'Building next. Voice interface, persistent context, proactive task suggestions.',
-    status: 'next',
-    phase: 'Product',
   },
   {
     title: 'TINE Secretary AI',

@@ -20,7 +20,8 @@ export default function HomeCtas() {
         {/* ── Meet the Team card ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           style={{ flex: '1 1 380px', maxWidth: 500 }}
         >
@@ -109,7 +110,8 @@ export default function HomeCtas() {
         {/* ── Claim Your Planet card ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
           style={{ flex: '1 1 380px', maxWidth: 500 }}
         >
