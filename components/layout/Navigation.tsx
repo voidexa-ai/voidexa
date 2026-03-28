@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Info } from 'lucide-react'
+import { Menu, X, Info, LayoutDashboard } from 'lucide-react'
 import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 import AuthButton from '@/components/AuthButton'
 import { useGetInTouchModal } from '@/components/GetInTouchModal'
+import { useAuth } from '@/components/AuthProvider'
+import { supabase } from '@/lib/supabase'
 
 // FIX 2: All products visible in top nav
 const mainLinks = [
@@ -40,35 +42,6 @@ const mobileSecondary = [
   { href: '/whitepaper', label: 'White Paper',   badge: null   },
 ] as const
 
-// FIX 4: Page label map for breadcrumb
-const PAGE_LABELS: Record<string, string> = {
-  '/':             'Home',
-  '/home':         'Home',
-  '/trading':      'AI Trading',
-  '/trading-hub':  'Trading Hub',
-  '/apps':         'Apps',
-  '/ai-tools':     'AI Tools',
-  '/services':     'Services',
-  '/void-chat':    'Void Chat',
-  '/quantum':      'Quantum',
-  '/station':      'Space Station',
-  '/about':        'About',
-  '/contact':      'Contact',
-  '/ghost-ai':     'Ghost AI',
-  '/token':        'Token',
-  '/whitepaper':   'White Paper',
-  '/products':     'Products',
-  '/profile':              'Profile',
-  '/claim-your-planet':    'Claim Your Planet',
-  '/team':                 'The Team',
-}
-
-function getPageLabel(pathname: string): string {
-  if (pathname.startsWith('/void-chat')) return 'Void Chat'
-  if (pathname.startsWith('/trading-hub/')) return 'Trading Hub'
-  return PAGE_LABELS[pathname] ?? ''
-}
-
 const PATH_COLOR: Record<string, string> = {}
 STAR_MAP_NODES.forEach(n => { if (n.path) PATH_COLOR[n.path] = n.emissive })
 
@@ -85,8 +58,10 @@ export default function Navigation() {
   const [menuOpen, setMenuOpen]       = useState(false)
   const [infoPanelOpen, setInfoPanel] = useState(false)
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin]         = useState(false)
   const pathname = usePathname()
   const { open: openModal } = useGetInTouchModal()
+  const { user } = useAuth()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -101,8 +76,15 @@ export default function Navigation() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen, infoPanelOpen])
 
-
-  const pageLabel = getPageLabel(pathname)
+  useEffect(() => {
+    if (!user) { setIsAdmin(false); return }
+    supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => setIsAdmin(data?.role === 'admin'))
+  }, [user?.id])
 
   return (
     <>
@@ -244,6 +226,32 @@ export default function Navigation() {
 
             {/* Desktop right: CTA + auth */}
             <div className="hidden lg:flex items-center gap-2 shrink-0">
+              {isAdmin && (
+                <Link
+                  href="/control-plane"
+                  title="Control Plane"
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: 30, height: 30, borderRadius: 6,
+                    background: 'rgba(0,212,255,0.08)',
+                    border: '1px solid rgba(0,212,255,0.2)',
+                    color: 'rgba(0,212,255,0.65)',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(0,212,255,0.16)'
+                    el.style.color = '#00d4ff'
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(0,212,255,0.08)'
+                    el.style.color = 'rgba(0,212,255,0.65)'
+                  }}
+                >
+                  <LayoutDashboard size={14} />
+                </Link>
+              )}
               <button
                 onClick={() => openModal()}
                 className="px-3 py-1.5 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
@@ -266,29 +274,6 @@ export default function Navigation() {
           </nav>
         </header>
 
-        {/* FIX 4: Page name breadcrumb — subtle label below nav */}
-        {pageLabel && (
-          <div
-            style={{
-              background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.03), transparent)',
-              borderBottom: '1px solid rgba(255,255,255,0.04)',
-              padding: '2px 0 3px',
-              textAlign: 'center',
-            }}
-          >
-            <span style={{
-              fontSize: '14px',
-              fontWeight: 500,
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: 'rgba(148,163,184,0.45)',
-              fontFamily: 'var(--font-space)',
-              userSelect: 'none',
-            }}>
-              {pageLabel}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* FIX 3: Floating side button — right edge, vertically centered, pulsing glow */}
@@ -545,6 +530,26 @@ export default function Navigation() {
 
               {/* Divider */}
               <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '8px 20px' }} />
+
+              {/* Admin: Control Plane */}
+              {isAdmin && (
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.22 }}>
+                  <Link
+                    href="/control-plane"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-3 w-full rounded-2xl px-5 transition-colors"
+                    style={{
+                      minHeight: 44, fontSize: '1rem', fontWeight: 500,
+                      color: '#00d4ff',
+                      background: pathname === '/control-plane' ? 'rgba(0,212,255,0.08)' : 'transparent',
+                      borderLeft: pathname === '/control-plane' ? '2px solid #00d4ff' : '2px solid transparent',
+                    }}
+                  >
+                    <LayoutDashboard size={16} />
+                    Control Plane
+                  </Link>
+                </motion.div>
+              )}
 
               {/* Secondary links */}
               {mobileSecondary.map(({ href, label, badge }, i) => {

@@ -5,6 +5,7 @@ import FeaturedProduct    from '@/components/sections/home/FeaturedProduct'
 import CoreTech           from '@/components/sections/home/CoreTech'
 import ClaimPlanetTeaser  from '@/components/sections/home/ClaimPlanetTeaser'
 import TeamTeaser          from '@/components/sections/home/TeamTeaser'
+import Kcp90Stats         from '@/components/sections/home/Kcp90Stats'
 
 export default function HomePage() {
   return (
@@ -15,6 +16,7 @@ export default function HomePage() {
       <FeaturedProduct />
       <CoreTech />
       <TeamTeaser />
+      <Kcp90Stats />
       <ClaimPlanetTeaser />
     </>
   )
