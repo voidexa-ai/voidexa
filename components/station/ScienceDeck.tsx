@@ -19,9 +19,16 @@ interface RoadmapItem {
 
 const ROADMAP: RoadmapItem[] = [
   {
+    title: 'Trading Bot',
+    desc: 'Autonomous trading bot — APEX + SCALPER strategies, defense layer, KCP-90 integrated.',
+    tooltip: 'v4.1.0. 359 tests. APEX + SCALPER strategies. Momentum defense active. KCP-90 context compression.',
+    status: 'live',
+    phase: 'Phase 1',
+  },
+  {
     title: 'Void Chat',
-    desc: 'Multi-provider AI chat — Claude, GPT-4o, Gemini in one interface.',
-    tooltip: undefined,
+    desc: 'Multi-provider AI chat — Claude, GPT-4o, Gemini with KCP-90 context compression.',
+    tooltip: 'KCP-90 context compression active — older messages compressed to extend context window.',
     status: 'live',
     phase: 'Phase 2',
   },
@@ -49,8 +56,8 @@ const ROADMAP: RoadmapItem[] = [
   {
     title: 'Quantum',
     desc: 'Multi-AI debate — emergent intelligence from provider disagreement.',
-    tooltip: 'Multi-AI debate engine running. 944 tests. KCP-BINARY SHM active. $0.02 per session.',
-    status: 'active',
+    tooltip: '960 tests. KCP-90 middleware integrated. Multi-provider debate engine live.',
+    status: 'live',
     phase: 'Phase 6',
   },
   {
@@ -63,8 +70,8 @@ const ROADMAP: RoadmapItem[] = [
   {
     title: 'Comlink',
     desc: 'Encrypted AI-powered messaging protocol for the community.',
-    tooltip: 'Confirming build and encryption security',
-    status: 'testing',
+    tooltip: undefined,
+    status: 'planned',
     phase: 'Phase 9',
   },
   {
@@ -73,6 +80,27 @@ const ROADMAP: RoadmapItem[] = [
     tooltip: undefined,
     status: 'planned',
     phase: 'Phase 10',
+  },
+  {
+    title: 'Control Plane',
+    desc: 'KCP-90 dashboard — compression stats across all voidexa products.',
+    tooltip: 'Live dashboard at /control-plane. Auto-refresh. Encoder breakdown, daily trends, recent events.',
+    status: 'live',
+    phase: 'Infra',
+  },
+  {
+    title: 'KCP-90 Protocol',
+    desc: 'Semantic AI compression. 78–88% token reduction across all products.',
+    tooltip: 'v0.8.0. 248 tests. 78–88% compression proven across 20 domains. Integrated in Void Chat, Quantum, Trading Bot.',
+    status: 'live',
+    phase: 'Infra',
+  },
+  {
+    title: 'KCP-BINARY',
+    desc: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory.',
+    tooltip: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory. 154 tests.',
+    status: 'active',
+    phase: 'Infra',
   },
   {
     title: 'Energy Orchestrator',
@@ -89,18 +117,11 @@ const ROADMAP: RoadmapItem[] = [
     phase: 'Platform',
   },
   {
-    title: 'KCP-90 Protocol',
-    desc: 'Semantic AI compression. 90% token reduction.',
-    tooltip: 'Semantic AI compression. 90% token reduction. No competitor has this.',
-    status: 'active',
-    phase: 'Infra',
-  },
-  {
-    title: 'KCP-BINARY',
-    desc: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory.',
-    tooltip: 'Rust binary transport. FlatBuffers + Ed25519 + shared memory. 154 tests.',
-    status: 'active',
-    phase: 'Infra',
+    title: 'Jarvis',
+    desc: 'Personal AI assistant with voice, context, and proactive suggestions.',
+    tooltip: 'Building next. Voice interface, persistent context, proactive task suggestions.',
+    status: 'building',
+    phase: 'Product',
   },
   {
     title: 'TINE Secretary AI',
@@ -134,13 +155,6 @@ const ROADMAP: RoadmapItem[] = [
     title: 'DIY Mechanic',
     desc: 'AI-powered repair guide engine — diagnose and fix anything step by step.',
     tooltip: 'AI-powered repair guide engine — diagnose and fix anything step by step.',
-    status: 'planned',
-    phase: 'Product',
-  },
-  {
-    title: 'Jarvis',
-    desc: 'Personal AI assistant with voice, context, and proactive suggestions.',
-    tooltip: 'Personal AI assistant with voice, context, and proactive suggestions.',
     status: 'planned',
     phase: 'Product',
   },

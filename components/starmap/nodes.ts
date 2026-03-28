@@ -107,16 +107,16 @@ export const STAR_MAP_NODES: StarNode[] = [
   // ── Undiscovered mystery nodes ──────────────────────────────────────────
   {
     id: 'ghost-ai',
-    label: 'Ghost AI',
-    path: '/ghost-ai',
+    label: 'Void Chat',
+    path: '/void-chat',
     position: [-5, 3, -14],
-    color: '#111111',
-    emissive: '#666666',
-    emissiveIntensity: 0.3,
+    color: '#0d0820',
+    emissive: '#8b5cf6',
+    emissiveIntensity: 2.2,
     size: 0.28,
     isCenter: false,
-    sublabel: '???',
-    isDiscovered: false,
+    sublabel: 'Multi-AI chat · KCP-90 compression',
+    isDiscovered: true,
   },
   {
     id: 'quantum',

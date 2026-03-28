@@ -15,8 +15,8 @@ export default function HomePage() {
       <Sovereignty />
       <FeaturedProduct />
       <CoreTech />
-      <TeamTeaser />
       <Kcp90Stats />
+      <TeamTeaser />
       <ClaimPlanetTeaser />
     </>
   )
