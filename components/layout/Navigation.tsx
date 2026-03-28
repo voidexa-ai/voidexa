@@ -9,7 +9,6 @@ import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 import AuthButton from '@/components/AuthButton'
 import { useGetInTouchModal } from '@/components/GetInTouchModal'
 import { useAuth } from '@/components/AuthProvider'
-import { supabase } from '@/lib/supabase'
 
 // FIX 2: All products visible in top nav
 const mainLinks = [
@@ -78,12 +77,10 @@ export default function Navigation() {
 
   useEffect(() => {
     if (!user) { setIsAdmin(false); return }
-    supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-      .then(({ data }) => setIsAdmin(data?.role === 'admin'))
+    fetch('/api/auth/role')
+      .then(r => r.json())
+      .then(({ role }) => setIsAdmin(role === 'admin'))
+      .catch(() => setIsAdmin(false))
   }, [user?.id])
 
   return (

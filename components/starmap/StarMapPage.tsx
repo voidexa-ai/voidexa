@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import CSSStarfield from './CSSStarfield'
 
 // R3F canvas — client-side only, no SSR
@@ -9,6 +9,190 @@ const StarMapCanvas = dynamic(() => import('./StarMapCanvas'), {
   ssr: false,
   loading: () => null,
 })
+
+// ── KCP-90 floating stats panel ────────────────────────────────────────────
+
+interface KcpSummary {
+  total_compressions: number
+  overall_ratio: number
+  total_tokens_saved: number
+  estimated_usd_saved: number
+}
+
+function useCountUp(target: number, run: boolean, duration = 1200) {
+  const [count, setCount] = useState(0)
+  const raf = useRef<number | null>(null)
+  useEffect(() => {
+    if (!run || target <= 0) return
+    const start = performance.now()
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setCount(Math.round(eased * target))
+      if (t < 1) raf.current = requestAnimationFrame(tick)
+    }
+    raf.current = requestAnimationFrame(tick)
+    return () => { if (raf.current) cancelAnimationFrame(raf.current) }
+  }, [target, run, duration])
+  return count
+}
+
+function Stat({ value, label, prefix = '', suffix = '' }: { value: string | number; label: string; prefix?: string; suffix?: string }) {
+  return (
+    <div style={{ textAlign: 'center', minWidth: 64 }}>
+      <div style={{
+        fontSize: 18,
+        fontWeight: 800,
+        fontFamily: 'var(--font-space)',
+        background: 'linear-gradient(135deg, #00d4ff, #a78bfa)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        lineHeight: 1.1,
+      }}>
+        {prefix}{value}{suffix}
+      </div>
+      <div style={{
+        fontSize: 9,
+        fontWeight: 600,
+        color: 'rgba(148,163,184,0.55)',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        marginTop: 3,
+        lineHeight: 1.2,
+      }}>
+        {label}
+      </div>
+    </div>
+  )
+}
+
+function Kcp90FloatingPanel() {
+  const [summary, setSummary] = useState<KcpSummary | null | undefined>(undefined)
+  const [visible, setVisible] = useState(true)
+  const hasData = summary != null
+
+  useEffect(() => {
+    fetch('/api/kcp90/public-stats')
+      .then(r => r.json())
+      .then(({ data }) => setSummary(data ?? null))
+      .catch(() => setSummary(null))
+  }, [])
+
+  const compressions = useCountUp(hasData ? (summary!.total_compressions ?? 0) : 0, hasData)
+  const ratio        = useCountUp(hasData ? Math.round((summary!.overall_ratio ?? 0) * 100) : 0, hasData)
+  const tokens       = useCountUp(hasData ? (summary!.total_tokens_saved ?? 0) : 0, hasData)
+
+  if (!visible) return null
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 72,
+        right: 20,
+        zIndex: 30,
+        background: 'rgba(7,4,18,0.82)',
+        border: '1px solid rgba(0,212,255,0.18)',
+        borderRadius: 14,
+        padding: '14px 18px 12px',
+        backdropFilter: 'blur(18px)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.06)',
+        minWidth: 260,
+        maxWidth: 300,
+      }}
+    >
+      {/* Header row */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          {/* Live pulse dot */}
+          <span style={{
+            display: 'inline-block',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: '#22c55e',
+            boxShadow: '0 0 6px #22c55e',
+            animation: 'kcp-pulse 2s ease-in-out infinite',
+          }} />
+          <span style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: 'rgba(0,212,255,0.7)',
+            fontFamily: 'var(--font-space)',
+          }}>
+            KCP-90 Live Stats
+          </span>
+        </div>
+        <button
+          onClick={() => setVisible(false)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(148,163,184,0.35)',
+            cursor: 'pointer',
+            fontSize: 14,
+            lineHeight: 1,
+            padding: '0 2px',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.7)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.35)')}
+          aria-label="Dismiss"
+        >
+          ×
+        </button>
+      </div>
+
+      {/* Stats row */}
+      <div style={{ display: 'flex', gap: 4, justifyContent: 'space-between' }}>
+        <Stat
+          value={hasData && compressions > 0 ? compressions.toLocaleString() : '20+'}
+          label="compressions"
+        />
+        <div style={{ width: 1, background: 'rgba(255,255,255,0.06)', alignSelf: 'stretch' }} />
+        <Stat
+          value={hasData && ratio > 0 ? ratio : '83'}
+          label="avg compress %"
+          suffix="%"
+        />
+        <div style={{ width: 1, background: 'rgba(255,255,255,0.06)', alignSelf: 'stretch' }} />
+        <Stat
+          value={hasData && tokens > 0 ? tokens.toLocaleString() : '78–88%'}
+          label="tokens saved"
+        />
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        marginTop: 10,
+        paddingTop: 8,
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        fontSize: 9,
+        color: 'rgba(148,163,184,0.35)',
+        letterSpacing: '0.06em',
+        textAlign: 'center',
+      }}>
+        Powered by KCP-90 — voidexa compression protocol
+      </div>
+
+      <style>{`
+        @keyframes kcp-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+// ── Main page ──────────────────────────────────────────────────────────────
 
 export default function StarMapPage() {
   // Lock scroll while on homepage
@@ -33,6 +217,9 @@ export default function StarMapPage() {
 
       {/* R3F canvas — loads progressively on top */}
       <StarMapCanvas />
+
+      {/* KCP-90 floating stats panel — bottom-right */}
+      <Kcp90FloatingPanel />
 
       {/* Interaction hint */}
       <div

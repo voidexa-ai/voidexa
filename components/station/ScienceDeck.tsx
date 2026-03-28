@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle, Hammer, Circle, ChevronUp, Send, Wrench, Zap } from 'lucide-react'
+import { CheckCircle, Hammer, Circle, ChevronUp, Send, Wrench, Zap, ArrowRight } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 const ACCENT = '#44aacc'
 
-type RoadmapStatus = 'live' | 'active' | 'building' | 'testing' | 'planned'
+type RoadmapStatus = 'live' | 'active' | 'building' | 'next' | 'testing' | 'planned'
 
 interface RoadmapItem {
   title: string
@@ -120,7 +120,7 @@ const ROADMAP: RoadmapItem[] = [
     title: 'Jarvis',
     desc: 'Personal AI assistant with voice, context, and proactive suggestions.',
     tooltip: 'Building next. Voice interface, persistent context, proactive task suggestions.',
-    status: 'building',
+    status: 'next',
     phase: 'Product',
   },
   {
@@ -171,8 +171,9 @@ const STATUS_CONFIG: Record<
   RoadmapStatus,
   { label: string; color: string; Icon: typeof CheckCircle; pulse?: boolean }
 > = {
-  live:     { label: 'LIVE',     color: '#22c55e', Icon: CheckCircle },
+  live:     { label: 'LIVE',     color: '#22c55e', Icon: CheckCircle, pulse: true },
   active:   { label: 'ACTIVE',   color: '#22c55e', Icon: Zap,         pulse: true },
+  next:     { label: 'NEXT',     color: '#00d4ff', Icon: ArrowRight },
   building: { label: 'BUILDING', color: '#f97316', Icon: Wrench },
   testing:  { label: 'TESTING',  color: '#eab308', Icon: Hammer },
   planned:  { label: 'PLANNED',  color: '#475569', Icon: Circle },
@@ -253,25 +254,36 @@ export default function ScienceDeck() {
 
             const rowBg =
               item.status === 'live'
-                ? 'rgba(34,197,94,0.04)'
+                ? 'rgba(34,197,94,0.06)'
                 : item.status === 'active'
                 ? 'rgba(34,197,94,0.04)'
+                : item.status === 'next'
+                ? 'rgba(0,212,255,0.05)'
                 : item.status === 'building'
-                ? `rgba(249,115,22,0.04)`
+                ? 'rgba(249,115,22,0.04)'
                 : item.status === 'testing'
                 ? 'rgba(234,179,8,0.04)'
-                : 'rgba(255,255,255,0.02)'
+                : 'rgba(255,255,255,0.015)'
 
             const rowBorder =
-              item.status === 'building'
-                ? `1px solid rgba(249,115,22,0.14)`
+              item.status === 'live'
+                ? '1px solid rgba(34,197,94,0.28)'
                 : item.status === 'active'
-                ? `1px solid rgba(34,197,94,0.14)`
+                ? '1px solid rgba(34,197,94,0.14)'
+                : item.status === 'next'
+                ? '1px solid rgba(0,212,255,0.22)'
+                : item.status === 'building'
+                ? '1px solid rgba(249,115,22,0.14)'
                 : item.status === 'testing'
-                ? `1px solid rgba(234,179,8,0.14)`
-                : item.status === 'live'
-                ? `1px solid rgba(34,197,94,0.14)`
-                : '1px solid rgba(255,255,255,0.05)'
+                ? '1px solid rgba(234,179,8,0.14)'
+                : '1px solid rgba(255,255,255,0.04)'
+
+            const rowBoxShadow =
+              item.status === 'live'
+                ? 'inset 3px 0 0 rgba(34,197,94,0.5)'
+                : item.status === 'next'
+                ? 'inset 3px 0 0 rgba(0,212,255,0.45)'
+                : 'none'
 
             return (
               <motion.div
@@ -281,7 +293,7 @@ export default function ScienceDeck() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.04 }}
                 className="flex gap-4 px-5 py-4 rounded-xl items-start group relative"
-                style={{ background: rowBg, border: rowBorder }}
+                style={{ background: rowBg, border: rowBorder, boxShadow: rowBoxShadow }}
               >
                 <Icon size={18} style={{ color, marginTop: 2, flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">

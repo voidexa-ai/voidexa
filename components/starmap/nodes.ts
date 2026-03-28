@@ -115,7 +115,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     emissiveIntensity: 2.2,
     size: 0.28,
     isCenter: false,
-    sublabel: 'Multi-AI chat · KCP-90 compression',
+    sublabel: 'Multi-AI chat with KCP-90 compression. Claude, ChatGPT & Gemini.',
     isDiscovered: true,
   },
   {
