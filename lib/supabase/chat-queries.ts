@@ -104,6 +104,52 @@ export async function getMessages(conversationId: string, userId: string): Promi
   return (data || []) as ChatMessage[];
 }
 
+export async function updateMessageCompression(
+  messageId: string,
+  contentCompressed: string,
+  compressionRatio: number,
+  encoderUsed: string = 'regex'
+): Promise<void> {
+  const supabase = getServiceClient();
+  const { error } = await supabase
+    .from('chat_messages')
+    .update({
+      content_compressed: contentCompressed,
+      compression_ratio: compressionRatio,
+      encoder_used: encoderUsed,
+    })
+    .eq('id', messageId);
+
+  if (error) throw new Error(error.message);
+}
+
+export async function updateConversationTokensSaved(
+  conversationId: string,
+  additionalTokensSaved: number
+): Promise<void> {
+  const supabase = getServiceClient();
+  // Increment the existing tokens_saved counter
+  const { error } = await supabase.rpc('increment_tokens_saved', {
+    conv_id: conversationId,
+    delta: additionalTokensSaved,
+  });
+
+  // Fallback: if RPC doesn't exist, do a read-then-write
+  if (error) {
+    const { data: conv } = await supabase
+      .from('chat_conversations')
+      .select('tokens_saved')
+      .eq('id', conversationId)
+      .single();
+
+    const current = (conv?.tokens_saved as number) || 0;
+    await supabase
+      .from('chat_conversations')
+      .update({ tokens_saved: current + additionalTokensSaved })
+      .eq('id', conversationId);
+  }
+}
+
 export async function insertMessage(
   conversationId: string,
   userId: string,

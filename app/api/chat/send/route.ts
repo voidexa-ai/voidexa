@@ -9,8 +9,9 @@ import { cookies } from 'next/headers';
 import { checkCredits } from '@/lib/credits/check';
 import { deductCredits } from '@/lib/credits/deduct';
 import { getModelById } from '@/config/providers';
-import { getMessages, insertMessage, getConversation } from '@/lib/supabase/chat-queries';
+import { getMessages, insertMessage, getConversation, updateMessageCompression, updateConversationTokensSaved } from '@/lib/supabase/chat-queries';
 import { logGhaiTransaction } from '@/lib/supabase/credit-queries';
+import { compressForContext } from '@/lib/kcp90/compress-context';
 import { PLATFORM } from '@/config/constants';
 import { streamProvider } from '@/lib/providers/router';
 import type { ProviderMessage } from '@/types/providers';
@@ -76,12 +77,31 @@ export async function POST(req: NextRequest) {
     // 6. Save user message to DB
     await insertMessage(conversationId, user.id, 'user', message);
 
-    // 7. Build message history for provider
+    // 7. Build message history for provider — with KCP-90 context compression
     const history = await getMessages(conversationId, user.id);
-    const providerMessages: ProviderMessage[] = history.map((m) => ({
-      role: m.role as 'user' | 'assistant' | 'system',
+    const compressionResult = compressForContext(history);
+    const providerMessages: ProviderMessage[] = compressionResult.messages.map((m) => ({
+      role: m.role,
       content: m.content,
     }));
+
+    // Persist compression metadata async (non-blocking — don't delay the stream)
+    if (compressionResult.compressed) {
+      void (async () => {
+        try {
+          await Promise.all(
+            Object.entries(compressionResult.byId).map(([msgId, meta]) =>
+              updateMessageCompression(msgId, meta.content_compressed, meta.compression_ratio)
+            )
+          );
+          if (compressionResult.tokensSaved > 0) {
+            await updateConversationTokensSaved(conversationId, compressionResult.tokensSaved);
+          }
+        } catch {
+          // Compression metadata is best-effort — never block the user's chat
+        }
+      })();
+    }
 
     // 8. Stream response via SSE
     const encoder = new TextEncoder();

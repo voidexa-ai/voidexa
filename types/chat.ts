@@ -10,6 +10,8 @@ export interface Conversation {
   provider: ProviderSlug;
   model: string;
   message_count: number;
+  tokens_saved: number;
+  compression_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -20,6 +22,9 @@ export interface ChatMessage {
   user_id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  content_compressed: string | null;
+  compression_ratio: number | null;
+  encoder_used: string | null;
   provider: ProviderSlug | null;
   model: string | null;
   tokens_input: number;
