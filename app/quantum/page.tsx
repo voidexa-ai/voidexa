@@ -772,7 +772,7 @@ export default function QuantumPage() {
                 color: '#22d3ba',
                 bg: 'rgba(34,211,186,0.06)',
                 border: 'rgba(34,211,186,0.18)',
-                desc: 'When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 90% fewer tokens. Same message, 10% of the cost. Like sending a text instead of a letter.',
+                desc: '78–88% byte compression, benchmarked on 248 tests across 20 diverse sentences covering software, trading, energy, and business domains. Fine-tuned Llama 3.1 8B running locally via Ollama. ~200ms response time. Built and proven March 28, 2026.',
               },
               {
                 tag: 'KCP-BINARY',
@@ -820,7 +820,7 @@ export default function QuantumPage() {
             className="text-center font-mono"
             style={{ fontSize: 12, color: 'rgba(148,163,184,0.35)', letterSpacing: '0.06em' }}
           >
-            KCP-90 Communication Protocol with Binary Encoding and Shared Memory Transport — Created by voidexa
+            KCP-90 Communication Protocol — 78–88% compression · 248 tests · ~200ms · Built by voidexa · March 28, 2026
           </motion.p>
         </section>
 
