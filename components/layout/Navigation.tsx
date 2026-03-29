@@ -224,7 +224,7 @@ export default function Navigation() {
 
             </div>
 
-            {/* Desktop right: CTA + auth */}
+            {/* Desktop right: CTA + auth + admin */}
             <div className="hidden lg:flex items-center gap-2 shrink-0">
               <button
                 onClick={() => openModal()}
@@ -234,6 +234,36 @@ export default function Navigation() {
                 Get in touch
               </button>
               <AuthButton />
+              {isAdmin && (
+                <Link
+                  href="/control-plane"
+                  title="Control Plane"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    background: 'rgba(0,212,255,0.07)',
+                    border: '1px solid rgba(0,212,255,0.25)',
+                    color: 'rgba(0,212,255,0.7)',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(0,212,255,0.15)'
+                    el.style.color = '#00d4ff'
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(0,212,255,0.07)'
+                    el.style.color = 'rgba(0,212,255,0.7)'
+                  }}
+                >
+                  <LayoutDashboard size={15} />
+                </Link>
+              )}
             </div>
 
             {/* Mobile hamburger */}
@@ -249,44 +279,6 @@ export default function Navigation() {
         </header>
 
       </div>
-
-      {/* Admin: control plane icon — floats above the Menu button, same right edge */}
-      {isAdmin && (
-        <Link
-          href="/control-plane"
-          title="Control Plane"
-          style={{
-            position: 'fixed',
-            right: 0,
-            top: 'calc(50% - 74px)',
-            zIndex: 39,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 52,
-            height: 38,
-            background: 'rgba(7,15,25,0.95)',
-            border: '1px solid rgba(0,212,255,0.28)',
-            borderRight: 'none',
-            borderRadius: '8px 0 0 8px',
-            color: 'rgba(0,212,255,0.7)',
-            transition: 'all 0.2s',
-            backdropFilter: 'blur(12px)',
-          }}
-          onMouseEnter={e => {
-            const el = e.currentTarget as HTMLElement
-            el.style.background = 'rgba(0,30,45,0.98)'
-            el.style.color = '#00d4ff'
-          }}
-          onMouseLeave={e => {
-            const el = e.currentTarget as HTMLElement
-            el.style.background = 'rgba(7,15,25,0.95)'
-            el.style.color = 'rgba(0,212,255,0.7)'
-          }}
-        >
-          <LayoutDashboard size={15} />
-        </Link>
-      )}
 
       {/* FIX 3: Floating side button — right edge, vertically centered, pulsing glow */}
       <motion.button

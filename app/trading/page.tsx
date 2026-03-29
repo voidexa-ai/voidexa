@@ -323,6 +323,9 @@ function BacktestChart() {
 
 /* ─── Features list ─── */
 const features = [
+  'APEX TRADER CORE — primary regime-aware strategy, +357% backtested over 12 months',
+  'SCALPER CORE — high-frequency scalping layer optimised for volatile alt markets',
+  '8-layer defense system — 8 independent risk checks before any order executes',
   'Multi-agent architecture — Scanner, Season, Futures, Portfolio agents running independently',
   'Season Engine classifies BTC/ETH/ALTCOIN/RISK_OFF phases every tick',
   'Rebalance engine generates proposals with momentum weighting (never executes directly)',
@@ -397,9 +400,9 @@ export default function TradingPage() {
                 </span>
               </h1>
               <p className="text-[#8899af] leading-relaxed mb-8 text-lg max-w-lg">
-                An autonomous trading system that reads the market in real time, adjusts strategy
-                across four phases, and executes through a five-stage risk pipeline.
-                v4.1.0 · 359 tests · KCP-90 integrated · Set it once — it runs itself.
+                APEX TRADER CORE + SCALPER CORE — dual-strategy autonomous system with an 8-layer
+                defense pipeline. Reads the market in real time, adjusts across four phases.
+                v4.1.0 · +357% backtest · 359 tests · KCP-90 integrated · Set it once — it runs itself.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a href="#node" className="btn-primary glow-cyan-btn">

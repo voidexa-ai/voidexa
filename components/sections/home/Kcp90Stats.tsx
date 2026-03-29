@@ -29,22 +29,21 @@ function useCountUp(target: number, run: boolean, duration = 1200) {
 
 const statStyle = {
   value: {
-    fontSize: 20,
-    fontWeight: 800,
+    fontSize: 40,
+    fontWeight: 900,
     fontFamily: 'var(--font-space)',
-    background: 'linear-gradient(135deg, #00d4ff, #a78bfa)',
-    WebkitBackgroundClip: 'text' as const,
-    WebkitTextFillColor: 'transparent' as const,
-    backgroundClip: 'text' as const,
-    lineHeight: 1.1,
+    color: '#00d4ff',
+    lineHeight: 1.05,
+    letterSpacing: '-0.01em',
+    textShadow: '0 0 20px rgba(0,212,255,0.45)',
   },
   label: {
-    fontSize: 9,
-    fontWeight: 600,
-    color: 'rgba(148,163,184,0.45)',
-    letterSpacing: '0.12em',
+    fontSize: 11,
+    fontWeight: 700,
+    color: 'rgba(148,163,184,0.65)',
+    letterSpacing: '0.14em',
     textTransform: 'uppercase' as const,
-    marginTop: 3,
+    marginTop: 5,
     whiteSpace: 'nowrap' as const,
   },
 }
@@ -67,95 +66,85 @@ export default function Kcp90Stats() {
     <div style={{ padding: '0 24px 64px', maxWidth: 1100, margin: '0 auto' }}>
       <div
         style={{
-          borderRadius: 16,
-          background: 'rgba(7,4,18,0.85)',
-          border: '1px solid rgba(0,212,255,0.13)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
-          padding: '18px 28px 14px',
+          borderRadius: 20,
+          background: 'rgba(7,4,18,0.92)',
+          border: '1px solid rgba(0,212,255,0.22)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.5), 0 0 60px rgba(0,212,255,0.04)',
+          padding: '32px 48px 24px',
         }}
       >
-        {/* Top row: pulse label + stats */}
+        {/* Header: pulse label */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
+          <span style={{
+            display: 'inline-block',
+            width: 10,
+            height: 10,
+            borderRadius: '50%',
+            background: '#22c55e',
+            boxShadow: '0 0 10px #22c55e',
+            animation: 'kcp-bar-pulse 2s ease-in-out infinite',
+            flexShrink: 0,
+          }} />
+          <span style={{
+            fontSize: 13,
+            fontWeight: 800,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: 'rgba(0,212,255,0.8)',
+            fontFamily: 'var(--font-space)',
+          }}>
+            KCP-90 Live Stats
+          </span>
+        </div>
+
+        {/* 4 stats grid */}
         <div style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: 32,
           alignItems: 'center',
-          gap: 20,
-          flexWrap: 'wrap',
         }}>
-          {/* Live label */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
-            <span style={{
-              display: 'inline-block',
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: '#22c55e',
-              boxShadow: '0 0 6px #22c55e',
-              animation: 'kcp-bar-pulse 2s ease-in-out infinite',
-            }} />
-            <span style={{
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: 'rgba(0,212,255,0.65)',
-              fontFamily: 'var(--font-space)',
-            }}>
-              KCP-90 Live Stats
-            </span>
+          {/* Avg Compression */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={statStyle.value}>
+              {hasData && ratio > 0 ? `${ratio}%` : '83%'}
+            </div>
+            <div style={statStyle.label}>Avg Compression</div>
           </div>
 
-          {/* Vertical divider */}
-          <div style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.08)', flexShrink: 0 }} />
-
-          {/* 4 inline stats */}
-          <div style={{
-            display: 'flex',
-            gap: 28,
-            flex: 1,
-            flexWrap: 'wrap',
-            alignItems: 'center',
-          }}>
-            {/* Avg Compression */}
-            <div style={{ textAlign: 'center' }}>
-              <div style={statStyle.value}>
-                {hasData && ratio > 0 ? `${ratio}%` : '83%'}
-              </div>
-              <div style={statStyle.label}>Avg Compression</div>
+          {/* Total Compressions */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={statStyle.value}>
+              {hasData && compressions > 0 ? compressions.toLocaleString() : '20+'}
             </div>
+            <div style={statStyle.label}>Total Compressions</div>
+          </div>
 
-            {/* Total Compressions */}
-            <div style={{ textAlign: 'center' }}>
-              <div style={statStyle.value}>
-                {hasData && compressions > 0 ? compressions.toLocaleString() : '20+'}
-              </div>
-              <div style={statStyle.label}>Compressions</div>
-            </div>
+          {/* Token Range */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={statStyle.value}>78–88%</div>
+            <div style={statStyle.label}>Token Range</div>
+          </div>
 
-            {/* Token Range */}
-            <div style={{ textAlign: 'center' }}>
-              <div style={statStyle.value}>78–88%</div>
-              <div style={statStyle.label}>Token Range</div>
-            </div>
-
-            {/* Cost Saved */}
-            <div style={{ textAlign: 'center' }}>
-              <div style={statStyle.value}>Proven</div>
-              <div style={statStyle.label}>Cost Saved</div>
-            </div>
+          {/* Cost Saved */}
+          <div style={{ textAlign: 'center' }}>
+            <div style={statStyle.value}>Proven</div>
+            <div style={statStyle.label}>Cost Saved</div>
           </div>
         </div>
 
         {/* Footer */}
         <div style={{
-          marginTop: 10,
-          paddingTop: 8,
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-          fontSize: 10,
-          color: 'rgba(148,163,184,0.32)',
-          letterSpacing: '0.06em',
+          marginTop: 24,
+          paddingTop: 16,
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          fontSize: 11,
+          color: 'rgba(148,163,184,0.4)',
+          letterSpacing: '0.08em',
           textAlign: 'center',
+          fontWeight: 500,
         }}>
           Powered by KCP-90 — Integrated in: Quantum · Trading Bot · Void Chat
         </div>
