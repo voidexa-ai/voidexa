@@ -56,21 +56,21 @@ function Kcp90FloatingPanel() {
   if (!visible) return null
 
   const statVal: React.CSSProperties = {
-    fontSize: 36,
+    fontSize: 52,
     fontWeight: 900,
     fontFamily: 'var(--font-space)',
     color: '#00d4ff',
-    lineHeight: 1.05,
-    letterSpacing: '-0.01em',
-    textShadow: '0 0 18px rgba(0,212,255,0.5)',
+    lineHeight: 1.0,
+    letterSpacing: '-0.02em',
+    textShadow: '0 0 24px rgba(0,212,255,0.7)',
   }
   const statLbl: React.CSSProperties = {
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: 700,
-    color: 'rgba(148,163,184,0.65)',
+    color: 'rgba(148,163,184,0.75)',
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    marginTop: 4,
+    marginTop: 6,
     whiteSpace: 'nowrap',
   }
 
@@ -81,15 +81,15 @@ function Kcp90FloatingPanel() {
         bottom: 72,
         right: 20,
         zIndex: 55,
-        background: 'rgba(7,4,18,0.92)',
-        border: '1px solid rgba(0,212,255,0.25)',
-        borderRadius: 18,
-        padding: '22px 28px 18px',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        boxShadow: '0 12px 48px rgba(0,0,0,0.6), 0 0 60px rgba(0,212,255,0.05)',
-        minWidth: 340,
-        minHeight: 150,
+        background: 'rgba(7,4,18,0.95)',
+        border: '1px solid rgba(0,212,255,0.3)',
+        borderRadius: 20,
+        padding: '28px 36px 24px',
+        backdropFilter: 'blur(32px)',
+        WebkitBackdropFilter: 'blur(32px)',
+        boxShadow: '0 16px 64px rgba(0,0,0,0.7), 0 0 80px rgba(0,212,255,0.08)',
+        minWidth: 420,
+        minHeight: 200,
       }}
     >
       {/* Header row */}
@@ -97,7 +97,7 @@ function Kcp90FloatingPanel() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 18,
+        marginBottom: 24,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{
@@ -111,11 +111,11 @@ function Kcp90FloatingPanel() {
             flexShrink: 0,
           }} />
           <span style={{
-            fontSize: 13,
+            fontSize: 15,
             fontWeight: 800,
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
-            color: 'rgba(0,212,255,0.85)',
+            color: 'rgba(0,212,255,0.9)',
             fontFamily: 'var(--font-space)',
           }}>
             KCP-90 Live Stats
