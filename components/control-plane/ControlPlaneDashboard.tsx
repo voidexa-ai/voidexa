@@ -62,10 +62,11 @@ const SANS    = 'Inter, system-ui, sans-serif';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function fmt(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `${(n / 1_000).toFixed(1)}K`;
-  return String(n);
+function fmt(n: number | null | undefined): string {
+  const v = n ?? 0;
+  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M`;
+  if (v >= 1_000)     return `${(v / 1_000).toFixed(1)}K`;
+  return String(v);
 }
 
 function formatTime(iso: string): string {
@@ -400,7 +401,7 @@ function Kcp90Panel({ summary, daily, recent }: {
         <Card style={{ padding: '18px 22px' }}>
           <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Avg Compression Rate</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
-            {summary ? `${(summary.overall_ratio * 100).toFixed(1)}%` : '—'}
+            {summary ? `${((summary.overall_ratio ?? 0) * 100).toFixed(1)}%` : '—'}
           </div>
           {summary && (
             <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
@@ -417,7 +418,7 @@ function Kcp90Panel({ summary, daily, recent }: {
           </div>
           {summary && (
             <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
-              ≈ ${summary.estimated_usd_saved.toFixed(2)} saved
+              ≈ ${(summary.estimated_usd_saved ?? 0).toFixed(2)} saved
             </div>
           )}
         </Card>
@@ -474,7 +475,7 @@ function Kcp90Panel({ summary, daily, recent }: {
                     </td>
                     <td style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textAlign: 'right', paddingRight: 12 }}>{fmt(row.original_chars)}</td>
                     <td style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textAlign: 'right', paddingRight: 12 }}>{fmt(row.compressed_chars)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 11, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{(row.compression_ratio * 100).toFixed(1)}%</td>
+                    <td style={{ fontFamily: MONO, fontSize: 11, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{((row.compression_ratio ?? 0) * 100).toFixed(1)}%</td>
                     <td style={{ fontFamily: MONO, fontSize: 11, color: BLUE, textAlign: 'right', paddingRight: 12 }}>{fmt(row.tokens_saved)}</td>
                     <td style={{ fontFamily: MONO, fontSize: 10, color: '#475569', textAlign: 'right' }}>{timeAgo(row.created_at)}</td>
                   </tr>
@@ -772,7 +773,7 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
               <MetricCard
                 label="KCP-90 Compressions"
                 value={summary ? fmt(summary.total_compressions) : '—'}
-                sub={summary ? `${(summary.overall_ratio * 100).toFixed(1)}% avg rate` : undefined}
+                sub={summary ? `${((summary.overall_ratio ?? 0) * 100).toFixed(1)}% avg rate` : undefined}
                 accent={BLUE}
               />
               <MetricCard
