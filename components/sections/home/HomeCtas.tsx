@@ -124,11 +124,11 @@ export default function HomeCtas() {
             el.style.transform = 'translateY(0)'
           }}
         >
-          {/* Image section — same aspect-ratio as the square cards so tops align */}
+          {/* Image section — wide landscape banner */}
           <div style={{
             position: 'relative',
             width: '100%',
-            aspectRatio: '1 / 1',
+            height: 220,
             flexShrink: 0,
             overflow: 'hidden',
           }}>
@@ -137,12 +137,10 @@ export default function HomeCtas() {
               src="/images/cast/gruppe billede.jpg"
               alt="The voidexa team"
               style={{
-                position: 'absolute',
-                inset: 0,
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                objectPosition: 'center 30%',
+                objectPosition: 'center 40%',
               }}
             />
             {/* Subtle bottom fade into text area */}
