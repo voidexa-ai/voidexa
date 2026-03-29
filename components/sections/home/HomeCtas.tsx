@@ -126,10 +126,8 @@ export default function HomeCtas() {
         >
           {/* Image section — wide landscape banner */}
           <div style={{
-            position: 'relative',
             width: '100%',
-            height: 220,
-            flexShrink: 0,
+            height: 180,
             overflow: 'hidden',
           }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -140,7 +138,7 @@ export default function HomeCtas() {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                objectPosition: 'center 40%',
+                objectPosition: 'center center',
               }}
             />
             {/* Subtle bottom fade into text area */}
