@@ -15,7 +15,7 @@ export default function HomeCtas() {
           href="/claim-your-planet"
           style={{
             position: 'relative',
-            flex: '1 1 0',
+            flex: '0 0 calc(25% - 8px)',
             aspectRatio: '1 / 1',
             marginTop: 40,
             borderRadius: 16,
@@ -101,7 +101,7 @@ export default function HomeCtas() {
         <Link
           href="/team"
           style={{
-            flex: '1 1 0',
+            flex: '0 0 calc(46% - 8px)',
             borderRadius: 16,
             overflow: 'hidden',
             textDecoration: 'none',
@@ -201,7 +201,7 @@ export default function HomeCtas() {
           href="/token"
           style={{
             position: 'relative',
-            flex: '1 1 0',
+            flex: '0 0 calc(25% - 8px)',
             aspectRatio: '1 / 1',
             marginTop: 40,
             borderRadius: 16,
