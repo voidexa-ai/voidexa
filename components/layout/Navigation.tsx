@@ -224,46 +224,18 @@ export default function Navigation() {
 
             </div>
 
-            {/* Desktop right: CTA + auth + admin */}
+            {/* Desktop right: CTA (non-admin only) + auth */}
             <div className="hidden lg:flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => openModal()}
-                className="px-3 py-1.5 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg,#00d4ff,#8b5cf6)' }}
-              >
-                Get in touch
-              </button>
-              <AuthButton />
-              {isAdmin && (
-                <Link
-                  href="/control-plane"
-                  title="Control Plane"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 32,
-                    height: 32,
-                    borderRadius: 8,
-                    background: 'rgba(0,212,255,0.07)',
-                    border: '1px solid rgba(0,212,255,0.25)',
-                    color: 'rgba(0,212,255,0.7)',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={e => {
-                    const el = e.currentTarget as HTMLElement
-                    el.style.background = 'rgba(0,212,255,0.15)'
-                    el.style.color = '#00d4ff'
-                  }}
-                  onMouseLeave={e => {
-                    const el = e.currentTarget as HTMLElement
-                    el.style.background = 'rgba(0,212,255,0.07)'
-                    el.style.color = 'rgba(0,212,255,0.7)'
-                  }}
+              {!isAdmin && (
+                <button
+                  onClick={() => openModal()}
+                  className="px-3 py-1.5 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
+                  style={{ background: 'linear-gradient(135deg,#00d4ff,#8b5cf6)' }}
                 >
-                  <LayoutDashboard size={15} />
-                </Link>
+                  Get in touch
+                </button>
               )}
+              <AuthButton />
             </div>
 
             {/* Mobile hamburger */}
@@ -279,6 +251,45 @@ export default function Navigation() {
         </header>
 
       </div>
+
+      {/* Admin icon — fixed far-right, vertically centered with nav bar, desktop only */}
+      {isAdmin && (
+        <Link
+          href="/control-plane"
+          title="Control Plane"
+          className="hidden lg:flex"
+          style={{
+            position: 'fixed',
+            top: 10,
+            right: 16,
+            zIndex: 51,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 34,
+            height: 34,
+            borderRadius: 8,
+            background: 'rgba(0,212,255,0.07)',
+            border: '1px solid rgba(0,212,255,0.25)',
+            color: 'rgba(0,212,255,0.7)',
+            transition: 'all 0.2s',
+            backdropFilter: 'blur(12px)',
+          }}
+          onMouseEnter={e => {
+            const el = e.currentTarget as HTMLElement
+            el.style.background = 'rgba(0,212,255,0.18)'
+            el.style.color = '#00d4ff'
+            el.style.borderColor = 'rgba(0,212,255,0.5)'
+          }}
+          onMouseLeave={e => {
+            const el = e.currentTarget as HTMLElement
+            el.style.background = 'rgba(0,212,255,0.07)'
+            el.style.color = 'rgba(0,212,255,0.7)'
+            el.style.borderColor = 'rgba(0,212,255,0.25)'
+          }}
+        >
+          <LayoutDashboard size={15} />
+        </Link>
+      )}
 
       {/* FIX 3: Floating side button — right edge, vertically centered, pulsing glow */}
       <motion.button

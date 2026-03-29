@@ -15,10 +15,11 @@ export default function HomeCtas() {
             position: 'relative',
             display: 'block',
             width: '100%',
-            height: 200,
+            height: 160,
             borderRadius: 16,
             overflow: 'hidden',
             textDecoration: 'none',
+            background: '#070412',
             border: '1px solid rgba(139,92,246,0.22)',
             boxShadow: '0 0 0 0 rgba(139,92,246,0)',
             transition: 'all 0.25s ease',
@@ -46,8 +47,8 @@ export default function HomeCtas() {
               inset: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center 25%',
+              objectFit: 'contain',
+              objectPosition: 'center center',
             }}
           />
           {/* Dark overlay */}
@@ -114,12 +115,13 @@ export default function HomeCtas() {
             href="/claim-your-planet"
             style={{
               position: 'relative',
-              flex: '1 1 200px',
-              minHeight: 200,
+              flex: '1 1 0',
+              aspectRatio: '1 / 1',
               borderRadius: 16,
               overflow: 'hidden',
               textDecoration: 'none',
               border: '1px solid rgba(0,212,255,0.2)',
+              background: '#070412',
               boxShadow: '0 0 0 0 rgba(0,212,255,0)',
               transition: 'all 0.25s ease',
             }}
@@ -145,7 +147,7 @@ export default function HomeCtas() {
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'contain',
                 objectPosition: 'center',
               }}
             />
@@ -200,12 +202,13 @@ export default function HomeCtas() {
             href="/token"
             style={{
               position: 'relative',
-              flex: '1 1 200px',
-              minHeight: 200,
+              flex: '1 1 0',
+              aspectRatio: '1 / 1',
               borderRadius: 16,
               overflow: 'hidden',
               textDecoration: 'none',
               border: '1px solid rgba(0,212,255,0.2)',
+              background: '#070412',
               boxShadow: '0 0 0 0 rgba(0,212,255,0)',
               transition: 'all 0.25s ease',
             }}
@@ -231,7 +234,7 @@ export default function HomeCtas() {
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
+                objectFit: 'contain',
                 objectPosition: 'center',
               }}
             />
