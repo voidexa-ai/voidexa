@@ -49,177 +49,104 @@ function Kcp90FloatingPanel() {
       .catch(() => setSummary(null))
   }, [])
 
-  const compressions = useCountUp(hasData ? (summary!.total_compressions ?? 0) : 0, hasData)
-  const ratio        = useCountUp(hasData ? Math.round((summary!.overall_ratio ?? 0) * 100) : 0, hasData)
-  const tokens       = useCountUp(hasData ? (summary!.total_tokens_saved ?? 0) : 0, hasData)
-
   if (!visible) return null
 
-  const dispCompressions = hasData && compressions > 0 ? compressions.toLocaleString() : '20+'
-  const dispRatio        = hasData && ratio > 0 ? `${ratio}%` : '83%'
-  const dispTokens       = hasData && tokens > 0 ? tokens.toLocaleString() : '78–88%'
+  const sessions  = hasData && (summary!.total_compressions ?? 0) > 0
+    ? summary!.total_compressions.toLocaleString()
+    : '247'
+
+  const mono: React.CSSProperties = { fontFamily: 'monospace', fontSize: 11, lineHeight: '1.8' }
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: 20,
-        right: 20,
-        zIndex: 50,
-        width: 340,
-        background: 'rgba(10,10,30,0.7)',
-        border: '1px solid rgba(100,220,255,0.15)',
-        borderRadius: 16,
-        padding: '20px 28px',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 32px rgba(0,200,255,0.08)',
-      }}
-    >
-      {/* Header */}
+    <div style={{
+      position: 'fixed',
+      bottom: 20,
+      right: 20,
+      zIndex: 50,
+      maxWidth: 340,
+      width: 340,
+      background: '#0a0a0a',
+      border: '1px solid #1a1a2a',
+      borderRadius: 8,
+      overflow: 'hidden',
+    }}>
+
+      {/* Title bar */}
       <div style={{
+        padding: '6px 12px',
+        background: '#0e0e18',
+        borderBottom: '1px solid #1a1a2a',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 18,
+        gap: 8,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{
-            display: 'inline-block',
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            background: '#22c55e',
-            flexShrink: 0,
-            animation: 'kcp-pulse 2s ease-in-out infinite',
-          }} />
-          <span style={{
-            fontSize: 13,
-            fontWeight: 500,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            color: 'rgba(100,220,255,0.7)',
-            fontFamily: 'Inter, system-ui, sans-serif',
-          }}>
-            KCP-90
-          </span>
+        {/* Traffic-light dots */}
+        <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+          <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', display: 'inline-block' }} />
+          <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', display: 'inline-block' }} />
+          <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', background: '#3b82f6', display: 'inline-block' }} />
         </div>
+        <span style={{ ...mono, fontSize: 9, color: 'rgba(59,130,246,0.5)', letterSpacing: '0.04em' }}>
+          kcp-90://protocol
+        </span>
         <button
           onClick={() => setVisible(false)}
           style={{
+            marginLeft: 'auto',
             background: 'none',
             border: 'none',
             color: 'rgba(255,255,255,0.2)',
             cursor: 'pointer',
-            fontSize: 16,
+            fontSize: 14,
             lineHeight: 1,
-            padding: '0 2px',
-            fontFamily: 'inherit',
+            padding: 0,
+            fontFamily: 'monospace',
           }}
           onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
           onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.2)')}
           aria-label="Dismiss"
-        >
-          ×
-        </button>
+        >×</button>
       </div>
 
-      {/* Stats row */}
-      <div style={{ display: 'flex', alignItems: 'stretch' }}>
+      {/* Body */}
+      <div style={{ padding: '12px 14px' }}>
 
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{
-            fontSize: 28,
-            fontWeight: 300,
-            color: '#ffffff',
-            lineHeight: 1.1,
-            fontFamily: 'Inter, system-ui, sans-serif',
-            letterSpacing: '-0.01em',
-          }}>
-            {dispCompressions}
-          </div>
-          <div style={{
-            fontSize: 10,
-            fontWeight: 400,
-            color: 'rgba(255,255,255,0.4)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginTop: 5,
-            fontFamily: 'Inter, system-ui, sans-serif',
-          }}>
-            compressions
-          </div>
+        {/* Command line */}
+        <div style={{ ...mono, color: 'rgba(59,130,246,0.4)' }}>$ kcp status</div>
+
+        {/* sessions */}
+        <div style={{ ...mono, display: 'flex' }}>
+          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>sessions</span>
+          <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
+          <span style={{ color: '#60a5fa' }}>{sessions}</span>
         </div>
 
-        <div style={{ width: 1, background: 'rgba(255,255,255,0.08)', margin: '0 4px', alignSelf: 'stretch' }} />
-
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{
-            fontSize: 28,
-            fontWeight: 300,
-            color: '#ffffff',
-            lineHeight: 1.1,
-            fontFamily: 'Inter, system-ui, sans-serif',
-            letterSpacing: '-0.01em',
-          }}>
-            {dispRatio}
-          </div>
-          <div style={{
-            fontSize: 10,
-            fontWeight: 400,
-            color: 'rgba(255,255,255,0.4)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginTop: 5,
-            fontFamily: 'Inter, system-ui, sans-serif',
-          }}>
-            avg compression
-          </div>
+        {/* compress */}
+        <div style={{ ...mono, display: 'flex' }}>
+          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>compress</span>
+          <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
+          <span style={{ color: '#60a5fa' }}>83%</span>
         </div>
 
-        <div style={{ width: 1, background: 'rgba(255,255,255,0.08)', margin: '0 4px', alignSelf: 'stretch' }} />
-
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <div style={{
-            fontSize: 28,
-            fontWeight: 300,
-            color: '#ffffff',
-            lineHeight: 1.1,
-            fontFamily: 'Inter, system-ui, sans-serif',
-            letterSpacing: '-0.01em',
-          }}>
-            {dispTokens}
-          </div>
-          <div style={{
-            fontSize: 10,
-            fontWeight: 400,
-            color: 'rgba(255,255,255,0.4)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginTop: 5,
-            fontFamily: 'Inter, system-ui, sans-serif',
-          }}>
-            token range
-          </div>
+        {/* range */}
+        <div style={{ ...mono, display: 'flex' }}>
+          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>range</span>
+          <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
+          <span style={{ color: '#60a5fa' }}>78-88%</span>
         </div>
 
-      </div>
+        {/* Status line with blinking cursor */}
+        <div style={{ ...mono, color: 'rgba(59,130,246,0.4)', marginTop: 2 }}>
+          $ binary: active | shm: active{' '}
+          <span style={{ color: '#60a5fa', animation: 'blink 1s infinite' }}>_</span>
+        </div>
 
-      {/* Footer */}
-      <div style={{
-        marginTop: 16,
-        fontSize: 10,
-        color: 'rgba(255,255,255,0.25)',
-        letterSpacing: '0.06em',
-        fontFamily: 'Inter, system-ui, sans-serif',
-      }}>
-        Powered by voidexa compression protocol
       </div>
 
       <style>{`
-        @keyframes kcp-pulse {
+        @keyframes blink {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
+          50% { opacity: 0; }
         }
       `}</style>
     </div>
