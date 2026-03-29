@@ -33,26 +33,31 @@ export default async function ControlPlanePage() {
 
   if (profile?.role !== 'admin') redirect('/');
 
-  // Initial SSR data fetch
-  const [summaryRes, dailyRes, recentRes] = await Promise.all([
-    serviceClient.from('kcp90_summary').select('*').single(),
-    serviceClient
-      .from('kcp90_daily_stats')
-      .select('*')
-      .order('day', { ascending: true })
-      .limit(30),
-    serviceClient
-      .from('kcp90_stats')
-      .select('id, product, encoder_used, original_chars, compressed_chars, compression_ratio, tokens_saved, created_at')
-      .order('created_at', { ascending: false })
-      .limit(20),
-  ]);
-
-  const initial = {
-    summary: summaryRes.data ?? null,
-    daily:   dailyRes.data   ?? [],
-    recent:  recentRes.data  ?? [],
-  };
+  // Initial SSR data fetch — wrapped in try/catch so a Supabase error
+  // doesn't crash the whole page; dashboard handles null/empty gracefully.
+  let initial = { summary: null as null, daily: [] as unknown[], recent: [] as unknown[] };
+  try {
+    const [summaryRes, dailyRes, recentRes] = await Promise.all([
+      serviceClient.from('kcp90_summary').select('*').single(),
+      serviceClient
+        .from('kcp90_daily_stats')
+        .select('*')
+        .order('day', { ascending: true })
+        .limit(30),
+      serviceClient
+        .from('kcp90_stats')
+        .select('id, product, encoder_used, original_chars, compressed_chars, compression_ratio, tokens_saved, created_at')
+        .order('created_at', { ascending: false })
+        .limit(20),
+    ]);
+    initial = {
+      summary: summaryRes.data ?? null,
+      daily:   dailyRes.data   ?? [],
+      recent:  recentRes.data  ?? [],
+    };
+  } catch {
+    // Supabase unreachable — dashboard renders with empty state
+  }
 
   return <ControlPlaneDashboard initial={initial} />;
 }

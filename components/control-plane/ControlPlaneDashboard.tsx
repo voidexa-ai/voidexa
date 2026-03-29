@@ -3,10 +3,10 @@
 // components/control-plane/ControlPlaneDashboard.tsx
 // voidexa Control Plane — full admin command center
 
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, BarChart, Bar, Cell,
+  ResponsiveContainer,
 } from 'recharts';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -704,8 +704,8 @@ function ActivityFeedPanel() {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function ControlPlaneDashboard({ initial }: { initial: StatsData }) {
-  const [data, setData] = useState<StatsData>(initial);
+export default function ControlPlaneDashboard({ initial }: { initial: { summary: Summary | null; daily: unknown[]; recent: unknown[] } }) {
+  const [data, setData] = useState<StatsData>({ summary: initial.summary, daily: initial.daily as DailyStat[], recent: initial.recent as RecentStat[] });
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(new Date());
   const [activeNav, setActiveNav] = useState('overview');
