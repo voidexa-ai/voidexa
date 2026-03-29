@@ -117,9 +117,9 @@ function SectionHeader({ title, badge }: { title: string; badge?: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
       <span style={{
-        fontFamily: MONO, fontSize: 10, fontWeight: 600,
-        letterSpacing: '0.18em', textTransform: 'uppercase',
-        color: 'rgba(100,200,255,0.5)',
+        fontFamily: SANS, fontSize: 16, fontWeight: 500,
+        letterSpacing: '0.04em',
+        color: '#e2e8f0',
       }}>
         {title}
       </span>
@@ -173,21 +173,21 @@ function MetricCard({
         }}>demo</span>
       )}
       <div style={{
-        fontFamily: SANS, fontSize: 10, fontWeight: 600,
-        letterSpacing: '0.14em', textTransform: 'uppercase',
-        color: 'rgba(148,163,184,0.6)', marginBottom: 10,
+        fontFamily: SANS, fontSize: 13, fontWeight: 500,
+        letterSpacing: '0.06em', textTransform: 'uppercase',
+        color: 'rgba(148,163,184,0.7)', marginBottom: 10,
       }}>
         {label}
       </div>
       <div style={{
-        fontFamily: MONO, fontSize: 28, fontWeight: 400,
-        color: accent ?? '#f1f5f9', lineHeight: 1.1, letterSpacing: '-0.01em',
+        fontFamily: MONO, fontSize: 36, fontWeight: 300,
+        color: accent ?? '#f1f5f9', lineHeight: 1.1, letterSpacing: '-0.02em',
       }}>
         {value}
       </div>
       {sub && (
         <div style={{
-          fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.45)',
+          fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.5)',
           marginTop: 6,
         }}>
           {sub}
@@ -213,7 +213,7 @@ const NAV_LINKS = [
 function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => void }) {
   return (
     <div style={{
-      width: 220, flexShrink: 0,
+      width: 240, flexShrink: 0,
       background: BG_SIDE,
       borderRight: BORDER,
       display: 'flex', flexDirection: 'column',
@@ -223,14 +223,14 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
       {/* Logo */}
       <div style={{ padding: '24px 20px 20px', borderBottom: BORDER }}>
         <div style={{
-          fontFamily: MONO, fontSize: 13, fontWeight: 700,
+          fontFamily: MONO, fontSize: 16, fontWeight: 700,
           color: BLUE, letterSpacing: '0.06em',
         }}>
           voidexa
         </div>
         <div style={{
-          fontFamily: MONO, fontSize: 9, color: 'rgba(100,200,255,0.35)',
-          letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 3,
+          fontFamily: MONO, fontSize: 10, color: 'rgba(100,200,255,0.35)',
+          letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 4,
         }}>
           control-plane://admin
         </div>
@@ -259,7 +259,7 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
               {link.icon}
             </span>
             <span style={{
-              fontFamily: SANS, fontSize: 12, fontWeight: 500,
+              fontFamily: SANS, fontSize: 14, fontWeight: 500,
               color: active === link.id ? '#e2e8f0' : 'rgba(148,163,184,0.55)',
             }}>
               {link.label}
@@ -299,21 +299,21 @@ function TopBar({
       padding: '0 28px', gap: 16,
     }}>
       <span style={{
-        fontFamily: MONO, fontSize: 11, fontWeight: 600,
-        color: '#e2e8f0', letterSpacing: '0.06em',
+        fontFamily: MONO, fontSize: 18, fontWeight: 600,
+        color: '#e2e8f0', letterSpacing: '0.04em',
       }}>
         Control Plane
       </span>
-      <span style={{ color: 'rgba(255,255,255,0.1)', fontSize: 12 }}>/</span>
+      <span style={{ color: 'rgba(255,255,255,0.1)', fontSize: 14 }}>/</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         <Dot color={GREEN} pulse />
-        <span style={{ fontFamily: MONO, fontSize: 10, color: 'rgba(16,185,129,0.7)', letterSpacing: '0.1em' }}>
+        <span style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(16,185,129,0.7)', letterSpacing: '0.08em' }}>
           systems nominal
         </span>
       </div>
       <div style={{ flex: 1 }} />
       <span style={{
-        fontFamily: MONO, fontSize: 10,
+        fontFamily: MONO, fontSize: 12,
         color: 'rgba(148,163,184,0.4)',
       }}>
         {lastRefresh
@@ -393,18 +393,18 @@ function Kcp90Panel({ summary, daily, recent }: {
       <SectionHeader title="KCP-90 Protocol" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Total Compressions</div>
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Total Compressions</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
             {summary ? fmt(summary.total_compressions) : '—'}
           </div>
         </Card>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Avg Compression Rate</div>
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Avg Compression Rate</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
             {summary ? `${((summary.overall_ratio ?? 0) * 100).toFixed(1)}%` : '—'}
           </div>
           {summary && (
-            <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
+            <div style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
               {fmt(summary.total_original_chars)} → {fmt(summary.total_compressed_chars)} chars
             </div>
           )}
@@ -412,18 +412,18 @@ function Kcp90Panel({ summary, daily, recent }: {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Tokens Saved</div>
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Tokens Saved</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: PURPLE, letterSpacing: '-0.02em' }}>
             {summary ? fmt(summary.total_tokens_saved) : '—'}
           </div>
           {summary && (
-            <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
+            <div style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
               ≈ ${(summary.estimated_usd_saved ?? 0).toFixed(2)} saved
             </div>
           )}
         </Card>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Active Products</div>
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Active Products</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: PURPLE, letterSpacing: '-0.02em' }}>
             {summary ? `${summary.active_products} / 5` : '—'}
           </div>
@@ -433,7 +433,7 @@ function Kcp90Panel({ summary, daily, recent }: {
       {/* Daily trend — pure CSS bar chart, zero external dependencies */}
       {trendData.length > 0 && (
         <Card style={{ padding: '20px 22px', marginBottom: 12 }}>
-          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.04em', marginBottom: 16 }}>
             Daily compressions — last 30 days
           </div>
           <CssBarChart data={trendData} />
@@ -443,7 +443,7 @@ function Kcp90Panel({ summary, daily, recent }: {
       {/* Recent events table */}
       {recent.length > 0 && (
         <Card style={{ padding: '20px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>
+          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.04em', marginBottom: 14 }}>
             Recent compression events
           </div>
           <div style={{ overflowX: 'auto' }}>
@@ -518,8 +518,8 @@ function TradingBotPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 14, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: 'rgba(100,116,139,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 16, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -554,8 +554,8 @@ function GhaiPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 14, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: 'rgba(100,116,139,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 16, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -590,8 +590,8 @@ function QuantumPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 14, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: 'rgba(100,116,139,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 16, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -646,6 +646,9 @@ const SYSTEMS = [
   { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.3)', note: 'Phase 3' },
   { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.3)', note: 'Phase 4' },
   { name: 'Comlink',            status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
+  { name: 'BOSSO',              status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
+  { name: 'TINE Secretary AI',  status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
+  { name: 'Jarvis',             status: 'next',     color: BLUE,   note: 'Planned — next release' },
   { name: 'Supabase DB',        status: 'live',     color: GREEN,  note: 'ihuljnekxkyqgroklurp — EU region' },
   { name: 'Vercel Hosting',     status: 'live',     color: GREEN,  note: 'voidexa.com — edge network' },
 ];
@@ -663,12 +666,12 @@ function SystemHealthPanel() {
             }}>
               <Dot color={color} pulse={status === 'live'} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: SANS, fontSize: 12, color: '#cbd5e1', fontWeight: 500 }}>{name}</div>
-                <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(100,116,139,0.6)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
+                <div style={{ fontFamily: SANS, fontSize: 14, color: '#cbd5e1', fontWeight: 500 }}>{name}</div>
+                <div style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(100,116,139,0.6)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
               </div>
               <span style={{
-                fontFamily: MONO, fontSize: 9, fontWeight: 600,
-                color, opacity: 0.85, letterSpacing: '0.1em',
+                fontFamily: MONO, fontSize: 11, fontWeight: 600,
+                color, opacity: 0.85, letterSpacing: '0.08em',
                 textTransform: 'uppercase', flexShrink: 0,
               }}>{status}</span>
             </div>
@@ -705,8 +708,8 @@ function ActivityFeedPanel() {
               borderBottom: i < ACTIVITY.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
             }}>
               <span style={{ fontFamily: MONO, fontSize: 14, color, flexShrink: 0, lineHeight: 1.4 }}>{icon}</span>
-              <span style={{ fontFamily: SANS, fontSize: 12, color: '#94a3b8', flex: 1, lineHeight: 1.5 }}>{text}</span>
-              <span style={{ fontFamily: MONO, fontSize: 10, color: 'rgba(100,116,139,0.5)', flexShrink: 0, marginTop: 1 }}>{time}</span>
+              <span style={{ fontFamily: SANS, fontSize: 13, color: '#94a3b8', flex: 1, lineHeight: 1.5 }}>{text}</span>
+              <span style={{ fontFamily: MONO, fontSize: 11, color: 'rgba(100,116,139,0.5)', flexShrink: 0, marginTop: 1 }}>{time}</span>
             </div>
           ))}
         </div>
