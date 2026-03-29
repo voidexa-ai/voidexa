@@ -46,7 +46,7 @@ export default function HomeCtas() {
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              objectPosition: 'center center',
+              objectPosition: 'center 30%',
             }}
           />
           <div style={{
@@ -105,14 +105,14 @@ export default function HomeCtas() {
         {/* ── BOTTOM ROW: Two true-square cards ── */}
         <div style={{ display: 'flex', gap: 12 }}>
 
-          {/* Left: Claim Your Planet — width drives height via aspect-ratio */}
+          {/* Left: Claim Your Planet — height drives width via aspect-ratio */}
           <Link
             href="/claim-your-planet"
             style={{
               position: 'relative',
-              width: 'calc(50% - 6px)',
+              height: 280,
               aspectRatio: '1 / 1',
-              flexShrink: 0,
+              flex: '0 0 auto',
               borderRadius: 16,
               overflow: 'hidden',
               textDecoration: 'none',
@@ -192,14 +192,14 @@ export default function HomeCtas() {
             </div>
           </Link>
 
-          {/* Right: GHAI — same width as left card */}
+          {/* Right: GHAI — same height as left card */}
           <Link
             href="/token"
             style={{
               position: 'relative',
-              width: 'calc(50% - 6px)',
+              height: 280,
               aspectRatio: '1 / 1',
-              flexShrink: 0,
+              flex: '0 0 auto',
               borderRadius: 16,
               overflow: 'hidden',
               textDecoration: 'none',
