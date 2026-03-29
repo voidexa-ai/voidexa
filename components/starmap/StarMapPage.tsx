@@ -55,7 +55,7 @@ function Kcp90FloatingPanel() {
     ? summary!.total_compressions.toLocaleString()
     : '247'
 
-  const mono: React.CSSProperties = { fontFamily: 'monospace', fontSize: 11, lineHeight: '1.8' }
+  const mono: React.CSSProperties = { fontFamily: 'monospace', fontSize: 13, lineHeight: '1.8' }
 
   return (
     <div style={{
@@ -63,8 +63,8 @@ function Kcp90FloatingPanel() {
       bottom: 20,
       right: 20,
       zIndex: 50,
-      maxWidth: 340,
-      width: 340,
+      maxWidth: 370,
+      width: 370,
       background: '#0a0a0a',
       border: '1px solid #1a1a2a',
       borderRadius: 8,
@@ -86,7 +86,7 @@ function Kcp90FloatingPanel() {
           <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', display: 'inline-block' }} />
           <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', background: '#3b82f6', display: 'inline-block' }} />
         </div>
-        <span style={{ ...mono, fontSize: 9, color: 'rgba(59,130,246,0.5)', letterSpacing: '0.04em' }}>
+        <span style={{ ...mono, fontSize: 11, color: 'rgba(59,130,246,0.5)', letterSpacing: '0.04em' }}>
           kcp-90://protocol
         </span>
         <button
@@ -118,25 +118,25 @@ function Kcp90FloatingPanel() {
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>sessions</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa' }}>{sessions}</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>{sessions}</span>
         </div>
 
         {/* compress */}
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>compress</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa' }}>83%</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>83%</span>
         </div>
 
         {/* range */}
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>range</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa' }}>78-88%</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>78-88%</span>
         </div>
 
         {/* Status line with blinking cursor */}
-        <div style={{ ...mono, color: 'rgba(59,130,246,0.4)', marginTop: 2 }}>
+        <div style={{ ...mono, fontSize: 12, color: 'rgba(59,130,246,0.4)', marginTop: 2 }}>
           $ binary: active | shm: active{' '}
           <span style={{ color: '#60a5fa', animation: 'blink 1s infinite' }}>_</span>
         </div>
