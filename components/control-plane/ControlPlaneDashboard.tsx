@@ -4,10 +4,6 @@
 // voidexa Control Plane — full admin command center
 
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -343,13 +339,44 @@ function TopBar({
   );
 }
 
+// ─── CSS Bar Chart (no external libs) ────────────────────────────────────────
+
+function CssBarChart({ data }: { data: { day: string; compressions: number }[] }) {
+  const max = Math.max(...data.map(d => d.compressions), 1);
+  // Show at most 30 bars; if more, sample evenly
+  const bars = data.length > 30 ? data.filter((_, i) => i % Math.ceil(data.length / 30) === 0) : data;
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 120, width: '100%' }}>
+      {bars.map(({ day, compressions }) => {
+        const pct = Math.max((compressions / max) * 100, 2);
+        return (
+          <div
+            key={day}
+            title={`${day}: ${compressions.toLocaleString()}`}
+            style={{
+              flex: 1,
+              height: `${pct}%`,
+              background: `linear-gradient(to top, ${BLUE}, rgba(96,165,250,0.4))`,
+              borderRadius: '2px 2px 0 0',
+              minWidth: 4,
+              cursor: 'default',
+              transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.7'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '1'; }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── KCP-90 Panel ─────────────────────────────────────────────────────────────
 
-function Kcp90Panel({ summary, daily, recent, mounted }: {
+function Kcp90Panel({ summary, daily, recent }: {
   summary: Summary | null;
   daily: DailyStat[];
   recent: RecentStat[];
-  mounted: boolean;
 }) {
   const dayMap: Record<string, number> = {};
   for (const row of daily) {
@@ -402,25 +429,13 @@ function Kcp90Panel({ summary, daily, recent, mounted }: {
         </Card>
       </div>
 
-      {/* Daily trend — only render recharts on client to avoid SSR crash */}
-      {mounted && trendData.length > 0 && (
+      {/* Daily trend — pure CSS bar chart, zero external dependencies */}
+      {trendData.length > 0 && (
         <Card style={{ padding: '20px 22px', marginBottom: 12 }}>
           <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>
             Daily compressions — last 30 days
           </div>
-          <ResponsiveContainer width="100%" height={160}>
-            <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-              <XAxis dataKey="day" tick={{ fill: '#475569', fontSize: 10, fontFamily: MONO }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#475569', fontSize: 10, fontFamily: MONO }} axisLine={false} tickLine={false} tickFormatter={fmt} />
-              <Tooltip
-                contentStyle={{ background: '#0a0a18', border: '1px solid rgba(100,200,255,0.15)', borderRadius: 8, fontFamily: MONO, fontSize: 11 }}
-                itemStyle={{ color: BLUE }}
-                labelStyle={{ color: '#64748b' }}
-              />
-              <Line type="monotone" dataKey="compressions" stroke={BLUE} strokeWidth={1.5} dot={false} activeDot={{ r: 3, fill: BLUE }} />
-            </LineChart>
-          </ResponsiveContainer>
+          <CssBarChart data={trendData} />
         </Card>
       )}
 
@@ -702,7 +717,6 @@ function ActivityFeedPanel() {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ControlPlaneDashboard({ initial }: { initial: { summary: Summary | null; daily: unknown[]; recent: unknown[] } }) {
-  const [mounted, setMounted] = useState(false);
   const [data, setData] = useState<StatsData>({ summary: initial.summary, daily: initial.daily as DailyStat[], recent: initial.recent as RecentStat[] });
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
@@ -723,15 +737,10 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
   }, []);
 
   useEffect(() => {
-    setMounted(true);
     setLastRefresh(new Date());
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
     const id = setInterval(refresh, 30_000);
     return () => clearInterval(id);
-  }, [refresh, mounted]);
+  }, [refresh]);
 
   const handleNav = (id: string) => {
     setActiveNav(id);
@@ -790,7 +799,7 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
           </section>
 
           {/* ── Row 2: KCP-90 ── */}
-          <Kcp90Panel summary={summary} daily={daily} recent={recent} mounted={mounted} />
+          <Kcp90Panel summary={summary} daily={daily} recent={recent} />
 
           {/* ── Row 3: Trading Bot + GHAI Token ── */}
           <section id="trading">
