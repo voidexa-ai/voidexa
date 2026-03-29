@@ -15,10 +15,11 @@ export default function HomeCtas() {
             position: 'relative',
             display: 'block',
             width: '100%',
-            height: 160,
+            height: 200,
             borderRadius: 16,
             overflow: 'hidden',
             textDecoration: 'none',
+            background: '#0a0a1a',
             border: '1px solid rgba(139,92,246,0.22)',
             transition: 'all 0.25s ease',
           }}
@@ -44,8 +45,8 @@ export default function HomeCtas() {
               inset: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center 20%',
+              objectFit: 'contain',
+              objectPosition: 'center center',
             }}
           />
           <div style={{

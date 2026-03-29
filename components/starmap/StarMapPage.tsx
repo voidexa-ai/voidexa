@@ -37,36 +37,6 @@ function useCountUp(target: number, run: boolean, duration = 1200) {
   return count
 }
 
-function Stat({ value, label, prefix = '', suffix = '' }: { value: string | number; label: string; prefix?: string; suffix?: string }) {
-  return (
-    <div style={{ textAlign: 'center', minWidth: 64 }}>
-      <div style={{
-        fontSize: 18,
-        fontWeight: 800,
-        fontFamily: 'var(--font-space)',
-        background: 'linear-gradient(135deg, #00d4ff, #a78bfa)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        lineHeight: 1.1,
-      }}>
-        {prefix}{value}{suffix}
-      </div>
-      <div style={{
-        fontSize: 9,
-        fontWeight: 600,
-        color: 'rgba(148,163,184,0.55)',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        marginTop: 3,
-        lineHeight: 1.2,
-      }}>
-        {label}
-      </div>
-    </div>
-  )
-}
-
 function Kcp90FloatingPanel() {
   const [summary, setSummary] = useState<KcpSummary | null | undefined>(undefined)
   const [visible, setVisible] = useState(true)
@@ -85,21 +55,41 @@ function Kcp90FloatingPanel() {
 
   if (!visible) return null
 
+  const statVal: React.CSSProperties = {
+    fontSize: 36,
+    fontWeight: 900,
+    fontFamily: 'var(--font-space)',
+    color: '#00d4ff',
+    lineHeight: 1.05,
+    letterSpacing: '-0.01em',
+    textShadow: '0 0 18px rgba(0,212,255,0.5)',
+  }
+  const statLbl: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 700,
+    color: 'rgba(148,163,184,0.65)',
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    marginTop: 4,
+    whiteSpace: 'nowrap',
+  }
+
   return (
     <div
       style={{
         position: 'fixed',
         bottom: 72,
         right: 20,
-        zIndex: 50,
-        background: 'rgba(7,4,18,0.82)',
-        border: '1px solid rgba(0,212,255,0.18)',
-        borderRadius: 14,
-        padding: '14px 18px 12px',
-        backdropFilter: 'blur(18px)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.06)',
-        minWidth: 260,
-        maxWidth: 300,
+        zIndex: 55,
+        background: 'rgba(7,4,18,0.92)',
+        border: '1px solid rgba(0,212,255,0.25)',
+        borderRadius: 18,
+        padding: '22px 28px 18px',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        boxShadow: '0 12px 48px rgba(0,0,0,0.6), 0 0 60px rgba(0,212,255,0.05)',
+        minWidth: 340,
+        minHeight: 150,
       }}
     >
       {/* Header row */}
@@ -107,25 +97,25 @@ function Kcp90FloatingPanel() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 12,
+        marginBottom: 18,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          {/* Live pulse dot */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{
             display: 'inline-block',
-            width: 6,
-            height: 6,
+            width: 9,
+            height: 9,
             borderRadius: '50%',
             background: '#22c55e',
-            boxShadow: '0 0 6px #22c55e',
+            boxShadow: '0 0 9px #22c55e',
             animation: 'kcp-pulse 2s ease-in-out infinite',
+            flexShrink: 0,
           }} />
           <span style={{
-            fontSize: 10,
-            fontWeight: 700,
-            letterSpacing: '0.18em',
+            fontSize: 13,
+            fontWeight: 800,
+            letterSpacing: '0.2em',
             textTransform: 'uppercase',
-            color: 'rgba(0,212,255,0.7)',
+            color: 'rgba(0,212,255,0.85)',
             fontFamily: 'var(--font-space)',
           }}>
             KCP-90 Live Stats
@@ -136,48 +126,58 @@ function Kcp90FloatingPanel() {
           style={{
             background: 'none',
             border: 'none',
-            color: 'rgba(148,163,184,0.35)',
+            color: 'rgba(148,163,184,0.4)',
             cursor: 'pointer',
-            fontSize: 14,
+            fontSize: 18,
             lineHeight: 1,
             padding: '0 2px',
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.7)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.35)')}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.8)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.4)')}
           aria-label="Dismiss"
         >
           ×
         </button>
       </div>
 
-      {/* Stats row */}
-      <div style={{ display: 'flex', gap: 4, justifyContent: 'space-between' }}>
-        <Stat
-          value={hasData && compressions > 0 ? compressions.toLocaleString() : '20+'}
-          label="compressions"
-        />
-        <div style={{ width: 1, background: 'rgba(255,255,255,0.06)', alignSelf: 'stretch' }} />
-        <Stat
-          value={hasData && ratio > 0 ? ratio : '83'}
-          label="avg compress %"
-          suffix="%"
-        />
-        <div style={{ width: 1, background: 'rgba(255,255,255,0.06)', alignSelf: 'stretch' }} />
-        <Stat
-          value={hasData && tokens > 0 ? tokens.toLocaleString() : '78–88%'}
-          label="tokens saved"
-        />
+      {/* Stats row — 3 columns */}
+      <div style={{ display: 'flex', gap: 0, justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={statVal}>
+            {hasData && compressions > 0 ? compressions.toLocaleString() : '20+'}
+          </div>
+          <div style={statLbl}>Compressions</div>
+        </div>
+
+        <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.07)', margin: '0 4px' }} />
+
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={statVal}>
+            {hasData && ratio > 0 ? `${ratio}%` : '83%'}
+          </div>
+          <div style={statLbl}>Avg Compression</div>
+        </div>
+
+        <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.07)', margin: '0 4px' }} />
+
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={statVal}>
+            {hasData && tokens > 0 ? tokens.toLocaleString() : '—'}
+          </div>
+          <div style={statLbl}>Tokens Saved</div>
+        </div>
       </div>
 
       {/* Footer */}
       <div style={{
-        marginTop: 10,
-        paddingTop: 8,
-        borderTop: '1px solid rgba(255,255,255,0.05)',
-        fontSize: 9,
-        color: 'rgba(148,163,184,0.35)',
-        letterSpacing: '0.06em',
+        marginTop: 14,
+        paddingTop: 10,
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        fontSize: 10,
+        color: 'rgba(148,163,184,0.4)',
+        letterSpacing: '0.08em',
         textAlign: 'center',
+        fontWeight: 500,
       }}>
         Powered by KCP-90 — voidexa compression protocol
       </div>
