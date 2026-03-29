@@ -345,10 +345,11 @@ function TopBar({
 
 // ─── KCP-90 Panel ─────────────────────────────────────────────────────────────
 
-function Kcp90Panel({ summary, daily, recent }: {
+function Kcp90Panel({ summary, daily, recent, mounted }: {
   summary: Summary | null;
   daily: DailyStat[];
   recent: RecentStat[];
+  mounted: boolean;
 }) {
   const dayMap: Record<string, number> = {};
   for (const row of daily) {
@@ -401,8 +402,8 @@ function Kcp90Panel({ summary, daily, recent }: {
         </Card>
       </div>
 
-      {/* Daily trend */}
-      {trendData.length > 0 && (
+      {/* Daily trend — only render recharts on client to avoid SSR crash */}
+      {mounted && trendData.length > 0 && (
         <Card style={{ padding: '20px 22px', marginBottom: 12 }}>
           <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>
             Daily compressions — last 30 days
@@ -701,9 +702,10 @@ function ActivityFeedPanel() {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ControlPlaneDashboard({ initial }: { initial: { summary: Summary | null; daily: unknown[]; recent: unknown[] } }) {
+  const [mounted, setMounted] = useState(false);
   const [data, setData] = useState<StatsData>({ summary: initial.summary, daily: initial.daily as DailyStat[], recent: initial.recent as RecentStat[] });
   const [refreshing, setRefreshing] = useState(false);
-  const [lastRefresh, setLastRefresh] = useState<Date | null>(new Date());
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [activeNav, setActiveNav] = useState('overview');
 
   const refresh = useCallback(async () => {
@@ -721,9 +723,15 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
   }, []);
 
   useEffect(() => {
+    setMounted(true);
+    setLastRefresh(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     const id = setInterval(refresh, 30_000);
     return () => clearInterval(id);
-  }, [refresh]);
+  }, [refresh, mounted]);
 
   const handleNav = (id: string) => {
     setActiveNav(id);
@@ -782,7 +790,7 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
           </section>
 
           {/* ── Row 2: KCP-90 ── */}
-          <Kcp90Panel summary={summary} daily={daily} recent={recent} />
+          <Kcp90Panel summary={summary} daily={daily} recent={recent} mounted={mounted} />
 
           {/* ── Row 3: Trading Bot + GHAI Token ── */}
           <section id="trading">

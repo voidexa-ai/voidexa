@@ -2,7 +2,9 @@
 // Standalone full-viewport layout for the admin control plane.
 // Sits above the global Navigation via z-index and provides its own scroll context.
 
-export default function ControlPlaneLayout({ children }: { children: React.ReactNode }) {
+import type { ReactNode } from 'react'
+
+export default function ControlPlaneLayout({ children }: { children: ReactNode }) {
   return (
     <div
       style={{
