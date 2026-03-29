@@ -55,70 +55,53 @@ function Kcp90FloatingPanel() {
 
   if (!visible) return null
 
-  const statVal: React.CSSProperties = {
-    fontSize: 52,
-    fontWeight: 900,
-    fontFamily: 'var(--font-space)',
-    color: '#00d4ff',
-    lineHeight: 1.0,
-    letterSpacing: '-0.02em',
-    textShadow: '0 0 24px rgba(0,212,255,0.7)',
-  }
-  const statLbl: React.CSSProperties = {
-    fontSize: 13,
-    fontWeight: 700,
-    color: 'rgba(148,163,184,0.75)',
-    letterSpacing: '0.14em',
-    textTransform: 'uppercase',
-    marginTop: 6,
-    whiteSpace: 'nowrap',
-  }
+  const dispCompressions = hasData && compressions > 0 ? compressions.toLocaleString() : '20+'
+  const dispRatio        = hasData && ratio > 0 ? `${ratio}%` : '83%'
+  const dispTokens       = hasData && tokens > 0 ? tokens.toLocaleString() : '78–88%'
 
   return (
     <div
       style={{
         position: 'fixed',
-        bottom: 72,
+        bottom: 20,
         right: 20,
-        zIndex: 55,
-        background: 'rgba(7,4,18,0.95)',
-        border: '1px solid rgba(0,212,255,0.3)',
-        borderRadius: 20,
-        padding: '28px 36px 24px',
-        backdropFilter: 'blur(32px)',
-        WebkitBackdropFilter: 'blur(32px)',
-        boxShadow: '0 16px 64px rgba(0,0,0,0.7), 0 0 80px rgba(0,212,255,0.08)',
-        minWidth: 420,
-        minHeight: 200,
+        zIndex: 50,
+        width: 340,
+        background: 'rgba(10,10,30,0.7)',
+        border: '1px solid rgba(100,220,255,0.15)',
+        borderRadius: 16,
+        padding: '20px 28px',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        boxShadow: '0 8px 32px rgba(0,200,255,0.08)',
       }}
     >
-      {/* Header row */}
+      {/* Header */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 24,
+        marginBottom: 18,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <span style={{
             display: 'inline-block',
-            width: 9,
-            height: 9,
+            width: 8,
+            height: 8,
             borderRadius: '50%',
             background: '#22c55e',
-            boxShadow: '0 0 9px #22c55e',
-            animation: 'kcp-pulse 2s ease-in-out infinite',
             flexShrink: 0,
+            animation: 'kcp-pulse 2s ease-in-out infinite',
           }} />
           <span style={{
-            fontSize: 15,
-            fontWeight: 800,
-            letterSpacing: '0.2em',
+            fontSize: 13,
+            fontWeight: 500,
+            letterSpacing: '0.14em',
             textTransform: 'uppercase',
-            color: 'rgba(0,212,255,0.9)',
-            fontFamily: 'var(--font-space)',
+            color: 'rgba(100,220,255,0.7)',
+            fontFamily: 'Inter, system-ui, sans-serif',
           }}>
-            KCP-90 Live Stats
+            KCP-90
           </span>
         </div>
         <button
@@ -126,66 +109,117 @@ function Kcp90FloatingPanel() {
           style={{
             background: 'none',
             border: 'none',
-            color: 'rgba(148,163,184,0.4)',
+            color: 'rgba(255,255,255,0.2)',
             cursor: 'pointer',
-            fontSize: 18,
+            fontSize: 16,
             lineHeight: 1,
             padding: '0 2px',
+            fontFamily: 'inherit',
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.8)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(148,163,184,0.4)')}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.2)')}
           aria-label="Dismiss"
         >
           ×
         </button>
       </div>
 
-      {/* Stats row — 3 columns */}
-      <div style={{ display: 'flex', gap: 0, justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ textAlign: 'center', flex: 1 }}>
-          <div style={statVal}>
-            {hasData && compressions > 0 ? compressions.toLocaleString() : '20+'}
+      {/* Stats row */}
+      <div style={{ display: 'flex', alignItems: 'stretch' }}>
+
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{
+            fontSize: 28,
+            fontWeight: 300,
+            color: '#ffffff',
+            lineHeight: 1.1,
+            fontFamily: 'Inter, system-ui, sans-serif',
+            letterSpacing: '-0.01em',
+          }}>
+            {dispCompressions}
           </div>
-          <div style={statLbl}>Compressions</div>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.4)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            marginTop: 5,
+            fontFamily: 'Inter, system-ui, sans-serif',
+          }}>
+            compressions
+          </div>
         </div>
 
-        <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.07)', margin: '0 4px' }} />
+        <div style={{ width: 1, background: 'rgba(255,255,255,0.08)', margin: '0 4px', alignSelf: 'stretch' }} />
 
-        <div style={{ textAlign: 'center', flex: 1 }}>
-          <div style={statVal}>
-            {hasData && ratio > 0 ? `${ratio}%` : '83%'}
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{
+            fontSize: 28,
+            fontWeight: 300,
+            color: '#ffffff',
+            lineHeight: 1.1,
+            fontFamily: 'Inter, system-ui, sans-serif',
+            letterSpacing: '-0.01em',
+          }}>
+            {dispRatio}
           </div>
-          <div style={statLbl}>Avg Compression</div>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.4)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            marginTop: 5,
+            fontFamily: 'Inter, system-ui, sans-serif',
+          }}>
+            avg compression
+          </div>
         </div>
 
-        <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.07)', margin: '0 4px' }} />
+        <div style={{ width: 1, background: 'rgba(255,255,255,0.08)', margin: '0 4px', alignSelf: 'stretch' }} />
 
-        <div style={{ textAlign: 'center', flex: 1 }}>
-          <div style={statVal}>
-            {hasData && tokens > 0 ? tokens.toLocaleString() : '—'}
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{
+            fontSize: 28,
+            fontWeight: 300,
+            color: '#ffffff',
+            lineHeight: 1.1,
+            fontFamily: 'Inter, system-ui, sans-serif',
+            letterSpacing: '-0.01em',
+          }}>
+            {dispTokens}
           </div>
-          <div style={statLbl}>Tokens Saved</div>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.4)',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            marginTop: 5,
+            fontFamily: 'Inter, system-ui, sans-serif',
+          }}>
+            token range
+          </div>
         </div>
+
       </div>
 
       {/* Footer */}
       <div style={{
-        marginTop: 14,
-        paddingTop: 10,
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        marginTop: 16,
         fontSize: 10,
-        color: 'rgba(148,163,184,0.4)',
-        letterSpacing: '0.08em',
-        textAlign: 'center',
-        fontWeight: 500,
+        color: 'rgba(255,255,255,0.25)',
+        letterSpacing: '0.06em',
+        fontFamily: 'Inter, system-ui, sans-serif',
       }}>
-        Powered by KCP-90 — voidexa compression protocol
+        Powered by voidexa compression protocol
       </div>
 
       <style>{`
         @keyframes kcp-pulse {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          50% { opacity: 0.3; }
         }
       `}</style>
     </div>
