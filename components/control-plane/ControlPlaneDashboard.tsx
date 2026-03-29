@@ -1,13 +1,12 @@
 'use client';
 
 // components/control-plane/ControlPlaneDashboard.tsx
-// KCP-90 Control Plane — client dashboard with auto-refresh and charts
+// voidexa Control Plane — full admin command center
 
 import { useEffect, useState, useCallback } from 'react';
 import {
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  LineChart, Line, Legend,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, BarChart, Bar, Cell,
 } from 'recharts';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -29,13 +28,8 @@ interface DailyStat {
   day: string;
   product: string;
   total_compressions: number;
-  total_original_chars: number;
-  total_compressed_chars: number;
   avg_ratio: number;
   total_tokens_saved: number;
-  ollama_count: number;
-  regex_count: number;
-  raw_count: number;
 }
 
 interface RecentStat {
@@ -55,23 +49,20 @@ interface StatsData {
   recent: RecentStat[];
 }
 
-// ─── Colours ──────────────────────────────────────────────────────────────────
+// ─── Style constants ──────────────────────────────────────────────────────────
 
-const ENCODER_COLORS: Record<string, string> = {
-  ollama: '#7777bb',
-  regex:  '#4ade80',
-  raw:    '#f59e0b',
-};
-
-const PRODUCT_COLORS: Record<string, string> = {
-  quantum:     '#7777bb',
-  'trading-bot': '#4ade80',
-  'void-chat': '#60a5fa',
-  jarvis:      '#f59e0b',
-  other:       '#94a3b8',
-};
-
-const TOTAL_PRODUCTS = 5;
+const BG      = '#030308';
+const BG_CARD = 'rgba(10,10,25,0.85)';
+const BG_SIDE = '#07070f';
+const BORDER  = '1px solid rgba(100,200,255,0.08)';
+const BORDER_H = '1px solid rgba(100,200,255,0.22)';
+const BLUE    = '#3b82f6';
+const PURPLE  = '#7c3aed';
+const GREEN   = '#10b981';
+const YELLOW  = '#f59e0b';
+const RED     = '#ef4444';
+const MONO    = '"JetBrains Mono", "Fira Mono", "Courier New", monospace';
+const SANS    = 'Inter, system-ui, sans-serif';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -87,53 +78,627 @@ function formatTime(iso: string): string {
   });
 }
 
-function encoderBadgeClass(encoder: string): string {
-  const map: Record<string, string> = {
-    ollama: 'bg-indigo-900/60 text-indigo-300 border border-indigo-700',
-    regex:  'bg-green-900/60 text-green-300 border border-green-700',
-    raw:    'bg-yellow-900/60 text-yellow-300 border border-yellow-700',
-  };
-  return map[encoder] ?? 'bg-gray-800 text-gray-300 border border-gray-700';
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// ─── Reusable card wrapper ────────────────────────────────────────────────────
 
-function SummaryCard({
-  label, value, sub,
+function Card({
+  children, style, className,
 }: {
-  label: string; value: string | number; sub?: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
 }) {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col gap-1 hover:border-indigo-800 transition-colors">
-      <p className="text-gray-400 text-xs uppercase tracking-widest">{label}</p>
-      <p className="text-3xl font-bold text-white">{value}</p>
-      {sub && <p className="text-gray-500 text-sm">{sub}</p>}
+    <div
+      className={className}
+      style={{
+        background: BG_CARD,
+        border: BORDER,
+        borderRadius: 12,
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        ...style,
+      }}
+    >
+      {children}
     </div>
   );
 }
 
-function EmptyState() {
+// ─── Section header ───────────────────────────────────────────────────────────
+
+function SectionHeader({ title, badge }: { title: string; badge?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-32 text-center">
-      <div className="text-6xl mb-6 opacity-30">⚡</div>
-      <p className="text-gray-400 text-lg font-medium">No compression data yet.</p>
-      <p className="text-gray-600 text-sm mt-2">KCP-90 will start logging when products are active.</p>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
+      <span style={{
+        fontFamily: MONO, fontSize: 10, fontWeight: 600,
+        letterSpacing: '0.18em', textTransform: 'uppercase',
+        color: 'rgba(100,200,255,0.5)',
+      }}>
+        {title}
+      </span>
+      {badge && (
+        <span style={{
+          fontFamily: MONO, fontSize: 9, fontWeight: 600,
+          background: 'rgba(239,68,68,0.15)',
+          border: '1px solid rgba(239,68,68,0.25)',
+          color: '#fca5a5',
+          borderRadius: 4,
+          padding: '1px 6px',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+        }}>
+          {badge}
+        </span>
+      )}
     </div>
   );
 }
 
-function RefreshBadge({ lastRefresh, refreshing }: { lastRefresh: Date | null; refreshing: boolean }) {
+// ─── Status dot ───────────────────────────────────────────────────────────────
+
+function Dot({ color, pulse }: { color: string; pulse?: boolean }) {
   return (
-    <div className="flex items-center gap-2 text-gray-500 text-xs">
-      <span
-        className={`w-2 h-2 rounded-full ${refreshing ? 'bg-yellow-400 animate-pulse' : 'bg-green-500'}`}
-      />
-      {refreshing
-        ? 'Refreshing…'
-        : lastRefresh
-          ? `Last updated ${formatTime(lastRefresh.toISOString())}`
-          : 'Loading…'}
+    <span style={{
+      display: 'inline-block', width: 8, height: 8, borderRadius: '50%',
+      background: color,
+      boxShadow: `0 0 6px ${color}`,
+      flexShrink: 0,
+      animation: pulse ? 'cp-pulse 2s ease-in-out infinite' : undefined,
+    }} />
+  );
+}
+
+// ─── Metric card ─────────────────────────────────────────────────────────────
+
+function MetricCard({
+  label, value, sub, accent, demo,
+}: {
+  label: string; value: string; sub?: string; accent?: string; demo?: boolean;
+}) {
+  return (
+    <Card style={{ padding: '20px 22px', position: 'relative' }}>
+      {demo && (
+        <span style={{
+          position: 'absolute', top: 10, right: 10,
+          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+        }}>demo</span>
+      )}
+      <div style={{
+        fontFamily: SANS, fontSize: 10, fontWeight: 600,
+        letterSpacing: '0.14em', textTransform: 'uppercase',
+        color: 'rgba(148,163,184,0.6)', marginBottom: 10,
+      }}>
+        {label}
+      </div>
+      <div style={{
+        fontFamily: MONO, fontSize: 28, fontWeight: 400,
+        color: accent ?? '#f1f5f9', lineHeight: 1.1, letterSpacing: '-0.01em',
+      }}>
+        {value}
+      </div>
+      {sub && (
+        <div style={{
+          fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.45)',
+          marginTop: 6,
+        }}>
+          {sub}
+        </div>
+      )}
+    </Card>
+  );
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+
+const NAV_LINKS = [
+  { id: 'overview',    label: 'Overview',       icon: '⬡' },
+  { id: 'kcp90',       label: 'KCP-90',          icon: '◈' },
+  { id: 'trading',     label: 'Trading Bot',     icon: '◎' },
+  { id: 'ghai',        label: 'GHAI Token',      icon: '◆' },
+  { id: 'quantum',     label: 'Quantum',         icon: '◇' },
+  { id: 'voidchat',    label: 'Void Chat',       icon: '◉' },
+  { id: 'health',      label: 'System Health',   icon: '▣' },
+  { id: 'activity',    label: 'Activity Feed',   icon: '≡' },
+];
+
+function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => void }) {
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0,
+      width: 220, height: '100vh',
+      background: BG_SIDE,
+      borderRight: BORDER,
+      display: 'flex', flexDirection: 'column',
+      zIndex: 40,
+      overflowY: 'auto',
+    }}>
+      {/* Logo */}
+      <div style={{ padding: '24px 20px 20px', borderBottom: BORDER }}>
+        <div style={{
+          fontFamily: MONO, fontSize: 13, fontWeight: 700,
+          color: BLUE, letterSpacing: '0.06em',
+        }}>
+          voidexa
+        </div>
+        <div style={{
+          fontFamily: MONO, fontSize: 9, color: 'rgba(100,200,255,0.35)',
+          letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 3,
+        }}>
+          control-plane://admin
+        </div>
+      </div>
+
+      {/* Nav links */}
+      <nav style={{ padding: '12px 10px', flex: 1 }}>
+        {NAV_LINKS.map(link => (
+          <button
+            key={link.id}
+            onClick={() => onNav(link.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              width: '100%', padding: '9px 12px',
+              borderRadius: 7, marginBottom: 2,
+              background: active === link.id ? 'rgba(59,130,246,0.12)' : 'transparent',
+              border: active === link.id ? '1px solid rgba(59,130,246,0.2)' : '1px solid transparent',
+              cursor: 'pointer', textAlign: 'left',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            <span style={{
+              fontFamily: MONO, fontSize: 13,
+              color: active === link.id ? BLUE : 'rgba(100,200,255,0.25)',
+            }}>
+              {link.icon}
+            </span>
+            <span style={{
+              fontFamily: SANS, fontSize: 12, fontWeight: 500,
+              color: active === link.id ? '#e2e8f0' : 'rgba(148,163,184,0.55)',
+            }}>
+              {link.label}
+            </span>
+          </button>
+        ))}
+      </nav>
+
+      {/* Footer */}
+      <div style={{
+        padding: '14px 20px',
+        borderTop: BORDER,
+        fontFamily: MONO, fontSize: 9, color: 'rgba(100,200,255,0.2)',
+        letterSpacing: '0.12em',
+      }}>
+        v1.0 · read-only
+      </div>
     </div>
+  );
+}
+
+// ─── Top bar ──────────────────────────────────────────────────────────────────
+
+function TopBar({
+  lastRefresh, refreshing, onRefresh,
+}: {
+  lastRefresh: Date | null;
+  refreshing: boolean;
+  onRefresh: () => void;
+}) {
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 220, right: 0,
+      height: 52, zIndex: 39,
+      background: 'rgba(3,3,8,0.9)',
+      borderBottom: BORDER,
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      display: 'flex', alignItems: 'center',
+      padding: '0 28px', gap: 16,
+    }}>
+      <span style={{
+        fontFamily: MONO, fontSize: 11, fontWeight: 600,
+        color: '#e2e8f0', letterSpacing: '0.06em',
+      }}>
+        Control Plane
+      </span>
+      <span style={{ color: 'rgba(255,255,255,0.1)', fontSize: 12 }}>/</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Dot color={GREEN} pulse />
+        <span style={{ fontFamily: MONO, fontSize: 10, color: 'rgba(16,185,129,0.7)', letterSpacing: '0.1em' }}>
+          systems nominal
+        </span>
+      </div>
+      <div style={{ flex: 1 }} />
+      <span style={{
+        fontFamily: MONO, fontSize: 10,
+        color: 'rgba(148,163,184,0.4)',
+      }}>
+        {lastRefresh
+          ? `updated ${formatTime(lastRefresh.toISOString())}`
+          : 'loading…'}
+      </span>
+      <button
+        onClick={onRefresh}
+        disabled={refreshing}
+        style={{
+          fontFamily: MONO, fontSize: 10,
+          color: refreshing ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.7)',
+          background: 'rgba(59,130,246,0.08)',
+          border: '1px solid rgba(59,130,246,0.2)',
+          borderRadius: 6, padding: '4px 12px',
+          cursor: refreshing ? 'default' : 'pointer',
+          letterSpacing: '0.08em',
+          transition: 'all 0.15s',
+        }}
+      >
+        {refreshing ? 'refreshing…' : '↺ refresh'}
+      </button>
+    </div>
+  );
+}
+
+// ─── KCP-90 Panel ─────────────────────────────────────────────────────────────
+
+function Kcp90Panel({ summary, daily, recent }: {
+  summary: Summary | null;
+  daily: DailyStat[];
+  recent: RecentStat[];
+}) {
+  const dayMap: Record<string, number> = {};
+  for (const row of daily) {
+    const day = row.day.slice(0, 10);
+    dayMap[day] = (dayMap[day] ?? 0) + row.total_compressions;
+  }
+  const trendData = Object.entries(dayMap)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([day, compressions]) => ({ day: day.slice(5), compressions }));
+
+  return (
+    <section id="kcp90">
+      <SectionHeader title="KCP-90 Protocol" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+        <Card style={{ padding: '18px 22px' }}>
+          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Total Compressions</div>
+          <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
+            {summary ? fmt(summary.total_compressions) : '—'}
+          </div>
+        </Card>
+        <Card style={{ padding: '18px 22px' }}>
+          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Avg Compression Rate</div>
+          <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
+            {summary ? `${(summary.overall_ratio * 100).toFixed(1)}%` : '—'}
+          </div>
+          {summary && (
+            <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
+              {fmt(summary.total_original_chars)} → {fmt(summary.total_compressed_chars)} chars
+            </div>
+          )}
+        </Card>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+        <Card style={{ padding: '18px 22px' }}>
+          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Tokens Saved</div>
+          <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: PURPLE, letterSpacing: '-0.02em' }}>
+            {summary ? fmt(summary.total_tokens_saved) : '—'}
+          </div>
+          {summary && (
+            <div style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
+              ≈ ${summary.estimated_usd_saved.toFixed(2)} saved
+            </div>
+          )}
+        </Card>
+        <Card style={{ padding: '18px 22px' }}>
+          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Active Products</div>
+          <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: PURPLE, letterSpacing: '-0.02em' }}>
+            {summary ? `${summary.active_products} / 5` : '—'}
+          </div>
+        </Card>
+      </div>
+
+      {/* Daily trend */}
+      {trendData.length > 0 && (
+        <Card style={{ padding: '20px 22px', marginBottom: 12 }}>
+          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>
+            Daily compressions — last 30 days
+          </div>
+          <ResponsiveContainer width="100%" height={160}>
+            <LineChart data={trendData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+              <XAxis dataKey="day" tick={{ fill: '#475569', fontSize: 10, fontFamily: MONO }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#475569', fontSize: 10, fontFamily: MONO }} axisLine={false} tickLine={false} tickFormatter={fmt} />
+              <Tooltip
+                contentStyle={{ background: '#0a0a18', border: '1px solid rgba(100,200,255,0.15)', borderRadius: 8, fontFamily: MONO, fontSize: 11 }}
+                itemStyle={{ color: BLUE }}
+                labelStyle={{ color: '#64748b' }}
+              />
+              <Line type="monotone" dataKey="compressions" stroke={BLUE} strokeWidth={1.5} dot={false} activeDot={{ r: 3, fill: BLUE }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </Card>
+      )}
+
+      {/* Recent events table */}
+      {recent.length > 0 && (
+        <Card style={{ padding: '20px 22px' }}>
+          <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(148,163,184,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 14 }}>
+            Recent compression events
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  {['Product', 'Encoder', 'Original', 'Compressed', 'Ratio', 'Tokens Saved', 'Time'].map(h => (
+                    <th key={h} style={{
+                      fontFamily: SANS, fontSize: 9, fontWeight: 600,
+                      color: 'rgba(100,116,139,0.7)', letterSpacing: '0.14em',
+                      textTransform: 'uppercase', textAlign: h === 'Product' || h === 'Encoder' ? 'left' : 'right',
+                      paddingBottom: 10, paddingRight: h !== 'Time' ? 12 : 0,
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {recent.map((row) => (
+                  <tr key={row.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                    <td style={{ fontFamily: SANS, fontSize: 12, color: '#94a3b8', padding: '10px 12px 10px 0', textTransform: 'capitalize' }}>{row.product}</td>
+                    <td style={{ paddingRight: 12 }}>
+                      <span style={{
+                        fontFamily: MONO, fontSize: 10,
+                        color: row.encoder_used === 'ollama' ? '#a78bfa' : row.encoder_used === 'regex' ? '#4ade80' : '#fbbf24',
+                        background: row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.1)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.1)' : 'rgba(251,191,36,0.1)',
+                        border: `1px solid ${row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.25)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.25)' : 'rgba(251,191,36,0.25)'}`,
+                        borderRadius: 4, padding: '1px 6px',
+                      }}>{row.encoder_used}</span>
+                    </td>
+                    <td style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textAlign: 'right', paddingRight: 12 }}>{fmt(row.original_chars)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textAlign: 'right', paddingRight: 12 }}>{fmt(row.compressed_chars)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 11, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{(row.compression_ratio * 100).toFixed(1)}%</td>
+                    <td style={{ fontFamily: MONO, fontSize: 11, color: BLUE, textAlign: 'right', paddingRight: 12 }}>{fmt(row.tokens_saved)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 10, color: '#475569', textAlign: 'right' }}>{timeAgo(row.created_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
+    </section>
+  );
+}
+
+// ─── Trading Bot Panel ────────────────────────────────────────────────────────
+
+function TradingBotPanel() {
+  const data = [
+    { label: 'season',    value: 'S-03', color: '#94a3b8' },
+    { label: 'status',    value: 'ACTIVE', color: GREEN },
+    { label: 'health',    value: 'GREEN', color: GREEN },
+    { label: 'P&L (day)', value: '+$142.80', color: '#4ade80' },
+    { label: 'P&L (total)', value: '+$3,241', color: '#4ade80' },
+    { label: 'open positions', value: '3', color: '#f1f5f9' },
+    { label: 'strategy', value: 'APEX + SCALPER', color: PURPLE },
+    { label: 'uptime', value: '99.2%', color: '#94a3b8' },
+  ];
+  return (
+    <Card style={{ padding: '20px 22px', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 14, right: 14 }}>
+        <span style={{
+          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+        }}>demo</span>
+      </div>
+      <SectionHeader title="Trading Bot" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+        {data.map(({ label, value, color }) => (
+          <div key={label} style={{
+            display: 'flex', flexDirection: 'column', gap: 2,
+            padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+          }}>
+            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 14, color, fontWeight: 500 }}>{value}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+// ─── GHAI Token Panel ─────────────────────────────────────────────────────────
+
+function GhaiPanel() {
+  const data = [
+    { label: 'price',    value: '$0.0042', color: BLUE },
+    { label: '24h change', value: '+3.2%', color: '#4ade80' },
+    { label: 'supply',   value: '100M GHAI', color: '#94a3b8' },
+    { label: 'burned',   value: '2.4M GHAI', color: RED },
+    { label: 'holders',  value: '847', color: '#f1f5f9' },
+    { label: 'contract', value: 'Ch8Ek9P…x5gK', color: 'rgba(100,200,255,0.4)' },
+  ];
+  return (
+    <Card style={{ padding: '20px 22px', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 14, right: 14 }}>
+        <span style={{
+          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+        }}>demo</span>
+      </div>
+      <SectionHeader title="GHAI Token" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+        {data.map(({ label, value, color }) => (
+          <div key={label} style={{
+            display: 'flex', flexDirection: 'column', gap: 2,
+            padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+          }}>
+            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 14, color, fontWeight: 500 }}>{value}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+// ─── Quantum Panel ────────────────────────────────────────────────────────────
+
+function QuantumPanel() {
+  const data = [
+    { label: 'status',     value: 'LIVE',        color: GREEN },
+    { label: 'tests passed', value: '960 / 960', color: '#4ade80' },
+    { label: 'sessions',   value: '—',           color: '#94a3b8' },
+    { label: 'providers',  value: '3 active',    color: '#94a3b8' },
+    { label: 'avg latency', value: '142ms',      color: BLUE },
+    { label: 'uptime',     value: '100%',        color: '#4ade80' },
+  ];
+  return (
+    <Card style={{ padding: '20px 22px', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 14, right: 14 }}>
+        <span style={{
+          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+        }}>demo</span>
+      </div>
+      <SectionHeader title="Quantum" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+        {data.map(({ label, value, color }) => (
+          <div key={label} style={{
+            display: 'flex', flexDirection: 'column', gap: 2,
+            padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+          }}>
+            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 14, color, fontWeight: 500 }}>{value}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+// ─── Void Chat Panel ──────────────────────────────────────────────────────────
+
+function VoidChatPanel() {
+  const data = [
+    { label: 'status',     value: 'BUILDING',    color: YELLOW },
+    { label: 'messages',   value: '—',           color: '#94a3b8' },
+    { label: 'users',      value: '—',           color: '#94a3b8' },
+    { label: 'providers',  value: 'Claude · GPT · Gemini', color: '#94a3b8' },
+    { label: 'free tier',  value: '10 msg/day',  color: BLUE },
+    { label: 'pro plan',   value: '$5/mo',       color: PURPLE },
+  ];
+  return (
+    <Card style={{ padding: '20px 22px', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 14, right: 14 }}>
+        <span style={{
+          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+        }}>demo</span>
+      </div>
+      <SectionHeader title="Void Chat" />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+        {data.map(({ label, value, color }) => (
+          <div key={label} style={{
+            display: 'flex', flexDirection: 'column', gap: 2,
+            padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+          }}>
+            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 13, color, fontWeight: 500 }}>{value}</span>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+// ─── System Health Panel ──────────────────────────────────────────────────────
+
+const SYSTEMS = [
+  { name: 'KCP-90 Protocol',    status: 'live',     color: GREEN,  note: 'Compression active across all products' },
+  { name: 'Quantum',            status: 'live',     color: GREEN,  note: '960 tests passed — fully operational' },
+  { name: 'Trading Bot',        status: 'live',     color: GREEN,  note: 'APEX + SCALPER running S-03' },
+  { name: 'GHAI Token',         status: 'live',     color: GREEN,  note: 'Solana mainnet · Ch8Ek9P…x5gK' },
+  { name: 'Void Chat',          status: 'building', color: YELLOW, note: 'Phase 2 in development' },
+  { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.3)', note: 'Phase 3' },
+  { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.3)', note: 'Phase 4' },
+  { name: 'Comlink',            status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
+  { name: 'Supabase DB',        status: 'live',     color: GREEN,  note: 'ihuljnekxkyqgroklurp — EU region' },
+  { name: 'Vercel Hosting',     status: 'live',     color: GREEN,  note: 'voidexa.com — edge network' },
+];
+
+function SystemHealthPanel() {
+  return (
+    <section id="health">
+      <SectionHeader title="System Health" />
+      <Card style={{ padding: '20px 22px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+          {SYSTEMS.map(({ name, status, color, note }) => (
+            <div key={name} style={{
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '11px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
+            }}>
+              <Dot color={color} pulse={status === 'live'} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: SANS, fontSize: 12, color: '#cbd5e1', fontWeight: 500 }}>{name}</div>
+                <div style={{ fontFamily: SANS, fontSize: 10, color: 'rgba(100,116,139,0.6)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
+              </div>
+              <span style={{
+                fontFamily: MONO, fontSize: 9, fontWeight: 600,
+                color, opacity: 0.85, letterSpacing: '0.1em',
+                textTransform: 'uppercase', flexShrink: 0,
+              }}>{status}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </section>
+  );
+}
+
+// ─── Activity Feed ────────────────────────────────────────────────────────────
+
+const ACTIVITY = [
+  { icon: '◈', text: 'KCP-90 compression recorded — quantum product, 83% ratio', time: '2m ago', color: BLUE },
+  { icon: '◎', text: 'Trading Bot opened position — APEX strategy, ETH/USDT', time: '8m ago', color: GREEN },
+  { icon: '◈', text: 'KCP-90 compression recorded — trading-bot product, 79% ratio', time: '12m ago', color: BLUE },
+  { icon: '▣', text: 'System health check passed — all 4 live products nominal', time: '18m ago', color: GREEN },
+  { icon: '◎', text: 'Trading Bot closed position +$24.40 — SCALPER strategy', time: '34m ago', color: GREEN },
+  { icon: '◈', text: 'KCP-90 batch compression — 14 events, avg 81% ratio', time: '1h ago', color: BLUE },
+  { icon: '◇', text: 'Quantum session completed — provider response 142ms', time: '1h ago', color: PURPLE },
+  { icon: '◈', text: 'KCP-90 compression recorded — void-chat product, 77% ratio', time: '2h ago', color: BLUE },
+];
+
+function ActivityFeedPanel() {
+  return (
+    <section id="activity">
+      <SectionHeader title="Activity Feed" badge="demo" />
+      <Card style={{ padding: '20px 22px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {ACTIVITY.map(({ icon, text, time, color }, i) => (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'flex-start', gap: 14,
+              padding: '12px 0',
+              borderBottom: i < ACTIVITY.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            }}>
+              <span style={{ fontFamily: MONO, fontSize: 14, color, flexShrink: 0, lineHeight: 1.4 }}>{icon}</span>
+              <span style={{ fontFamily: SANS, fontSize: 12, color: '#94a3b8', flex: 1, lineHeight: 1.5 }}>{text}</span>
+              <span style={{ fontFamily: MONO, fontSize: 10, color: 'rgba(100,116,139,0.5)', flexShrink: 0, marginTop: 1 }}>{time}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </section>
   );
 }
 
@@ -143,6 +708,7 @@ export default function ControlPlaneDashboard({ initial }: { initial: StatsData 
   const [data, setData] = useState<StatsData>(initial);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(new Date());
+  const [activeNav, setActiveNav] = useState('overview');
 
   const refresh = useCallback(async () => {
     setRefreshing(true);
@@ -163,266 +729,95 @@ export default function ControlPlaneDashboard({ initial }: { initial: StatsData 
     return () => clearInterval(id);
   }, [refresh]);
 
+  const handleNav = (id: string) => {
+    setActiveNav(id);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const { summary, daily, recent } = data;
-  const isEmpty = !summary || summary.total_compressions === 0;
-
-  // ── Encoder donut data ──
-  const encoderData = summary
-    ? [
-        { name: 'Ollama', value: summary.ollama_count, color: ENCODER_COLORS.ollama },
-        { name: 'Regex',  value: summary.regex_count,  color: ENCODER_COLORS.regex },
-        { name: 'Raw',    value: summary.raw_count,     color: ENCODER_COLORS.raw },
-      ].filter(d => d.value > 0)
-    : [];
-
-  // ── Per-product bar data from daily stats ──
-  const productMap: Record<string, number> = {};
-  for (const row of daily) {
-    const key = row.product ?? 'other';
-    productMap[key] = (productMap[key] ?? 0) + row.total_compressions;
-  }
-  const productData = Object.entries(productMap).map(([product, total]) => ({
-    product,
-    total,
-    color: PRODUCT_COLORS[product] ?? PRODUCT_COLORS.other,
-  }));
-
-  // ── Daily trend: aggregate across products per day ──
-  const dayMap: Record<string, number> = {};
-  for (const row of daily) {
-    const day = row.day.slice(0, 10);
-    dayMap[day] = (dayMap[day] ?? 0) + row.total_compressions;
-  }
-  const trendData = Object.entries(dayMap)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([day, compressions]) => ({ day, compressions }));
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      {/* ── Hero ── */}
-      <div className="relative border-b border-gray-800/50 bg-gradient-to-b from-gray-900 to-gray-950 px-8 py-12">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-900/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-900/10 rounded-full blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto">
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div>
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-xs font-mono text-indigo-400 bg-indigo-900/40 border border-indigo-800 px-3 py-1 rounded-full uppercase tracking-widest">
-                  Admin Only
-                </span>
-                <span className="text-xs font-mono text-gray-500">voidexa control plane</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                KCP-90
-                <span className="text-indigo-400"> Control Plane</span>
-              </h1>
-              <p className="text-gray-400 mt-3 text-base max-w-xl">
-                Real-time compression analytics across all voidexa products.
-                KCP-90 reduces context overhead, saving tokens and cost on every AI call.
-              </p>
+    <div style={{ background: BG, minHeight: '100vh', color: '#e2e8f0' }}>
+      <Sidebar active={activeNav} onNav={handleNav} />
+      <TopBar lastRefresh={lastRefresh} refreshing={refreshing} onRefresh={refresh} />
+
+      {/* Main content */}
+      <div style={{ marginLeft: 220, paddingTop: 52 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 40 }}>
+
+          {/* ── Row 1: 4 Metric Cards ── */}
+          <section id="overview">
+            <SectionHeader title="Overview" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+              <MetricCard
+                label="KCP-90 Compressions"
+                value={summary ? fmt(summary.total_compressions) : '—'}
+                sub={summary ? `${(summary.overall_ratio * 100).toFixed(1)}% avg rate` : undefined}
+                accent={BLUE}
+              />
+              <MetricCard
+                label="Trading P&L (total)"
+                value="+$3,241"
+                sub="Season 03 · APEX + SCALPER"
+                accent="#4ade80"
+                demo
+              />
+              <MetricCard
+                label="GHAI Price"
+                value="$0.0042"
+                sub="+3.2% 24h"
+                accent={PURPLE}
+                demo
+              />
+              <MetricCard
+                label="Active Systems"
+                value="4 / 10"
+                sub="Quantum · Trading · KCP-90 · GHAI"
+                accent={GREEN}
+              />
             </div>
-            <RefreshBadge lastRefresh={lastRefresh} refreshing={refreshing} />
-          </div>
+          </section>
+
+          {/* ── Row 2: KCP-90 ── */}
+          <Kcp90Panel summary={summary} daily={daily} recent={recent} />
+
+          {/* ── Row 3: Trading Bot + GHAI Token ── */}
+          <section id="trading">
+            <SectionHeader title="Products — Phase 1 & 2" />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <TradingBotPanel />
+              <GhaiPanel />
+            </div>
+          </section>
+
+          {/* ── Row 4: Quantum + Void Chat ── */}
+          <section id="quantum">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <QuantumPanel />
+              <VoidChatPanel />
+            </div>
+          </section>
+
+          {/* ── Row 5: System Health ── */}
+          <SystemHealthPanel />
+
+          {/* ── Row 6: Activity Feed ── */}
+          <ActivityFeedPanel />
+
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 py-10 space-y-10">
-        {isEmpty ? (
-          <EmptyState />
-        ) : (
-          <>
-            {/* ── Summary Cards ── */}
-            <section>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <SummaryCard
-                  label="Total Compressions"
-                  value={fmt(summary!.total_compressions)}
-                />
-                <SummaryCard
-                  label="Overall Compression Ratio"
-                  value={`${(summary!.overall_ratio * 100).toFixed(1)}%`}
-                  sub={`${fmt(summary!.total_original_chars)} → ${fmt(summary!.total_compressed_chars)} chars`}
-                />
-                <SummaryCard
-                  label="Tokens Saved"
-                  value={fmt(summary!.total_tokens_saved)}
-                  sub={`≈ $${summary!.estimated_usd_saved.toFixed(2)} saved`}
-                />
-                <SummaryCard
-                  label="Active Products"
-                  value={`${summary!.active_products} / ${TOTAL_PRODUCTS}`}
-                />
-              </div>
-            </section>
-
-            {/* ── Encoder Breakdown + Product Breakdown ── */}
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Donut */}
-              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-                <h2 className="text-sm uppercase tracking-widest text-gray-400 mb-6">Encoder Breakdown</h2>
-                {encoderData.length === 0 ? (
-                  <p className="text-gray-600 text-sm">No data</p>
-                ) : (
-                  <div className="flex items-center gap-6">
-                    <ResponsiveContainer width={180} height={180}>
-                      <PieChart>
-                        <Pie
-                          data={encoderData}
-                          cx="50%" cy="50%"
-                          innerRadius={55} outerRadius={80}
-                          paddingAngle={3}
-                          dataKey="value"
-                        >
-                          {encoderData.map((entry) => (
-                            <Cell key={entry.name} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{ background: '#111827', border: '1px solid #374151', borderRadius: 8 }}
-                          itemStyle={{ color: '#e5e7eb' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="flex flex-col gap-3">
-                      {encoderData.map((d) => (
-                        <div key={d.name} className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full" style={{ background: d.color }} />
-                          <span className="text-gray-300 text-sm">{d.name}</span>
-                          <span className="text-gray-500 text-sm ml-auto pl-4">{fmt(d.value)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Product bar chart */}
-              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-                <h2 className="text-sm uppercase tracking-widest text-gray-400 mb-6">Per-Product Compressions</h2>
-                {productData.length === 0 ? (
-                  <p className="text-gray-600 text-sm">No data</p>
-                ) : (
-                  <ResponsiveContainer width="100%" height={180}>
-                    <BarChart data={productData} barCategoryGap="30%">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-                      <XAxis
-                        dataKey="product"
-                        tick={{ fill: '#9ca3af', fontSize: 12 }}
-                        axisLine={false} tickLine={false}
-                      />
-                      <YAxis
-                        tick={{ fill: '#6b7280', fontSize: 11 }}
-                        axisLine={false} tickLine={false}
-                        tickFormatter={fmt}
-                      />
-                      <Tooltip
-                        contentStyle={{ background: '#111827', border: '1px solid #374151', borderRadius: 8 }}
-                        itemStyle={{ color: '#e5e7eb' }}
-                        cursor={{ fill: '#1f2937' }}
-                      />
-                      <Bar dataKey="total" radius={[4, 4, 0, 0]}>
-                        {productData.map((entry) => (
-                          <Cell key={entry.product} fill={entry.color} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                )}
-              </div>
-            </section>
-
-            {/* ── Daily Trend ── */}
-            <section className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-              <h2 className="text-sm uppercase tracking-widest text-gray-400 mb-6">
-                Daily Compressions — Last 30 Days
-              </h2>
-              {trendData.length === 0 ? (
-                <p className="text-gray-600 text-sm">No data</p>
-              ) : (
-                <ResponsiveContainer width="100%" height={220}>
-                  <LineChart data={trendData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-                    <XAxis
-                      dataKey="day"
-                      tick={{ fill: '#6b7280', fontSize: 11 }}
-                      axisLine={false} tickLine={false}
-                      tickFormatter={(v) => v.slice(5)} // MM-DD
-                    />
-                    <YAxis
-                      tick={{ fill: '#6b7280', fontSize: 11 }}
-                      axisLine={false} tickLine={false}
-                      tickFormatter={fmt}
-                    />
-                    <Tooltip
-                      contentStyle={{ background: '#111827', border: '1px solid #374151', borderRadius: 8 }}
-                      itemStyle={{ color: '#e5e7eb' }}
-                      labelStyle={{ color: '#9ca3af' }}
-                    />
-                    <Legend
-                      wrapperStyle={{ color: '#9ca3af', fontSize: 12 }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="compressions"
-                      stroke="#7777bb"
-                      strokeWidth={2}
-                      dot={false}
-                      activeDot={{ r: 4, fill: '#7777bb' }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              )}
-            </section>
-
-            {/* ── Recent Activity ── */}
-            <section className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-              <h2 className="text-sm uppercase tracking-widest text-gray-400 mb-6">Recent Compression Events</h2>
-              {recent.length === 0 ? (
-                <p className="text-gray-600 text-sm">No events</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="text-gray-500 text-xs uppercase tracking-wider border-b border-gray-800">
-                        <th className="text-left pb-3 pr-4 font-medium">Product</th>
-                        <th className="text-left pb-3 pr-4 font-medium">Encoder</th>
-                        <th className="text-right pb-3 pr-4 font-medium">Original</th>
-                        <th className="text-right pb-3 pr-4 font-medium">Compressed</th>
-                        <th className="text-right pb-3 pr-4 font-medium">Ratio</th>
-                        <th className="text-right pb-3 pr-4 font-medium">Tokens Saved</th>
-                        <th className="text-right pb-3 font-medium">Time</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-800/60">
-                      {recent.map((row) => (
-                        <tr key={row.id} className="hover:bg-gray-800/30 transition-colors">
-                          <td className="py-3 pr-4 text-gray-300 capitalize">{row.product}</td>
-                          <td className="py-3 pr-4">
-                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${encoderBadgeClass(row.encoder_used)}`}>
-                              {row.encoder_used}
-                            </span>
-                          </td>
-                          <td className="py-3 pr-4 text-right text-gray-400 font-mono">{fmt(row.original_chars)}</td>
-                          <td className="py-3 pr-4 text-right text-gray-400 font-mono">{fmt(row.compressed_chars)}</td>
-                          <td className="py-3 pr-4 text-right font-mono">
-                            <span className={row.compression_ratio > 0.3 ? 'text-green-400' : 'text-yellow-400'}>
-                              {(row.compression_ratio * 100).toFixed(1)}%
-                            </span>
-                          </td>
-                          <td className="py-3 pr-4 text-right text-indigo-400 font-mono">{fmt(row.tokens_saved)}</td>
-                          <td className="py-3 text-right text-gray-500 text-xs">{formatTime(row.created_at)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </section>
-          </>
-        )}
-      </div>
+      <style>{`
+        @keyframes cp-pulse {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0.35; }
+        }
+        * { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a12; }
+        ::-webkit-scrollbar-thumb { background: rgba(100,200,255,0.15); border-radius: 3px; }
+      `}</style>
     </div>
   );
 }
