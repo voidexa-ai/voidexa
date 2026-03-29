@@ -216,13 +216,12 @@ const NAV_LINKS = [
 function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => void }) {
   return (
     <div style={{
-      position: 'fixed', top: 0, left: 0,
-      width: 220, height: '100vh',
+      width: 220, flexShrink: 0,
       background: BG_SIDE,
       borderRight: BORDER,
       display: 'flex', flexDirection: 'column',
-      zIndex: 40,
       overflowY: 'auto',
+      height: '100%',
     }}>
       {/* Logo */}
       <div style={{ padding: '24px 20px 20px', borderBottom: BORDER }}>
@@ -296,12 +295,9 @@ function TopBar({
 }) {
   return (
     <div style={{
-      position: 'fixed', top: 0, left: 220, right: 0,
-      height: 52, zIndex: 39,
-      background: 'rgba(3,3,8,0.9)',
+      height: 52, flexShrink: 0,
+      background: 'rgba(3,3,8,0.95)',
       borderBottom: BORDER,
-      backdropFilter: 'blur(12px)',
-      WebkitBackdropFilter: 'blur(12px)',
       display: 'flex', alignItems: 'center',
       padding: '0 28px', gap: 16,
     }}>
@@ -731,19 +727,25 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
 
   const handleNav = (id: string) => {
     setActiveNav(id);
+    const scroller = document.getElementById('cp-scroll');
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (scroller && el) {
+      scroller.scrollTo({ top: el.offsetTop - 16, behavior: 'smooth' });
+    }
   };
 
   const { summary, daily, recent } = data;
 
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: '#e2e8f0' }}>
+    <div style={{ display: 'flex', height: '100%', color: '#e2e8f0', background: BG, overflow: 'hidden' }}>
       <Sidebar active={activeNav} onNav={handleNav} />
-      <TopBar lastRefresh={lastRefresh} refreshing={refreshing} onRefresh={refresh} />
 
-      {/* Main content */}
-      <div style={{ marginLeft: 220, paddingTop: 52 }}>
+      {/* Right column: topbar + scrollable content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+        <TopBar lastRefresh={lastRefresh} refreshing={refreshing} onRefresh={refresh} />
+
+        {/* Scrollable main content */}
+        <div id="cp-scroll" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 40 }}>
 
           {/* ── Row 1: 4 Metric Cards ── */}
@@ -806,7 +808,8 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
           <ActivityFeedPanel />
 
         </div>
-      </div>
+        </div>{/* end scrollable */}
+      </div>{/* end right column */}
 
       <style>{`
         @keyframes cp-pulse {
