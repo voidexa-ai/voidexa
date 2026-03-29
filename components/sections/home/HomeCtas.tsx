@@ -19,9 +19,7 @@ export default function HomeCtas() {
             borderRadius: 16,
             overflow: 'hidden',
             textDecoration: 'none',
-            background: '#070412',
             border: '1px solid rgba(139,92,246,0.22)',
-            boxShadow: '0 0 0 0 rgba(139,92,246,0)',
             transition: 'all 0.25s ease',
           }}
           onMouseEnter={e => {
@@ -33,11 +31,10 @@ export default function HomeCtas() {
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement
             el.style.borderColor = 'rgba(139,92,246,0.22)'
-            el.style.boxShadow = '0 0 0 0 rgba(139,92,246,0)'
+            el.style.boxShadow = 'none'
             el.style.transform = 'translateY(0)'
           }}
         >
-          {/* Background image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/cast/gruppe billede.jpg"
@@ -47,23 +44,20 @@ export default function HomeCtas() {
               inset: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'contain',
-              objectPosition: 'center center',
+              objectFit: 'cover',
+              objectPosition: 'center 20%',
             }}
           />
-          {/* Dark overlay */}
           <div style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(135deg, rgba(7,4,18,0.72) 0%, rgba(7,4,18,0.45) 60%, rgba(7,4,18,0.25) 100%)',
+            background: 'linear-gradient(135deg, rgba(7,4,18,0.68) 0%, rgba(7,4,18,0.38) 60%, rgba(7,4,18,0.18) 100%)',
           }} />
-          {/* Purple glow overlay */}
           <div style={{
             position: 'absolute',
             inset: 0,
             background: 'radial-gradient(ellipse 60% 80% at 0% 50%, rgba(139,92,246,0.18) 0%, transparent 70%)',
           }} />
-          {/* Text content */}
           <div style={{
             position: 'absolute',
             inset: 0,
@@ -90,13 +84,13 @@ export default function HomeCtas() {
               fontFamily: 'var(--font-space)',
               lineHeight: 1.2,
               marginBottom: 4,
-              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+              textShadow: '0 2px 12px rgba(0,0,0,0.6)',
             }}>
               Meet the team
             </div>
             <div style={{
               fontSize: 14,
-              color: 'rgba(226,232,240,0.7)',
+              color: 'rgba(226,232,240,0.75)',
               display: 'flex',
               alignItems: 'center',
               gap: 6,
@@ -107,23 +101,23 @@ export default function HomeCtas() {
           </div>
         </Link>
 
-        {/* ── BOTTOM ROW: Two square cards ── */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        {/* ── BOTTOM ROW: Two true-square cards ── */}
+        <div style={{ display: 'flex', gap: 12 }}>
 
-          {/* Left: Claim Your Planet */}
+          {/* Left: Claim Your Planet — width drives height via aspect-ratio */}
           <Link
             href="/claim-your-planet"
             style={{
               position: 'relative',
-              flex: '1 1 0',
+              width: 'calc(50% - 6px)',
               aspectRatio: '1 / 1',
+              flexShrink: 0,
               borderRadius: 16,
               overflow: 'hidden',
               textDecoration: 'none',
               border: '1px solid rgba(0,212,255,0.2)',
-              background: '#070412',
-              boxShadow: '0 0 0 0 rgba(0,212,255,0)',
               transition: 'all 0.25s ease',
+              display: 'block',
             }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLElement
@@ -134,7 +128,7 @@ export default function HomeCtas() {
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement
               el.style.borderColor = 'rgba(0,212,255,0.2)'
-              el.style.boxShadow = '0 0 0 0 rgba(0,212,255,0)'
+              el.style.boxShadow = 'none'
               el.style.transform = 'translateY(0)'
             }}
           >
@@ -147,14 +141,14 @@ export default function HomeCtas() {
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'contain',
+                objectFit: 'cover',
                 objectPosition: 'center',
               }}
             />
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(160deg, rgba(7,4,18,0.55) 0%, rgba(7,4,18,0.75) 100%)',
+              background: 'linear-gradient(160deg, rgba(7,4,18,0.45) 0%, rgba(7,4,18,0.70) 100%)',
             }} />
             <div style={{
               position: 'absolute',
@@ -186,7 +180,7 @@ export default function HomeCtas() {
                 color: '#e2e8f0',
                 fontFamily: 'var(--font-space)',
                 lineHeight: 1.2,
-                textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+                textShadow: '0 2px 12px rgba(0,0,0,0.6)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
@@ -197,20 +191,20 @@ export default function HomeCtas() {
             </div>
           </Link>
 
-          {/* Right: GHAI */}
+          {/* Right: GHAI — same width as left card */}
           <Link
             href="/token"
             style={{
               position: 'relative',
-              flex: '1 1 0',
+              width: 'calc(50% - 6px)',
               aspectRatio: '1 / 1',
+              flexShrink: 0,
               borderRadius: 16,
               overflow: 'hidden',
               textDecoration: 'none',
               border: '1px solid rgba(0,212,255,0.2)',
-              background: '#070412',
-              boxShadow: '0 0 0 0 rgba(0,212,255,0)',
               transition: 'all 0.25s ease',
+              display: 'block',
             }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLElement
@@ -221,7 +215,7 @@ export default function HomeCtas() {
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLElement
               el.style.borderColor = 'rgba(0,212,255,0.2)'
-              el.style.boxShadow = '0 0 0 0 rgba(0,212,255,0)'
+              el.style.boxShadow = 'none'
               el.style.transform = 'translateY(0)'
             }}
           >
@@ -234,14 +228,14 @@ export default function HomeCtas() {
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'contain',
+                objectFit: 'cover',
                 objectPosition: 'center',
               }}
             />
             <div style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(160deg, rgba(7,4,18,0.55) 0%, rgba(7,4,18,0.75) 100%)',
+              background: 'linear-gradient(160deg, rgba(7,4,18,0.45) 0%, rgba(7,4,18,0.70) 100%)',
             }} />
             <div style={{
               position: 'absolute',
@@ -273,14 +267,14 @@ export default function HomeCtas() {
                 color: '#e2e8f0',
                 fontFamily: 'var(--font-space)',
                 lineHeight: 1.2,
-                textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+                textShadow: '0 2px 12px rgba(0,0,0,0.6)',
                 marginBottom: 3,
               }}>
                 GHAI
               </div>
               <div style={{
                 fontSize: 13,
-                color: 'rgba(226,232,240,0.65)',
+                color: 'rgba(226,232,240,0.7)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 6,
