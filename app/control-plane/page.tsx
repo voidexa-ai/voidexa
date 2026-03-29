@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
-import ControlPlaneDashboard from '@/components/control-plane/ControlPlaneDashboard';
+// DashboardLoader is a Client Component that wraps ControlPlaneDashboard with
+// dynamic(ssr:false) — dynamic() with ssr:false cannot be used in Server Components.
+import DashboardLoader from '@/components/control-plane/DashboardLoader';
 
 export const metadata = { title: 'KCP-90 Control Plane — voidexa' };
 
@@ -59,5 +61,5 @@ export default async function ControlPlanePage() {
     // Supabase unreachable — dashboard renders with empty state
   }
 
-  return <ControlPlaneDashboard initial={initial} />;
+  return <DashboardLoader initial={initial} />;
 }
