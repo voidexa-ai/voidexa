@@ -125,13 +125,13 @@ function SectionHeader({ title, badge }: { title: string; badge?: string }) {
       </span>
       {badge && (
         <span style={{
-          fontFamily: MONO, fontSize: 9, fontWeight: 600,
-          background: 'rgba(239,68,68,0.15)',
-          border: '1px solid rgba(239,68,68,0.25)',
+          fontFamily: MONO, fontSize: 12, fontWeight: 600,
+          background: 'rgba(239,68,68,0.25)',
+          border: '1px solid rgba(239,68,68,0.45)',
           color: '#fca5a5',
           borderRadius: 4,
-          padding: '1px 6px',
-          letterSpacing: '0.1em',
+          padding: '2px 8px',
+          letterSpacing: '0.08em',
           textTransform: 'uppercase',
         }}>
           {badge}
@@ -167,9 +167,9 @@ function MetricCard({
       {demo && (
         <span style={{
           position: 'absolute', top: 10, right: 10,
-          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       )}
       <div style={{
@@ -187,7 +187,7 @@ function MetricCard({
       </div>
       {sub && (
         <div style={{
-          fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.5)',
+          fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.7)',
           marginTop: 6,
         }}>
           {sub}
@@ -229,8 +229,8 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
           voidexa
         </div>
         <div style={{
-          fontFamily: MONO, fontSize: 10, color: 'rgba(100,200,255,0.35)',
-          letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 4,
+          fontFamily: MONO, fontSize: 12, color: 'rgba(100,200,255,0.6)',
+          letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 4,
         }}>
           control-plane://admin
         </div>
@@ -253,14 +253,14 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
             }}
           >
             <span style={{
-              fontFamily: MONO, fontSize: 13,
-              color: active === link.id ? BLUE : 'rgba(100,200,255,0.25)',
+              fontFamily: MONO, fontSize: 14,
+              color: active === link.id ? BLUE : 'rgba(100,200,255,0.5)',
             }}>
               {link.icon}
             </span>
             <span style={{
               fontFamily: SANS, fontSize: 14, fontWeight: 500,
-              color: active === link.id ? '#e2e8f0' : 'rgba(148,163,184,0.55)',
+              color: active === link.id ? '#e2e8f0' : 'rgba(148,163,184,0.75)',
             }}>
               {link.label}
             </span>
@@ -272,8 +272,8 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
       <div style={{
         padding: '14px 20px',
         borderTop: BORDER,
-        fontFamily: MONO, fontSize: 9, color: 'rgba(100,200,255,0.2)',
-        letterSpacing: '0.12em',
+        fontFamily: MONO, fontSize: 12, color: 'rgba(100,200,255,0.5)',
+        letterSpacing: '0.1em',
       }}>
         v1.0 · read-only
       </div>
@@ -304,7 +304,7 @@ function TopBar({
       }}>
         Control Plane
       </span>
-      <span style={{ color: 'rgba(255,255,255,0.1)', fontSize: 14 }}>/</span>
+      <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>/</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         <Dot color={GREEN} pulse />
         <span style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(16,185,129,0.7)', letterSpacing: '0.08em' }}>
@@ -313,8 +313,8 @@ function TopBar({
       </div>
       <div style={{ flex: 1 }} />
       <span style={{
-        fontFamily: MONO, fontSize: 12,
-        color: 'rgba(148,163,184,0.4)',
+        fontFamily: MONO, fontSize: 13,
+        color: 'rgba(148,163,184,0.7)',
       }}>
         {lastRefresh
           ? `updated ${formatTime(lastRefresh.toISOString())}`
@@ -324,8 +324,8 @@ function TopBar({
         onClick={onRefresh}
         disabled={refreshing}
         style={{
-          fontFamily: MONO, fontSize: 10,
-          color: refreshing ? 'rgba(59,130,246,0.4)' : 'rgba(59,130,246,0.7)',
+          fontFamily: MONO, fontSize: 13,
+          color: refreshing ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0.9)',
           background: 'rgba(59,130,246,0.08)',
           border: '1px solid rgba(59,130,246,0.2)',
           borderRadius: 6, padding: '4px 12px',
@@ -404,7 +404,7 @@ function Kcp90Panel({ summary, daily, recent }: {
             {summary ? `${((summary.overall_ratio ?? 0) * 100).toFixed(1)}%` : '—'}
           </div>
           {summary && (
-            <div style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
+            <div style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(148,163,184,0.65)', marginTop: 6 }}>
               {fmt(summary.total_original_chars)} → {fmt(summary.total_compressed_chars)} chars
             </div>
           )}
@@ -417,7 +417,7 @@ function Kcp90Panel({ summary, daily, recent }: {
             {summary ? fmt(summary.total_tokens_saved) : '—'}
           </div>
           {summary && (
-            <div style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.4)', marginTop: 6 }}>
+            <div style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(148,163,184,0.65)', marginTop: 6 }}>
               ≈ ${(summary.estimated_usd_saved ?? 0).toFixed(2)} saved
             </div>
           )}
@@ -452,8 +452,8 @@ function Kcp90Panel({ summary, daily, recent }: {
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   {['Product', 'Encoder', 'Original', 'Compressed', 'Ratio', 'Tokens Saved', 'Time'].map(h => (
                     <th key={h} style={{
-                      fontFamily: SANS, fontSize: 9, fontWeight: 600,
-                      color: 'rgba(100,116,139,0.7)', letterSpacing: '0.14em',
+                      fontFamily: SANS, fontSize: 12, fontWeight: 600,
+                      color: 'rgba(100,116,139,0.85)', letterSpacing: '0.1em',
                       textTransform: 'uppercase', textAlign: h === 'Product' || h === 'Encoder' ? 'left' : 'right',
                       paddingBottom: 10, paddingRight: h !== 'Time' ? 12 : 0,
                     }}>{h}</th>
@@ -463,21 +463,21 @@ function Kcp90Panel({ summary, daily, recent }: {
               <tbody>
                 {recent.map((row) => (
                   <tr key={row.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                    <td style={{ fontFamily: SANS, fontSize: 12, color: '#94a3b8', padding: '10px 12px 10px 0', textTransform: 'capitalize' }}>{row.product}</td>
+                    <td style={{ fontFamily: SANS, fontSize: 13, color: '#cbd5e1', padding: '10px 12px 10px 0', textTransform: 'capitalize' }}>{row.product}</td>
                     <td style={{ paddingRight: 12 }}>
                       <span style={{
-                        fontFamily: MONO, fontSize: 10,
+                        fontFamily: MONO, fontSize: 12,
                         color: row.encoder_used === 'ollama' ? '#a78bfa' : row.encoder_used === 'regex' ? '#4ade80' : '#fbbf24',
-                        background: row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.1)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.1)' : 'rgba(251,191,36,0.1)',
-                        border: `1px solid ${row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.25)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.25)' : 'rgba(251,191,36,0.25)'}`,
-                        borderRadius: 4, padding: '1px 6px',
+                        background: row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.15)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.15)' : 'rgba(251,191,36,0.15)',
+                        border: `1px solid ${row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.4)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.4)' : 'rgba(251,191,36,0.4)'}`,
+                        borderRadius: 4, padding: '2px 7px',
                       }}>{row.encoder_used}</span>
                     </td>
-                    <td style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textAlign: 'right', paddingRight: 12 }}>{fmt(row.original_chars)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 11, color: '#64748b', textAlign: 'right', paddingRight: 12 }}>{fmt(row.compressed_chars)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 11, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{((row.compression_ratio ?? 0) * 100).toFixed(1)}%</td>
-                    <td style={{ fontFamily: MONO, fontSize: 11, color: BLUE, textAlign: 'right', paddingRight: 12 }}>{fmt(row.tokens_saved)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 10, color: '#475569', textAlign: 'right' }}>{timeAgo(row.created_at)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', textAlign: 'right', paddingRight: 12 }}>{fmt(row.original_chars)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', textAlign: 'right', paddingRight: 12 }}>{fmt(row.compressed_chars)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{((row.compression_ratio ?? 0) * 100).toFixed(1)}%</td>
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: BLUE, textAlign: 'right', paddingRight: 12 }}>{fmt(row.tokens_saved)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(148,163,184,0.6)', textAlign: 'right' }}>{timeAgo(row.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -506,9 +506,9 @@ function TradingBotPanel() {
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       </div>
       <SectionHeader title="Trading Bot" />
@@ -518,8 +518,8 @@ function TradingBotPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: 'rgba(100,116,139,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 16, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -536,15 +536,15 @@ function GhaiPanel() {
     { label: 'supply',   value: '100M GHAI', color: '#94a3b8' },
     { label: 'burned',   value: '2.4M GHAI', color: RED },
     { label: 'holders',  value: '847', color: '#f1f5f9' },
-    { label: 'contract', value: 'Ch8Ek9P…x5gK', color: 'rgba(100,200,255,0.4)' },
+    { label: 'contract', value: 'Ch8Ek9P…x5gK', color: 'rgba(100,200,255,0.7)' },
   ];
   return (
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       </div>
       <SectionHeader title="GHAI Token" />
@@ -554,8 +554,8 @@ function GhaiPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: 'rgba(100,116,139,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 16, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -578,9 +578,9 @@ function QuantumPanel() {
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       </div>
       <SectionHeader title="Quantum" />
@@ -590,8 +590,8 @@ function QuantumPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: 'rgba(100,116,139,0.7)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 16, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -614,9 +614,9 @@ function VoidChatPanel() {
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 8, color: 'rgba(255,255,255,0.2)',
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 4, padding: '1px 5px', textTransform: 'uppercase', letterSpacing: '0.1em',
+          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
+          borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       </div>
       <SectionHeader title="Void Chat" />
@@ -626,8 +626,8 @@ function VoidChatPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 9, color: 'rgba(100,116,139,0.6)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>{label}</span>
-            <span style={{ fontFamily: MONO, fontSize: 13, color, fontWeight: 500 }}>{value}</span>
+            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
       </div>
@@ -643,8 +643,8 @@ const SYSTEMS = [
   { name: 'Trading Bot',        status: 'live',     color: GREEN,  note: 'APEX + SCALPER running S-03' },
   { name: 'GHAI Token',         status: 'live',     color: GREEN,  note: 'Solana mainnet · Ch8Ek9P…x5gK' },
   { name: 'Void Chat',          status: 'building', color: YELLOW, note: 'Phase 2 in development' },
-  { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.3)', note: 'Phase 3' },
-  { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.3)', note: 'Phase 4' },
+  { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 3' },
+  { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 4' },
   { name: 'Comlink',            status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
   { name: 'BOSSO',              status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
   { name: 'TINE Secretary AI',  status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
@@ -667,11 +667,11 @@ function SystemHealthPanel() {
               <Dot color={color} pulse={status === 'live'} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: SANS, fontSize: 14, color: '#cbd5e1', fontWeight: 500 }}>{name}</div>
-                <div style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(100,116,139,0.6)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
+                <div style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(148,163,184,0.65)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
               </div>
               <span style={{
-                fontFamily: MONO, fontSize: 11, fontWeight: 600,
-                color, opacity: 0.85, letterSpacing: '0.08em',
+                fontFamily: MONO, fontSize: 12, fontWeight: 700,
+                color, opacity: 1, letterSpacing: '0.08em',
                 textTransform: 'uppercase', flexShrink: 0,
               }}>{status}</span>
             </div>
@@ -708,8 +708,8 @@ function ActivityFeedPanel() {
               borderBottom: i < ACTIVITY.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
             }}>
               <span style={{ fontFamily: MONO, fontSize: 14, color, flexShrink: 0, lineHeight: 1.4 }}>{icon}</span>
-              <span style={{ fontFamily: SANS, fontSize: 13, color: '#94a3b8', flex: 1, lineHeight: 1.5 }}>{text}</span>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: 'rgba(100,116,139,0.5)', flexShrink: 0, marginTop: 1 }}>{time}</span>
+              <span style={{ fontFamily: SANS, fontSize: 14, color: '#cbd5e1', flex: 1, lineHeight: 1.5 }}>{text}</span>
+              <span style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(148,163,184,0.6)', flexShrink: 0, marginTop: 1 }}>{time}</span>
             </div>
           ))}
         </div>
