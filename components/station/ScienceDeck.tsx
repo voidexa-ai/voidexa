@@ -57,9 +57,9 @@ const ROADMAP: RoadmapItem[] = [
   // ── NEXT ─────────────────────────────────────────────────────────────────
   {
     title: 'Jarvis',
-    desc: 'Personal AI assistant with voice, context, and Quantum.',
-    tooltip: 'Building next. Voice interface, persistent context, proactive task suggestions.',
-    status: 'next',
+    desc: 'Voice-controlled personal AI butler. Claude Sonnet brain. Wake word activation. Conversation memory. Desktop actions. Morning briefings. v3.1.0. 197 tests.',
+    tooltip: 'v3.1.0. 197 tests. Voice-controlled personal AI butler. Claude Sonnet brain. Wake word activation. Conversation memory. Desktop actions. Morning briefings.',
+    status: 'live',
     phase: 'Phase 6',
   },
   // ── BUILDING ─────────────────────────────────────────────────────────────

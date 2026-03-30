@@ -648,7 +648,7 @@ const SYSTEMS = [
   { name: 'Comlink',            status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
   { name: 'BOSSO',              status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
   { name: 'TINE Secretary AI',  status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
-  { name: 'Jarvis',             status: 'next',     color: BLUE,   note: 'Planned — next release' },
+  { name: 'Jarvis',             status: 'live',     color: GREEN,  note: 'v3.1.0 — 197 tests — Voice AI Butler' },
   { name: 'Supabase DB',        status: 'live',     color: GREEN,  note: 'ihuljnekxkyqgroklurp — EU region' },
   { name: 'Vercel Hosting',     status: 'live',     color: GREEN,  note: 'voidexa.com — edge network' },
 ];
