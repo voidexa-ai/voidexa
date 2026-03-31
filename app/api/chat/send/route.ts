@@ -3,7 +3,6 @@
 // Auth check → Credit check → Provider call (streamed) → Log message → Deduct credits
 
 import { NextRequest } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { checkCredits } from '@/lib/credits/check';
@@ -14,6 +13,7 @@ import { logGhaiTransaction } from '@/lib/supabase/credit-queries';
 import { compressForContext } from '@/lib/kcp90/compress-context';
 import { PLATFORM } from '@/config/constants';
 import { streamProvider } from '@/lib/providers/router';
+import { sanitizeMessage, sanitizeUuid } from '@/lib/sanitize';
 import type { ProviderMessage } from '@/types/providers';
 import type { ProviderSlug } from '@/config/providers';
 
@@ -35,22 +35,36 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
-    // 2. Parse request
+    // 2. Parse and sanitize request
     const body = await req.json();
-    const { conversationId, message, provider, model: modelId } = body as {
-      conversationId: string;
-      message: string;
-      provider: ProviderSlug;
-      model: string;
+    const rawBody = body as {
+      conversationId: unknown;
+      message: unknown;
+      provider: unknown;
+      model: unknown;
     };
 
-    if (!conversationId || !message || !provider || !modelId) {
+    if (!rawBody.conversationId || !rawBody.message || !rawBody.provider || !rawBody.model) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
 
+    let conversationId: string;
+    try {
+      conversationId = sanitizeUuid(String(rawBody.conversationId));
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid conversationId' }), { status: 400 });
+    }
+
+    const message = sanitizeMessage(String(rawBody.message));
+    if (!message) {
+      return new Response(JSON.stringify({ error: 'Message cannot be empty' }), { status: 400 });
+    }
     if (message.length > PLATFORM.maxMessagesPerConversation) {
       return new Response(JSON.stringify({ error: 'Message too long' }), { status: 400 });
     }
+
+    const provider = String(rawBody.provider) as ProviderSlug;
+    const modelId = String(rawBody.model);
 
     // 3. Validate model exists
     const modelDef = getModelById(modelId);
@@ -156,15 +170,16 @@ export async function POST(req: NextRequest) {
               controller.enqueue(encoder.encode(doneEvent));
               controller.close();
             },
-            onError(error) {
-              const errorEvent = `data: ${JSON.stringify({ type: 'error', data: error.message })}\n\n`;
+            onError(_error) {
+              console.error('[chat/send] Provider error:', _error);
+              const errorEvent = `data: ${JSON.stringify({ type: 'error', data: 'AI provider error. Please try again.' })}\n\n`;
               controller.enqueue(encoder.encode(errorEvent));
               controller.close();
             },
           });
         } catch (error) {
-          const msg = error instanceof Error ? error.message : 'Provider error';
-          const errorEvent = `data: ${JSON.stringify({ type: 'error', data: msg })}\n\n`;
+          console.error('[chat/send] Stream error:', error);
+          const errorEvent = `data: ${JSON.stringify({ type: 'error', data: 'An error occurred. Please try again.' })}\n\n`;
           controller.enqueue(encoder.encode(errorEvent));
           controller.close();
         }
@@ -179,7 +194,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Internal server error';
-    return new Response(JSON.stringify({ error: msg }), { status: 500 });
+    console.error('[chat/send] Unhandled error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
   }
 }

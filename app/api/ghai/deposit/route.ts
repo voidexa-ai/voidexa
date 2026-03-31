@@ -6,6 +6,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { verifyGhaiDeposit } from '@/lib/ghai/verify-deposit';
 import { creditGhaiDeposit, logGhaiTransaction } from '@/lib/supabase/credit-queries';
+import { sanitizeNumber } from '@/lib/sanitize';
 import type { DepositRequest } from '@/types/credits';
 
 export async function POST(req: NextRequest) {
@@ -22,19 +23,31 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { txSignature, walletAddress, expectedAmount } = await req.json() as DepositRequest;
+    const body = await req.json() as DepositRequest;
+    const { txSignature, walletAddress, expectedAmount } = body;
 
-    if (!txSignature || !walletAddress || !expectedAmount) {
+    if (!txSignature || !walletAddress || expectedAmount == null) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    // Validate types and ranges
+    if (typeof txSignature !== 'string' || txSignature.length < 80 || txSignature.length > 120) {
+      return NextResponse.json({ error: 'Invalid transaction signature' }, { status: 400 });
+    }
+    if (typeof walletAddress !== 'string' || walletAddress.length < 32 || walletAddress.length > 44) {
+      return NextResponse.json({ error: 'Invalid wallet address' }, { status: 400 });
+    }
+    let validatedAmount: number;
+    try {
+      validatedAmount = sanitizeNumber(expectedAmount, 1, 1_000_000);
+    } catch {
+      return NextResponse.json({ error: 'Invalid deposit amount' }, { status: 400 });
+    }
+
     // Verify on-chain
-    const verification = await verifyGhaiDeposit(txSignature, expectedAmount);
+    const verification = await verifyGhaiDeposit(txSignature, validatedAmount);
     if (!verification.valid) {
-      return NextResponse.json({
-        error: 'Deposit verification failed',
-        reason: verification.error,
-      }, { status: 400 });
+      return NextResponse.json({ error: 'Deposit verification failed' }, { status: 400 });
     }
 
     // Credit the user
@@ -46,7 +59,7 @@ export async function POST(req: NextRequest) {
     );
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+      return NextResponse.json({ error: 'Failed to credit deposit' }, { status: 400 });
     }
 
     // Log transaction
@@ -58,7 +71,7 @@ export async function POST(req: NextRequest) {
       message: `${verification.amount} GHAI credited to your account`,
     });
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Deposit error';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error('[ghai/deposit]', error);
+    return NextResponse.json({ error: 'Deposit processing failed' }, { status: 500 });
   }
 }

@@ -52,7 +52,7 @@ export async function GET() {
 
     return NextResponse.json(response);
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Balance error';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error('[ghai/balance]', error);
+    return NextResponse.json({ error: 'Failed to fetch balance' }, { status: 500 });
   }
 }

@@ -10,6 +10,7 @@ import {
   deleteConversation,
   updateConversationTitle,
 } from '@/lib/supabase/chat-queries';
+import { sanitizeMessage, sanitizeUuid } from '@/lib/sanitize';
 import type { ProviderSlug } from '@/config/providers';
 
 async function getUser() {
@@ -42,19 +43,21 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    const { provider, model, title } = await req.json() as {
-      provider: ProviderSlug;
-      model: string;
-      title?: string;
-    };
+    const body = await req.json();
+    const provider = body?.provider as ProviderSlug;
+    const model = body?.model as string;
+    const rawTitle = body?.title;
 
     if (!provider || !model) {
       return NextResponse.json({ error: 'provider and model are required' }, { status: 400 });
     }
 
+    const title = rawTitle ? sanitizeMessage(String(rawTitle), 100) : undefined;
+
     const conversation = await createConversation(user.id, provider, model, title);
     return NextResponse.json({ conversation }, { status: 201 });
   } catch (error) {
+    console.error('[conversations POST]', error);
     return NextResponse.json({ error: 'Failed to create conversation' }, { status: 500 });
   }
 }
@@ -65,14 +68,22 @@ export async function DELETE(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    const { conversationId } = await req.json() as { conversationId: string };
-    if (!conversationId) {
+    const body = await req.json();
+    if (!body?.conversationId) {
       return NextResponse.json({ error: 'conversationId is required' }, { status: 400 });
+    }
+
+    let conversationId: string;
+    try {
+      conversationId = sanitizeUuid(String(body.conversationId));
+    } catch {
+      return NextResponse.json({ error: 'Invalid conversationId' }, { status: 400 });
     }
 
     await deleteConversation(conversationId, user.id);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('[conversations DELETE]', error);
     return NextResponse.json({ error: 'Failed to delete conversation' }, { status: 500 });
   }
 }
@@ -83,14 +94,27 @@ export async function PATCH(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    const { conversationId, title } = await req.json() as { conversationId: string; title: string };
-    if (!conversationId || !title) {
+    const body = await req.json();
+    if (!body?.conversationId || !body?.title) {
       return NextResponse.json({ error: 'conversationId and title are required' }, { status: 400 });
+    }
+
+    let conversationId: string;
+    try {
+      conversationId = sanitizeUuid(String(body.conversationId));
+    } catch {
+      return NextResponse.json({ error: 'Invalid conversationId' }, { status: 400 });
+    }
+
+    const title = sanitizeMessage(String(body.title), 100);
+    if (!title) {
+      return NextResponse.json({ error: 'title cannot be empty' }, { status: 400 });
     }
 
     await updateConversationTitle(conversationId, user.id, title);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('[conversations PATCH]', error);
     return NextResponse.json({ error: 'Failed to update conversation' }, { status: 500 });
   }
 }
