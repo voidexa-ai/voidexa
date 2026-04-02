@@ -263,7 +263,7 @@ export default function ClaimYourPlanetPage() {
               fontWeight: 400,
             }}>
               Own a sovereign node in the voidexa star system.
-              Build infrastructure. Fuel it with GHAI. Become part of
+              Build infrastructure. Fuel it with USD or GHAI. Become part of
               the network that runs itself.
             </p>
 
@@ -327,14 +327,13 @@ export default function ClaimYourPlanetPage() {
                 fontSize: 22, fontWeight: 700, color: '#e2e8f0',
                 marginBottom: 6, fontFamily: 'var(--font-space)',
               }}>
-                GHAI is the currency of this universe
+                USD pricing. GHAI accepted at 15% discount.
               </p>
               <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.6 }}>
-                Planet ownership, maintenance, and infrastructure fuel all run on GHAI —
-                the native utility token of the voidexa star system.
+                All planet pricing is in USD. Pay via Stripe, or use GHAI at a 15% discount. GHAI is available on Raydium (Solana).
               </p>
               <p style={{ fontSize: 14, color: '#475569', marginTop: 10 }}>
-                All transactions run on GHAI.{' '}
+                All prices in USD. Pay with GHAI for a discount.{' '}
                 <Link href="/ghost-ai" style={{ color: '#8b5cf6', textDecoration: 'none', fontWeight: 500 }}
                   onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#a78bfa'}
                   onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = '#8b5cf6'}
@@ -526,14 +525,14 @@ export default function ClaimYourPlanetPage() {
                 {
                   phase: 'Launch Phase',
                   title: 'Initial Deposit',
-                  desc: 'A one-time GHAI deposit to stake your claim in the voidexa star system and activate your planet node.',
+                  desc: '$500 USD (or equivalent in GHAI at daily rate) — a one-time deposit to stake your claim in the voidexa star system and activate your planet node.',
                   icon: '🚀',
                   color: '#00d4ff',
                 },
                 {
                   phase: 'Self-Sustaining',
                   title: 'Monthly Contribution',
-                  desc: 'An ongoing GHAI contribution that keeps your planet active, habitable, and growing within the network.',
+                  desc: '$50/month USD (or equivalent in GHAI at daily rate) — keeps your planet active, habitable, and growing within the network.',
                   icon: '🔄',
                   color: '#8b5cf6',
                 },
@@ -601,7 +600,7 @@ export default function ClaimYourPlanetPage() {
               {[
                 {
                   title: 'Transparent Allocation',
-                  desc: 'Every GHAI deposit is tracked on-chain. Allocation to infrastructure, rewards, and operations is publicly visible.',
+                  desc: 'Every GHAI transaction is tracked on-chain. USD payments tracked via Stripe. Allocation to infrastructure, rewards, and operations is publicly visible.',
                   icon: '📊',
                 },
                 {

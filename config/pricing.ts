@@ -13,6 +13,16 @@ export const STRIPE_PRO = {
 
 export const GHAI_DISCOUNT_PERCENT = 15; // GHAI payments are 15% cheaper than Stripe equivalent
 
+// USD cost per message by provider + model (displayed alongside GHAI cost)
+export const USD_COSTS: Record<string, string> = {
+  'claude-sonnet': '$0.01',
+  'claude-opus':   '$0.02',
+  'gpt-4o':        '$0.02',
+  'gpt-4o-mini':   '$0.01',
+  'gemini-pro':    '$0.02',
+  'gemini-flash':  '$0.01',
+} as const;
+
 // GHAI cost per message by provider + model
 // These are the BASE costs. Adjust as provider pricing changes.
 export const GHAI_COSTS: Record<string, number> = {

@@ -275,7 +275,7 @@ export default function GhostAIPage() {
             className="text-lg mb-12 max-w-xl mx-auto"
             style={{ color: '#475569' }}
           >
-            The utility token powering the voidexa ecosystem
+            The ecosystem token of voidexa — swap on Raydium, use on the platform
           </motion.p>
 
           {/* CTA buttons */}
@@ -599,7 +599,7 @@ export default function GhostAIPage() {
             Try Void Chat
           </h3>
           <p className="relative text-base mb-8 max-w-md mx-auto" style={{ color: '#64748b' }}>
-            Claude, GPT-4o, and Gemini — one interface, one token, no subscriptions.
+            Claude, GPT-4o, and Gemini — one interface — pay in USD or GHAI
           </p>
           <a
             href="/void-chat"
