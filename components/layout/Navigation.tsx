@@ -19,7 +19,7 @@ const mainLinks = [
   { href: '/ai-tools',    label: 'AI Tools',    badge: null   },
   { href: '/services',    label: 'Services',    badge: null   },
   { href: '/station',     label: 'Station',     badge: null   },
-  { href: '/quantum',     label: 'Quantum',     badge: 'SOON' },
+  { href: '/quantum',     label: 'Quantum',     badge: null   },
   { href: '/team',        label: 'Team',        badge: null   },
 ]
 
