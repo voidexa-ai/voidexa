@@ -106,23 +106,23 @@
   position: absolute;
   z-index: 3;
   cursor: pointer;
-  border: 2px solid transparent;
-  border-radius: 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
   background: transparent;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 /* Idle: subtle pulsing border */
 .br-hotspot::before {
   content: '';
   position: absolute;
-  inset: -2px;
-  border-radius: 14px;
+  inset: -1px;
+  border-radius: 9px;
   border: 1px solid var(--hotspot-color, #00d4ff);
   opacity: 0;
   transition: opacity 0.4s;
@@ -136,11 +136,11 @@
 
 /* Hover state */
 .br-hotspot:hover {
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.15);
   border-color: var(--hotspot-color, #00d4ff);
   box-shadow:
-    0 0 30px color-mix(in srgb, var(--hotspot-color, #00d4ff) 30%, transparent),
-    inset 0 0 40px color-mix(in srgb, var(--hotspot-color, #00d4ff) 8%, transparent);
+    0 0 15px color-mix(in srgb, var(--hotspot-color, #00d4ff) 20%, transparent),
+    inset 0 0 20px color-mix(in srgb, var(--hotspot-color, #00d4ff) 5%, transparent);
 }
 
 .br-hotspot:hover::before {
@@ -150,28 +150,28 @@
 .br-hotspot:hover::after {
   content: '';
   position: absolute;
-  inset: -4px;
-  border-radius: 16px;
-  border: 2px solid var(--hotspot-color, #00d4ff);
-  opacity: 0.6;
+  inset: -2px;
+  border-radius: 10px;
+  border: 1px solid var(--hotspot-color, #00d4ff);
+  opacity: 0.5;
   animation: hotspot-glow-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes hotspot-glow-pulse {
   0%, 100% {
-    opacity: 0.3;
-    box-shadow: 0 0 15px color-mix(in srgb, var(--hotspot-color, #00d4ff) 20%, transparent);
+    opacity: 0.25;
+    box-shadow: 0 0 8px color-mix(in srgb, var(--hotspot-color, #00d4ff) 15%, transparent);
   }
   50% {
-    opacity: 0.8;
-    box-shadow: 0 0 35px color-mix(in srgb, var(--hotspot-color, #00d4ff) 50%, transparent);
+    opacity: 0.6;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--hotspot-color, #00d4ff) 30%, transparent);
   }
 }
 
 /* Hotspot label */
 .br-hotspot-label {
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: 8px;
+  letter-spacing: 2px;
   opacity: 0;
   transform: translateY(6px);
   transition: all 0.3s;
@@ -189,7 +189,7 @@
 
 /* Tooltip */
 .br-hotspot-tooltip {
-  font-size: 11px;
+  font-size: 10px;
   color: rgba(255,255,255,0.7);
   opacity: 0;
   transform: translateY(4px);
@@ -481,7 +481,7 @@
   }
 
   .br-hotspot-label {
-    font-size: 7px !important;
+    font-size: 6px !important;
     letter-spacing: 1px !important;
   }
 
