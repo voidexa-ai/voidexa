@@ -1,0 +1,52 @@
+{
+  "tracks": [
+    {
+      "id": "dk-001",
+      "title": "Kernen i Mig",
+      "artist": "Viktor Staal",
+      "language": "danish",
+      "file": "/music/danish/kernen-i-mig.mp3",
+      "duration": "3:42"
+    },
+    {
+      "id": "dk-002",
+      "title": "Nattevagten",
+      "artist": "Luna Vest",
+      "language": "danish",
+      "file": "/music/danish/nattevagten.mp3",
+      "duration": "4:05"
+    },
+    {
+      "id": "dk-003",
+      "title": "Stjernestov",
+      "artist": "Emil Frost",
+      "language": "danish",
+      "file": "/music/danish/stjernestov.mp3",
+      "duration": "3:18"
+    },
+    {
+      "id": "int-001",
+      "title": "Digital Horizon",
+      "artist": "Neon Circuit",
+      "language": "international",
+      "file": "/music/international/digital-horizon.mp3",
+      "duration": "3:55"
+    },
+    {
+      "id": "int-002",
+      "title": "Void Walker",
+      "artist": "Astral Drift",
+      "language": "international",
+      "file": "/music/international/void-walker.mp3",
+      "duration": "4:12"
+    },
+    {
+      "id": "int-003",
+      "title": "Ghost Protocol",
+      "artist": "Binary Sunset",
+      "language": "international",
+      "file": "/music/international/ghost-protocol.mp3",
+      "duration": "3:30"
+    }
+  ]
+}
