@@ -1,7 +1,9 @@
-/* Break Room — CRT scanlines, neon glow, retro pixel fonts */
+/* Break Room — Immersive interactive room with hotspot zones */
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+/* ───── Variables ───── */
+.break-room-immersive,
 .break-room {
   --br-bg: #0d0a1f;
   --br-bg-deep: #060412;
@@ -16,17 +18,280 @@
   --br-glow-orange: 0 0 20px rgba(255,102,0,0.3);
 }
 
-.break-room {
-  background: linear-gradient(180deg, var(--br-bg) 0%, var(--br-bg-deep) 50%, var(--br-bg-deepest) 100%);
+/* ───── Fullscreen background ───── */
+.break-room-immersive {
+  position: relative;
   min-height: 100vh;
+  overflow: hidden;
 }
 
-/* Pixel font for game UI */
+.br-bg-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.br-bg-image {
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.br-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.4) 0%,
+    rgba(0,0,0,0.15) 40%,
+    rgba(0,0,0,0.25) 100%
+  );
+  pointer-events: none;
+}
+
+/* ───── Floating title ───── */
+.br-title-float {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.br-title-float h1 {
+  font-size: 20px;
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+  text-shadow:
+    0 0 20px rgba(0,212,255,0.6),
+    0 0 60px rgba(0,212,255,0.2),
+    0 2px 8px rgba(0,0,0,0.8);
+}
+
+.br-title-float p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+/* ───── Leaderboard toggle ───── */
+.br-leaderboard-toggle {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 5;
+}
+
+.br-float-btn {
+  background: rgba(10,10,25,0.8);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #ffd700;
+  font-size: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s;
+}
+
+.br-float-btn:hover {
+  background: rgba(255,215,0,0.15);
+  box-shadow: 0 0 20px rgba(255,215,0,0.2);
+}
+
+/* ───── Hotspot zones ───── */
+.br-hotspot {
+  position: absolute;
+  z-index: 3;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Idle: subtle pulsing border */
+.br-hotspot::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  border: 1px solid var(--hotspot-color, #00d4ff);
+  opacity: 0;
+  transition: opacity 0.4s;
+  animation: hotspot-idle-pulse 3s ease-in-out infinite;
+}
+
+@keyframes hotspot-idle-pulse {
+  0%, 100% { opacity: 0.08; }
+  50% { opacity: 0.2; }
+}
+
+/* Hover state */
+.br-hotspot:hover {
+  background: rgba(0,0,0,0.2);
+  border-color: var(--hotspot-color, #00d4ff);
+  box-shadow:
+    0 0 30px color-mix(in srgb, var(--hotspot-color, #00d4ff) 30%, transparent),
+    inset 0 0 40px color-mix(in srgb, var(--hotspot-color, #00d4ff) 8%, transparent);
+}
+
+.br-hotspot:hover::before {
+  opacity: 0;
+}
+
+.br-hotspot:hover::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 16px;
+  border: 2px solid var(--hotspot-color, #00d4ff);
+  opacity: 0.6;
+  animation: hotspot-glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes hotspot-glow-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    box-shadow: 0 0 15px color-mix(in srgb, var(--hotspot-color, #00d4ff) 20%, transparent);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 35px color-mix(in srgb, var(--hotspot-color, #00d4ff) 50%, transparent);
+  }
+}
+
+/* Hotspot label */
+.br-hotspot-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: all 0.3s;
+  text-shadow:
+    0 0 10px currentColor,
+    0 0 30px currentColor,
+    0 1px 4px rgba(0,0,0,0.9);
+  pointer-events: none;
+}
+
+.br-hotspot:hover .br-hotspot-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tooltip */
+.br-hotspot-tooltip {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.3s 0.08s;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.br-hotspot:hover .br-hotspot-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ───── Section overlay ───── */
+.br-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: overlay-fade-in 0.3s ease-out;
+}
+
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.br-overlay-panel {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  max-height: 85vh;
+  background: linear-gradient(180deg, rgba(10,10,25,0.97) 0%, rgba(6,4,18,0.98) 100%);
+  border: 1px solid rgba(100,200,255,0.12);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  animation: overlay-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 -10px 60px rgba(0,0,0,0.5),
+    0 0 40px rgba(0,212,255,0.06);
+}
+
+@keyframes overlay-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.br-overlay-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.br-overlay-close:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border-color: rgba(0,212,255,0.3);
+}
+
+.br-overlay-content {
+  overflow-y: auto;
+  max-height: 85vh;
+  padding-bottom: 40px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,212,255,0.2) transparent;
+}
+
+.br-overlay-content::-webkit-scrollbar {
+  width: 6px;
+}
+.br-overlay-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.br-overlay-content::-webkit-scrollbar-thumb {
+  background: rgba(0,212,255,0.2);
+  border-radius: 3px;
+}
+
+/* ───── Shared component styles (kept from v1) ───── */
+
 .pixel-font {
   font-family: 'Press Start 2P', monospace;
 }
 
-/* Glass card */
 .br-card {
   background: var(--br-card);
   border: 1px solid var(--br-border);
@@ -34,7 +299,6 @@
   backdrop-filter: blur(10px);
 }
 
-/* Neon text glow */
 .neon-cyan {
   color: var(--br-cyan);
   text-shadow: 0 0 10px rgba(0,212,255,0.5), 0 0 30px rgba(0,212,255,0.2);
@@ -50,7 +314,6 @@
   text-shadow: 0 0 10px rgba(255,102,0,0.5), 0 0 30px rgba(255,102,0,0.2);
 }
 
-/* CRT scanline overlay for arcade cabinets */
 .crt-overlay {
   position: relative;
   overflow: hidden;
@@ -71,7 +334,6 @@
   z-index: 2;
 }
 
-/* Arcade cabinet styling */
 .arcade-cabinet {
   background: linear-gradient(180deg, #1a1030 0%, #0d0820 100%);
   border: 2px solid rgba(100,200,255,0.15);
@@ -86,14 +348,12 @@
   box-shadow: var(--br-glow-cyan);
 }
 
-/* Jukebox styling */
 .jukebox {
   background: linear-gradient(180deg, #1a0830 0%, #0d0420 100%);
   border: 2px solid rgba(168,85,247,0.2);
   border-radius: 20px;
 }
 
-/* Game canvas container */
 .game-container {
   position: relative;
   background: #000;
@@ -108,7 +368,6 @@
   image-rendering: pixelated;
 }
 
-/* Virtual d-pad for mobile */
 .touch-controls {
   position: absolute;
   bottom: 20px;
@@ -142,7 +401,6 @@
   background: rgba(0,212,255,0.5);
 }
 
-/* Leaderboard */
 .leaderboard-row {
   display: flex;
   justify-content: space-between;
@@ -160,7 +418,6 @@
   margin-right: 6px;
 }
 
-/* Chat bubble */
 .character-bubble {
   background: rgba(0,212,255,0.08);
   border: 1px solid rgba(0,212,255,0.15);
@@ -171,7 +428,6 @@
   line-height: 1.5;
 }
 
-/* Beat the CEO banner */
 .beat-ceo-banner {
   background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
   border: 1px solid rgba(255,215,0,0.3);
@@ -182,7 +438,6 @@
   text-align: center;
 }
 
-/* Confetti animation */
 @keyframes confetti-fall {
   0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
@@ -196,7 +451,6 @@
   z-index: 9999;
 }
 
-/* YouTube laptop */
 .laptop-frame {
   background: linear-gradient(180deg, #2a2a3a, #1a1a2a);
   border-radius: 12px 12px 0 0;
@@ -212,7 +466,6 @@
   border-top: none;
 }
 
-/* Section headers */
 .section-header {
   font-family: 'Press Start 2P', monospace;
   font-size: 18px;
@@ -220,11 +473,37 @@
   margin-bottom: 1.5rem;
 }
 
+/* ───── Mobile ───── */
 @media (max-width: 768px) {
+  .br-title-float h1 {
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  .br-hotspot-label {
+    font-size: 7px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .br-hotspot-tooltip {
+    font-size: 9px;
+  }
+
+  .br-overlay-panel {
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+  }
+
   .section-header {
     font-size: 14px;
   }
+
   .arcade-cabinet {
     padding: 0.75rem;
+  }
+
+  .br-leaderboard-toggle {
+    bottom: 12px;
+    right: 12px;
   }
 }
