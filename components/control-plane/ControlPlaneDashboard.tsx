@@ -220,8 +220,21 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
       overflowY: 'auto',
       height: '100%',
     }}>
-      {/* Logo */}
+      {/* Back to site + Logo */}
       <div style={{ padding: '24px 20px 20px', borderBottom: BORDER }}>
+        <a
+          href="/home"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontFamily: SANS, fontSize: 14, fontWeight: 500,
+            color: 'rgba(100,200,255,0.6)', textDecoration: 'none',
+            marginBottom: 14, transition: 'color 0.2s',
+          }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#3b82f6' }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(100,200,255,0.6)' }}
+        >
+          ← Back to voidexa.com
+        </a>
         <div style={{
           fontFamily: MONO, fontSize: 16, fontWeight: 700,
           color: BLUE, letterSpacing: '0.06em',

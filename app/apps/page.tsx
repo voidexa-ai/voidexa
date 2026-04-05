@@ -7,18 +7,18 @@ import { ArrowRight } from 'lucide-react'
 const deploymentTiers = [
   {
     tier: 'Tier 1',
-    title: 'Anonymous Cloud',
-    desc: 'Rent an anonymous server through voidexa. Instant setup, no hardware needed. Your messages route through infrastructure we manage but cannot read.',
+    title: 'Cloud',
+    desc: 'We host it. You use it. Nothing stored.',
   },
   {
     tier: 'Tier 2',
     title: 'Own Server',
-    desc: 'Run Comlink on a compact computer with 4G/5G SIM and mobile hotspot. Full control, full anonymity. No third party involved.',
+    desc: 'Run it on your own hardware. Full control.',
   },
   {
     tier: 'Tier 3',
     title: 'Off-Grid Suitcase',
-    desc: 'Weatherproof hardcase with built-in computer, 4G/5G modem with external antenna, solar panel or small windmill for power. Can be deployed anywhere — mounted in a tree, placed on the ground, or buried with only antenna and power source visible. Complete off-grid operation for days without maintenance.',
+    desc: 'Weatherproof hardcase with built-in computer and mobile antenna. Deploy anywhere.',
   },
 ]
 
@@ -67,85 +67,64 @@ export default function AppsPage() {
           </p>
         </motion.div>
 
-        {/* Comlink feature section */}
+        {/* Comlink — compact card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-20 rounded-3xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, rgba(139,92,246,0.06), rgba(0,212,255,0.04))',
-            border: '1px solid rgba(139,92,246,0.15)',
-          }}
+          className="glass-card rounded-2xl p-5 mb-10"
         >
-          <div className="p-8 lg:p-12">
-            <div className="flex flex-col lg:flex-row gap-12">
-              <div className="lg:w-2/5">
-                <span
-                  className="inline-block mb-4 text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
-                  style={{
-                    background: 'rgba(139,92,246,0.12)',
-                    border: '1px solid rgba(139,92,246,0.3)',
-                    color: '#8b5cf6',
-                  }}
-                >
-                  Beta — Comlink
-                </span>
-                <p className="text-[#94a3b8] text-base leading-relaxed mb-4" style={{ fontStyle: 'italic' }}>
-                  Encrypted AI-powered communication. Your agents talk. Nobody else listens.
-                </p>
-                <h2
-                  className="text-4xl font-bold text-[#e2e8f0] mb-4"
-                  style={{ fontFamily: 'var(--font-space)' }}
-                >
-                  Off-grid.{' '}
-                  <span style={{
-                    background: 'linear-gradient(135deg, #8b5cf6, #00d4ff)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}>
-                    Encrypted. Untraceable.
-                  </span>
-                </h2>
-                <p className="text-[#b0b0b0] leading-relaxed mb-3">
-                  Comlink is encrypted one-to-many communication. A master node sends to all agents. Each agent responds directly to master only. Agents cannot see each other. Every message is encrypted client-side before it leaves your device.
-                </p>
-                <p className="text-[#b0b0b0] leading-relaxed mb-3">
-                  QR invite only. 60-minute message lifespan. Ghost mode runs entirely in RAM — nothing written to disk, nothing persists after shutdown.
-                </p>
-                <p className="text-[#b0b0b0] leading-relaxed mb-6">
-                  Three deployment tiers:
-                </p>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-opacity"
-                  style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)' }}
-                >
-                  Request beta access <ArrowRight size={14} />
-                </Link>
-              </div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-medium text-[#e2e8f0]" style={{ fontFamily: 'var(--font-space)' }}>
+              Comlink
+            </h3>
+            <span
+              className="inline-block text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
+              style={{
+                background: 'rgba(139,92,246,0.12)',
+                border: '1px solid rgba(139,92,246,0.3)',
+                color: '#8b5cf6',
+              }}
+            >
+              Beta
+            </span>
+          </div>
+          <p className="text-[15px] text-[#b0b0b0] leading-relaxed mb-4">
+            Your private network. You control who talks, who listens, and who sees what.
+            Create groups with a QR scan. Add people with a long press. Dissolve a group and
+            everyone disappears. No traces, no logs, no data stored. 60-minute message lifespan.
+            Ghost mode runs entirely in RAM. Three tiers: cloud, own server, or off-grid suitcase.
+          </p>
 
-              <div className="lg:w-3/5 space-y-4">
-                {deploymentTiers.map(({ tier, title, desc }, i) => (
-                  <motion.div
-                    key={tier}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.07 }}
-                    className="p-4 rounded-xl"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                    }}
-                  >
-                    <div className="text-sm font-medium uppercase tracking-widest mb-1" style={{ color: '#8b5cf6' }}>{tier}</div>
-                    <div className="text-sm font-medium text-[#e2e8f0] mb-1">{title}</div>
-                    <div className="text-[15px] text-[#b0b0b0] leading-relaxed">{desc}</div>
-                  </motion.div>
-                ))}
-              </div>
+          {/* Collapsible tiers */}
+          <details className="group">
+            <summary className="cursor-pointer text-sm font-medium text-[#8b5cf6] hover:text-[#a78bfa] transition-colors select-none list-none flex items-center gap-1.5 mb-2">
+              <span className="group-open:rotate-90 transition-transform text-[14px]">▶</span>
+              Deployment tiers
+            </summary>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+              {deploymentTiers.map(({ tier, title, desc }) => (
+                <div
+                  key={tier}
+                  className="p-3 rounded-xl"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                >
+                  <div className="text-sm font-medium uppercase tracking-widest mb-0.5" style={{ color: '#8b5cf6' }}>{tier}</div>
+                  <div className="text-sm font-medium text-[#e2e8f0] mb-0.5">{title}</div>
+                  <div className="text-[14px] text-[#b0b0b0] leading-relaxed">{desc}</div>
+                </div>
+              ))}
             </div>
+          </details>
+
+          <div className="mt-4">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)' }}
+            >
+              Request beta access <ArrowRight size={14} />
+            </Link>
           </div>
         </motion.div>
 

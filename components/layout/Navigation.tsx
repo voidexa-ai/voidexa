@@ -31,7 +31,6 @@ const infoPanelLinks = [
   { href: '/ghost-ai',           label: 'Ghost AI'         },
   { href: '/whitepaper',         label: 'White Paper'      },
   { href: '/claim-your-planet',  label: 'Claim Your Planet' },
-  { href: '/break-room',         label: 'Break Room'        },
 ]
 
 // Mobile: secondary links
