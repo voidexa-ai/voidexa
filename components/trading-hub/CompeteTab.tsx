@@ -170,12 +170,12 @@ export default function CompeteTab() {
           </h3>
         </div>
         <p style={{ color: '#64748b', fontSize: '0.9375rem', lineHeight: 1.6, marginBottom: 16 }}>
-          The voidexa All-Season bot has returned +357% over its lifetime. Any bot on the leaderboard that beats this benchmark earns a permanent spot in the Hall of Fame and 5,000 GHAI.
+          The voidexa All-Season bot has returned +194.79% over its lifetime. Any bot on the leaderboard that beats this benchmark earns a permanent spot in the Hall of Fame and 5,000 GHAI.
         </p>
         <div className="flex flex-wrap gap-4">
           <div>
             <div style={{ color: '#475569', fontSize: '0.875rem' }}>Target to beat</div>
-            <div style={{ color: '#22c55e', fontWeight: 500, fontSize: '1.5rem', letterSpacing: '0.02em' }}>+357%</div>
+            <div style={{ color: '#22c55e', fontWeight: 500, fontSize: '1.5rem', letterSpacing: '0.02em' }}>+194.79%</div>
           </div>
           <div>
             <div style={{ color: '#475569', fontSize: '0.875rem' }}>Hall of Fame entries</div>

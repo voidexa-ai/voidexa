@@ -13,7 +13,7 @@ const beliefs = [
 const differentiators = [
   {
     title: 'Compressed Intelligence',
-    desc: "Our AI systems communicate in ways that use 90% fewer resources than industry standard. We didn't optimize the pipeline — we reinvented the language.",
+    desc: "Our AI systems communicate in ways that use 95% fewer resources than industry standard. We didn't optimize the pipeline — we reinvented the language.",
   },
   {
     title: 'Persistent Memory',

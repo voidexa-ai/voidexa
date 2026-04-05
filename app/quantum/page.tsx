@@ -330,7 +330,7 @@ export default function QuantumPage() {
               />
 
               {/* Decorative label */}
-              <p className="font-mono uppercase tracking-[0.22em] mb-3" style={{ fontSize: 12, color: '#22d3ba' }}>
+              <p className="font-mono uppercase tracking-[0.22em] mb-3" style={{ fontSize: 14, color: '#22d3ba' }}>
                 CAPTAIN&apos;S LOG — TRANSMISSION 001
               </p>
 
@@ -777,7 +777,7 @@ export default function QuantumPage() {
                 color: '#22d3ba',
                 bg: 'rgba(34,211,186,0.06)',
                 border: 'rgba(34,211,186,0.18)',
-                desc: '78–88% byte compression integrated as middleware in Quantum — every debate message compressed before transmission. 248 protocol benchmarks. Fine-tuned Llama 3.1 8B via Ollama. ~200ms. Built and proven March 28, 2026.',
+                desc: '95% byte compression integrated as middleware in Quantum — every debate message compressed before transmission. v0.4.0 GPU pipeline. Fine-tuned Llama 3.1 8B via Ollama. ~200ms. Built and proven March 28, 2026.',
               },
               {
                 tag: 'KCP-BINARY',
@@ -823,9 +823,9 @@ export default function QuantumPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-center font-mono"
-            style={{ fontSize: 12, color: 'rgba(148,163,184,0.35)', letterSpacing: '0.06em' }}
+            style={{ fontSize: 14, color: 'rgba(148,163,184,0.35)', letterSpacing: '0.06em' }}
           >
-            KCP-90 middleware active · 78–88% compression · 960 Quantum tests passed · Built by voidexa · March 28, 2026
+            KCP-90 middleware active · 95% compression · 960 Quantum tests passed · Built by voidexa · March 28, 2026
           </motion.p>
         </section>
 

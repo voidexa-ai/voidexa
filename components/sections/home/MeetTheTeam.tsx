@@ -41,7 +41,7 @@ export default function MeetTheTeam() {
           >
             <p
               className="font-mono uppercase tracking-[0.28em] mb-4"
-              style={{ fontSize: 12, color: 'rgba(119,119,187,0.75)' }}
+              style={{ fontSize: 14, color: 'rgba(119,119,187,0.75)' }}
             >
               The Cast
             </p>

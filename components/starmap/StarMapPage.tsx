@@ -55,7 +55,7 @@ function Kcp90FloatingPanel() {
     ? summary!.total_compressions.toLocaleString()
     : '247'
 
-  const mono: React.CSSProperties = { fontFamily: 'monospace', fontSize: 13, lineHeight: '1.8' }
+  const mono: React.CSSProperties = { fontFamily: 'monospace', fontSize: 14, lineHeight: '1.8' }
 
   return (
     <div style={{
@@ -86,7 +86,7 @@ function Kcp90FloatingPanel() {
           <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', display: 'inline-block' }} />
           <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', background: '#3b82f6', display: 'inline-block' }} />
         </div>
-        <span style={{ ...mono, fontSize: 11, color: 'rgba(59,130,246,0.5)', letterSpacing: '0.04em' }}>
+        <span style={{ ...mono, fontSize: 14, color: 'rgba(59,130,246,0.5)', letterSpacing: '0.04em' }}>
           kcp-90://protocol
         </span>
         <button
@@ -125,14 +125,14 @@ function Kcp90FloatingPanel() {
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>compress</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>83%</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>95%</span>
         </div>
 
         {/* range */}
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>range</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>78-88%</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>95%</span>
         </div>
 
         {/* Status line with blinking cursor */}

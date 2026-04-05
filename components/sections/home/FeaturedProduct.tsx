@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, TrendingUp, Shield as ShieldIcon, Activity, Clock } from 'lucide-react'
 
 const stats = [
-  { icon: TrendingUp, value: '+357%',   label: '12-month backtest',   color: '#00d4ff' },
+  { icon: TrendingUp, value: '+194.79%',   label: '12-month backtest',   color: '#00d4ff' },
   { icon: Activity,   value: '5-stage', label: 'AI pipeline',          color: '#8b5cf6' },
   { icon: ShieldIcon, value: '11',      label: 'Coins tracked',        color: '#00d4ff' },
   { icon: Clock,      value: '24/7',    label: 'Autonomous operation', color: '#8b5cf6' },
@@ -67,7 +67,7 @@ export default function FeaturedProduct() {
             </h2>
             <p className="text-[#8899af] leading-relaxed mb-8">
               A five-stage AI pipeline that classifies market regimes and executes trades
-              autonomously. +357% backtested returns across 11 crypto assets.
+              autonomously. +194.79% backtested returns across 11 crypto assets.
               Every trade logged, every decision auditable.
             </p>
 

@@ -68,7 +68,7 @@ export default function HomeCtas() {
             <span style={{
               display: 'inline-block',
               marginBottom: 7,
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: 700,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
@@ -163,7 +163,7 @@ export default function HomeCtas() {
             borderTop: '1px solid rgba(139,92,246,0.1)',
           }}>
             <div style={{
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: 700,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
@@ -184,7 +184,7 @@ export default function HomeCtas() {
               Meet the team
             </div>
             <div style={{
-              fontSize: 13,
+              fontSize: 14,
               color: 'rgba(226,232,240,0.55)',
               display: 'flex',
               alignItems: 'center',
@@ -254,7 +254,7 @@ export default function HomeCtas() {
             <span style={{
               display: 'inline-block',
               marginBottom: 7,
-              fontSize: 10,
+              fontSize: 14,
               fontWeight: 700,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
@@ -278,7 +278,7 @@ export default function HomeCtas() {
               GHAI
             </div>
             <div style={{
-              fontSize: 12,
+              fontSize: 14,
               color: 'rgba(226,232,240,0.65)',
               display: 'flex',
               alignItems: 'center',

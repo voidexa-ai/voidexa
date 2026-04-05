@@ -156,7 +156,7 @@ export default function Hero() {
           className="mt-20 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16"
         >
           {[
-            { value: '+357%', label: 'Backtest return (12mo)' },
+            { value: '+194.79%', label: 'Backtest return (12mo)' },
             { value: '5-stage', label: 'AI pipeline' },
             { value: '24/7', label: 'Autonomous operation' },
           ].map(({ value, label }, i) => (

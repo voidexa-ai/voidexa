@@ -19,8 +19,8 @@ const pipeline = [
 ]
 
 const stats = [
-  { icon: TrendingUp, value: '+357%',   label: '12-month backtest',     color: '#00d4ff' },
-  { icon: Activity,   value: '359',     label: 'tests passing',         color: '#8b5cf6' },
+  { icon: TrendingUp, value: '+194.79%',   label: '12-month backtest',     color: '#00d4ff' },
+  { icon: Activity,   value: '839+',    label: 'tests passing',         color: '#8b5cf6' },
   { icon: Shield,     value: '11',      label: 'coins tracked',         color: '#00d4ff' },
   { icon: Clock,      value: '4',       label: 'market phases',         color: '#8b5cf6' },
 ]
@@ -288,9 +288,9 @@ function BacktestChart() {
             fontFamily: 'var(--font-space)',
           }}
         >
-          +357%
+          +194.79%
         </div>
-        <div className="text-sm text-[#334155]">All-Season Bot v4.1.0</div>
+        <div className="text-sm text-[#334155]">All-Season Bot V3 regime-based</div>
       </div>
       <div className="absolute bottom-14 right-10 text-right">
         <div className="text-sm text-[#334155]">--- buy & hold</div>
@@ -323,7 +323,7 @@ function BacktestChart() {
 
 /* ─── Features list ─── */
 const features = [
-  'APEX TRADER CORE — primary regime-aware strategy, +357% backtested over 12 months',
+  'APEX TRADER CORE — primary regime-aware strategy, +194.79% backtested over 12 months',
   'SCALPER CORE — high-frequency scalping layer optimised for volatile alt markets',
   '8-layer defense system — 8 independent risk checks before any order executes',
   'Multi-agent architecture — Scanner, Season, Futures, Portfolio agents running independently',
@@ -332,7 +332,7 @@ const features = [
   'Risk Gate is the final authority — every order must pass before execution',
   'Futures overlay: adaptive leverage 1x–5x based on signal confidence + volume',
   'Trailing stops, breakeven logic, funding rate harvester in RISK_OFF',
-  'KCP-90 context compression — 78–88% token reduction on AI reasoning chains',
+  'KCP-90 context compression — 95% token reduction on AI reasoning chains',
   'Telegram notifications for every signal, trade, and daily summary',
   'Paper trading simulator runs in parallel with live bot',
   'KuCoin spot + futures integration via ccxt',
@@ -402,7 +402,7 @@ export default function TradingPage() {
               <p className="text-[#8899af] leading-relaxed mb-8 text-lg max-w-lg">
                 APEX TRADER CORE + SCALPER CORE — dual-strategy autonomous system with an 8-layer
                 defense pipeline. Reads the market in real time, adjusts across four phases.
-                v4.1.0 · +357% backtest · 359 tests · KCP-90 integrated · Set it once — it runs itself.
+                V3 regime-based · +194.79% backtest · 839+ tests · KCP-90 integrated · Set it once — it runs itself.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a href="#node" className="btn-primary glow-cyan-btn">

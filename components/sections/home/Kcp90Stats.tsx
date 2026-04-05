@@ -38,7 +38,7 @@ const statStyle = {
     textShadow: '0 0 20px rgba(0,212,255,0.45)',
   },
   label: {
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: 700,
     color: 'rgba(148,163,184,0.65)',
     letterSpacing: '0.14em',
@@ -109,7 +109,7 @@ export default function Kcp90Stats() {
           {/* Avg Compression */}
           <div style={{ textAlign: 'center' }}>
             <div style={statStyle.value}>
-              {hasData && ratio > 0 ? `${ratio}%` : '83%'}
+              {hasData && ratio > 0 ? `${ratio}%` : '95%'}
             </div>
             <div style={statStyle.label}>Avg Compression</div>
           </div>
@@ -124,7 +124,7 @@ export default function Kcp90Stats() {
 
           {/* Token Range */}
           <div style={{ textAlign: 'center' }}>
-            <div style={statStyle.value}>78–88%</div>
+            <div style={statStyle.value}>95%</div>
             <div style={statStyle.label}>Token Range</div>
           </div>
 
@@ -140,8 +140,8 @@ export default function Kcp90Stats() {
           marginTop: 24,
           paddingTop: 16,
           borderTop: '1px solid rgba(255,255,255,0.06)',
-          fontSize: 11,
-          color: 'rgba(148,163,184,0.4)',
+          fontSize: 14,
+          color: 'rgba(148,163,184,0.5)',
           letterSpacing: '0.08em',
           textAlign: 'center',
           fontWeight: 500,
@@ -153,7 +153,7 @@ export default function Kcp90Stats() {
       <style>{`
         @keyframes kcp-bar-pulse {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          50% { opacity: 0.5; }
         }
       `}</style>
     </div>

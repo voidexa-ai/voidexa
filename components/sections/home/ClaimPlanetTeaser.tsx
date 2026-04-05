@@ -35,7 +35,7 @@ export default function ClaimPlanetTeaser() {
         }}>
           <Star size={12} style={{ color: '#f59e0b' }} />
           <span style={{
-            fontSize: 13, fontWeight: 600, color: '#f59e0b',
+            fontSize: 14, fontWeight: 600, color: '#f59e0b',
             letterSpacing: '0.08em', textTransform: 'uppercase',
           }}>
             5 Pioneer Slots · First come, first served

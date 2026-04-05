@@ -91,6 +91,9 @@ export default function AppsPage() {
                 >
                   Beta — Comlink
                 </span>
+                <p className="text-[#94a3b8] text-base leading-relaxed mb-4" style={{ fontStyle: 'italic' }}>
+                  Encrypted AI-powered communication. Your agents talk. Nobody else listens.
+                </p>
                 <h2
                   className="text-4xl font-bold text-[#e2e8f0] mb-4"
                   style={{ fontFamily: 'var(--font-space)' }}

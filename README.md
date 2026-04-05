@@ -19,7 +19,7 @@ But the founder was doing something none of them saw coming. While asking questi
 ## The technology
 
 ### KCP-90 — Compressed AI-to-AI Communication
-When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 90% fewer tokens. Same message, 10% of the cost. No competitor has this.
+When AIs talk they use thousands of words. KCP-90 compresses it to the essentials — 95% fewer tokens. Same message, 5% of the cost. No competitor has this.
 
 ### KCP-BINARY — Binary Transport Layer
 Normally AIs talk in text — slow and expensive. KCP-BINARY translates to binary code using FlatBuffers encoding with Ed25519 digital signatures. Built in Rust. 154 tests passing.

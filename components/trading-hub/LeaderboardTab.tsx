@@ -121,7 +121,7 @@ export default function LeaderboardTab() {
               className="font-medium"
               style={{ color: '#22c55e', fontSize: '2.5rem', letterSpacing: '0.02em', lineHeight: 1 }}
             >
-              +357%
+              +194.79%
             </div>
             <div style={{ color: '#64748b', fontSize: '0.9375rem' }}>All-time return</div>
             <div

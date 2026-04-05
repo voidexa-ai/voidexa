@@ -125,7 +125,7 @@ function SectionHeader({ title, badge }: { title: string; badge?: string }) {
       </span>
       {badge && (
         <span style={{
-          fontFamily: MONO, fontSize: 12, fontWeight: 600,
+          fontFamily: MONO, fontSize: 14, fontWeight: 600,
           background: 'rgba(239,68,68,0.25)',
           border: '1px solid rgba(239,68,68,0.45)',
           color: '#fca5a5',
@@ -167,13 +167,13 @@ function MetricCard({
       {demo && (
         <span style={{
           position: 'absolute', top: 10, right: 10,
-          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          fontFamily: MONO, fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
           background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
           borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       )}
       <div style={{
-        fontFamily: SANS, fontSize: 13, fontWeight: 500,
+        fontFamily: SANS, fontSize: 14, fontWeight: 500,
         letterSpacing: '0.06em', textTransform: 'uppercase',
         color: 'rgba(148,163,184,0.7)', marginBottom: 10,
       }}>
@@ -187,7 +187,7 @@ function MetricCard({
       </div>
       {sub && (
         <div style={{
-          fontFamily: SANS, fontSize: 12, color: 'rgba(148,163,184,0.7)',
+          fontFamily: SANS, fontSize: 14, color: 'rgba(148,163,184,0.7)',
           marginTop: 6,
         }}>
           {sub}
@@ -229,7 +229,7 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
           voidexa
         </div>
         <div style={{
-          fontFamily: MONO, fontSize: 12, color: 'rgba(100,200,255,0.6)',
+          fontFamily: MONO, fontSize: 14, color: 'rgba(100,200,255,0.6)',
           letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 4,
         }}>
           control-plane://admin
@@ -272,7 +272,7 @@ function Sidebar({ active, onNav }: { active: string; onNav: (id: string) => voi
       <div style={{
         padding: '14px 20px',
         borderTop: BORDER,
-        fontFamily: MONO, fontSize: 12, color: 'rgba(100,200,255,0.5)',
+        fontFamily: MONO, fontSize: 14, color: 'rgba(100,200,255,0.5)',
         letterSpacing: '0.1em',
       }}>
         v1.0 · read-only
@@ -307,13 +307,13 @@ function TopBar({
       <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>/</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         <Dot color={GREEN} pulse />
-        <span style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(16,185,129,0.7)', letterSpacing: '0.08em' }}>
+        <span style={{ fontFamily: MONO, fontSize: 14, color: 'rgba(16,185,129,0.7)', letterSpacing: '0.08em' }}>
           systems nominal
         </span>
       </div>
       <div style={{ flex: 1 }} />
       <span style={{
-        fontFamily: MONO, fontSize: 13,
+        fontFamily: MONO, fontSize: 14,
         color: 'rgba(148,163,184,0.7)',
       }}>
         {lastRefresh
@@ -324,7 +324,7 @@ function TopBar({
         onClick={onRefresh}
         disabled={refreshing}
         style={{
-          fontFamily: MONO, fontSize: 13,
+          fontFamily: MONO, fontSize: 14,
           color: refreshing ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0.9)',
           background: 'rgba(59,130,246,0.08)',
           border: '1px solid rgba(59,130,246,0.2)',
@@ -393,18 +393,18 @@ function Kcp90Panel({ summary, daily, recent }: {
       <SectionHeader title="KCP-90 Protocol" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Total Compressions</div>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Total Compressions</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
             {summary ? fmt(summary.total_compressions) : '—'}
           </div>
         </Card>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Avg Compression Rate</div>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Avg Compression Rate</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: BLUE, letterSpacing: '-0.02em' }}>
             {summary ? `${((summary.overall_ratio ?? 0) * 100).toFixed(1)}%` : '—'}
           </div>
           {summary && (
-            <div style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(148,163,184,0.65)', marginTop: 6 }}>
+            <div style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(148,163,184,0.65)', marginTop: 6 }}>
               {fmt(summary.total_original_chars)} → {fmt(summary.total_compressed_chars)} chars
             </div>
           )}
@@ -412,18 +412,18 @@ function Kcp90Panel({ summary, daily, recent }: {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Tokens Saved</div>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Tokens Saved</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: PURPLE, letterSpacing: '-0.02em' }}>
             {summary ? fmt(summary.total_tokens_saved) : '—'}
           </div>
           {summary && (
-            <div style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(148,163,184,0.65)', marginTop: 6 }}>
+            <div style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(148,163,184,0.65)', marginTop: 6 }}>
               ≈ ${(summary.estimated_usd_saved ?? 0).toFixed(2)} saved
             </div>
           )}
         </Card>
         <Card style={{ padding: '18px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Active Products</div>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Active Products</div>
           <div style={{ fontFamily: MONO, fontSize: 36, fontWeight: 300, color: PURPLE, letterSpacing: '-0.02em' }}>
             {summary ? `${summary.active_products} / 5` : '—'}
           </div>
@@ -433,7 +433,7 @@ function Kcp90Panel({ summary, daily, recent }: {
       {/* Daily trend — pure CSS bar chart, zero external dependencies */}
       {trendData.length > 0 && (
         <Card style={{ padding: '20px 22px', marginBottom: 12 }}>
-          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.04em', marginBottom: 16 }}>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.04em', marginBottom: 16 }}>
             Daily compressions — last 30 days
           </div>
           <CssBarChart data={trendData} />
@@ -443,7 +443,7 @@ function Kcp90Panel({ summary, daily, recent }: {
       {/* Recent events table */}
       {recent.length > 0 && (
         <Card style={{ padding: '20px 22px' }}>
-          <div style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.04em', marginBottom: 14 }}>
+          <div style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.04em', marginBottom: 14 }}>
             Recent compression events
           </div>
           <div style={{ overflowX: 'auto' }}>
@@ -452,7 +452,7 @@ function Kcp90Panel({ summary, daily, recent }: {
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   {['Product', 'Encoder', 'Original', 'Compressed', 'Ratio', 'Tokens Saved', 'Time'].map(h => (
                     <th key={h} style={{
-                      fontFamily: SANS, fontSize: 12, fontWeight: 600,
+                      fontFamily: SANS, fontSize: 14, fontWeight: 600,
                       color: 'rgba(100,116,139,0.85)', letterSpacing: '0.1em',
                       textTransform: 'uppercase', textAlign: h === 'Product' || h === 'Encoder' ? 'left' : 'right',
                       paddingBottom: 10, paddingRight: h !== 'Time' ? 12 : 0,
@@ -463,21 +463,21 @@ function Kcp90Panel({ summary, daily, recent }: {
               <tbody>
                 {recent.map((row) => (
                   <tr key={row.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                    <td style={{ fontFamily: SANS, fontSize: 13, color: '#cbd5e1', padding: '10px 12px 10px 0', textTransform: 'capitalize' }}>{row.product}</td>
+                    <td style={{ fontFamily: SANS, fontSize: 14, color: '#cbd5e1', padding: '10px 12px 10px 0', textTransform: 'capitalize' }}>{row.product}</td>
                     <td style={{ paddingRight: 12 }}>
                       <span style={{
-                        fontFamily: MONO, fontSize: 12,
+                        fontFamily: MONO, fontSize: 14,
                         color: row.encoder_used === 'ollama' ? '#a78bfa' : row.encoder_used === 'regex' ? '#4ade80' : '#fbbf24',
                         background: row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.15)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.15)' : 'rgba(251,191,36,0.15)',
                         border: `1px solid ${row.encoder_used === 'ollama' ? 'rgba(167,139,250,0.4)' : row.encoder_used === 'regex' ? 'rgba(74,222,128,0.4)' : 'rgba(251,191,36,0.4)'}`,
                         borderRadius: 4, padding: '2px 7px',
                       }}>{row.encoder_used}</span>
                     </td>
-                    <td style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', textAlign: 'right', paddingRight: 12 }}>{fmt(row.original_chars)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 12, color: '#94a3b8', textAlign: 'right', paddingRight: 12 }}>{fmt(row.compressed_chars)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 12, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{((row.compression_ratio ?? 0) * 100).toFixed(1)}%</td>
-                    <td style={{ fontFamily: MONO, fontSize: 12, color: BLUE, textAlign: 'right', paddingRight: 12 }}>{fmt(row.tokens_saved)}</td>
-                    <td style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(148,163,184,0.6)', textAlign: 'right' }}>{timeAgo(row.created_at)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 14, color: '#94a3b8', textAlign: 'right', paddingRight: 12 }}>{fmt(row.original_chars)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 14, color: '#94a3b8', textAlign: 'right', paddingRight: 12 }}>{fmt(row.compressed_chars)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 14, color: row.compression_ratio > 0.3 ? '#4ade80' : '#fbbf24', textAlign: 'right', paddingRight: 12 }}>{((row.compression_ratio ?? 0) * 100).toFixed(1)}%</td>
+                    <td style={{ fontFamily: MONO, fontSize: 14, color: BLUE, textAlign: 'right', paddingRight: 12 }}>{fmt(row.tokens_saved)}</td>
+                    <td style={{ fontFamily: MONO, fontSize: 14, color: 'rgba(148,163,184,0.6)', textAlign: 'right' }}>{timeAgo(row.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -506,7 +506,7 @@ function TradingBotPanel() {
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          fontFamily: MONO, fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
           background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
           borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
@@ -518,7 +518,7 @@ function TradingBotPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
             <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
@@ -533,7 +533,7 @@ function GhaiPanel() {
   const data = [
     { label: 'price',    value: '$0.0042', color: BLUE },
     { label: '24h change', value: '+3.2%', color: '#4ade80' },
-    { label: 'supply',   value: '100M GHAI', color: '#94a3b8' },
+    { label: 'supply',   value: '700M GHAI', color: '#94a3b8' },
     { label: 'burned',   value: '2.4M GHAI', color: RED },
     { label: 'holders',  value: '847', color: '#f1f5f9' },
     { label: 'contract', value: 'Ch8Ek9P…x5gK', color: 'rgba(100,200,255,0.7)' },
@@ -542,7 +542,7 @@ function GhaiPanel() {
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          fontFamily: MONO, fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
           background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
           borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
@@ -554,7 +554,7 @@ function GhaiPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
             <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
@@ -578,7 +578,7 @@ function QuantumPanel() {
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          fontFamily: MONO, fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
           background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
           borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
@@ -590,7 +590,7 @@ function QuantumPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
             <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
@@ -603,18 +603,18 @@ function QuantumPanel() {
 
 function VoidChatPanel() {
   const data = [
-    { label: 'status',     value: 'BUILDING',    color: YELLOW },
+    { label: 'status',     value: 'LIVE',        color: GREEN },
     { label: 'messages',   value: '—',           color: '#94a3b8' },
     { label: 'users',      value: '—',           color: '#94a3b8' },
     { label: 'providers',  value: 'Claude · GPT · Gemini', color: '#94a3b8' },
-    { label: 'free tier',  value: '10 msg/day',  color: BLUE },
-    { label: 'pro plan',   value: '$5/mo',       color: PURPLE },
+    { label: 'sonnet',     value: '$0.01/msg',   color: BLUE },
+    { label: 'opus',       value: '$0.02/msg',   color: PURPLE },
   ];
   return (
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 14, right: 14 }}>
         <span style={{
-          fontFamily: MONO, fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+          fontFamily: MONO, fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
           background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)',
           borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
@@ -626,7 +626,7 @@ function VoidChatPanel() {
             display: 'flex', flexDirection: 'column', gap: 2,
             padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.04)',
           }}>
-            <span style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+            <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
             <span style={{ fontFamily: MONO, fontSize: 18, color, fontWeight: 500 }}>{value}</span>
           </div>
         ))}
@@ -642,15 +642,17 @@ const SYSTEMS = [
   { name: 'Quantum',            status: 'live',     color: GREEN,  note: '960 tests passed — fully operational' },
   { name: 'Trading Bot',        status: 'live',     color: GREEN,  note: 'APEX + SCALPER running S-03' },
   { name: 'GHAI Token',         status: 'live',     color: GREEN,  note: 'Solana mainnet · Ch8Ek9P…x5gK' },
-  { name: 'Void Chat',          status: 'building', color: YELLOW, note: 'Phase 2 in development' },
+  { name: 'Void Chat',          status: 'live',     color: GREEN,  note: 'LIVE — $0.01/msg Sonnet, $0.02/msg Opus' },
   { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 3' },
   { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 4' },
   { name: 'Comlink',            status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
   { name: 'BOSSO',              status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
   { name: 'TINE Secretary AI',  status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
-  { name: 'Jarvis',             status: 'live',     color: GREEN,  note: 'v3.1.0 — 197 tests — Voice AI Butler' },
+  { name: 'Jarvis',             status: 'live',     color: GREEN,  note: 'v4.2.0 — 559+ tests — Voice AI Butler' },
   { name: 'Supabase DB',        status: 'live',     color: GREEN,  note: 'ihuljnekxkyqgroklurp — EU region' },
   { name: 'Vercel Hosting',     status: 'live',     color: GREEN,  note: 'voidexa.com — edge network' },
+  { name: 'Conference Room',    status: 'live',     color: GREEN,  note: 'Autonomous build pipeline — self-repair, Telegram alerts' },
+  { name: 'DreamGraph',         status: 'live',     color: GREEN,  note: 'Knowledge graph — architectural tension detection' },
 ];
 
 function SystemHealthPanel() {
@@ -667,10 +669,10 @@ function SystemHealthPanel() {
               <Dot color={color} pulse={status === 'live'} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: SANS, fontSize: 14, color: '#cbd5e1', fontWeight: 500 }}>{name}</div>
-                <div style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(148,163,184,0.65)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
+                <div style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(148,163,184,0.65)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{note}</div>
               </div>
               <span style={{
-                fontFamily: MONO, fontSize: 12, fontWeight: 700,
+                fontFamily: MONO, fontSize: 14, fontWeight: 700,
                 color, opacity: 1, letterSpacing: '0.08em',
                 textTransform: 'uppercase', flexShrink: 0,
               }}>{status}</span>
@@ -685,14 +687,14 @@ function SystemHealthPanel() {
 // ─── Activity Feed ────────────────────────────────────────────────────────────
 
 const ACTIVITY = [
-  { icon: '◈', text: 'KCP-90 compression recorded — quantum product, 83% ratio', time: '2m ago', color: BLUE },
+  { icon: '◈', text: 'KCP-90 compression recorded — quantum product, 95% ratio', time: '2m ago', color: BLUE },
   { icon: '◎', text: 'Trading Bot opened position — APEX strategy, ETH/USDT', time: '8m ago', color: GREEN },
-  { icon: '◈', text: 'KCP-90 compression recorded — trading-bot product, 79% ratio', time: '12m ago', color: BLUE },
+  { icon: '◈', text: 'KCP-90 compression recorded — trading-bot product, 95% ratio', time: '12m ago', color: BLUE },
   { icon: '▣', text: 'System health check passed — all 4 live products nominal', time: '18m ago', color: GREEN },
   { icon: '◎', text: 'Trading Bot closed position +$24.40 — SCALPER strategy', time: '34m ago', color: GREEN },
-  { icon: '◈', text: 'KCP-90 batch compression — 14 events, avg 81% ratio', time: '1h ago', color: BLUE },
+  { icon: '◈', text: 'KCP-90 batch compression — 14 events, avg 95% ratio', time: '1h ago', color: BLUE },
   { icon: '◇', text: 'Quantum session completed — provider response 142ms', time: '1h ago', color: PURPLE },
-  { icon: '◈', text: 'KCP-90 compression recorded — void-chat product, 77% ratio', time: '2h ago', color: BLUE },
+  { icon: '◈', text: 'KCP-90 compression recorded — void-chat product, 95% ratio', time: '2h ago', color: BLUE },
 ];
 
 function ActivityFeedPanel() {
@@ -709,7 +711,7 @@ function ActivityFeedPanel() {
             }}>
               <span style={{ fontFamily: MONO, fontSize: 14, color, flexShrink: 0, lineHeight: 1.4 }}>{icon}</span>
               <span style={{ fontFamily: SANS, fontSize: 14, color: '#cbd5e1', flex: 1, lineHeight: 1.5 }}>{text}</span>
-              <span style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(148,163,184,0.6)', flexShrink: 0, marginTop: 1 }}>{time}</span>
+              <span style={{ fontFamily: MONO, fontSize: 14, color: 'rgba(148,163,184,0.6)', flexShrink: 0, marginTop: 1 }}>{time}</span>
             </div>
           ))}
         </div>
@@ -835,7 +837,7 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
       <style>{`
         @keyframes cp-pulse {
           0%, 100% { opacity: 1; }
-          50%       { opacity: 0.35; }
+          50%       { opacity: 0.5; }
         }
         * { box-sizing: border-box; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }

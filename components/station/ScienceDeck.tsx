@@ -28,8 +28,8 @@ const ROADMAP: RoadmapItem[] = [
   },
   {
     title: 'AI Trading Bot',
-    desc: 'Regime-aware autonomous trading. +357% backtested. v4.1.0.',
-    tooltip: 'v4.1.0. 359 tests. APEX + SCALPER strategies. Momentum defense active. KCP-90 context compression.',
+    desc: 'Regime-aware autonomous trading. +194.79% backtested. V3 regime-based.',
+    tooltip: 'V3 regime-based. 839+ tests. APEX + SCALPER strategies. Momentum defense active. KCP-90 context compression.',
     status: 'live',
     phase: 'Phase 2',
   },
@@ -42,8 +42,8 @@ const ROADMAP: RoadmapItem[] = [
   },
   {
     title: 'KCP-90',
-    desc: 'AI-to-AI compression protocol. 78–88% proven. 248 tests.',
-    tooltip: 'v0.8.0. 248 tests. 78–88% compression proven across 20 domains. Integrated in Void Chat, Quantum, Trading Bot.',
+    desc: 'AI-to-AI compression protocol. 95% proven. v0.4.0 GPU pipeline.',
+    tooltip: 'v0.4.0 GPU pipeline. 95% compression proven across 20 domains. Integrated in Void Chat, Quantum, Trading Bot.',
     status: 'live',
     phase: 'Phase 4',
   },
@@ -57,8 +57,8 @@ const ROADMAP: RoadmapItem[] = [
   // ── NEXT ─────────────────────────────────────────────────────────────────
   {
     title: 'Jarvis',
-    desc: 'Voice-controlled personal AI butler. Claude Sonnet brain. Wake word activation. Conversation memory. Desktop actions. Morning briefings. v3.1.0. 197 tests.',
-    tooltip: 'v3.1.0. 197 tests. Voice-controlled personal AI butler. Claude Sonnet brain. Wake word activation. Conversation memory. Desktop actions. Morning briefings.',
+    desc: 'Voice-controlled personal AI butler. Claude Sonnet brain. Wake word activation. Conversation memory. Desktop actions. Morning briefings. v4.2.0. 559+ tests.',
+    tooltip: 'v4.2.0. 559+ tests. Voice-controlled personal AI butler. Claude Sonnet brain. Wake word activation. Conversation memory. Desktop actions. Morning briefings.',
     status: 'live',
     phase: 'Phase 6',
   },
@@ -140,6 +140,34 @@ const ROADMAP: RoadmapItem[] = [
     tooltip: 'Encrypted messaging platform. Rebuilt v10.0, awaiting test.',
     status: 'testing',
     phase: 'Phase 17',
+  },
+  {
+    title: 'Conference Room',
+    desc: 'Autonomous build pipeline. Self-repair, Telegram alerts, AI escalation. Zero API cost.',
+    tooltip: 'Autonomous build pipeline with self-repair, Telegram alerts, AI escalation. Zero API cost.',
+    status: 'live',
+    phase: 'Phase 18',
+  },
+  {
+    title: 'DreamGraph',
+    desc: 'Knowledge graph finding architectural tensions across repos.',
+    tooltip: 'Knowledge graph that discovers architectural tensions and patterns across repositories.',
+    status: 'live',
+    phase: 'Phase 19',
+  },
+  {
+    title: 'voidexa-orchestration',
+    desc: 'Shared AI provider orchestration. 53 tests.',
+    tooltip: 'Shared AI provider orchestration layer. 53 tests.',
+    status: 'live',
+    phase: 'Phase 20',
+  },
+  {
+    title: 'voidexa-auth',
+    desc: 'Shared authentication and billing.',
+    tooltip: 'Shared authentication and billing service across voidexa products.',
+    status: 'live',
+    phase: 'Phase 21',
   },
 ]
 
