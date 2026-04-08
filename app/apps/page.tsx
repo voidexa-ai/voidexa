@@ -8,17 +8,17 @@ const deploymentTiers = [
   {
     tier: 'Tier 1',
     title: 'Cloud',
-    desc: 'We host it. You use it. Nothing stored.',
+    desc: 'We host the server. Your messages are encrypted on your device before they ever leave it. We only handle encrypted data — unreadable to us, unreadable to anyone.',
   },
   {
     tier: 'Tier 2',
-    title: 'Own Server',
-    desc: 'Run it on your own hardware. Full control.',
+    title: 'Private Node',
+    desc: 'We ship you a dedicated Comlink device, pre-configured and ready to run. Plug it in. Your private network goes live. No tech skills needed.',
   },
   {
     tier: 'Tier 3',
-    title: 'Off-Grid Suitcase',
-    desc: 'Weatherproof hardcase with built-in computer and mobile antenna. Deploy anywhere.',
+    title: 'Field Node',
+    desc: 'A deployable communication system in a hardcase. Solar or wind powered, mobile connected, fully independent. Coming soon.',
   },
 ]
 
@@ -75,9 +75,12 @@ export default function AppsPage() {
           className="glass-card rounded-2xl p-5 mb-10"
         >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-[#e2e8f0]" style={{ fontFamily: 'var(--font-space)' }}>
-              Comlink
-            </h3>
+            <div>
+              <h3 className="text-sm font-medium text-[#e2e8f0]" style={{ fontFamily: 'var(--font-space)' }}>
+                Comlink — Encrypted Messenger App
+              </h3>
+              <p className="text-[13px] text-[#8b5cf6] mt-0.5">Your private app. Your own private network.</p>
+            </div>
             <span
               className="inline-block text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"
               style={{
@@ -90,14 +93,11 @@ export default function AppsPage() {
             </span>
           </div>
           <p className="text-[15px] text-[#b0b0b0] leading-relaxed mb-4">
-            Your private network. You control who talks, who listens, and who sees what.
-            Create groups with a QR scan. Add people with a long press. Dissolve a group and
-            everyone disappears. No traces, no logs, no data stored. 60-minute message lifespan.
-            Ghost mode runs entirely in RAM. Three tiers: cloud, own server, or off-grid suitcase.
+            Your messages are encrypted on your device before they ever leave it. Our servers only handle encrypted data — we cannot read it, and neither can anyone else. End-to-end encrypted, peer-to-peer by design. Create groups with a QR scan. Add people with a long press. Dissolve a group and everyone disappears. 60-minute message lifespan. Ghost mode runs entirely in RAM. Zero-trace.
           </p>
 
           {/* Collapsible tiers */}
-          <details className="group">
+          <details className="group" open>
             <summary className="cursor-pointer text-sm font-medium text-[#8b5cf6] hover:text-[#a78bfa] transition-colors select-none list-none flex items-center gap-1.5 mb-2">
               <span className="group-open:rotate-90 transition-transform text-[14px]">▶</span>
               Deployment tiers

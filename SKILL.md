@@ -1,194 +1,88 @@
 ---
-name: voidexa
-description: Local codebase analysis for voidexa
-doc_version: 
+name: ghai-strip
+description: Strip all buyable/technical GHAI token details from voidexa.com. Remove contract addresses, buy links, wallet connect, specific pricing in GHAI, and deposit flows. Replace with teaser-only "Coming Soon" content that builds hype and scarcity. Triggers on "strip ghai", "remove token details", "ghai teaser", "hide crypto", "token coming soon" in the context of voidexa.
 ---
 
-# voidexa Codebase
+# GHAI Strip — Build Skill
 
-## Description
+## Context
+Project: voidexa.com at C:\Users\Jixwu\Desktop\voidexa (Next.js, Vercel)
+Goal: Remove ALL public-facing token purchase details. Convert GHAI from "buy it here" to "something big is coming, and you can't have it yet."
 
-Local codebase analysis and documentation generated from code analysis.
+## Strategy
+Build hype before access. Create scarcity. Make people wait and want it.
+- NO contract address visible anywhere on public pages
+- NO buy links (Raydium, DEX, Solscan)
+- NO wallet connect for deposits on public pages
+- NO specific GHAI pricing per message shown to users
+- NO live price ticker on public pages
+- YES keep the GHAI brand, ghost visual, and "Coming Soon" energy
+- YES keep backend/API routes functional (they stay for when we go live)
+- YES keep admin/control-plane data intact (admin-only, not public)
 
-**Path:** `C:\Users\Jixwu\Desktop\voidexa`
-**Files Analyzed:** 119
-**Languages:** TypeScript, JavaScript
-**Analysis Depth:** deep
+## Design Language
+Same voidexa dark space aesthetic:
+- Background: dark gradients (#0d0a1f to #060412 to #020108)
+- Primary accent: cyan (#00d4ff)
+- Secondary accent: purple (#8b5cf6, #a855f7)
+- Ghost AI purple: #7c3aed
+- Text: light lavender tones at varying opacity
+- "Coming Soon" badges: gray (#888) background rgba(136,136,136,0.1), border rgba(136,136,136,0.25)
+- Font sizes: minimum 14px body, 14px labels, opacity >= 0.5
 
-## When to Use This Skill
+## Files to Modify (21 files)
 
-Use this skill when you need to:
-- Understand the codebase architecture and design patterns
-- Find implementation examples and usage patterns
-- Review API documentation extracted from code
-- Check configuration patterns and best practices
-- Explore test examples and real-world usage
-- Navigate the codebase structure efficiently
+### TIER 1 — Major page rewrites
+1. app/ghost-ai/page.tsx — Remove contract address, buy links, live price, token stats. Keep hero visual + waitlist. Teaser only.
+2. app/claim-your-planet/page.tsx — Remove specific GHAI amounts ($500, $50/month, 5M/5M GHAI). Replace with "Pricing at launch." Remove GHAI discount banner. Remove Raydium mention.
+3. app/void-chat/pricing/page.tsx — Remove GHAI tier entirely. Keep Stripe Pro. Add "Token payments coming soon."
+4. app/profile/page.tsx — Remove wallet connect (Phantom/Solflare). Keep basic profile.
 
-## ⚡ Quick Reference
+### TIER 2 — Component updates
+5. components/ghost-ai/CreditDisplay.tsx — Remove GHAI balance display and deposit CTA. Show Pro/USD only.
+6. components/ghost-ai/DepositModal.tsx — Replace with "GHAI deposits coming soon" message.
+7. components/ghost-ai/GhaiTicker.tsx — Replace live ticker with "Coming Soon" placeholder or remove.
+8. components/ghost-ai/ModelSelector.tsx — Remove GHAI cost from dropdown text. Show USD only.
+9. components/sections/home/ClaimPlanetTeaser.tsx — Remove "10M GHAI" specific amount. Say "exclusive pioneer rewards."
+10. components/sections/home/HomeCtas.tsx — GHAI card stays visual but text becomes "Coming Soon."
+11. components/layout/Navigation.tsx — Remove /token from mobile secondary links.
+12. components/control-plane/ControlPlaneDashboard.tsx — Remove contract address from GhaiPanel display (admin only but clean it).
+13. components/WalletProvider.tsx — Keep file, no changes needed.
 
-### Codebase Statistics
+### TIER 3 — Config and minor
+14. config/constants.ts — Remove contractAddress value (set to empty string). Remove VOIDEXA_RECEIVER_WALLET.
+15. app/token/page.tsx — Change redirect from /ghost-ai#token-info to /ghost-ai.
+16. app/void-chat/page.tsx — Remove GHAI cost from model option display text.
+17. app/admin/void-chat/page.tsx — Remove GHAI Deposited/Spent/In Platform admin stats.
+18. app/whitepaper/page.tsx — Remove "Ghost AI · GHAI Token" eyebrow text.
 
-**Languages:**
-- **TypeScript**: 118 files (99.2%)
-- **JavaScript**: 1 files (0.8%)
+### DO NOT TOUCH (keep backend functional)
+- app/api/ghai/* (balance, deposit, price routes)
+- lib/ghai/* (balance.ts, price-feed.ts, verify-deposit.ts)
+- lib/credits/* (check.ts, deduct.ts)
+- lib/stripe/* (client.ts, subscription.ts)
+- app/api/chat/* (conversations, send)
+- app/api/stripe/* (checkout, webhook)
+- types/credits.ts, config/providers.ts, config/pricing.ts
+- All break-room content
+- All trading-hub tab components
 
-**Analysis Performed:**
-- ✅ API Reference (C2.5)
-- ✅ Dependency Graph (C2.6)
-- ✅ Design Patterns (C3.1)
-- ✅ Test Examples (C3.2)
-- ✅ Configuration Patterns (C3.4)
-- ✅ Architectural Analysis (C3.7)
-- ✅ Project Documentation (C3.9)
+## Removed Content Archive
+All removed content must be saved to: C:\Users\Jixwu\Desktop\voidexa\GHAI_STRIPPED_CONTENT.md
+This file preserves every piece of removed code/content organized by source file, so it can be restored when GHAI goes live with proper liquidity and social media campaign.
 
-## 📝 Code Examples
+## Build Order
+1. Git backup first: git add -A && git commit -m "pre-ghai-strip backup"
+2. Create GHAI_STRIPPED_CONTENT.md archive
+3. Modify all files per plan
+4. npm run build — fix ALL errors
+5. Git commit: "ghai-strip: convert all token details to teaser-only coming soon"
+6. Deploy: npx vercel --prod
 
-*High-quality examples extracted from test files (C3.2)*
-
-**Test: should return all chains when no namespace is provided** (complexity: 0.60)
-
-```javascript
-const mockChains = new Map([
-            ['eip155', {}],
-            ['solana', {}],
-            ['polkadot', {}],
-            ['bip122', {}]
-        ])
-```
-
-**Test: should return all namespaces connected with WalletConnect connector** (complexity: 0.60)
-
-```javascript
-const mockChains = new Map([
-            ['eip155', {}],
-            ['solana', {}],
-            ['polkadot', {}],
-            ['bip122', {}]
-        ])
-```
-
-**Test: should return all namespaces connected with WalletConnect connector** (complexity: 0.60)
-
-```javascript
-const mockChains = new Map([
-            ['eip155', {}],
-            ['solana', {}],
-            ['polkadot', {}],
-            ['bip122', {}]
-        ])
-```
-
-**Test: emit error if thread exits** (complexity: 0.20)
-
-```javascript
-const stream = new ThreadStream({
-    filename: join(__dirname, 'exit.js')
-```
-
-**Test: emit error if thread exits** (complexity: 0.20)
-
-```javascript
-const stream = new ThreadStream({
-    filename: join(__dirname, 'exit.js')
-```
-
-**Test: should fetch wallet image and update AssetController state correctly** (complexity: 0.10)
-
-```javascript
-const blob = new Blob([image])
-```
-
-**Test: should fetch network image and update AssetController state correctly** (complexity: 0.10)
-
-```javascript
-const blob = new Blob([image])
-```
-
-**Test: should fetch connector image and update AssetController state correctly** (complexity: 0.10)
-
-```javascript
-const blob = new Blob([image])
-```
-
-**Test: should fetch currency image and update AssetController state correctly** (complexity: 0.10)
-
-```javascript
-const blob = new Blob([image])
-```
-
-**Test: should fetch token image and update AssetController state correctly** (complexity: 0.10)
-
-```javascript
-const blob = new Blob([image])
-```
-
-*See `references/test_examples/` for all extracted examples*
-
-## 🏗️ Architecture Overview
-
-*From C3.7 architectural analysis*
-
-**Detected Architectural Patterns:**
-
-- **Layered Architecture (2-tier)** (confidence: 0.85)
-
-*Total: 1 architectural patterns detected*
-
-*See `references/architecture/` for complete architectural analysis*
-
-## ⚙️ Configuration Patterns
-
-*From C3.4 configuration analysis*
-
-**Configuration Files Analyzed:** 100
-**Total Settings:** 12975
-**Patterns Detected:** 0
-
-**Configuration Types:**
-- unknown: 100 files
-
-*See `references/config_patterns/` for detailed configuration analysis*
-
-## 📖 Project Documentation
-
-*Extracted from markdown files in the project (C3.9)*
-
-**Total Documentation Files:** 13
-**Categories:** 2
-
-### Overview
-
-- **This is NOT the Next.js you know**: Agent rules for Next.js usage within the voidexa platform, clarifying non-standard Next.js conventions used in this codebase.
-- **CLAUDE.md — Void Chat MVP (Phase 2)**: Primary project instructions for Void Chat MVP Phase 2, defining the tech stack, architecture, Supabase schema, and strict development rules for the voidexa.com platform.
-- **CLAUDE.md — Control Plane Dashboard Addendum**: Addendum to CLAUDE.md scoping the Control Plane dashboard build â€” admin-only access, existing infrastructure to reuse, and specific components to build.
-- **Ghost AI Chat — Phase 2 Dependencies**: Dependency installation reference for Ghost AI Chat Phase 2, listing the Anthropic SDK, OpenAI, and Google Generative AI npm packages.
-- **voidexa — Sovereign AI Infrastructure**: Public-facing overview of voidexa as a sovereign AI infrastructure company, introducing KCP-90 semantic compression and kcp-binary Rust transport layer.
-
-### Other
-
-- **SKILL.md — voidexa Control Plane Dashboard**: **SKILL.md — voidexa Control Plane Dashboard**
-- **SKILL.md — voidexa Control Plane Dashboard**: **SKILL.md — voidexa Control Plane Dashboard**
-- **10_AI_IDEAS_CHATGPT**: I cannot honestly prove that nobody has proposed any of these. What I can say is that I pressure-tes...
-- **10_AI_IDEAS_NOBODY_THOUGHT_OF**: TOP 5 (mine picks fra alle 4 AI'er):
-- **KCP-90 INTEGRATION PLAN — voidexa Ecosystem**: **KCP-90 INTEGRATION PLAN — voidexa Ecosystem**
-- *...and 3 more*
-
-**Key Topics:** Next.js rules, agent behavior, codebase conventions, Void Chat MVP, Phase 2, Supabase auth, wallet connection, RLS, AI chat, revenue features
-
-*See `references/documentation/` for all project documentation*
-
-## 📚 Available References
-
-This skill includes detailed reference documentation:
-
-- **API Reference**: `references/api_reference/` - Complete API documentation
-- **Dependencies**: `references/dependencies/` - Dependency graph and analysis
-- **Examples**: `references/test_examples/` - Usage examples from tests
-- **Configuration**: `references/config_patterns/` - Configuration patterns
-- **Architecture**: `references/architecture/` - Architectural patterns
-- **Documentation**: `references/documentation/` - Project documentation
-
----
-
-**Generated by Skill Seeker** | Codebase Analyzer with C3.x Analysis
+## Rules
+- NEVER remove the GHAI brand or Ghost AI visual identity
+- NEVER break the backend payment infrastructure
+- NEVER remove waitlist functionality
+- ALL removed content goes into GHAI_STRIPPED_CONTENT.md
+- Keep "Powered by {provider} — orchestrated by voidexa" transparency line
+- Test build before committing
