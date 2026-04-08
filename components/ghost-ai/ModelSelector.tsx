@@ -3,9 +3,8 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import { PROVIDERS, MODELS, type ProviderSlug } from '@/config/providers';
-import { GHAI_COSTS } from '@/config/pricing';
+import { USD_COSTS } from '@/config/pricing';
 
 interface ModelSelectorProps {
   selectedProvider: ProviderSlug;
@@ -21,23 +20,6 @@ export function ModelSelector({
   onModelChange,
 }: ModelSelectorProps) {
   const providerModels = MODELS.filter((m) => m.provider === selectedProvider);
-  const [ghaiPriceUsd, setGhaiPriceUsd] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch('/api/ghai/price')
-      .then((r) => r.ok ? r.json() : null)
-      .then((d) => { if (d?.priceUsd) setGhaiPriceUsd(d.priceUsd); })
-      .catch(() => {});
-  }, []);
-
-  function msgPrice(modelId: string): string {
-    const ghaiCost = GHAI_COSTS[modelId] ?? 1;
-    if (ghaiPriceUsd !== null) {
-      const usd = ghaiCost * ghaiPriceUsd;
-      return usd < 0.01 ? `$${usd.toFixed(6)}/msg` : `$${usd.toFixed(4)}/msg`;
-    }
-    return `${ghaiCost} GHAI`;
-  }
 
   return (
     <div className="space-y-2">
@@ -71,7 +53,7 @@ export function ModelSelector({
       >
         {providerModels.map((m) => (
           <option key={m.id} value={m.id}>
-            {m.displayName} — {msgPrice(m.id)}{m.isPremium ? ' ★' : ''}
+            {m.displayName} — {USD_COSTS[m.id] ?? '$0.01'}/msg{m.isPremium ? ' ★' : ''}
           </option>
         ))}
       </select>

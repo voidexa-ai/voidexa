@@ -43,13 +43,6 @@ export default async function AdminVoidChatPage() {
     .from('chat_messages')
     .select('*', { count: 'exact', head: true });
 
-  const { data: ghaiStats } = await serviceClient
-    .from('user_credits')
-    .select('total_ghai_deposited, total_ghai_spent');
-
-  const totalDeposited = ghaiStats?.reduce((sum, r) => sum + Number(r.total_ghai_deposited), 0) || 0;
-  const totalSpent = ghaiStats?.reduce((sum, r) => sum + Number(r.total_ghai_spent), 0) || 0;
-
   const { count: proSubscribers } = await serviceClient
     .from('user_credits')
     .select('*', { count: 'exact', head: true })
@@ -64,9 +57,6 @@ export default async function AdminVoidChatPage() {
         <StatCard label="Conversations" value={totalConversations || 0} />
         <StatCard label="Messages" value={totalMessages || 0} />
         <StatCard label="Pro Subscribers" value={proSubscribers || 0} />
-        <StatCard label="GHAI Deposited" value={`${totalDeposited.toFixed(0)} GHAI`} />
-        <StatCard label="GHAI Spent" value={`${totalSpent.toFixed(0)} GHAI`} />
-        <StatCard label="GHAI in Platform" value={`${(totalDeposited - totalSpent).toFixed(0)} GHAI`} />
         <StatCard label="Stripe MRR" value={`$${((proSubscribers || 0) * 5).toFixed(0)}`} />
       </div>
 

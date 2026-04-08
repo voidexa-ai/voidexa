@@ -11,7 +11,7 @@ export default function WhitepaperPage() {
           className="text-sm font-semibold uppercase tracking-[0.18em] mb-3"
           style={{ color: 'rgba(136,136,136,0.53)' }}
         >
-          Ghost AI · GHAI Token
+          voidexa
         </p>
         <h1
           className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight mb-6"

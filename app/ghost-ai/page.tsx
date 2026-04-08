@@ -1,34 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, ExternalLink, FileText, Send, TrendingUp, TrendingDown } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowRight, FileText, Send } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
-const GHAI_CONTRACT = 'Ch8Ek9PTbzSGdL4EWHC2pQfPq2vTseiCPjeZsAZLx5gK'
-
 const EARN_REWARDS = [
-  { action: 'Create account',          reward: '50 GHAI',       desc: 'Welcome bonus for new members' },
-  { action: 'Connect wallet',          reward: '25 GHAI',       desc: 'Verify your Solana wallet' },
-  { action: 'Refer a friend',          reward: '100 GHAI each', desc: 'Both you and your friend earn' },
-  { action: 'Upload a trading bot',    reward: '500 GHAI',      desc: 'Share your strategy on Trading Hub' },
-  { action: 'Win monthly competition', reward: '10,000 GHAI',   desc: 'Top ranked bot of the month' },
+  { action: 'Create account',          reward: 'Reward TBA',   desc: 'Welcome bonus for new members' },
+  { action: 'Connect wallet',          reward: 'Reward TBA',   desc: 'Verify your Solana wallet' },
+  { action: 'Refer a friend',          reward: 'Reward TBA',   desc: 'Both you and your friend earn' },
+  { action: 'Upload a trading bot',    reward: 'Reward TBA',   desc: 'Share your strategy on Trading Hub' },
+  { action: 'Win monthly competition', reward: 'Reward TBA',   desc: 'Top ranked bot of the month' },
 ]
-
-interface PriceData {
-  priceUsd: number
-  priceChange24h: number
-  volume24h: number
-  liquidity: number
-  marketCap: number
-}
-
-function formatCompact(n: number): string {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(2)}M`
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(1)}K`
-  return `$${n.toFixed(2)}`
-}
 
 // Ghost AI SVG watermark — ghost silhouette with embedded circuit lines
 function GhostWatermark() {
@@ -106,18 +90,6 @@ export default function GhostAIPage() {
   const [email, setEmail]       = useState('')
   const [sent, setSent]         = useState(false)
   const [loading, setLoading]   = useState(false)
-  const [price, setPrice]       = useState<PriceData | null>(null)
-  const [priceLoading, setPriceLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/api/ghai/price')
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d?.priceUsd) setPrice(d) })
-      .catch(() => {})
-      .finally(() => setPriceLoading(false))
-  }, [])
-
-  const priceUp = (price?.priceChange24h ?? 0) >= 0
 
   return (
     <div className="relative overflow-hidden" style={{ background: 'transparent' }}>
@@ -275,7 +247,7 @@ export default function GhostAIPage() {
             className="text-lg mb-12 max-w-xl mx-auto"
             style={{ color: '#475569' }}
           >
-            The ecosystem token of voidexa — swap on Raydium, use on the platform
+            The ecosystem token of voidexa — something big is coming
           </motion.p>
 
           {/* CTA buttons */}
@@ -286,8 +258,7 @@ export default function GhostAIPage() {
             className="flex flex-wrap items-center justify-center gap-3 mb-14"
           >
             <a
-              href={`https://raydium.io/swap/?inputMint=sol&outputMint=${GHAI_CONTRACT}`}
-              target="_blank" rel="noopener noreferrer"
+              href="/void-chat"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold transition-all"
               style={{
                 background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
@@ -297,22 +268,7 @@ export default function GhostAIPage() {
               onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 50px rgba(139,92,246,0.6)'}
               onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 30px rgba(139,92,246,0.35)'}
             >
-              Buy on Raydium <ArrowRight size={15} />
-            </a>
-
-            <a
-              href="/void-chat"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold transition-all"
-              style={{
-                background: 'rgba(139,92,246,0.12)',
-                border: '1px solid rgba(139,92,246,0.4)',
-                color: '#c4b5fd',
-                boxShadow: '0 0 20px rgba(139,92,246,0.1)',
-              }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.22)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 30px rgba(139,92,246,0.25)' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.12)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 0 20px rgba(139,92,246,0.1)' }}
-            >
-              Try Void Chat — Multi-AI Chat →
+              Try Void Chat — Multi-AI Chat <ArrowRight size={15} />
             </a>
 
             <Link
@@ -329,7 +285,7 @@ export default function GhostAIPage() {
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-80"
               style={{ background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.25)', color: '#38bdf8' }}
             >
-              <ExternalLink size={14} /> Telegram
+              Telegram
             </a>
           </motion.div>
 
@@ -365,7 +321,7 @@ export default function GhostAIPage() {
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-50 whitespace-nowrap"
                   style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.35)', color: '#c4b5fd' }}
                 >
-                  {loading ? '…' : <><Send size={13} /> Join waitlist</>}
+                  {loading ? '...' : <><Send size={13} /> Join waitlist</>}
                 </button>
               </form>
             )}
@@ -388,144 +344,9 @@ export default function GhostAIPage() {
       </section>
 
       {/* ══════════════════════════════════════════
-          LIVE PRICE + TOKEN INFO
-      ══════════════════════════════════════════ */}
-      <section id="token-info" className="relative z-10 max-w-4xl mx-auto px-6 pt-12 pb-20">
-
-        {/* Live price card */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-10 rounded-2xl p-6"
-          style={{
-            background: 'rgba(139,92,246,0.05)',
-            border: '1px solid rgba(139,92,246,0.2)',
-            backdropFilter: 'blur(12px)',
-            boxShadow: '0 0 40px rgba(139,92,246,0.08)',
-          }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div style={{
-                width: 36, height: 36, borderRadius: '50%',
-                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 14, fontWeight: 800, color: '#fff',
-              }}>G</div>
-              <div>
-                <p className="text-sm font-bold text-white">GHAI</p>
-                <p className="text-sm" style={{ color: '#475569' }}>Ghost AI Token · Solana</p>
-              </div>
-            </div>
-            <span className="text-sm font-bold uppercase tracking-widest px-2 py-1 rounded-full"
-              style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}>
-              Live
-            </span>
-          </div>
-
-          {priceLoading ? (
-            <div className="animate-pulse space-y-2">
-              <div className="h-8 bg-gray-800 rounded w-40" />
-              <div className="h-4 bg-gray-800 rounded w-24" />
-            </div>
-          ) : price ? (
-            <>
-              <div className="flex items-end gap-4 mb-4">
-                <p className="text-4xl font-bold text-white" style={{ fontFamily: 'var(--font-space)' }}>
-                  ${price.priceUsd.toFixed(8)}
-                </p>
-                <div className="flex items-center gap-1 mb-1" style={{ color: priceUp ? '#22c55e' : '#ef4444' }}>
-                  {priceUp ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                  <span className="text-sm font-semibold">
-                    {priceUp ? '+' : ''}{price.priceChange24h.toFixed(2)}%
-                  </span>
-                  <span className="text-sm" style={{ color: '#475569' }}>24h</span>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { label: 'Volume 24h',  value: formatCompact(price.volume24h) },
-                  { label: 'Liquidity',   value: formatCompact(price.liquidity) },
-                  { label: 'Market Cap',  value: formatCompact(price.marketCap) },
-                ].map(({ label, value }) => (
-                  <div key={label}>
-                    <p className="text-sm uppercase tracking-wider mb-1" style={{ color: '#334155' }}>{label}</p>
-                    <p className="text-sm font-semibold text-gray-300">{value}</p>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <p className="text-sm" style={{ color: '#475569' }}>Price data unavailable</p>
-          )}
-        </motion.div>
-
-        {/* Contract address */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="rounded-2xl p-5 mb-6"
-          style={{
-            background: 'rgba(204,170,68,0.04)',
-            border: '1px solid rgba(204,170,68,0.18)',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 0 24px rgba(204,170,68,0.04)',
-          }}
-        >
-          <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#64748b' }}>
-            Contract Address · Solana
-          </p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <code className="text-sm font-mono break-all" style={{ color: '#ccaa44' }}>{GHAI_CONTRACT}</code>
-            <a
-              href={`https://solscan.io/token/${GHAI_CONTRACT}`}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm font-bold transition-opacity hover:opacity-80 shrink-0"
-              style={{ color: '#ccaa44' }}
-            >
-              Solscan <ExternalLink size={11} />
-            </a>
-          </div>
-        </motion.div>
-
-        {/* Token stats grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10"
-        >
-          {[
-            { label: 'Chain',   value: 'Solana',          accent: '#9945ff' },
-            { label: 'Supply',  value: '700M circulating', accent: '#00d4ff' },
-            { label: 'Mint',    value: 'Revoked ✓',       accent: '#22c55e' },
-            { label: 'Freeze',  value: 'Revoked ✓',       accent: '#22c55e' },
-          ].map(({ label, value, accent }) => (
-            <div
-              key={label}
-              className="rounded-xl p-4 text-center"
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: `1px solid ${accent}22`,
-                backdropFilter: 'blur(4px)',
-              }}
-            >
-              <p className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: '#334155' }}>{label}</p>
-              <p className="text-sm font-semibold" style={{ color: accent }}>{value}</p>
-            </div>
-          ))}
-        </motion.div>
-      </section>
-
-      {/* ══════════════════════════════════════════
           EARN GHAI
       ══════════════════════════════════════════ */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-24">
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-24 pt-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -564,7 +385,7 @@ export default function GhostAIPage() {
                 <p className="text-sm font-medium" style={{ color: '#cbd5e1' }}>{action}</p>
                 <p className="text-sm mt-0.5" style={{ color: '#475569' }}>{desc}</p>
               </div>
-              <span className="text-sm font-bold shrink-0" style={{ color: '#ccaa44' }}>{reward}</span>
+              <span className="text-sm font-bold shrink-0" style={{ color: '#888' }}>{reward}</span>
             </motion.div>
           ))}
         </div>
@@ -599,7 +420,7 @@ export default function GhostAIPage() {
             Try Void Chat
           </h3>
           <p className="relative text-base mb-8 max-w-md mx-auto" style={{ color: '#64748b' }}>
-            Claude, GPT-4o, and Gemini — one interface — pay in USD or GHAI
+            Claude, GPT-4o, and Gemini — one interface — powered by voidexa
           </p>
           <a
             href="/void-chat"

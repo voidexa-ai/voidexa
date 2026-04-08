@@ -3,22 +3,14 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Copy, Check, ExternalLink } from 'lucide-react'
+import { Copy, Check } from 'lucide-react'
 import { useAuth } from '@/components/AuthProvider'
 import { supabase } from '@/lib/supabase'
-import bs58 from 'bs58'
 
 interface Profile {
   name: string | null
   role: string
   referral_code: string | null
-}
-
-interface WalletConnection {
-  id: string
-  wallet_address: string
-  wallet_type: string
-  connected_at: string
 }
 
 interface WaitlistEntry {
@@ -27,38 +19,16 @@ interface WaitlistEntry {
   created_at: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PhantomProvider = any
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SolflareProvider = any
-
-function getPhantom(): PhantomProvider | null {
-  if (typeof window === 'undefined') return null
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const w = window as any
-  return w.phantom?.solana?.isPhantom ? w.phantom.solana : null
-}
-
-function getSolflare(): SolflareProvider | null {
-  if (typeof window === 'undefined') return null
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const w = window as any
-  return w.solflare?.isSolflare ? w.solflare : null
-}
-
 export default function ProfilePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
   const [profile, setProfile]             = useState<Profile | null>(null)
-  const [wallets, setWallets]             = useState<WalletConnection[]>([])
   const [waitlistEntries, setWaitlist]    = useState<WaitlistEntry[]>([])
   const [name, setName]                   = useState('')
   const [saving, setSaving]               = useState(false)
   const [saved, setSaved]                 = useState(false)
   const [copied, setCopied]               = useState(false)
-  const [connectingWallet, setConnecting] = useState<'phantom' | 'solflare' | null>(null)
-  const [walletError, setWalletError]     = useState('')
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -70,9 +40,8 @@ export default function ProfilePage() {
     if (!user) return
 
     async function load() {
-      const [profileRes, walletsRes, waitlistRes] = await Promise.all([
+      const [profileRes, waitlistRes] = await Promise.all([
         supabase.from('profiles').select('name, role, referral_code').eq('id', user!.id).single(),
-        supabase.from('wallet_connections').select('id, wallet_address, wallet_type, connected_at').eq('user_id', user!.id),
         supabase.from('waitlist_signups').select('id, product, created_at').eq('user_id', user!.id).order('created_at', { ascending: false }),
       ])
 
@@ -80,7 +49,6 @@ export default function ProfilePage() {
         setProfile(profileRes.data)
         setName(profileRes.data.name ?? '')
       }
-      if (walletsRes.data) setWallets(walletsRes.data)
       if (waitlistRes.data) setWaitlist(waitlistRes.data)
     }
     load()
@@ -100,91 +68,6 @@ export default function ProfilePage() {
     navigator.clipboard.writeText(`https://voidexa.com/?ref=${profile.referral_code}`)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
-  }
-
-  async function reloadWallets() {
-    if (!user) return
-    const { data } = await supabase
-      .from('wallet_connections')
-      .select('id, wallet_address, wallet_type, connected_at')
-      .eq('user_id', user.id)
-    if (data) setWallets(data)
-  }
-
-  async function connectPhantom() {
-    if (!user) return
-    const phantom = getPhantom()
-    if (!phantom) {
-      setWalletError('Phantom wallet not found. Install it from phantom.app.')
-      return
-    }
-    setConnecting('phantom')
-    setWalletError('')
-    try {
-      const resp = await phantom.connect()
-      const address: string = resp.publicKey.toString()
-      const alreadySaved = wallets.some(w => w.wallet_address === address)
-      if (alreadySaved) { setConnecting(null); return }
-
-      const timestamp = Date.now()
-      const msgBytes = new TextEncoder().encode(`Verify wallet for voidexa: ${timestamp}`)
-      const { signature } = await phantom.signMessage(msgBytes, 'utf8')
-      const sigBase58 = bs58.encode(signature)
-
-      const { error } = await supabase.from('wallet_connections').upsert({
-        user_id: user.id,
-        wallet_address: address,
-        wallet_type: 'Phantom',
-        signature: sigBase58,
-        verified: true,
-      }, { onConflict: 'user_id,wallet_address' })
-
-      if (error) setWalletError(error.message)
-      else await reloadWallets()
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e)
-      console.warn('[phantom] connect/sign failed:', msg)
-      setWalletError('Connection cancelled or failed.')
-    }
-    setConnecting(null)
-  }
-
-  async function connectSolflare() {
-    if (!user) return
-    const solflare = getSolflare()
-    if (!solflare) {
-      setWalletError('Solflare wallet not found. Install it from solflare.com.')
-      return
-    }
-    setConnecting('solflare')
-    setWalletError('')
-    try {
-      await solflare.connect()
-      const address: string = solflare.publicKey.toString()
-      const alreadySaved = wallets.some(w => w.wallet_address === address)
-      if (alreadySaved) { setConnecting(null); return }
-
-      const timestamp = Date.now()
-      const msgBytes = new TextEncoder().encode(`Verify wallet for voidexa: ${timestamp}`)
-      const { signature } = await solflare.signMessage(msgBytes, 'utf8')
-      const sigBase58 = bs58.encode(signature)
-
-      const { error } = await supabase.from('wallet_connections').upsert({
-        user_id: user.id,
-        wallet_address: address,
-        wallet_type: 'Solflare',
-        signature: sigBase58,
-        verified: true,
-      }, { onConflict: 'user_id,wallet_address' })
-
-      if (error) setWalletError(error.message)
-      else await reloadWallets()
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e)
-      console.warn('[solflare] connect/sign failed:', msg)
-      setWalletError('Connection cancelled or failed.')
-    }
-    setConnecting(null)
   }
 
   if (loading || !user) return null
@@ -237,7 +120,7 @@ export default function ProfilePage() {
                     className="px-4 py-2 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
                     style={{ background: saved ? 'rgba(34,197,94,0.15)' : 'rgba(0,212,255,0.1)', border: `1px solid ${saved ? 'rgba(34,197,94,0.3)' : 'rgba(0,212,255,0.2)'}`, color: saved ? '#22c55e' : '#00d4ff' }}
                   >
-                    {saved ? <Check size={14} /> : saving ? '…' : 'Save'}
+                    {saved ? <Check size={14} /> : saving ? '...' : 'Save'}
                   </button>
                 </div>
               </div>
@@ -272,65 +155,9 @@ export default function ProfilePage() {
             </motion.div>
           )}
 
-          {/* Wallet connections */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} style={cardStyle}>
-            <h2 className="text-sm font-semibold text-[#e2e8f0] mb-4">Connected wallets</h2>
-
-            {walletError && (
-              <p className="text-sm mb-3 text-red-400 bg-red-900/20 border border-red-900/30 rounded-lg px-3 py-2">
-                {walletError}
-              </p>
-            )}
-
-            {wallets.length > 0 && (
-              <div className="space-y-2 mb-4">
-                {wallets.map(w => (
-                  <div key={w.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
-                    <div>
-                      <p className="text-sm font-mono text-[#94a3b8]">{w.wallet_address.slice(0, 8)}…{w.wallet_address.slice(-6)}</p>
-                      <p className="text-sm mt-0.5" style={{ color: '#334155' }}>{w.wallet_type}</p>
-                    </div>
-                    <a
-                      href={`https://explorer.solana.com/address/${w.wallet_address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-opacity hover:opacity-70"
-                      style={{ color: '#334155' }}
-                    >
-                      <ExternalLink size={12} />
-                    </a>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex gap-2">
-              <button
-                onClick={connectPhantom}
-                disabled={connectingWallet !== null}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
-                style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)', color: '#a78bfa' }}
-              >
-                {connectingWallet === 'phantom' ? 'Connecting…' : 'Connect Phantom'}
-              </button>
-              <button
-                onClick={connectSolflare}
-                disabled={connectingWallet !== null}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-40"
-                style={{ background: 'rgba(251,146,60,0.08)', border: '1px solid rgba(251,146,60,0.2)', color: '#fb923c' }}
-              >
-                {connectingWallet === 'solflare' ? 'Connecting…' : 'Connect Solflare'}
-              </button>
-            </div>
-
-            {wallets.length === 0 && !walletError && (
-              <p className="text-sm mt-3" style={{ color: '#334155' }}>No wallets connected yet. Connect a wallet above to verify ownership.</p>
-            )}
-          </motion.div>
-
           {/* Waitlist signups */}
           {waitlistEntries.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} style={cardStyle}>
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} style={cardStyle}>
               <h2 className="text-sm font-semibold text-[#e2e8f0] mb-3">Waitlist signups</h2>
               <div className="space-y-1.5">
                 {waitlistEntries.map(e => (

@@ -263,7 +263,7 @@ export default function ClaimYourPlanetPage() {
               fontWeight: 400,
             }}>
               Own a sovereign node in the voidexa star system.
-              Build infrastructure. Fuel it with USD or GHAI. Become part of
+              Build infrastructure. Fuel it with your contributions. Become part of
               the network that runs itself.
             </p>
 
@@ -295,7 +295,7 @@ export default function ClaimYourPlanetPage() {
           </motion.div>
         </section>
 
-        {/* ── 2. GHAI BANNER ──────────────────────────────────────────────── */}
+        {/* ── 2. PRICING BANNER ──────────────────────────────────────────── */}
         <section style={{
           padding: '0 24px 60px',
           display: 'flex', justifyContent: 'center',
@@ -327,13 +327,12 @@ export default function ClaimYourPlanetPage() {
                 fontSize: 22, fontWeight: 700, color: '#e2e8f0',
                 marginBottom: 6, fontFamily: 'var(--font-space)',
               }}>
-                USD pricing. GHAI accepted at 15% discount.
+                Pricing at launch.
               </p>
               <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.6 }}>
-                All planet pricing is in USD. Pay via Stripe, or use GHAI at a 15% discount. GHAI is available on Raydium (Solana).
+                Planet pricing details will be announced at launch. Token payment options coming soon.
               </p>
               <p style={{ fontSize: 14, color: '#475569', marginTop: 10 }}>
-                All prices in USD. Pay with GHAI for a discount.{' '}
                 <Link href="/ghost-ai" style={{ color: '#8b5cf6', textDecoration: 'none', fontWeight: 500 }}
                   onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.color = '#a78bfa'}
                   onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.color = '#8b5cf6'}
@@ -437,14 +436,14 @@ export default function ClaimYourPlanetPage() {
               {[
                 {
                   milestone: '6-Month Milestone',
-                  amount: '5,000,000 GHAI',
+                  amount: 'Pioneer Reward',
                   desc: 'Paid monthly over 6 months after reaching the 6-month milestone.',
                   color: '#00d4ff',
                   glow: 'rgba(0,212,255,0.12)',
                 },
                 {
                   milestone: '12-Month Milestone',
-                  amount: '5,000,000 GHAI',
+                  amount: 'Pioneer Reward',
                   desc: 'Paid monthly over 6 months after reaching the 12-month milestone.',
                   color: '#8b5cf6',
                   glow: 'rgba(139,92,246,0.12)',
@@ -525,14 +524,14 @@ export default function ClaimYourPlanetPage() {
                 {
                   phase: 'Launch Phase',
                   title: 'Initial Deposit',
-                  desc: '$500 USD (or equivalent in GHAI at daily rate) — a one-time deposit to stake your claim in the voidexa star system and activate your planet node.',
+                  desc: 'A one-time deposit to stake your claim in the voidexa star system and activate your planet node. Pricing at launch.',
                   icon: '🚀',
                   color: '#00d4ff',
                 },
                 {
                   phase: 'Self-Sustaining',
                   title: 'Monthly Contribution',
-                  desc: '$50/month USD (or equivalent in GHAI at daily rate) — keeps your planet active, habitable, and growing within the network.',
+                  desc: 'A monthly contribution that keeps your planet active, habitable, and growing within the network. Pricing at launch.',
                   icon: '🔄',
                   color: '#8b5cf6',
                 },
@@ -592,7 +591,7 @@ export default function ClaimYourPlanetPage() {
                 maxWidth: 500, margin: '10px auto 0', lineHeight: 1.65,
               }}>
                 Funds go to infrastructure, not founder pockets. Every contribution is
-                transparently allocated and governed by smart contract.
+                transparently allocated and governed.
               </p>
             </motion.div>
 
@@ -600,12 +599,12 @@ export default function ClaimYourPlanetPage() {
               {[
                 {
                   title: 'Transparent Allocation',
-                  desc: 'Every GHAI transaction is tracked on-chain. USD payments tracked via Stripe. Allocation to infrastructure, rewards, and operations is publicly visible.',
+                  desc: 'All payments tracked via Stripe. Allocation to infrastructure, rewards, and operations is publicly visible.',
                   icon: '📊',
                 },
                 {
                   title: 'Smart Contract Governed',
-                  desc: 'Planet rules, pioneer rewards, and fund distribution are enforced by smart contracts — no manual overrides.',
+                  desc: 'Planet rules, pioneer rewards, and fund distribution are enforced transparently — no manual overrides.',
                   icon: '⛓️',
                 },
               ].map((item, i) => (
@@ -838,7 +837,7 @@ export default function ClaimYourPlanetPage() {
                 {
                   step: '03',
                   title: 'Fuel Up and Launch',
-                  desc: 'Once approved, make your initial GHAI deposit, set up your monthly contribution, and launch your planet into the star system.',
+                  desc: 'Once approved, make your initial deposit, set up your monthly contribution, and launch your planet into the star system.',
                   color: '#00ff44',
                 },
               ].map((item, i) => (

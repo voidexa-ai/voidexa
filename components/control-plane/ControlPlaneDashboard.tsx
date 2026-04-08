@@ -549,7 +549,7 @@ function GhaiPanel() {
     { label: 'supply',   value: '700M GHAI', color: '#94a3b8' },
     { label: 'burned',   value: '2.4M GHAI', color: RED },
     { label: 'holders',  value: '847', color: '#f1f5f9' },
-    { label: 'contract', value: 'Ch8Ek9P…x5gK', color: 'rgba(100,200,255,0.7)' },
+    { label: 'contract', value: 'Coming Soon', color: 'rgba(136,136,136,0.5)' },
   ];
   return (
     <Card style={{ padding: '20px 22px', position: 'relative' }}>
@@ -654,7 +654,7 @@ const SYSTEMS = [
   { name: 'KCP-90 Protocol',    status: 'live',     color: GREEN,  note: 'Compression active across all products' },
   { name: 'Quantum',            status: 'live',     color: GREEN,  note: '960 tests passed — fully operational' },
   { name: 'Trading Bot',        status: 'live',     color: GREEN,  note: 'APEX + SCALPER running S-03' },
-  { name: 'GHAI Token',         status: 'live',     color: GREEN,  note: 'Solana mainnet · Ch8Ek9P…x5gK' },
+  { name: 'GHAI Token',         status: 'planned',  color: 'rgba(148,163,184,0.6)',  note: 'Coming soon — token details at launch' },
   { name: 'Void Chat',          status: 'live',     color: GREEN,  note: 'LIVE — $0.01/msg Sonnet, $0.02/msg Opus' },
   { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 3' },
   { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 4' },
@@ -802,16 +802,15 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
                 demo
               />
               <MetricCard
-                label="GHAI Price"
-                value="$0.0042"
-                sub="+3.2% 24h"
+                label="GHAI Token"
+                value="Coming Soon"
+                sub="Token details at launch"
                 accent={PURPLE}
-                demo
               />
               <MetricCard
                 label="Active Systems"
                 value="4 / 10"
-                sub="Quantum · Trading · KCP-90 · GHAI"
+                sub="Quantum · Trading · KCP-90"
                 accent={GREEN}
               />
             </div>

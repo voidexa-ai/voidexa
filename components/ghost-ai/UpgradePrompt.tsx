@@ -1,17 +1,16 @@
-// src/components/ghost-ai/UpgradePrompt.tsx
-// Shown when free tier is exhausted — prompts to deposit GHAI or subscribe
+// components/ghost-ai/UpgradePrompt.tsx
+// Shown when free tier is exhausted — prompts to subscribe
 
 'use client';
 
 import { useState } from 'react';
-import { GHAI_DISCOUNT_PERCENT } from '@/config/pricing';
 
 interface UpgradePromptProps {
   reason?: string;
   onDepositClick?: () => void;
 }
 
-export function UpgradePrompt({ reason, onDepositClick }: UpgradePromptProps) {
+export function UpgradePrompt({ reason }: UpgradePromptProps) {
   const [subscribing, setSubscribing] = useState(false);
 
   async function handleSubscribe() {
@@ -36,18 +35,15 @@ export function UpgradePrompt({ reason, onDepositClick }: UpgradePromptProps) {
 
       <div className="space-y-3">
         <button
-          onClick={onDepositClick}
-          className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors"
-        >
-          Deposit GHAI ({GHAI_DISCOUNT_PERCENT}% cheaper)
-        </button>
-        <button
           onClick={handleSubscribe}
           disabled={subscribing}
-          className="w-full py-3 border border-gray-600 hover:bg-gray-800 rounded-lg font-medium transition-colors disabled:opacity-50"
+          className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors disabled:opacity-50"
         >
           {subscribing ? 'Redirecting to Stripe...' : 'Subscribe — $5/month'}
         </button>
+        <p className="text-sm" style={{ color: '#888' }}>
+          Token payments coming soon
+        </p>
       </div>
     </div>
   );

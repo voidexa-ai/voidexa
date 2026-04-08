@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 export default function TokenPage() {
   const router = useRouter()
   useEffect(() => {
-    router.replace('/ghost-ai#token-info')
+    router.replace('/ghost-ai')
   }, [router])
   return null
 }

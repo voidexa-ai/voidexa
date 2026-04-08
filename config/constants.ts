@@ -3,15 +3,14 @@
 
 // GHAI Token
 export const GHAI_TOKEN = {
-  contractAddress: 'Ch8Ek9PTbzSGdL4EWHC2pQfPq2vTseiCPjeZsAZLx5gK',
+  contractAddress: '',
   chain: 'solana',
   symbol: 'GHAI',
   decimals: 6,
   totalSupply: 1_000_000_000,
 } as const;
 
-// voidexa receiver wallet for GHAI deposits
-// Users send GHAI here, platform credits their balance
+// voidexa receiver wallet for GHAI deposits (backend use only)
 export const VOIDEXA_RECEIVER_WALLET = process.env.GHAI_RECEIVER_WALLET || '';
 
 // Solana RPC

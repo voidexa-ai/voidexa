@@ -38,7 +38,6 @@ const mobileSecondary = [
   { href: '/station',    label: 'Space Station', badge: 'NEW'  },
   { href: '/about',      label: 'About',         badge: null   },
   { href: '/contact',    label: 'Contact',       badge: null   },
-  { href: '/token',      label: 'Token',         badge: null   },
   { href: '/whitepaper', label: 'White Paper',   badge: null   },
 ] as const
 

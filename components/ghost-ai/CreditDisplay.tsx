@@ -1,5 +1,5 @@
 // components/ghost-ai/CreditDisplay.tsx
-// Shows GHAI balance and tier — no free tier
+// Shows subscription tier — GHAI balance coming soon
 
 'use client';
 
@@ -41,31 +41,12 @@ export function CreditDisplay() {
               : { background: 'rgba(139,92,246,0.15)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.2)' }
           }
         >
-          {balance.tier === 'pro' ? 'PRO' : 'GHAI'}
+          {balance.tier === 'pro' ? 'PRO' : 'USD'}
         </span>
       </div>
 
-      {/* GHAI balance */}
-      {balance.platformBalance > 0 ? (
-        <p className="text-gray-300">
-          <span className="text-purple-400 font-semibold">
-            {balance.platformBalance.toFixed(2)}
-          </span>{' '}
-          GHAI
-        </p>
-      ) : balance.tier !== 'pro' ? (
-        <p className="text-sm" style={{ color: '#64748b' }}>No GHAI balance</p>
-      ) : null}
-
-      {/* Wallet balance */}
-      {balance.walletBalance !== null && balance.walletBalance > 0 && (
-        <p className="text-sm" style={{ color: '#475569' }}>
-          Wallet: {balance.walletBalance.toFixed(0)} GHAI
-        </p>
-      )}
-
-      {/* Deposit CTA — prominent when empty */}
-      {balance.tier !== 'pro' && balance.platformBalance <= 0 && (
+      {/* Pro status or upgrade CTA */}
+      {balance.tier !== 'pro' && (
         <a
           href="/void-chat/pricing"
           className="flex items-center justify-center w-full mt-2 px-3 py-2.5 rounded-xl text-sm font-bold text-center transition-all"
@@ -79,7 +60,7 @@ export function CreditDisplay() {
           onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 24px rgba(139,92,246,0.4)'}
           onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 16px rgba(139,92,246,0.2)'}
         >
-          Deposit GHAI or buy credits →
+          Upgrade to Pro →
         </a>
       )}
     </div>

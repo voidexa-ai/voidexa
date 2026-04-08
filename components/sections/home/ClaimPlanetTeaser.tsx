@@ -73,7 +73,7 @@ export default function ClaimPlanetTeaser() {
           maxWidth: 480, margin: '0 auto 32px',
         }}>
           The first 5 habitable planets receive a special pioneer reward:
-          up to <span style={{ color: '#94a3b8', fontWeight: 500 }}>10M GHAI</span> vested over 18 months.
+          exclusive pioneer rewards vested over 18 months.
         </p>
 
         <Link

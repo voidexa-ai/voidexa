@@ -12,7 +12,7 @@ import {
   getDefaultModel,
   type ProviderSlug,
 } from '@/config/providers';
-import { GHAI_COSTS, USD_COSTS } from '@/config/pricing';
+import { USD_COSTS } from '@/config/pricing';
 import { useChatState } from '@/components/ghost-ai/VoidChatShell';
 
 const PROVIDER_COLORS: Record<ProviderSlug, string> = {
@@ -116,7 +116,7 @@ export default function ChatPage() {
           >
             {providerModels.map((m) => (
               <option key={m.id} value={m.id}>
-                {m.displayName} — {m.description} ({USD_COSTS[m.id] ?? '$0.01'}/msg or {GHAI_COSTS[m.id]} GHAI{m.isPremium ? ' ★' : ''})
+                {m.displayName} — {m.description} ({USD_COSTS[m.id] ?? '$0.01'}/msg{m.isPremium ? ' ★' : ''})
               </option>
             ))}
           </select>

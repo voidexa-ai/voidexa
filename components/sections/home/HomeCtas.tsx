@@ -284,7 +284,7 @@ export default function HomeCtas() {
               alignItems: 'center',
               gap: 5,
             }}>
-              The fuel of voidexa
+              Coming Soon
               <ArrowRight size={12} style={{ color: 'rgba(0,212,255,0.7)', flexShrink: 0 }} />
             </div>
           </div>
