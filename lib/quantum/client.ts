@@ -9,7 +9,7 @@ export async function createQuantumSession(
   token: string
 ): Promise<{ id: string } | { error: string }> {
   try {
-    const res = await fetch(`${API_BASE}/api/quantum/session`, {
+    const res = await fetch(`${API_BASE}/api/sessions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export function streamQuantumSession(
   async function connect() {
     try {
       const res = await fetch(
-        `${API_BASE}/api/quantum/session/${sessionId}/stream`,
+        `${API_BASE}/api/sessions/${sessionId}/stream`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -83,7 +83,7 @@ export async function getSessionStatus(
 ): Promise<{ consensus: number; status: string } | null> {
   try {
     const res = await fetch(
-      `${API_BASE}/api/quantum/session/${sessionId}/status`,
+      `${API_BASE}/api/sessions/${sessionId}/status`,
       { headers: { Authorization: `Bearer ${token}` } }
     )
     if (!res.ok) return null
