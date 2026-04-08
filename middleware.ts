@@ -61,7 +61,7 @@ const SECURITY_HEADERS: Record<string, string> = {
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' https:;",
+    "connect-src 'self' https: http://localhost:8000;",
 };
 
 function applySecurityHeaders(response: NextResponse): NextResponse {

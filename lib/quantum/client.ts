@@ -6,19 +6,23 @@ const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'http://localhost:80
 
 export async function createQuantumSession(
   question: string,
-  token: string
+  token: string | null
 ): Promise<{ id: string } | { error: string }> {
   try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
     const res = await fetch(`${API_BASE}/api/sessions`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ question }),
+      headers,
+      body: JSON.stringify({ task: question }),
     })
     if (!res.ok) {
-      return { error: `API returned ${res.status}` }
+      const text = await res.text()
+      return { error: `API returned ${res.status}: ${text}` }
     }
     return await res.json()
   } catch {
@@ -28,7 +32,7 @@ export async function createQuantumSession(
 
 export function streamQuantumSession(
   sessionId: string,
-  token: string,
+  token: string | null,
   onEvent: (event: QuantumSSEEvent) => void,
   onError: (err: string) => void
 ): () => void {
@@ -39,7 +43,7 @@ export function streamQuantumSession(
       const res = await fetch(
         `${API_BASE}/api/sessions/${sessionId}/stream`,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
       )
       if (!res.ok || !res.body) {
@@ -79,12 +83,12 @@ export function streamQuantumSession(
 
 export async function getSessionStatus(
   sessionId: string,
-  token: string
+  token: string | null
 ): Promise<{ consensus: number; status: string } | null> {
   try {
     const res = await fetch(
       `${API_BASE}/api/sessions/${sessionId}/status`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: token ? { Authorization: `Bearer ${token}` } : {} }
     )
     if (!res.ok) return null
     return await res.json()

@@ -110,13 +110,7 @@ export default function QuantumDebatePanel() {
 
     try {
       const { data: { session } } = await supabase.auth.getSession()
-      const token = session?.access_token
-      if (!token) {
-        setOffline(true)
-        setLoading(false)
-        runDemoDebate(q)
-        return
-      }
+      const token = session?.access_token ?? null
 
       const result = await createQuantumSession(q, token)
       if ('error' in result) {
@@ -130,7 +124,7 @@ export default function QuantumDebatePanel() {
       setLoading(false)
       const cancel = streamQuantumSession(
         result.id,
-        token,
+        token ?? null,
         (event: QuantumSSEEvent) => {
           switch (event.type) {
             case 'thinking':
