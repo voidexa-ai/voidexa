@@ -15,7 +15,6 @@ const CHARACTERS: QuantumCharacter[] = [
   { id: 'gpt', name: 'GPT', role: 'Lead Developer', tagline: 'Never wrong. Except when he is.', image: '/images/cast/gpt.jpg', color: '#4ade80', glow: 'rgba(74,222,128,0.35)' },
   { id: 'perplexity', name: 'Perplexity', role: 'Fact Checker', tagline: 'Actually, according to my sources...', image: '/images/cast/perplexity.jpg', color: '#fb923c', glow: 'rgba(251,146,60,0.35)' },
   { id: 'gemini', name: 'Gemini', role: 'Senior Reviewer', tagline: 'Namaste. Your code is garbage.', image: '/images/cast/gemini.jpg', color: '#c084fc', glow: 'rgba(192,132,252,0.35)' },
-  { id: 'llama', name: 'Llama', role: 'Trainee', tagline: 'Loading... 12% complete.', image: '/images/cast/llama.jpg', color: '#94a3b8', glow: 'rgba(148,163,184,0.25)' },
 ]
 
 const THINKING_PHRASES: Record<string, string> = {
@@ -23,7 +22,6 @@ const THINKING_PHRASES: Record<string, string> = {
   gpt: 'GPT is forming a response...',
   perplexity: 'Perplexity is checking sources...',
   gemini: 'Gemini is reviewing positions...',
-  llama: 'Llama is loading context...',
 }
 
 // Demo debate for offline/fallback mode
@@ -32,7 +30,6 @@ const DEMO_DEBATE: { characterId: string; text: string }[] = [
   { characterId: 'gpt', text: 'Agreed on the systematic approach. However, I\'d prioritize runtime performance — in production, O(n log n) with good constant factors beats O(n) with heavy overhead.' },
   { characterId: 'perplexity', text: 'According to recent benchmarks from 2024, the gap between theoretical complexity and real-world performance varies by up to 3x depending on cache behavior. Sources: ACM SIGPLAN, IEEE transactions.' },
   { characterId: 'gemini', text: 'Your benchmarks are helpful, but the question assumes a specific workload pattern. Without profiling the actual use case, we\'re optimizing in the dark. Show me the flamegraph.' },
-  { characterId: 'llama', text: '...I ran the basic tests and it seems like they\'re all converging on "it depends." I think I agree with everyone? Is that allowed?' },
 ]
 
 export default function QuantumDebatePanel() {
@@ -301,7 +298,7 @@ export default function QuantumDebatePanel() {
             {!question && messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center py-12">
                 <p style={{ fontSize: 16, color: '#64748b', marginBottom: 4 }}>
-                  Ask a question and watch 5 AIs debate it live.
+                  Ask a question and watch 4 AIs debate it live.
                 </p>
                 <p style={{ fontSize: 13, color: '#475569' }}>
                   They&apos;ll challenge each other, cite sources, and converge on the best answer.

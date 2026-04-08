@@ -38,7 +38,7 @@ export default function ConsensusMeter({ value }: ConsensusMeterProps) {
         />
       </div>
       <p className="mt-1" style={{ fontSize: 11, color: '#64748b' }}>
-        Emerging from 5 providers
+        Emerging from 4 providers
       </p>
     </div>
   )
