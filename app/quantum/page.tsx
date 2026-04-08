@@ -277,6 +277,30 @@ export default function QuantumPage() {
               >{h}</span>
             ))}
           </motion.div>
+
+          {/* Try Quantum CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.44 }}
+            className="mt-8"
+          >
+            <Link
+              href="/quantum/chat"
+              className="inline-flex items-center gap-2.5 rounded-lg px-7 py-3.5 font-semibold transition-all hover:scale-[1.03]"
+              style={{
+                fontSize: 16,
+                color: '#fff',
+                background: 'linear-gradient(135deg, #7777bb, #6366f1)',
+                border: '1px solid rgba(119,119,187,0.4)',
+                boxShadow: '0 0 24px rgba(119,119,187,0.25)',
+              }}
+            >
+              <Zap size={18} />
+              Try Quantum
+              <ArrowRight size={16} />
+            </Link>
+          </motion.div>
         </div>
 
         {/* Scroll indicator */}

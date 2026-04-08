@@ -1,0 +1,339 @@
+'use client'
+
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { supabase } from '@/lib/supabase'
+import type { QuantumCharacter, QuantumMessage, QuantumSSEEvent } from '@/types/quantum'
+import { createQuantumSession, streamQuantumSession } from '@/lib/quantum/client'
+import AvatarRing from './AvatarRing'
+import ConsensusMeter from './ConsensusMeter'
+import DebateMessage from './DebateMessage'
+import QuantumInput from './QuantumInput'
+import SessionBar from './SessionBar'
+
+const CHARACTERS: QuantumCharacter[] = [
+  { id: 'claude', name: 'Claude', role: 'Chief Architect', tagline: 'Overthinks everything. Usually right.', image: '/images/cast/claude.jpg', color: '#60a5fa', glow: 'rgba(96,165,250,0.35)' },
+  { id: 'gpt', name: 'GPT', role: 'Lead Developer', tagline: 'Never wrong. Except when he is.', image: '/images/cast/gpt.jpg', color: '#4ade80', glow: 'rgba(74,222,128,0.35)' },
+  { id: 'perplexity', name: 'Perplexity', role: 'Fact Checker', tagline: 'Actually, according to my sources...', image: '/images/cast/perplexity.jpg', color: '#fb923c', glow: 'rgba(251,146,60,0.35)' },
+  { id: 'gemini', name: 'Gemini', role: 'Senior Reviewer', tagline: 'Namaste. Your code is garbage.', image: '/images/cast/gemini.jpg', color: '#c084fc', glow: 'rgba(192,132,252,0.35)' },
+  { id: 'llama', name: 'Llama', role: 'Trainee', tagline: 'Loading... 12% complete.', image: '/images/cast/llama.jpg', color: '#94a3b8', glow: 'rgba(148,163,184,0.25)' },
+]
+
+const THINKING_PHRASES: Record<string, string> = {
+  claude: 'Claude is analyzing the problem...',
+  gpt: 'GPT is forming a response...',
+  perplexity: 'Perplexity is checking sources...',
+  gemini: 'Gemini is reviewing positions...',
+  llama: 'Llama is loading context...',
+}
+
+// Demo debate for offline/fallback mode
+const DEMO_DEBATE: { characterId: string; text: string }[] = [
+  { characterId: 'claude', text: 'The optimal approach here requires careful consideration of both time and space complexity. I suggest we evaluate the trade-offs systematically.' },
+  { characterId: 'gpt', text: 'Agreed on the systematic approach. However, I\'d prioritize runtime performance — in production, O(n log n) with good constant factors beats O(n) with heavy overhead.' },
+  { characterId: 'perplexity', text: 'According to recent benchmarks from 2024, the gap between theoretical complexity and real-world performance varies by up to 3x depending on cache behavior. Sources: ACM SIGPLAN, IEEE transactions.' },
+  { characterId: 'gemini', text: 'Your benchmarks are helpful, but the question assumes a specific workload pattern. Without profiling the actual use case, we\'re optimizing in the dark. Show me the flamegraph.' },
+  { characterId: 'llama', text: '...I ran the basic tests and it seems like they\'re all converging on "it depends." I think I agree with everyone? Is that allowed?' },
+]
+
+export default function QuantumDebatePanel() {
+  const [question, setQuestion] = useState<string | null>(null)
+  const [messages, setMessages] = useState<(QuantumMessage & { streaming?: boolean })[]>([])
+  const [consensus, setConsensus] = useState(0)
+  const [activeCharId, setActiveCharId] = useState<string | null>(null)
+  const [thinkingIds, setThinkingIds] = useState<string[]>([])
+  const [sessionActive, setSessionActive] = useState(false)
+  const [startTime, setStartTime] = useState<number | null>(null)
+  const [offline, setOffline] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const cancelStreamRef = useRef<(() => void) | null>(null)
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, scrollToBottom])
+
+  const runDemoDebate = useCallback((q: string) => {
+    setQuestion(q)
+    setSessionActive(true)
+    setStartTime(Date.now())
+    setThinkingIds(CHARACTERS.map(c => c.id))
+    setMessages([])
+    setConsensus(0)
+    setOffline(false)
+
+    let msgIdx = 0
+    const addNextMessage = () => {
+      if (msgIdx >= DEMO_DEBATE.length) {
+        setThinkingIds([])
+        setActiveCharId(null)
+        return
+      }
+      const demo = DEMO_DEBATE[msgIdx]
+      const charId = demo.characterId
+      setThinkingIds(prev => prev.filter(id => id !== charId))
+      setActiveCharId(charId)
+
+      const msg: QuantumMessage & { streaming?: boolean } = {
+        id: `demo-${msgIdx}`,
+        characterId: charId,
+        text: demo.text,
+        timestamp: Date.now(),
+        streaming: true,
+      }
+      setMessages(prev => [...prev, msg])
+      setConsensus(prev => Math.min(100, prev + 12 + Math.random() * 8))
+
+      msgIdx++
+      // Wait for streaming to finish (~18ms per char + buffer)
+      const streamDuration = demo.text.length * 18 + 500
+      setTimeout(() => {
+        setMessages(prev =>
+          prev.map(m => m.id === msg.id ? { ...m, streaming: false } : m)
+        )
+        setTimeout(addNextMessage, 400)
+      }, streamDuration)
+    }
+
+    // Start first message after thinking delay
+    setTimeout(addNextMessage, 1500)
+  }, [])
+
+  const handleSubmit = useCallback(async (q: string) => {
+    setLoading(true)
+    setQuestion(q)
+    setMessages([])
+    setConsensus(0)
+    setSessionActive(true)
+    setStartTime(Date.now())
+    setThinkingIds(CHARACTERS.map(c => c.id))
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      if (!token) {
+        setOffline(true)
+        setLoading(false)
+        runDemoDebate(q)
+        return
+      }
+
+      const result = await createQuantumSession(q, token)
+      if ('error' in result) {
+        // API offline — run demo mode
+        setOffline(true)
+        setLoading(false)
+        runDemoDebate(q)
+        return
+      }
+
+      setLoading(false)
+      const cancel = streamQuantumSession(
+        result.id,
+        token,
+        (event: QuantumSSEEvent) => {
+          switch (event.type) {
+            case 'thinking':
+              if (event.characterId) {
+                setActiveCharId(event.characterId)
+              }
+              break
+            case 'token':
+              if (event.characterId && event.token) {
+                setMessages(prev => {
+                  const existing = prev.find(
+                    m => m.characterId === event.characterId && m.streaming
+                  )
+                  if (existing) {
+                    return prev.map(m =>
+                      m.id === existing.id
+                        ? { ...m, text: m.text + event.token }
+                        : m
+                    )
+                  }
+                  return [
+                    ...prev,
+                    {
+                      id: `msg-${Date.now()}-${event.characterId}`,
+                      characterId: event.characterId!,
+                      text: event.token!,
+                      timestamp: Date.now(),
+                      streaming: true,
+                    },
+                  ]
+                })
+                setThinkingIds(prev =>
+                  prev.filter(id => id !== event.characterId)
+                )
+                setActiveCharId(event.characterId)
+              }
+              break
+            case 'message_complete':
+              if (event.characterId) {
+                setMessages(prev =>
+                  prev.map(m =>
+                    m.characterId === event.characterId && m.streaming
+                      ? { ...m, streaming: false }
+                      : m
+                  )
+                )
+              }
+              break
+            case 'consensus_update':
+              if (event.consensus !== undefined) {
+                setConsensus(event.consensus)
+              }
+              break
+            case 'session_complete':
+              setThinkingIds([])
+              setActiveCharId(null)
+              break
+            case 'error':
+              setOffline(true)
+              break
+          }
+        },
+        () => {
+          setOffline(true)
+          runDemoDebate(q)
+        }
+      )
+      cancelStreamRef.current = cancel
+    } catch {
+      setOffline(true)
+      setLoading(false)
+      runDemoDebate(q)
+    }
+  }, [runDemoDebate])
+
+  useEffect(() => {
+    return () => {
+      cancelStreamRef.current?.()
+    }
+  }, [])
+
+  const getCharacter = (id: string) => CHARACTERS.find(c => c.id === id)!
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Session bar */}
+      <SessionBar active={sessionActive} startTime={startTime} />
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 mt-4 min-h-0">
+        {/* Left: Avatar ring + consensus */}
+        <div className="lg:w-[320px] shrink-0 flex flex-col items-center gap-4 py-4">
+          <AvatarRing
+            characters={CHARACTERS}
+            activeId={activeCharId}
+            thinkingIds={thinkingIds}
+          />
+          <ConsensusMeter value={consensus} />
+
+          {/* Thinking indicators */}
+          {thinkingIds.length > 0 && (
+            <div className="flex flex-col gap-1 mt-2 w-full max-w-[280px]">
+              {thinkingIds.map(id => {
+                const char = getCharacter(id)
+                return (
+                  <div key={id} className="flex items-center gap-2" style={{ fontSize: 12 }}>
+                    <span
+                      className="inline-block rounded-full"
+                      style={{
+                        width: 5,
+                        height: 5,
+                        background: char.color,
+                        animation: 'quantum-pulse 1.5s ease-in-out infinite',
+                      }}
+                    />
+                    <span style={{ color: '#64748b' }}>
+                      {THINKING_PHRASES[id]}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Right: Debate messages */}
+        <div
+          className="flex-1 flex flex-col min-h-0 rounded-xl"
+          style={{
+            background: 'rgba(8,8,18,0.6)',
+            border: '1px solid rgba(119,119,187,0.15)',
+            backdropFilter: 'blur(12px)',
+          }}
+        >
+          {/* Question header */}
+          {question && (
+            <div
+              className="px-4 py-3 border-b"
+              style={{ borderColor: 'rgba(119,119,187,0.12)' }}
+            >
+              <span style={{ fontSize: 11, color: '#7777bb', fontWeight: 600, letterSpacing: '0.1em' }}>
+                QUESTION
+              </span>
+              <p style={{ fontSize: 15, color: '#e2e8f0', marginTop: 4 }}>{question}</p>
+            </div>
+          )}
+
+          {/* Offline banner */}
+          {offline && (
+            <div
+              className="px-4 py-2 text-center"
+              style={{
+                fontSize: 13,
+                color: '#fb923c',
+                background: 'rgba(251,146,60,0.06)',
+                borderBottom: '1px solid rgba(251,146,60,0.15)',
+              }}
+            >
+              Quantum API offline — showing demo debate
+            </div>
+          )}
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1" style={{ minHeight: 200 }}>
+            {!question && messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                <p style={{ fontSize: 16, color: '#64748b', marginBottom: 4 }}>
+                  Ask a question and watch 5 AIs debate it live.
+                </p>
+                <p style={{ fontSize: 13, color: '#475569' }}>
+                  They&apos;ll challenge each other, cite sources, and converge on the best answer.
+                </p>
+              </div>
+            )}
+            {messages.map(msg => (
+              <DebateMessage
+                key={msg.id}
+                character={getCharacter(msg.characterId)}
+                text={msg.text}
+                streaming={msg.streaming}
+                strikethrough={msg.strikethrough}
+                agreement={msg.agreement}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input */}
+          <div
+            className="px-4 py-3 border-t"
+            style={{ borderColor: 'rgba(119,119,187,0.12)' }}
+          >
+            <QuantumInput
+              onSubmit={handleSubmit}
+              disabled={thinkingIds.length > 0 && messages.length > 0}
+              loading={loading}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
