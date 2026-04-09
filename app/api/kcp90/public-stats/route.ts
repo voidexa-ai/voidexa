@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const revalidate = 60 // revalidate every 60s in production
+export const dynamic = 'force-dynamic' // skip prerender — needs runtime env vars
 
 export async function GET() {
   const serviceClient = createClient(
