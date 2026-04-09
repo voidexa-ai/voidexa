@@ -8,7 +8,6 @@ const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'http://localhost:88
  *  round of delta evaluation and uses full KCP-90 compression. */
 const MODE_ROUNDS: Record<QuantumMode, number> = {
   standard: 2,
-  full_search: 2,
   deep: 3,
 }
 

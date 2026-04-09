@@ -31,8 +31,8 @@ export interface QuantumSession {
   cost: number
 }
 
-/** Three UX modes surfaced in the QuantumInput dropdown. */
-export type QuantumMode = 'standard' | 'full_search' | 'deep'
+/** UX modes surfaced in the QuantumInput dropdown. */
+export type QuantumMode = 'standard' | 'deep'
 
 export interface QuantumSSEEvent {
   type:

@@ -23,11 +23,6 @@ const MODE_OPTIONS: ModeOption[] = [
     hint: '2 rounds · Perplexity & Gemini web search',
   },
   {
-    value: 'full_search',
-    label: 'Full Search',
-    hint: '2 rounds · all providers web-search (Claude/GPT pending SDK)',
-  },
-  {
     value: 'deep',
     label: 'Deep',
     hint: '3 rounds · full KCP-90 · all providers',

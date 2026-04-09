@@ -424,19 +424,32 @@ export default function QuantumDebatePanel() {
   )
 }
 
-// Market baseline: what four separate, independent API sessions would
-// cost a customer who queried Claude / GPT / Gemini / Perplexity on
-// their own — no shared context, no KCP-90 compression, full retail
-// token pricing on each provider. 10× is the rule-of-thumb headline
-// number; replace with a per-provider calculation once we start
-// reporting individual token counts in session_complete.
-const MARKET_MULTIPLIER = 10
+// Standard-API baseline: what this same debate would cost if each
+// provider were queried independently without KCP-90 prompt
+// compression. 3× the actual session cost is the rule-of-thumb ratio
+// we quote for a typical multi-round debate — the same multi-round
+// eval prompts still run, just without the compression savings.
+const STANDARD_API_MULTIPLIER = 3
+
+// Pretty label for each mode as shown in the summary headline.
+const MODE_LABEL: Record<string, string> = {
+  standard: 'Standard',
+  deep: 'Deep',
+  // Legacy values are kept as read-only fallbacks so old completed
+  // sessions still render a sensible label.
+  fast: 'Standard',
+  verbose: 'Deep',
+  quick: 'Standard',
+}
+
+function modeLabel(mode: string): string {
+  return MODE_LABEL[mode] ?? 'Standard'
+}
 
 function formatCost(usd: number): string {
   if (usd <= 0) return '$0.00'
   // Sub-dollar amounts render at 4 decimals so tiny quantum prices and
-  // their 10× market baselines stay at matching precision in the strip
-  // (e.g. $0.0957 vs $0.0096 instead of $0.10 vs $0.0096).
+  // their 3× API baselines stay at matching precision in the strip.
   if (usd < 1) return `$${usd.toFixed(4)}`
   return `$${usd.toFixed(2)}`
 }
@@ -448,10 +461,12 @@ function formatDuration(ms: number): string {
 
 function CostSummaryStrip({ summary }: { summary: CostSummary }) {
   const quantumPrice = summary.cost
-  const marketPrice = quantumPrice * MARKET_MULTIPLIER
-  const savedPct = marketPrice > 0
-    ? Math.round(((marketPrice - quantumPrice) / marketPrice) * 100)
-    : 0
+  const standardApiPrice = quantumPrice * STANDARD_API_MULTIPLIER
+  const modeName = modeLabel(summary.mode)
+  const providerCount = summary.providers.length
+  const rounds = summary.rounds || 0
+  const tokens = summary.tokens || 0
+  const timeStr = formatDuration(summary.elapsedMs)
 
   return (
     <div
@@ -475,31 +490,35 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         SESSION SUMMARY
       </div>
 
-      {/* Price comparison — the hero line of the strip. */}
+      {/* Line 1 — narrative headline describing the debate itself. */}
+      <p style={{ fontSize: 14, color: '#e2e8f0', marginBottom: 8 }}>
+        A <span style={{ fontWeight: 700, color: '#a5b4fc' }}>{modeName}</span>{' '}
+        Quantum debate with{' '}
+        <span style={{ fontWeight: 700, color: '#e2e8f0' }}>{providerCount}</span>{' '}
+        providers across{' '}
+        <span style={{ fontWeight: 700, color: '#e2e8f0' }}>{rounds}</span>{' '}
+        {rounds === 1 ? 'round' : 'rounds'}
+      </p>
+
+      {/* Lines 2 & 3 — price comparison. */}
       <div className="flex flex-col gap-1" style={{ fontSize: 13 }}>
         <div>
-          <span style={{ color: '#64748b' }}>Market price (4 separate APIs): </span>
+          <span style={{ color: '#64748b' }}>
+            Standard API cost for this debate:{' '}
+          </span>
           <span style={{ color: '#94a3b8', textDecoration: 'line-through' }}>
-            ~{formatCost(marketPrice)}
+            ~{formatCost(standardApiPrice)}
           </span>
         </div>
         <div>
-          <span style={{ color: '#64748b' }}>Your Quantum price: </span>
-          <span
-            style={{ color: '#e2e8f0', fontWeight: 700, fontSize: 15 }}
-          >
+          <span style={{ color: '#64748b' }}>Your price: </span>
+          <span style={{ color: '#e2e8f0', fontWeight: 700, fontSize: 15 }}>
             {formatCost(quantumPrice)}
-          </span>
-        </div>
-        <div>
-          <span style={{ color: '#64748b' }}>You saved: </span>
-          <span style={{ color: '#4ade80', fontWeight: 700 }}>
-            {savedPct}%
           </span>
         </div>
       </div>
 
-      {/* Meta line — dot-separated so it stays on one row on most widths. */}
+      {/* Line 4 — dot-separated meta (providers / tokens / time). */}
       <div
         style={{
           fontSize: 12,
@@ -512,27 +531,17 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         <span>
           Providers:{' '}
           <span style={{ color: '#cbd5e1' }}>
-            {summary.providers.length}/{TOTAL_PROVIDERS}
+            {providerCount}/{TOTAL_PROVIDERS}
           </span>
-        </span>
-        <span style={{ margin: '0 8px', color: '#334155' }}>·</span>
-        <span>
-          Rounds:{' '}
-          <span style={{ color: '#cbd5e1' }}>{summary.rounds || 0}</span>
         </span>
         <span style={{ margin: '0 8px', color: '#334155' }}>·</span>
         <span>
           Tokens:{' '}
-          <span style={{ color: '#cbd5e1' }}>
-            {(summary.tokens || 0).toLocaleString()}
-          </span>
+          <span style={{ color: '#cbd5e1' }}>{tokens.toLocaleString()}</span>
         </span>
         <span style={{ margin: '0 8px', color: '#334155' }}>·</span>
         <span>
-          Total time:{' '}
-          <span style={{ color: '#cbd5e1' }}>
-            {formatDuration(summary.elapsedMs)}
-          </span>
+          Time: <span style={{ color: '#cbd5e1' }}>{timeStr}</span>
         </span>
       </div>
     </div>
