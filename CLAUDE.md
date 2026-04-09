@@ -1,36 +1,39 @@
-# CLAUDE.md — Quantum Chat UI
+# CLAUDE.md — Quantum UI Polish
 
 ## What This Is
-Build the Quantum multi-AI debate chat interface as a page inside voidexa.com.
-Users reach it from /quantum via a "Try Quantum" button. It connects to the Quantum FastAPI backend for real-time AI debates.
+Fix 4 specific UI/UX issues in Quantum chat. Read SKILL.md for detailed descriptions.
 
-## Project Location
-C:\Users\Jixwu\Desktop\voidexa
+## Two Repos
+1. C:\Users\Jixwu\Desktop\voidexa (frontend — Next.js)
+2. C:\Users\Jixwu\Projects\quantum (backend — FastAPI)
 
-## Backend Location
-C:\Users\Jixwu\Projects\quantum\quantum_api\ (FastAPI, not deployed yet — use localhost)
+## GitNexus
+Quantum repo is indexed. MUST run gitnexus_impact before editing any symbol. MUST run gitnexus_detect_changes before committing.
+
+## The 4 Fixes (in priority order)
+
+### Fix 1: Scroll — only auto-scroll if user is near bottom
+File: voidexa/components/quantum/QuantumDebatePanel.tsx
+Change scrollToBottom to check if user is within 100px of bottom before scrolling.
+
+### Fix 2: Streaming text — character by character typewriter effect  
+File: voidexa/components/quantum/DebateMessage.tsx
+Ensure the streaming prop renders text progressively. If tokens arrive as 20-char chunks, animate each chunk appearing with CSS transition or requestAnimationFrame.
+
+### Fix 3: KCP-90 preload — disable Layer 1 for web sessions
+File: quantum/.env — add KCP90_LAYER1_TIMEOUT=0 or KCP90_DISABLE_LAYER1=true
+This prevents BERT model loading during chat sessions.
+
+### Fix 4: AI debate references — round 2 context
+File: quantum/engine.py — check _run_round() for round 2+ context passing.
+AIs should see previous round responses and reference them. This may already work but frontend only shows round 1.
+File: quantum/quantum_api/services/engine_bridge.py — check if all rounds are yielded or just round 1.
 
 ## Critical Rules
-1. Read SKILL.md FIRST — it has the complete spec
-2. Git backup BEFORE changes: git add -A && git commit -m "pre-quantum-ui backup"
-3. STREAMING IS EVERYTHING — the user must never stare at a blank screen. Text streams in character by character. Avatars glow while speaking. Consensus meter animates gradually. Show "thinking" states between responses.
-4. Use existing character images from public/images/cast/ (claude.jpg, gpt.jpg, gemini.jpg, perplexity.jpg, llama.jpg)
-5. Match voidexa design language — dark space aesthetic, Quantum accent #7777bb
-6. Auth required — same Supabase auth pattern as Void Chat (/void-chat layout.tsx)
-7. Graceful fallback if Quantum API is offline
-8. npm run build must pass with ZERO errors
-9. Build everything in ONE command — no user input mid-build
-10. After build: git add -A && git commit -m "feat: Quantum debate chat UI with streaming" && npx vercel --prod
-
-## The UI Feel
-Think of it as watching a live conference room debate. You ask a question, then 5 AIs discuss it in real time. You see each one thinking, then responding, then reacting to each other. The consensus meter climbs as they converge. It feels alive, not like waiting for an API call.
-
-## What Already Exists
-- /quantum page with marketing content, character avatars in ring layout, debate preview mockup
-- quantum_api/ with FastAPI backend, JWT auth, SSE streaming, 14 modules
-- Character images in public/images/cast/
-- Supabase auth system
-- Void Chat as a reference for auth flow + chat UI patterns
-
-## Minimum Font Sizes
-Body text: 16px minimum. Labels/badges: 14px minimum. Opacity minimum 0.5.
+1. Read SKILL.md FIRST
+2. Git backup BEFORE changes in both repos
+3. Use GitNexus for impact analysis
+4. Test with both servers running
+5. npm run build must pass
+6. Git commit both repos
+7. Do NOT deploy to vercel — we will review first

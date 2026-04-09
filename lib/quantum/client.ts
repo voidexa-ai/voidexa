@@ -2,7 +2,7 @@
 
 import type { QuantumSSEEvent } from '@/types/quantum'
 
-const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'http://localhost:8000'
+const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'http://localhost:8888'
 
 export async function createQuantumSession(
   question: string,

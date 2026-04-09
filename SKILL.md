@@ -1,116 +1,68 @@
 ---
-name: quantum-chat-ui
-description: Build the Quantum multi-AI debate chat interface as a page inside voidexa.com. The user reaches it from the /quantum marketing page via a "Try Quantum" button. Features 5 AI characters debating in real-time with streaming text, consensus meter, and the voidexa dark space aesthetic. Triggers on "quantum ui", "quantum chat", "try quantum", "debate interface", "quantum frontend" in the context of voidexa.
+name: quantum-ui-polish
+description: Fix 4 specific UI/UX issues in Quantum chat interface on voidexa.com
 ---
 
-# Quantum Chat UI — Build Skill
+# Quantum UI Polish — 4 Fixes
 
-## Context
-Project: voidexa.com at C:\Users\Jixwu\Desktop\voidexa (Next.js, Vercel)
-Backend: Quantum API at C:\Users\Jixwu\Projects\quantum\quantum_api\ (FastAPI, JWT auth, SSE streaming)
-Goal: Build a functional Quantum debate chat interface inside voidexa.com that connects to the Quantum FastAPI backend.
+## Project Location
+voidexa.com frontend: C:\Users\Jixwu\Desktop\voidexa
+Quantum API backend: C:\Users\Jixwu\Projects\quantum
 
-## Entry Point
-The /quantum page on voidexa.com already exists as a marketing/teaser page. Add a "Try Quantum" button that links to /quantum/chat (or /try-quantum). That new page IS the functional debate UI.
+## GitNexus
+Quantum repo is indexed by GitNexus. Use gitnexus_impact before editing any symbol. Use gitnexus_context to understand dependencies. Run gitnexus_detect_changes before committing.
 
-## The 5 AI Characters (already exist in voidexa)
-Images at: public/images/cast/
-- Claude (claude.jpg) — Chief Architect — blue #60a5fa — "Overthinks everything. Usually right."
-- GPT (gpt.jpg) — Lead Developer — green #4ade80 — "Never wrong. Except when he is."
-- Perplexity (perplexity.jpg) — Fact Checker — orange #fb923c — "Actually, according to my sources..."
-- Gemini (gemini.jpg) — Senior Reviewer — purple #c084fc — "Namaste. Your code is garbage."
-- Llama (llama.jpg) — Trainee — gray #94a3b8 — "Loading... 12% complete."
-- Jix (jix.jpg) — CEO — gold #f59e0b (NOT a debater — only appears as easter egg)
+## The 4 Problems
 
-## UI Layout — What the User Sees
+### Problem 1: Text arrives as one big block
+CURRENT: When an AI responds, the entire response appears at once — one big wall of text instantly.
+EXPECTED: Text should stream in character-by-character with a typewriter effect, like watching someone type. Each character appears with ~18ms delay.
+WHERE: The issue is in engine_bridge.py (Quantum repo) — it chunks responses into 20-char pieces but the frontend DebateMessage component may not be rendering them progressively.
+FILES: 
+- C:\Users\Jixwu\Desktop\voidexa\components\quantum\DebateMessage.tsx — check if streaming prop triggers character-by-character rendering
+- C:\Users\Jixwu\Projects\quantum\quantum_api\services\engine_bridge.py — verify token events are yielded with proper delays
 
-### Top Area
-- Session status bar: timer (running), cost counter ($0.0000 incrementing), "Quantum — Live Session" label
-- Mac-style window dots (red/yellow/green) for aesthetics
+### Problem 2: Auto-scroll is too aggressive
+CURRENT: Every time a new message or token arrives, the chat scrolls to the bottom. You can't read previous responses because it keeps jumping.
+EXPECTED: Only auto-scroll if the user is already near the bottom (within 100px). If they've scrolled up to read, don't force scroll.
+WHERE: C:\Users\Jixwu\Desktop\voidexa\components\quantum\QuantumDebatePanel.tsx — the scrollToBottom function runs on every message update via useEffect.
+FIX: Check scrollTop + clientHeight vs scrollHeight before scrolling. Only scroll if user is within 100px of bottom.
 
-### Left Side — Avatar Ring + Consensus
-- 5 AI avatars arranged in a circle/ring with connection lines between them
-- Center label: "QUANTUM"
-- Each avatar: circular photo, name, role below
-- Active speaker has glowing border in their color
-- Consensus meter below the ring: animated bar 0-100% with "Emerging from 5 providers" text
+### Problem 3: KCP-90 BERT model loads during session
+CURRENT: During a Quantum session, the terminal shows "Loading weights: 100%" and "Warning: You are sending unauthenticated requests to the HF Hub." This is KCP-90's BERT Layer 1 model loading mid-session.
+EXPECTED: KCP-90 should preload at Quantum API startup (in the lifespan function), not during a session. Or disable KCP-90 Layer 1 for the API if it's not needed for web sessions.
+WHERE: C:\Users\Jixwu\Projects\quantum\quantum_api\main.py — add KCP-90 preload in lifespan, OR set KCP90_LAYER1_TIMEOUT=0 in .env to disable Layer 1.
+SIMPLEST FIX: Add KCP90_DISABLE_LAYER1=true to .env and check it in the engine. Or simply set KCP90_LAYER1_TIMEOUT=0.
 
-### Right Side — Debate Messages
-- Question box at top showing the user's question
-- Streaming debate messages below, each with:
-  - Avatar photo (small, 30px)
-  - Character name in their color
-  - Message text streaming in character by character (NOT appearing all at once)
-  - Strikethrough on text when an AI changes position
-  - Green highlight when an AI shifts to agree
-- Auto-scrolls as new messages arrive
+### Problem 4: No real debate — AIs don't reference each other
+CURRENT: Each AI gives an independent answer. Claude says X, GPT says Y, Gemini says Z. They don't say "I disagree with Claude because..." 
+EXPECTED: In round 2+, AIs should see what others said and respond to it. This creates the debate effect.
+WHERE: This is in quantum/engine.py — the prompt for round 2+ should include previous responses. This may already be implemented in the engine (Quantum was designed with multi-round debate). Check if the frontend only shows round 1 responses or all rounds.
+NOTE: This is a BACKEND issue in the Quantum repo, not frontend. The engine needs to pass round 1 responses as context to round 2 providers. Check engine.py _run_round() for how context is passed between rounds.
 
-### Bottom
-- Input field for user's question
-- "Ask Quantum" submit button
-- Cost and time stats
+## Priority Order
+1. Problem 2 (scroll fix) — quickest, pure frontend
+2. Problem 1 (streaming text) — frontend + backend coordination  
+3. Problem 3 (KCP-90 preload) — backend env var
+4. Problem 4 (debate references) — backend engine logic, most complex
 
-## CRITICAL: Streaming Feel
-The #1 requirement. The user must NEVER sit staring at a blank screen waiting. The UI must feel alive at all times:
-- When the question is submitted, all 5 avatars show "thinking" animation (subtle pulse/glow)
-- As each AI responds, their avatar lights up and text streams in
-- SSE (Server-Sent Events) from the Quantum API delivers tokens in real-time
-- If the backend takes time, show intermediate states: "Claude is analyzing...", "GPT is forming a response...", "Perplexity is checking sources..."
-- The consensus meter should animate gradually as debate progresses
-- Typing indicators per AI character
-
-## Backend Connection
-The Quantum API (quantum_api/) runs locally on a configurable port. For now:
-- API base URL: configurable via env var NEXT_PUBLIC_QUANTUM_API_URL (default http://localhost:8000)
-- Auth: JWT token from voidexa Supabase auth
-- Endpoints needed:
-  - POST /api/quantum/session — start a new debate session
-  - GET /api/quantum/session/{id}/stream — SSE stream of debate events
-  - GET /api/quantum/session/{id}/status — session status/consensus
-- If the Quantum API is not running, show a graceful "Quantum is offline — coming soon" message
-
-## Design Language
-Same voidexa dark space aesthetic:
-- Background: transparent (inherits site background)
-- Cards/panels: rgba(8,8,18,0.92) with blur, borders rgba(119,119,187,0.3)
-- Quantum accent: #7777bb (already used on /quantum page)
-- Character colors as listed above
-- Font: var(--font-space) for headings, system for body
-- Minimum 14px body text, 14px labels
-- Glow effects on active elements
-- Mac-style window chrome for the debate panel
-
-## Files to Create
-1. app/quantum/chat/page.tsx — The debate UI page (or app/try-quantum/page.tsx)
-2. components/quantum/QuantumDebatePanel.tsx — Main debate interface component
-3. components/quantum/AvatarRing.tsx — The 5 AI avatars in circle layout with connections
-4. components/quantum/ConsensusMeter.tsx — Animated consensus bar
-5. components/quantum/DebateMessage.tsx — Single debate message with streaming
-6. components/quantum/QuantumInput.tsx — Question input + submit
-7. components/quantum/SessionBar.tsx — Timer, cost, status
-8. lib/quantum/client.ts — API client for Quantum backend (SSE, REST)
-9. types/quantum.ts — TypeScript types for sessions, messages, events
-
-## Files to Modify
-1. app/quantum/page.tsx — Add "Try Quantum" button linking to /quantum/chat
-2. components/layout/Navigation.tsx — No changes needed (Quantum already in nav)
-
-## Auth
-Quantum chat requires login (same as Void Chat). Use the existing Supabase auth from voidexa.com. Redirect to /auth/login if not authenticated.
-
-## Build Order
-1. Git backup: git add -A && git commit -m "pre-quantum-ui backup"
-2. Create all new files
-3. Modify /quantum page to add Try Quantum button
-4. npm run build — fix ALL errors
-5. Git commit: "feat: Quantum debate chat UI with streaming"
-6. npx vercel --prod
+## Testing
+1. Start Quantum API: cd C:\Users\Jixwu\Projects\quantum; python -m uvicorn quantum_api.main:app --reload --port 8000
+2. Start voidexa: cd C:\Users\Jixwu\Desktop\voidexa; npm run dev
+3. Go to localhost:3000/quantum/chat
+4. Ask a question and verify:
+   - Text streams in progressively (not all at once)
+   - Scrolling doesn't jump when reading previous messages
+   - No "Loading weights" warning in terminal
+   - In round 2, AIs reference each other's positions
+5. npm run build for voidexa — zero errors
+6. pytest for Quantum — all tests pass
+7. Git commit both repos
+8. npx vercel --prod for voidexa
 
 ## Rules
-- NEVER break existing pages
-- The streaming feel is NON-NEGOTIABLE — no blank waiting screens
-- Use existing character images from public/images/cast/
-- Keep the voidexa design language consistent
-- Auth required — same pattern as Void Chat
-- Graceful offline fallback if Quantum API is not running
-- Mobile responsive
+- Use GitNexus impact analysis before editing any symbol
+- Git backup before changes in both repos
+- Do NOT break existing functionality
+- Do NOT modify provider code or auth code
+- Minimum font 16px body, 14px labels
