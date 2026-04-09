@@ -1,7 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import type { QuantumCharacter, QuantumMessage, QuantumSSEEvent } from '@/types/quantum'
+import type {
+  QuantumCharacter,
+  QuantumMessage,
+  QuantumMode,
+  QuantumSSEEvent,
+} from '@/types/quantum'
 import { createQuantumSession, streamQuantumSession } from '@/lib/quantum/client'
 import AvatarRing from './AvatarRing'
 import ConsensusMeter from './ConsensusMeter'
@@ -31,6 +36,14 @@ const DEMO_DEBATE: { characterId: string; text: string }[] = [
   { characterId: 'gemini', text: 'Your benchmarks are helpful, but the question assumes a specific workload pattern. Without profiling the actual use case, we\'re optimizing in the dark. Show me the flamegraph.' },
 ]
 
+interface CostSummary {
+  cost: number
+  tokens: number
+  providers: string[]
+  rounds: number
+  mode: string
+}
+
 export default function QuantumDebatePanel() {
   const [question, setQuestion] = useState<string | null>(null)
   const [messages, setMessages] = useState<(QuantumMessage & { streaming?: boolean })[]>([])
@@ -41,6 +54,7 @@ export default function QuantumDebatePanel() {
   const [startTime, setStartTime] = useState<number | null>(null)
   const [offline, setOffline] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [costSummary, setCostSummary] = useState<CostSummary | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const cancelStreamRef = useRef<(() => void) | null>(null)
@@ -107,11 +121,12 @@ export default function QuantumDebatePanel() {
     setTimeout(addNextMessage, 1500)
   }, [])
 
-  const handleSubmit = useCallback(async (q: string) => {
+  const handleSubmit = useCallback(async (q: string, mode: QuantumMode) => {
     setLoading(true)
     setQuestion(q)
     setMessages([])
     setConsensus(0)
+    setCostSummary(null)
     setSessionActive(true)
     setStartTime(Date.now())
     setThinkingIds(CHARACTERS.map(c => c.id))
@@ -119,7 +134,7 @@ export default function QuantumDebatePanel() {
     try {
       // Quantum chat runs as guest — no Supabase auth required.
       // The Quantum API accepts unauthenticated requests in guest mode.
-      const result = await createQuantumSession(q, null)
+      const result = await createQuantumSession(q, null, mode)
       if ('error' in result) {
         // API offline — run demo mode
         setOffline(true)
@@ -188,6 +203,15 @@ export default function QuantumDebatePanel() {
             case 'session_complete':
               setThinkingIds([])
               setActiveCharId(null)
+              if (typeof event.cost === 'number') {
+                setCostSummary({
+                  cost: event.cost,
+                  tokens: event.tokens ?? 0,
+                  providers: event.providers_used ?? [],
+                  rounds: event.rounds ?? 0,
+                  mode: event.mode ?? mode,
+                })
+              }
               break
             case 'error':
               setOffline(true)
@@ -320,6 +344,7 @@ export default function QuantumDebatePanel() {
                 agreement={msg.agreement}
               />
             ))}
+            {costSummary && <CostSummaryStrip summary={costSummary} />}
             <div ref={messagesEndRef} />
           </div>
 
@@ -335,6 +360,86 @@ export default function QuantumDebatePanel() {
             />
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Fine-grained cost strip shown after session_complete. The "without
+// KCP-90" baseline is estimated at 3× actual cost — that's the headline
+// compression ratio we quote for the typical multi-round debate; once
+// the backend reports per-session kcp90_savings we'll wire that through
+// instead of the static multiplier.
+const KCP_BASELINE_MULTIPLIER = 3
+
+function formatCost(usd: number): string {
+  if (usd <= 0) return '$0.00'
+  if (usd < 0.01) return `$${usd.toFixed(4)}`
+  return `$${usd.toFixed(2)}`
+}
+
+function CostSummaryStrip({ summary }: { summary: CostSummary }) {
+  const actual = summary.cost
+  const baseline = actual * KCP_BASELINE_MULTIPLIER
+  const savedPct = baseline > 0
+    ? Math.round(((baseline - actual) / baseline) * 100)
+    : 0
+
+  return (
+    <div
+      className="mx-1 mt-3 mb-1 rounded-lg"
+      style={{
+        background:
+          'linear-gradient(135deg, rgba(74,222,128,0.08), rgba(99,102,241,0.08))',
+        border: '1px solid rgba(74,222,128,0.18)',
+        padding: '10px 14px',
+      }}
+    >
+      <div
+        style={{
+          fontSize: 11,
+          color: '#4ade80',
+          fontWeight: 700,
+          letterSpacing: '0.1em',
+          marginBottom: 6,
+        }}
+      >
+        SESSION SUMMARY
+      </div>
+      <div
+        className="flex flex-wrap gap-x-6 gap-y-2"
+        style={{ fontSize: 13, color: '#cbd5e1' }}
+      >
+        <div>
+          <span style={{ color: '#64748b' }}>Session cost: </span>
+          <span style={{ color: '#e2e8f0', fontWeight: 600 }}>
+            {formatCost(actual)}
+          </span>
+        </div>
+        <div>
+          <span style={{ color: '#64748b' }}>Without KCP-90: </span>
+          <span style={{ color: '#94a3b8', textDecoration: 'line-through' }}>
+            ~{formatCost(baseline)}
+          </span>
+        </div>
+        <div>
+          <span style={{ color: '#64748b' }}>You saved: </span>
+          <span style={{ color: '#4ade80', fontWeight: 700 }}>{savedPct}%</span>
+        </div>
+        {summary.tokens > 0 && (
+          <div>
+            <span style={{ color: '#64748b' }}>Tokens: </span>
+            <span style={{ color: '#e2e8f0' }}>
+              {summary.tokens.toLocaleString()}
+            </span>
+          </div>
+        )}
+        {summary.rounds > 0 && (
+          <div>
+            <span style={{ color: '#64748b' }}>Rounds: </span>
+            <span style={{ color: '#e2e8f0' }}>{summary.rounds}</span>
+          </div>
+        )}
       </div>
     </div>
   )

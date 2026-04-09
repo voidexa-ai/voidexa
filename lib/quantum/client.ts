@@ -1,12 +1,21 @@
 // lib/quantum/client.ts — API client for Quantum backend (SSE + REST)
 
-import type { QuantumSSEEvent } from '@/types/quantum'
+import type { QuantumMode, QuantumSSEEvent } from '@/types/quantum'
 
 const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'http://localhost:8888'
 
+/** Rounds baked into each UX mode. Deep is slower but runs a third
+ *  round of delta evaluation and uses full KCP-90 compression. */
+const MODE_ROUNDS: Record<QuantumMode, number> = {
+  standard: 2,
+  full_search: 2,
+  deep: 3,
+}
+
 export async function createQuantumSession(
   question: string,
-  token: string | null
+  token: string | null,
+  mode: QuantumMode = 'standard'
 ): Promise<{ id: string } | { error: string }> {
   try {
     const headers: Record<string, string> = {
@@ -18,7 +27,11 @@ export async function createQuantumSession(
     const res = await fetch(`${API_BASE}/api/sessions`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ task: question }),
+      body: JSON.stringify({
+        task: question,
+        mode,
+        rounds: MODE_ROUNDS[mode],
+      }),
     })
     if (!res.ok) {
       const text = await res.text()

@@ -31,6 +31,9 @@ export interface QuantumSession {
   cost: number
 }
 
+/** Three UX modes surfaced in the QuantumInput dropdown. */
+export type QuantumMode = 'standard' | 'full_search' | 'deep'
+
 export interface QuantumSSEEvent {
   type:
     | 'thinking'
@@ -55,4 +58,14 @@ export interface QuantumSSEEvent {
   reason?: string
   /** Raw provider name (pre-mapping) for provider_unavailable events. */
   provider?: string
+  /** session_complete: total USD cost across all providers. */
+  cost?: number
+  /** session_complete: total tokens used across all providers. */
+  tokens?: number
+  /** session_complete: providers that returned a response. */
+  providers_used?: string[]
+  /** session_complete: how many rounds actually ran. */
+  rounds?: number
+  /** session_complete: the engine mode that was used. */
+  mode?: string
 }
