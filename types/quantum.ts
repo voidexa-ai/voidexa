@@ -32,10 +32,27 @@ export interface QuantumSession {
 }
 
 export interface QuantumSSEEvent {
-  type: 'thinking' | 'token' | 'message_complete' | 'consensus_update' | 'session_complete' | 'error'
+  type:
+    | 'thinking'
+    | 'token'
+    | 'message_complete'
+    | 'consensus_update'
+    | 'session_complete'
+    | 'error'
+    | 'round_start'
+    | 'round_complete'
+    | 'provider_unavailable'
   characterId?: string
   token?: string
   message?: QuantumMessage
   consensus?: number
   error?: string
+  /** Round number (1-based). Present on round_start, round_complete, and
+   *  token/message_complete events for rounds 2+ so the UI can distinguish
+   *  multi-round debate bubbles. */
+  round?: number
+  /** Backend-supplied reason for provider_unavailable events. */
+  reason?: string
+  /** Raw provider name (pre-mapping) for provider_unavailable events. */
+  provider?: string
 }

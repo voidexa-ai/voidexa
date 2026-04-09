@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { QuantumCharacter } from '@/types/quantum'
 
 interface DebateMessageProps {
@@ -18,22 +18,30 @@ export default function DebateMessage({
   strikethrough = false,
   agreement = false,
 }: DebateMessageProps) {
-  const [displayed, setDisplayed] = useState(streaming ? '' : text)
+  // Character-by-character typewriter. We track `visibleLen` rather than a
+  // displayed string so new chunks arriving via the `text` prop don't reset
+  // progress — the cursor keeps advancing forward toward the growing target.
+  const [visibleLen, setVisibleLen] = useState<number>(() =>
+    streaming ? 0 : text.length
+  )
+  const targetLenRef = useRef<number>(text.length)
+  targetLenRef.current = text.length
 
   useEffect(() => {
     if (!streaming) {
-      setDisplayed(text)
+      // Finalized: show the full text immediately.
+      setVisibleLen(text.length)
       return
     }
-    let idx = 0
-    setDisplayed('')
     const iv = setInterval(() => {
-      idx++
-      setDisplayed(text.slice(0, idx))
-      if (idx >= text.length) clearInterval(iv)
+      setVisibleLen(prev =>
+        prev >= targetLenRef.current ? prev : prev + 1
+      )
     }, 18)
     return () => clearInterval(iv)
-  }, [text, streaming])
+  }, [streaming, text])
+
+  const displayed = text.slice(0, visibleLen)
 
   return (
     <div
@@ -69,7 +77,7 @@ export default function DebateMessage({
           }}
         >
           {displayed}
-          {streaming && displayed.length < text.length && (
+          {streaming && visibleLen < text.length && (
             <span
               className="inline-block ml-0.5"
               style={{

@@ -43,10 +43,19 @@ export default function QuantumDebatePanel() {
   const [offline, setOffline] = useState(false)
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
   const cancelStreamRef = useRef<(() => void) | null>(null)
 
+  // Only auto-scroll if the user is already near the bottom (within 100px).
+  // If they've scrolled up to re-read previous responses, we don't force-jump.
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = scrollContainerRef.current
+    if (!container) return
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight
+    if (distanceFromBottom <= 100) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [])
 
   useEffect(() => {
@@ -288,7 +297,11 @@ export default function QuantumDebatePanel() {
           )}
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1" style={{ minHeight: 200 }}>
+          <div
+            ref={scrollContainerRef}
+            className="flex-1 overflow-y-auto px-3 py-2 space-y-1"
+            style={{ minHeight: 200 }}
+          >
             {!question && messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center py-12">
                 <p style={{ fontSize: 16, color: '#64748b', marginBottom: 4 }}>
