@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
 import type { QuantumCharacter, QuantumMessage, QuantumSSEEvent } from '@/types/quantum'
 import { createQuantumSession, streamQuantumSession } from '@/lib/quantum/client'
 import AvatarRing from './AvatarRing'
@@ -118,10 +117,9 @@ export default function QuantumDebatePanel() {
     setThinkingIds(CHARACTERS.map(c => c.id))
 
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const token = session?.access_token ?? null
-
-      const result = await createQuantumSession(q, token)
+      // Quantum chat runs as guest — no Supabase auth required.
+      // The Quantum API accepts unauthenticated requests in guest mode.
+      const result = await createQuantumSession(q, null)
       if ('error' in result) {
         // API offline — run demo mode
         setOffline(true)
@@ -133,7 +131,7 @@ export default function QuantumDebatePanel() {
       setLoading(false)
       const cancel = streamQuantumSession(
         result.id,
-        token ?? null,
+        null,
         (event: QuantumSSEEvent) => {
           switch (event.type) {
             case 'thinking':

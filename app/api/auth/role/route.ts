@@ -18,9 +18,16 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ role: null })
 
+  // Service role key is optional — if missing, we can't check admin role
+  // but we don't want to crash the route. Non-admin is the safe default.
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceKey) {
+    return NextResponse.json({ role: null })
+  }
+
   const serviceClient = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    serviceKey
   )
 
   const { data } = await serviceClient
