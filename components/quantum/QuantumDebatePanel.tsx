@@ -42,7 +42,13 @@ interface CostSummary {
   providers: string[]
   rounds: number
   mode: string
+  /** Wall-clock duration from Ask-Quantum click to session_complete. */
+  elapsedMs: number
 }
+
+// Total providers shown in the avatar ring — used as the "/4" denominator
+// in the cost strip's providers line.
+const TOTAL_PROVIDERS = 4
 
 export default function QuantumDebatePanel() {
   const [question, setQuestion] = useState<string | null>(null)
@@ -55,9 +61,37 @@ export default function QuantumDebatePanel() {
   const [offline, setOffline] = useState(false)
   const [loading, setLoading] = useState(false)
   const [costSummary, setCostSummary] = useState<CostSummary | null>(null)
+  // Live wall-clock timer ticked at 100 ms while a session is in flight.
+  // Snapshotted into costSummary.elapsedMs on session_complete and then
+  // hidden from the live readout so the summary owns the final figure.
+  const [elapsedMs, setElapsedMs] = useState(0)
+  const [timerRunning, setTimerRunning] = useState(false)
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const timerStartRef = useRef<number>(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const cancelStreamRef = useRef<(() => void) | null>(null)
+
+  const stopTimer = useCallback((): number => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current)
+      timerIntervalRef.current = null
+    }
+    setTimerRunning(false)
+    return performance.now() - timerStartRef.current
+  }, [])
+
+  const startTimer = useCallback(() => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current)
+    }
+    timerStartRef.current = performance.now()
+    setElapsedMs(0)
+    setTimerRunning(true)
+    timerIntervalRef.current = setInterval(() => {
+      setElapsedMs(performance.now() - timerStartRef.current)
+    }, 100)
+  }, [])
 
   // Only auto-scroll if the user is already near the bottom (within 100px).
   // If they've scrolled up to re-read previous responses, we don't force-jump.
@@ -83,12 +117,14 @@ export default function QuantumDebatePanel() {
     setMessages([])
     setConsensus(0)
     setOffline(false)
+    startTimer()
 
     let msgIdx = 0
     const addNextMessage = () => {
       if (msgIdx >= DEMO_DEBATE.length) {
         setThinkingIds([])
         setActiveCharId(null)
+        stopTimer()
         return
       }
       const demo = DEMO_DEBATE[msgIdx]
@@ -119,7 +155,7 @@ export default function QuantumDebatePanel() {
 
     // Start first message after thinking delay
     setTimeout(addNextMessage, 1500)
-  }, [])
+  }, [startTimer, stopTimer])
 
   const handleSubmit = useCallback(async (q: string, mode: QuantumMode) => {
     setLoading(true)
@@ -130,6 +166,7 @@ export default function QuantumDebatePanel() {
     setSessionActive(true)
     setStartTime(Date.now())
     setThinkingIds(CHARACTERS.map(c => c.id))
+    startTimer()
 
     try {
       // Quantum chat runs as guest — no Supabase auth required.
@@ -200,9 +237,10 @@ export default function QuantumDebatePanel() {
                 setConsensus(event.consensus)
               }
               break
-            case 'session_complete':
+            case 'session_complete': {
               setThinkingIds([])
               setActiveCharId(null)
+              const finalMs = stopTimer()
               if (typeof event.cost === 'number') {
                 setCostSummary({
                   cost: event.cost,
@@ -210,11 +248,14 @@ export default function QuantumDebatePanel() {
                   providers: event.providers_used ?? [],
                   rounds: event.rounds ?? 0,
                   mode: event.mode ?? mode,
+                  elapsedMs: finalMs,
                 })
               }
               break
+            }
             case 'error':
               setOffline(true)
+              stopTimer()
               break
           }
         },
@@ -229,11 +270,15 @@ export default function QuantumDebatePanel() {
       setLoading(false)
       runDemoDebate(q)
     }
-  }, [runDemoDebate])
+  }, [runDemoDebate, startTimer, stopTimer])
 
   useEffect(() => {
     return () => {
       cancelStreamRef.current?.()
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current)
+        timerIntervalRef.current = null
+      }
     }
   }, [])
 
@@ -300,6 +345,20 @@ export default function QuantumDebatePanel() {
                 QUESTION
               </span>
               <p style={{ fontSize: 15, color: '#e2e8f0', marginTop: 4 }}>{question}</p>
+              {timerRunning && (
+                <p
+                  style={{
+                    fontSize: 12,
+                    color: '#7777bb',
+                    marginTop: 6,
+                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  <span style={{ color: '#475569' }}>Processing: </span>
+                  {formatDuration(elapsedMs)}
+                </p>
+              )}
             </div>
           )}
 
@@ -365,24 +424,33 @@ export default function QuantumDebatePanel() {
   )
 }
 
-// Fine-grained cost strip shown after session_complete. The "without
-// KCP-90" baseline is estimated at 3× actual cost — that's the headline
-// compression ratio we quote for the typical multi-round debate; once
-// the backend reports per-session kcp90_savings we'll wire that through
-// instead of the static multiplier.
-const KCP_BASELINE_MULTIPLIER = 3
+// Market baseline: what four separate, independent API sessions would
+// cost a customer who queried Claude / GPT / Gemini / Perplexity on
+// their own — no shared context, no KCP-90 compression, full retail
+// token pricing on each provider. 10× is the rule-of-thumb headline
+// number; replace with a per-provider calculation once we start
+// reporting individual token counts in session_complete.
+const MARKET_MULTIPLIER = 10
 
 function formatCost(usd: number): string {
   if (usd <= 0) return '$0.00'
-  if (usd < 0.01) return `$${usd.toFixed(4)}`
+  // Sub-dollar amounts render at 4 decimals so tiny quantum prices and
+  // their 10× market baselines stay at matching precision in the strip
+  // (e.g. $0.0957 vs $0.0096 instead of $0.10 vs $0.0096).
+  if (usd < 1) return `$${usd.toFixed(4)}`
   return `$${usd.toFixed(2)}`
 }
 
+function formatDuration(ms: number): string {
+  const seconds = Math.max(0, ms) / 1000
+  return `${seconds.toFixed(1)}s`
+}
+
 function CostSummaryStrip({ summary }: { summary: CostSummary }) {
-  const actual = summary.cost
-  const baseline = actual * KCP_BASELINE_MULTIPLIER
-  const savedPct = baseline > 0
-    ? Math.round(((baseline - actual) / baseline) * 100)
+  const quantumPrice = summary.cost
+  const marketPrice = quantumPrice * MARKET_MULTIPLIER
+  const savedPct = marketPrice > 0
+    ? Math.round(((marketPrice - quantumPrice) / marketPrice) * 100)
     : 0
 
   return (
@@ -392,7 +460,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         background:
           'linear-gradient(135deg, rgba(74,222,128,0.08), rgba(99,102,241,0.08))',
         border: '1px solid rgba(74,222,128,0.18)',
-        padding: '10px 14px',
+        padding: '12px 16px',
       }}
     >
       <div
@@ -401,45 +469,71 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
           color: '#4ade80',
           fontWeight: 700,
           letterSpacing: '0.1em',
-          marginBottom: 6,
+          marginBottom: 8,
         }}
       >
         SESSION SUMMARY
       </div>
-      <div
-        className="flex flex-wrap gap-x-6 gap-y-2"
-        style={{ fontSize: 13, color: '#cbd5e1' }}
-      >
+
+      {/* Price comparison — the hero line of the strip. */}
+      <div className="flex flex-col gap-1" style={{ fontSize: 13 }}>
         <div>
-          <span style={{ color: '#64748b' }}>Session cost: </span>
-          <span style={{ color: '#e2e8f0', fontWeight: 600 }}>
-            {formatCost(actual)}
+          <span style={{ color: '#64748b' }}>Market price (4 separate APIs): </span>
+          <span style={{ color: '#94a3b8', textDecoration: 'line-through' }}>
+            ~{formatCost(marketPrice)}
           </span>
         </div>
         <div>
-          <span style={{ color: '#64748b' }}>Without KCP-90: </span>
-          <span style={{ color: '#94a3b8', textDecoration: 'line-through' }}>
-            ~{formatCost(baseline)}
+          <span style={{ color: '#64748b' }}>Your Quantum price: </span>
+          <span
+            style={{ color: '#e2e8f0', fontWeight: 700, fontSize: 15 }}
+          >
+            {formatCost(quantumPrice)}
           </span>
         </div>
         <div>
           <span style={{ color: '#64748b' }}>You saved: </span>
-          <span style={{ color: '#4ade80', fontWeight: 700 }}>{savedPct}%</span>
+          <span style={{ color: '#4ade80', fontWeight: 700 }}>
+            {savedPct}%
+          </span>
         </div>
-        {summary.tokens > 0 && (
-          <div>
-            <span style={{ color: '#64748b' }}>Tokens: </span>
-            <span style={{ color: '#e2e8f0' }}>
-              {summary.tokens.toLocaleString()}
-            </span>
-          </div>
-        )}
-        {summary.rounds > 0 && (
-          <div>
-            <span style={{ color: '#64748b' }}>Rounds: </span>
-            <span style={{ color: '#e2e8f0' }}>{summary.rounds}</span>
-          </div>
-        )}
+      </div>
+
+      {/* Meta line — dot-separated so it stays on one row on most widths. */}
+      <div
+        style={{
+          fontSize: 12,
+          color: '#64748b',
+          marginTop: 10,
+          paddingTop: 8,
+          borderTop: '1px solid rgba(119,119,187,0.12)',
+        }}
+      >
+        <span>
+          Providers:{' '}
+          <span style={{ color: '#cbd5e1' }}>
+            {summary.providers.length}/{TOTAL_PROVIDERS}
+          </span>
+        </span>
+        <span style={{ margin: '0 8px', color: '#334155' }}>·</span>
+        <span>
+          Rounds:{' '}
+          <span style={{ color: '#cbd5e1' }}>{summary.rounds || 0}</span>
+        </span>
+        <span style={{ margin: '0 8px', color: '#334155' }}>·</span>
+        <span>
+          Tokens:{' '}
+          <span style={{ color: '#cbd5e1' }}>
+            {(summary.tokens || 0).toLocaleString()}
+          </span>
+        </span>
+        <span style={{ margin: '0 8px', color: '#334155' }}>·</span>
+        <span>
+          Total time:{' '}
+          <span style={{ color: '#cbd5e1' }}>
+            {formatDuration(summary.elapsedMs)}
+          </span>
+        </span>
       </div>
     </div>
   )
