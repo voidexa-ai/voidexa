@@ -2,7 +2,7 @@
 
 import type { QuantumMode, QuantumSSEEvent } from '@/types/quantum'
 
-const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'http://localhost:8888'
+const API_BASE = process.env.NEXT_PUBLIC_QUANTUM_API_URL || 'https://quantum-production-dd9d.up.railway.app'
 
 /** Rounds baked into each UX mode. Deep is slower but runs a third
  *  round of delta evaluation and uses full KCP-90 compression. */
