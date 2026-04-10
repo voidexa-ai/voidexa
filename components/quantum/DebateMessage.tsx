@@ -149,7 +149,7 @@ function Badge({ name, kind }: { name: string; kind: 'agree' | 'disagree' }) {
         display: 'inline-block',
         padding: '2px 8px',
         borderRadius: 999,
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: 600,
         letterSpacing: '0.04em',
         background: c.bg,
@@ -258,7 +258,7 @@ export default function DebateMessage({
           >
             {character.name}
           </span>
-          <span style={{ fontSize: 11, color: '#64748b', letterSpacing: '0.04em' }}>
+          <span style={{ fontSize: 14, color: '#64748b', letterSpacing: '0.04em' }}>
             {role}
           </span>
         </div>

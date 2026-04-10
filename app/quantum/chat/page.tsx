@@ -21,7 +21,7 @@ export default function QuantumChatPage() {
       <style>{`
         @keyframes quantum-pulse {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          50% { opacity: 0.5; }
         }
         @keyframes quantum-blink {
           0%, 100% { opacity: 1; }
@@ -33,7 +33,7 @@ export default function QuantumChatPage() {
         /* Markdown rendering inside debate message cards. Sized to
            match the voidexa font-size rule (body >=16px) and the dark
            sci-fi palette of the surrounding chat. */
-        .quantum-markdown { color: #c8c8d0; font-size: 15px; line-height: 1.7; }
+        .quantum-markdown { color: #c8c8d0; font-size: 16px; line-height: 1.7; }
         .quantum-markdown h1, .quantum-markdown h2, .quantum-markdown h3 {
           color: #e0e0e0;
           font-weight: 600;
@@ -42,7 +42,7 @@ export default function QuantumChatPage() {
         }
         .quantum-markdown h1 { font-size: 18px; }
         .quantum-markdown h2 { font-size: 16px; }
-        .quantum-markdown h3 { font-size: 15px; }
+        .quantum-markdown h3 { font-size: 16px; }
         .quantum-markdown p {
           color: #c8c8d0;
           line-height: 1.75;
@@ -63,7 +63,7 @@ export default function QuantumChatPage() {
           border-radius: 4px;
           padding: 1px 6px;
           font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-          font-size: 13px;
+          font-size: 14px;
           color: #d4d0ff;
         }
         .quantum-markdown pre {
@@ -73,7 +73,7 @@ export default function QuantumChatPage() {
           padding: 12px 14px;
           overflow-x: auto;
           margin: 10px 0;
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.55;
         }
         .quantum-markdown pre code {
@@ -106,7 +106,7 @@ export default function QuantumChatPage() {
         .quantum-markdown table {
           border-collapse: collapse;
           margin: 10px 0;
-          font-size: 13px;
+          font-size: 14px;
         }
         .quantum-markdown th, .quantum-markdown td {
           border: 1px solid rgba(127,119,221,0.18);

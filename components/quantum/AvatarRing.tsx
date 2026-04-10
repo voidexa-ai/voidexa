@@ -52,8 +52,8 @@ export default function AvatarRing({ characters, activeId, thinkingIds }: Avatar
           left: '50%',
           transform: 'translate(-50%, -50%)',
           fontFamily: 'var(--font-space)',
-          fontSize: 12,
-          color: 'rgba(119,119,187,0.6)',
+          fontSize: 14,
+          color: 'rgba(119,119,187,0.7)',
           letterSpacing: '0.2em',
         }}
       >
@@ -105,13 +105,13 @@ export default function AvatarRing({ characters, activeId, thinkingIds }: Avatar
             </div>
             <span
               className="text-center mt-1 font-medium"
-              style={{ fontSize: 11, color: isActive ? char.color : '#94a3b8' }}
+              style={{ fontSize: 14, color: isActive ? char.color : '#94a3b8' }}
             >
               {char.name}
             </span>
             <span
               className="text-center"
-              style={{ fontSize: 9, color: '#64748b' }}
+              style={{ fontSize: 14, color: '#64748b' }}
             >
               {char.role}
             </span>

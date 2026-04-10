@@ -83,7 +83,7 @@ export default function QuantumInput({
           aria-expanded={menuOpen}
           className="flex items-center gap-1.5 rounded-lg px-3 py-3 transition-all"
           style={{
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: 600,
             color: '#cbd5e1',
             background: 'rgba(8,8,18,0.7)',
@@ -153,7 +153,7 @@ export default function QuantumInput({
                   <div style={{ fontSize: 14, color: '#e2e8f0', fontWeight: 600 }}>
                     {opt.label}
                   </div>
-                  <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
+                  <div style={{ fontSize: 14, color: '#64748b', marginTop: 2 }}>
                     {opt.hint}
                   </div>
                 </li>

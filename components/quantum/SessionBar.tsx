@@ -54,17 +54,17 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
             }}
           />
         )}
-        <span style={{ fontSize: 13, color: '#94a3b8', fontWeight: 600 }}>
+        <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>
           Quantum {active ? '— Live Session' : '— Ready'}
         </span>
       </div>
 
       {/* Timer + cost */}
       <div className="flex items-center gap-4">
-        <span style={{ fontSize: 13, color: '#7777bb', fontFamily: 'monospace' }}>
+        <span style={{ fontSize: 14, color: '#7777bb', fontFamily: 'monospace' }}>
           {fmtTime(elapsed)}
         </span>
-        <span style={{ fontSize: 13, color: '#64748b', fontFamily: 'monospace' }}>
+        <span style={{ fontSize: 14, color: '#64748b', fontFamily: 'monospace' }}>
           ${cost.toFixed(4)}
         </span>
       </div>

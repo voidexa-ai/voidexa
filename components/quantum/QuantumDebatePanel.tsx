@@ -28,14 +28,6 @@ const THINKING_PHRASES: Record<string, string> = {
   gemini: 'Gemini is reviewing positions...',
 }
 
-// Demo debate for offline/fallback mode
-const DEMO_DEBATE: { characterId: string; text: string }[] = [
-  { characterId: 'claude', text: '## Initial analysis\n\nThe optimal approach here requires careful consideration of both **time** and **space** complexity. I suggest we evaluate the trade-offs systematically.' },
-  { characterId: 'gpt', text: 'Agreed on the systematic approach. However, I\'d prioritize **runtime performance** — in production, `O(n log n)` with good constant factors beats `O(n)` with heavy overhead.' },
-  { characterId: 'perplexity', text: 'According to recent benchmarks from 2024, the gap between theoretical complexity and real-world performance varies by up to 3x depending on cache behavior. *Sources: ACM SIGPLAN, IEEE transactions.*' },
-  { characterId: 'gemini', text: 'Your benchmarks are helpful, but the question assumes a specific workload pattern. Without profiling the actual use case, we\'re optimizing in the dark. **Show me the flamegraph.**' },
-]
-
 interface CostSummary {
   cost: number
   tokens: number
@@ -72,7 +64,7 @@ export default function QuantumDebatePanel() {
   const [thinkingIds, setThinkingIds] = useState<string[]>([])
   const [sessionActive, setSessionActive] = useState(false)
   const [startTime, setStartTime] = useState<number | null>(null)
-  const [offline, setOffline] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [costSummary, setCostSummary] = useState<CostSummary | null>(null)
   const [currentMode, setCurrentMode] = useState<QuantumMode>('standard')
@@ -124,76 +116,31 @@ export default function QuantumDebatePanel() {
     scrollToBottom()
   }, [messages, scrollToBottom])
 
-  const runDemoDebate = useCallback((q: string) => {
-    setQuestion(q)
-    setSessionActive(true)
-    setStartTime(Date.now())
-    setThinkingIds(CHARACTERS.map(c => c.id))
-    setMessages([])
-    setConsensus(0)
-    setOffline(false)
-    startTimer()
-
-    let msgIdx = 0
-    const addNextMessage = () => {
-      if (msgIdx >= DEMO_DEBATE.length) {
-        setThinkingIds([])
-        setActiveCharId(null)
-        stopTimer()
-        return
-      }
-      const demo = DEMO_DEBATE[msgIdx]
-      const charId = demo.characterId
-      setThinkingIds(prev => prev.filter(id => id !== charId))
-      setActiveCharId(charId)
-
-      const msg: LiveMessage = {
-        id: `demo-${msgIdx}`,
-        characterId: charId,
-        text: demo.text,
-        timestamp: Date.now(),
-        streaming: true,
-        round: 1,
-      }
-      setMessages(prev => [...prev, msg])
-      setConsensus(prev => Math.min(100, prev + 12 + Math.random() * 8))
-
-      msgIdx++
-      // Wait for streaming to finish (~18ms per char + buffer)
-      const streamDuration = demo.text.length * 18 + 500
-      setTimeout(() => {
-        setMessages(prev =>
-          prev.map(m => m.id === msg.id ? { ...m, streaming: false } : m)
-        )
-        setTimeout(addNextMessage, 400)
-      }, streamDuration)
-    }
-
-    // Start first message after thinking delay
-    setTimeout(addNextMessage, 1500)
-  }, [startTimer, stopTimer])
-
   const handleSubmit = useCallback(async (q: string, mode: QuantumMode) => {
     setLoading(true)
     setQuestion(q)
     setMessages([])
     setConsensus(0)
     setCostSummary(null)
+    setErrorMessage(null)
     setSessionActive(true)
     setStartTime(Date.now())
     setThinkingIds(CHARACTERS.map(c => c.id))
     setCurrentMode(mode)
     startTimer()
 
+    // Scroll chat area to top so the question card is visible.
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+
     try {
       // Quantum chat runs as guest — no Supabase auth required.
       // The Quantum API accepts unauthenticated requests in guest mode.
       const result = await createQuantumSession(q, null, mode)
       if ('error' in result) {
-        // API offline — run demo mode
-        setOffline(true)
+        setErrorMessage(result.error)
         setLoading(false)
-        runDemoDebate(q)
+        setThinkingIds([])
+        stopTimer()
         return
       }
 
@@ -273,23 +220,24 @@ export default function QuantumDebatePanel() {
               break
             }
             case 'error':
-              setOffline(true)
+              setErrorMessage(event.error ?? 'Engine error')
               stopTimer()
               break
           }
         },
         () => {
-          setOffline(true)
-          runDemoDebate(q)
+          setErrorMessage('Connection to Quantum API lost. Please try again.')
+          stopTimer()
         }
       )
       cancelStreamRef.current = cancel
     } catch {
-      setOffline(true)
+      setErrorMessage('Quantum API is currently unavailable. Please try again later.')
       setLoading(false)
-      runDemoDebate(q)
+      setThinkingIds([])
+      stopTimer()
     }
-  }, [runDemoDebate, startTimer, stopTimer])
+  }, [startTimer, stopTimer])
 
   useEffect(() => {
     return () => {
@@ -369,7 +317,7 @@ export default function QuantumDebatePanel() {
                 <div
                   key={id}
                   className="flex items-center gap-2"
-                  style={{ fontSize: 12 }}
+                  style={{ fontSize: 14 }}
                 >
                   <span
                     className="inline-block rounded-full"
@@ -398,18 +346,18 @@ export default function QuantumDebatePanel() {
 
       {/* ─────────────────── RIGHT PANEL — chat + cost + input ─────────── */}
       <section className="flex-1 flex flex-col min-w-0 min-h-0">
-        {/* Offline banner */}
-        {offline && (
+        {/* Error banner */}
+        {errorMessage && (
           <div
-            className="px-5 py-2 text-center shrink-0"
+            className="px-5 py-3 text-center shrink-0"
             style={{
-              fontSize: 13,
-              color: '#fb923c',
-              background: 'rgba(251,146,60,0.06)',
-              borderBottom: '1px solid rgba(251,146,60,0.15)',
+              fontSize: 14,
+              color: '#ef4444',
+              background: 'rgba(239,68,68,0.06)',
+              borderBottom: '1px solid rgba(239,68,68,0.15)',
             }}
           >
-            Quantum API offline — showing demo debate
+            {errorMessage}
           </div>
         )}
 
@@ -431,7 +379,7 @@ export default function QuantumDebatePanel() {
             >
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 14,
                   color: '#7f77dd',
                   fontWeight: 700,
                   letterSpacing: '0.12em',
@@ -446,7 +394,7 @@ export default function QuantumDebatePanel() {
               {timerRunning && (
                 <p
                   style={{
-                    fontSize: 12,
+                    fontSize: 14,
                     color: '#7f77dd',
                     marginTop: 8,
                     fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
@@ -534,9 +482,9 @@ function RoundSeparator({
       />
       <span
         style={{
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: '0.16em',
-          color: synthesis ? '#a5b4fc' : 'rgba(127,119,221,0.6)',
+          color: synthesis ? '#a5b4fc' : 'rgba(127,119,221,0.7)',
           fontWeight: 700,
           whiteSpace: 'nowrap',
         }}
@@ -612,7 +560,7 @@ function Kcp90InfoPanel({
         />
         <span
           style={{
-            fontSize: 11,
+            fontSize: 14,
             fontWeight: 800,
             letterSpacing: '0.14em',
             color: '#a5b4fc',
@@ -624,7 +572,7 @@ function Kcp90InfoPanel({
 
       <div
         style={{
-          fontSize: 12,
+          fontSize: 14,
           color: '#94a3b8',
           lineHeight: 1.7,
         }}
@@ -712,7 +660,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
     >
       <div
         style={{
-          fontSize: 11,
+          fontSize: 14,
           color: '#4ade80',
           fontWeight: 700,
           letterSpacing: '0.1em',
@@ -733,7 +681,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
       </p>
 
       {/* Lines 2 & 3 — price comparison. */}
-      <div className="flex flex-col gap-1" style={{ fontSize: 13 }}>
+      <div className="flex flex-col gap-1" style={{ fontSize: 14 }}>
         <div>
           <span style={{ color: '#64748b' }}>
             Standard API cost for this debate:{' '}
@@ -753,7 +701,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
       {/* Line 4 — dot-separated meta (providers / tokens / time). */}
       <div
         style={{
-          fontSize: 12,
+          fontSize: 14,
           color: '#64748b',
           marginTop: 10,
           paddingTop: 8,
