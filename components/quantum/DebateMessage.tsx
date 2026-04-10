@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import type { QuantumCharacter } from '@/types/quantum'
 
 interface DebateMessageProps {
@@ -16,6 +17,27 @@ interface ParsedEval {
   improvedAnswer: string | null
   agree: string[]
   disagree: string[]
+}
+
+// Provider role labels — pulled from the static cast metadata in the
+// constellation, kept here so the message card header doesn't need to
+// reach back into QuantumDebatePanel for the role string.
+const PROVIDER_ROLE: Record<string, string> = {
+  claude: 'Chief Architect',
+  gpt: 'Lead Developer',
+  perplexity: 'Fact Checker',
+  gemini: 'Senior Reviewer',
+}
+
+// Convert a 6-digit hex color to "r, g, b" so we can drop it into
+// rgba() expressions for the card background and border tints.
+function hexToRgb(hex: string): string {
+  const m = hex.replace('#', '')
+  if (m.length !== 6) return '127,119,221'
+  const r = parseInt(m.slice(0, 2), 16)
+  const g = parseInt(m.slice(2, 4), 16)
+  const b = parseInt(m.slice(4, 6), 16)
+  return `${r},${g},${b}`
 }
 
 // Progressive extractor for the fast-eval JSON shape the engine emits in
@@ -68,8 +90,6 @@ function parseEvalJson(raw: string): ParsedEval {
           out += c
           i++
         }
-        // Only surface when we've captured at least one character — avoids
-        // flickering an empty string before any content has arrived.
         if (out.length > 0 || closed) {
           improvedAnswer = out
         }
@@ -77,8 +97,6 @@ function parseEvalJson(raw: string): ParsedEval {
     }
   }
 
-  // Agree: list of provider names. Use a non-greedy match so a still-
-  // streaming disagree block doesn't swallow the closing bracket.
   const agree: string[] = []
   const agreeMatch = stripped.match(/"agree"\s*:\s*\[([^\]]*)\]/i)
   if (agreeMatch) {
@@ -89,8 +107,6 @@ function parseEvalJson(raw: string): ParsedEval {
     }
   }
 
-  // Disagree: object with provider-name keys → string reasons. We only
-  // need the keys for the badge list.
   const disagree: string[] = []
   const disagreeKeyMatches = stripped.matchAll(
     /"disagree"\s*:\s*\{([\s\S]*?)(?:\}|$)/gi
@@ -164,9 +180,6 @@ export default function DebateMessage({
   // prose we keep the existing behavior (animate the raw text).
   const displayTarget = isEval ? parsed.improvedAnswer ?? '' : text
 
-  // Character-by-character typewriter. We track visibleLen rather than a
-  // displayed string so new chunks arriving via the text prop don't reset
-  // progress — the cursor keeps advancing forward toward the growing target.
   const [visibleLen, setVisibleLen] = useState<number>(() =>
     streaming ? 0 : displayTarget.length
   )
@@ -191,79 +204,114 @@ export default function DebateMessage({
     Math.min(visibleLen, displayTarget.length)
   )
 
-  // Show "Evaluating..." placeholder while the model has started emitting
-  // eval JSON but improved_answer isn't extractable yet. Without this the
-  // user stares at an empty bubble for a second or two.
   const showEvaluating =
     isEval && parsed.improvedAnswer === null && streaming
   const stillTyping = streaming && visibleLen < displayTarget.length
 
+  const rgb = hexToRgb(character.color)
+  const role = PROVIDER_ROLE[character.id] ?? character.role
+
+  // Card colour tints — subtle backround + slightly stronger border so
+  // each provider gets its own visual lane in the chat without becoming
+  // garish. Numbers match the spec table (0.06 bg / 0.18 border).
+  const cardBg = agreement
+    ? `rgba(${rgb}, 0.10)`
+    : `rgba(${rgb}, 0.06)`
+  const cardBorder = `rgba(${rgb}, 0.22)`
+  const accent = `rgba(${rgb}, 0.55)`
+
   return (
     <div
-      className="flex items-start gap-3 py-2.5 px-3 rounded-lg"
+      className="rounded-xl"
       style={{
-        background: agreement ? 'rgba(74,222,128,0.06)' : 'transparent',
-        borderLeft: `2px solid ${character.color}33`,
+        background: cardBg,
+        border: `1px solid ${cardBorder}`,
+        padding: '14px 18px',
+        marginBottom: 14,
       }}
     >
-      {/* Avatar */}
+      {/* Header — avatar + name + role */}
       <div
-        className="rounded-full overflow-hidden shrink-0"
-        style={{ width: 30, height: 30, border: `1.5px solid ${character.color}66` }}
+        className="flex items-center gap-3"
+        style={{ marginBottom: 10 }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={character.image}
-          alt={character.name}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-      </div>
-      <div className="min-w-0 flex-1">
-        <span className="font-semibold" style={{ fontSize: 14, color: character.color }}>
-          {character.name}
-        </span>
-
-        {/* Badges for agree/disagree — only shown for eval-format messages. */}
-        {isEval && (parsed.agree.length > 0 || parsed.disagree.length > 0) && (
-          <div style={{ marginTop: 4, marginBottom: 2 }}>
-            {parsed.agree.map(name => (
-              <Badge key={`a-${name}`} name={name} kind="agree" />
-            ))}
-            {parsed.disagree.map(name => (
-              <Badge key={`d-${name}`} name={name} kind="disagree" />
-            ))}
-          </div>
-        )}
-
-        <p
-          className="leading-relaxed mt-0.5"
+        <div
+          className="rounded-full overflow-hidden shrink-0"
           style={{
-            fontSize: 15,
-            color: '#cbd5e1',
-            textDecoration: strikethrough ? 'line-through' : 'none',
-            textDecorationColor: strikethrough ? 'rgba(239,68,68,0.5)' : undefined,
+            width: 32,
+            height: 32,
+            border: `1.5px solid ${accent}`,
+            boxShadow: `0 0 0 2px rgba(${rgb}, 0.08)`,
           }}
         >
-          {showEvaluating ? (
-            <span style={{ color: '#64748b', fontStyle: 'italic' }}>
-              Evaluating other responses…
-            </span>
-          ) : (
-            displayed
-          )}
-          {stillTyping && !showEvaluating && (
-            <span
-              className="inline-block ml-0.5"
-              style={{
-                width: 2,
-                height: 14,
-                background: character.color,
-                animation: 'quantum-blink 0.8s ease-in-out infinite',
-                verticalAlign: 'text-bottom',
-              }}
-            />
-          )}
-        </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={character.image}
+            alt={character.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>
+        <div className="flex flex-col leading-tight min-w-0">
+          <span
+            className="font-semibold"
+            style={{ fontSize: 14, color: character.color }}
+          >
+            {character.name}
+          </span>
+          <span style={{ fontSize: 11, color: '#64748b', letterSpacing: '0.04em' }}>
+            {role}
+          </span>
+        </div>
+      </div>
+
+      {/* Badges for agree/disagree — only shown for eval-format messages. */}
+      {isEval && (parsed.agree.length > 0 || parsed.disagree.length > 0) && (
+        <div style={{ marginBottom: 8 }}>
+          {parsed.agree.map(name => (
+            <Badge key={`a-${name}`} name={name} kind="agree" />
+          ))}
+          {parsed.disagree.map(name => (
+            <Badge key={`d-${name}`} name={name} kind="disagree" />
+          ))}
+        </div>
+      )}
+
+      {/* Body — markdown rendered (or evaluating placeholder during early stream). */}
+      <div
+        style={{
+          textDecoration: strikethrough ? 'line-through' : 'none',
+          textDecorationColor: strikethrough ? 'rgba(239,68,68,0.5)' : undefined,
+        }}
+      >
+        {showEvaluating ? (
+          <p
+            style={{
+              color: '#94a3b8',
+              fontStyle: 'italic',
+              fontSize: 15,
+              margin: 0,
+            }}
+          >
+            Evaluating other responses…
+          </p>
+        ) : (
+          <div className="quantum-markdown">
+            <ReactMarkdown>{displayed}</ReactMarkdown>
+            {stillTyping && (
+              <span
+                className="inline-block ml-0.5"
+                style={{
+                  width: 2,
+                  height: 14,
+                  background: character.color,
+                  animation: 'quantum-blink 0.8s ease-in-out infinite',
+                  verticalAlign: 'text-bottom',
+                  marginTop: -4,
+                }}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
