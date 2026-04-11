@@ -496,7 +496,7 @@ export default function QuantumDebatePanel() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-full w-full">
+    <div className="flex flex-col lg:flex-row h-full w-full" style={{ overflow: 'hidden', maxWidth: '100vw' }}>
       {/* ─────────────────── LEFT PANEL — sticky ─────────────────── */}
       <aside
         className="shrink-0 flex flex-col gap-4 px-4 py-5 overflow-y-auto"
@@ -617,7 +617,7 @@ export default function QuantumDebatePanel() {
         <div
           ref={scrollContainerRef}
           className="quantum-chat-area flex-1 overflow-y-auto"
-          style={{ padding: '24px 80px 24px 28px', minHeight: 0 }}
+          style={{ padding: '24px 28px 24px 28px', minHeight: 0 }}
         >
           {/* Question header */}
           {question && (
@@ -731,7 +731,7 @@ export default function QuantumDebatePanel() {
           <div
             className="shrink-0"
             style={{
-              padding: '12px 80px 0 28px',
+              padding: '12px 28px 0 28px',
               borderTop: '1px solid rgba(255,255,255,0.06)',
             }}
           >
@@ -785,7 +785,7 @@ export default function QuantumDebatePanel() {
         {!viewingHistory && (
           <div
             className="shrink-0"
-            style={{ padding: '14px 80px 64px 28px' }}
+            style={{ padding: '14px 28px 64px 28px' }}
           >
             <QuantumInput
               onSubmit={handleSubmit}
@@ -1098,7 +1098,7 @@ function FollowUpInput({
   return (
     <div
       className="shrink-0"
-      style={{ padding: '0 80px 8px 28px' }}
+      style={{ padding: '0 28px 8px 28px' }}
     >
       {followUps.map((fu, i) => (
         <div

@@ -68,6 +68,8 @@ export default function QuantumChatPage() {
         height: `calc(100dvh - ${PAGE_RESERVED_PX}px)`,
         marginTop: PAGE_RESERVED_PX - 16,
         overflow: 'hidden',
+        overflowX: 'hidden',
+        maxWidth: '100vw',
       }}
     >
       <style>{`
