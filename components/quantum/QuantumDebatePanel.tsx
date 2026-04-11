@@ -8,11 +8,16 @@ import type {
   QuantumSSEEvent,
 } from '@/types/quantum'
 import { createQuantumSession, streamQuantumSession, askFollowUp } from '@/lib/quantum/client'
+import { supabase } from '@/lib/supabase'
 import AvatarRing from './AvatarRing'
 import ConsensusMeter from './ConsensusMeter'
 import DebateMessage from './DebateMessage'
 import QuantumInput from './QuantumInput'
 import SessionBar from './SessionBar'
+import WalletBar from './WalletBar'
+import ChatHistorySidebar, { type SavedSession } from './ChatHistorySidebar'
+
+const EXEMPT_EMAILS = ['ceo@voidexa.com', 'tom@voidexa.com']
 
 const CHARACTERS: QuantumCharacter[] = [
   { id: 'claude', name: 'Claude', role: 'Chief Architect', tagline: 'Overthinks everything. Usually right.', image: '/images/cast/claude.jpg', color: '#7f77dd', glow: 'rgba(127,119,221,0.35)' },
@@ -34,26 +39,31 @@ interface CostSummary {
   providers: string[]
   rounds: number
   mode: string
-  /** Wall-clock duration from Ask-Quantum click to session_complete. */
   elapsedMs: number
 }
 
-// Local message shape — extends the public QuantumMessage with the
-// streaming flag and the round number from the SSE event.
 type LiveMessage = QuantumMessage & {
   streaming?: boolean
   round?: number
 }
 
-// Total providers shown in the avatar ring — used as the "/4" denominator
-// in the cost strip's providers line.
 const TOTAL_PROVIDERS = 4
 
-// Default rounds per UX mode — keeps the round-separator label logic
-// honest about which round is the final "synthesis" round.
 const MODE_ROUND_COUNT: Record<QuantumMode, number> = {
   standard: 2,
   deep: 3,
+}
+
+// Customer pricing — matches CostSummaryStrip and SessionBar
+const CUSTOMER_MULTIPLIER: Record<string, { markup: number; min: number }> = {
+  standard: { markup: 2.5, min: 0.05 },
+  deep: { markup: 3.5, min: 0.25 },
+}
+
+function customerPrice(apiCost: number, mode: string): number {
+  const modeKey = mode === 'deep' || mode === 'verbose' ? 'deep' : 'standard'
+  const pricing = CUSTOMER_MULTIPLIER[modeKey]
+  return Math.max(pricing.min, apiCost * pricing.markup)
 }
 
 export default function QuantumDebatePanel() {
@@ -68,9 +78,6 @@ export default function QuantumDebatePanel() {
   const [loading, setLoading] = useState(false)
   const [costSummary, setCostSummary] = useState<CostSummary | null>(null)
   const [currentMode, setCurrentMode] = useState<QuantumMode>('standard')
-  // Live wall-clock timer ticked at 100 ms while a session is in flight.
-  // Snapshotted into costSummary.elapsedMs on session_complete and then
-  // hidden from the live readout so the summary owns the final figure.
   const [elapsedMs, setElapsedMs] = useState(0)
   const [timerRunning, setTimerRunning] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -78,11 +85,29 @@ export default function QuantumDebatePanel() {
   const [followUpLoading, setFollowUpLoading] = useState(false)
   const [synthesis, setSynthesis] = useState<string | null>(null)
   const [debateExpanded, setDebateExpanded] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [dbSessionId, setDbSessionId] = useState<string | null>(null)
+  // Viewing a historical session (read-only)
+  const [viewingHistory, setViewingHistory] = useState(false)
+  // Wallet insufficient modal trigger
+  const [showTopUpPrompt, setShowTopUpPrompt] = useState(false)
+
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const timerStartRef = useRef<number>(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const cancelStreamRef = useRef<(() => void) | null>(null)
+  // Accumulate messages for DB save
+  const accumulatedMessagesRef = useRef<LiveMessage[]>([])
+
+  const isExempt = EXEMPT_EMAILS.includes(userEmail ?? '')
+
+  // Get user email on mount
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUserEmail(data.user?.email ?? null)
+    })
+  }, [])
 
   const stopTimer = useCallback((): number => {
     if (timerIntervalRef.current) {
@@ -105,8 +130,6 @@ export default function QuantumDebatePanel() {
     }, 100)
   }, [])
 
-  // Only auto-scroll if the user is already near the bottom (within 100px).
-  // If they've scrolled up to re-read previous responses, we don't force-jump.
   const scrollToBottom = useCallback(() => {
     const container = scrollContainerRef.current
     if (!container) return
@@ -121,7 +144,96 @@ export default function QuantumDebatePanel() {
     scrollToBottom()
   }, [messages, scrollToBottom])
 
+  // ─── Save session to Supabase on start ────────────────────────────
+  const createDbSession = useCallback(async (q: string, mode: QuantumMode) => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return null
+
+    const { data } = await supabase
+      .from('quantum_sessions')
+      .insert({
+        user_id: user.id,
+        question: q,
+        mode,
+        status: 'active',
+      })
+      .select('id')
+      .single()
+
+    return data?.id ?? null
+  }, [])
+
+  // ─── Update session in Supabase on complete ──────────────────────
+  const completeDbSession = useCallback(async (
+    dbId: string,
+    synthText: string | null,
+    msgs: LiveMessage[],
+    cost: CostSummary
+  ) => {
+    const cp = customerPrice(cost.cost, cost.mode)
+    await supabase
+      .from('quantum_sessions')
+      .update({
+        status: 'complete',
+        synthesis: synthText,
+        messages: msgs.map(m => ({
+          id: m.id,
+          characterId: m.characterId,
+          text: m.text,
+          timestamp: m.timestamp,
+          round: m.round,
+        })),
+        cost_usd: cost.cost,
+        customer_price_usd: cp,
+        tokens_used: cost.tokens,
+        providers_used: cost.providers,
+        duration_seconds: cost.elapsedMs / 1000,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', dbId)
+  }, [])
+
+  // ─── Wallet deduction ─────────────────────────────────────────────
+  const deductWallet = useCallback(async (amount: number, quantumSessionId: string | null) => {
+    if (isExempt) return
+    try {
+      await fetch('/api/wallet/deduct', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount_usd: amount,
+          quantum_session_id: quantumSessionId,
+          description: 'Quantum session',
+        }),
+      })
+    } catch { /* silent — session already ran */ }
+  }, [isExempt])
+
+  // ─── Pre-session wallet check ─────────────────────────────────────
+  const checkBalance = useCallback(async (mode: QuantumMode): Promise<boolean> => {
+    if (isExempt) return true
+    try {
+      const res = await fetch('/api/wallet')
+      if (!res.ok) return true // fail open
+      const data = await res.json()
+      const balance = parseFloat(data.balance_usd ?? '0')
+      const minCost = mode === 'deep' ? 0.25 : 0.05
+      if (balance < minCost) {
+        setShowTopUpPrompt(true)
+        setErrorMessage(`Insufficient balance ($${balance.toFixed(2)}). ${mode === 'deep' ? 'Deep' : 'Standard'} mode costs at least $${minCost.toFixed(2)}.`)
+        return false
+      }
+      return true
+    } catch {
+      return true // fail open
+    }
+  }, [isExempt])
+
   const handleSubmit = useCallback(async (q: string, mode: QuantumMode) => {
+    // Balance check
+    const hasBalance = await checkBalance(mode)
+    if (!hasBalance) return
+
     setLoading(true)
     setQuestion(q)
     setMessages([])
@@ -132,18 +244,23 @@ export default function QuantumDebatePanel() {
     setDebateExpanded(false)
     setSessionActive(true)
     setSessionId(null)
+    setDbSessionId(null)
     setFollowUps([])
     setStartTime(Date.now())
     setThinkingIds(CHARACTERS.map(c => c.id))
     setCurrentMode(mode)
+    setViewingHistory(false)
+    setShowTopUpPrompt(false)
+    accumulatedMessagesRef.current = []
     startTimer()
 
-    // Scroll chat area to top so the question card is visible.
     scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
 
+    // Create DB session
+    const newDbId = await createDbSession(q, mode)
+    if (newDbId) setDbSessionId(newDbId)
+
     try {
-      // Quantum chat runs as guest — no Supabase auth required.
-      // The Quantum API accepts unauthenticated requests in guest mode.
       const result = await createQuantumSession(q, null, mode)
       if ('error' in result) {
         setErrorMessage(result.error)
@@ -173,24 +290,28 @@ export default function QuantumDebatePanel() {
                   const existing = prev.find(
                     m => m.characterId === event.characterId && m.streaming
                   )
+                  let updated: LiveMessage[]
                   if (existing) {
-                    return prev.map(m =>
+                    updated = prev.map(m =>
                       m.id === existing.id
                         ? { ...m, text: m.text + event.token }
                         : m
                     )
+                  } else {
+                    updated = [
+                      ...prev,
+                      {
+                        id: `msg-${Date.now()}-${event.characterId}-r${round}`,
+                        characterId: event.characterId!,
+                        text: event.token!,
+                        timestamp: Date.now(),
+                        streaming: true,
+                        round,
+                      },
+                    ]
                   }
-                  return [
-                    ...prev,
-                    {
-                      id: `msg-${Date.now()}-${event.characterId}-r${round}`,
-                      characterId: event.characterId!,
-                      text: event.token!,
-                      timestamp: Date.now(),
-                      streaming: true,
-                      round,
-                    },
-                  ]
+                  accumulatedMessagesRef.current = updated
+                  return updated
                 })
                 setThinkingIds(prev =>
                   prev.filter(id => id !== event.characterId)
@@ -200,13 +321,15 @@ export default function QuantumDebatePanel() {
               break
             case 'message_complete':
               if (event.characterId) {
-                setMessages(prev =>
-                  prev.map(m =>
+                setMessages(prev => {
+                  const updated = prev.map(m =>
                     m.characterId === event.characterId && m.streaming
                       ? { ...m, streaming: false }
                       : m
                   )
-                )
+                  accumulatedMessagesRef.current = updated
+                  return updated
+                })
               }
               break
             case 'consensus_update':
@@ -224,18 +347,27 @@ export default function QuantumDebatePanel() {
               setActiveCharId(null)
               setSessionActive(false)
               const finalMs = stopTimer()
+              let completedCost: CostSummary | null = null
               if (typeof event.cost === 'number') {
-                setCostSummary({
+                completedCost = {
                   cost: event.cost,
                   tokens: event.tokens ?? 0,
                   providers: event.providers_used ?? [],
                   rounds: event.rounds ?? 0,
                   mode: event.mode ?? mode,
                   elapsedMs: finalMs,
-                })
+                }
+                setCostSummary(completedCost)
               }
-              if (event.synthesis) {
-                setSynthesis(event.synthesis)
+              const synthText = event.synthesis ?? null
+              if (synthText) {
+                setSynthesis(synthText)
+              }
+              // Save to DB + deduct wallet
+              if (newDbId && completedCost) {
+                completeDbSession(newDbId, synthText, accumulatedMessagesRef.current, completedCost)
+                const cp = customerPrice(completedCost.cost, completedCost.mode)
+                deductWallet(cp, newDbId)
               }
               break
             }
@@ -260,7 +392,7 @@ export default function QuantumDebatePanel() {
       setSessionActive(false)
       stopTimer()
     }
-  }, [startTimer, stopTimer])
+  }, [startTimer, stopTimer, checkBalance, createDbSession, completeDbSession, deductWallet])
 
   useEffect(() => {
     return () => {
@@ -274,9 +406,64 @@ export default function QuantumDebatePanel() {
 
   const getCharacter = (id: string) => CHARACTERS.find(c => c.id === id)!
 
-  // Build the chat-area children with round separators interleaved
-  // between message groups. The final round is labelled SYNTHESIS so
-  // the user knows the debate is converging on its consolidated answer.
+  // ─── Load historical session ──────────────────────────────────────
+  const handleSelectSession = useCallback((session: SavedSession) => {
+    cancelStreamRef.current?.()
+    setViewingHistory(true)
+    setQuestion(session.question)
+    setCurrentMode(session.mode as QuantumMode)
+    setSynthesis(session.synthesis)
+    setMessages(
+      (session.messages as LiveMessage[]).map(m => ({ ...m, streaming: false }))
+    )
+    setConsensus(0)
+    setActiveCharId(null)
+    setThinkingIds([])
+    setSessionActive(false)
+    setLoading(false)
+    setErrorMessage(null)
+    setFollowUps([])
+    setDbSessionId(session.id)
+    setSessionId(null)
+    setStartTime(null)
+    setCostSummary(
+      session.cost_usd != null
+        ? {
+            cost: parseFloat(String(session.cost_usd)),
+            tokens: session.tokens_used ?? 0,
+            providers: session.providers_used ?? [],
+            rounds: 0,
+            mode: session.mode,
+            elapsedMs: (session.duration_seconds ?? 0) * 1000,
+          }
+        : null
+    )
+    setDebateExpanded(false)
+    stopTimer()
+  }, [stopTimer])
+
+  const handleNewDebate = useCallback(() => {
+    cancelStreamRef.current?.()
+    setViewingHistory(false)
+    setQuestion(null)
+    setMessages([])
+    setConsensus(0)
+    setCostSummary(null)
+    setErrorMessage(null)
+    setSynthesis(null)
+    setDebateExpanded(false)
+    setSessionActive(false)
+    setSessionId(null)
+    setDbSessionId(null)
+    setFollowUps([])
+    setStartTime(null)
+    setLoading(false)
+    setThinkingIds([])
+    setActiveCharId(null)
+    setShowTopUpPrompt(false)
+    stopTimer()
+  }, [stopTimer])
+
   const totalRounds = costSummary?.rounds ?? MODE_ROUND_COUNT[currentMode]
   const renderChatBody = (): React.ReactNode[] => {
     const out: React.ReactNode[] = []
@@ -312,14 +499,15 @@ export default function QuantumDebatePanel() {
     <div className="flex flex-col lg:flex-row h-full w-full">
       {/* ─────────────────── LEFT PANEL — sticky ─────────────────── */}
       <aside
-        className="shrink-0 flex flex-col gap-5 px-5 py-6 overflow-y-auto"
+        className="shrink-0 flex flex-col gap-4 px-4 py-5 overflow-y-auto"
         style={{
-          width: '300px',
+          width: '280px',
           maxWidth: '100%',
           borderRight: '1px solid rgba(255,255,255,0.06)',
           background: 'rgba(8,8,18,0.4)',
         }}
       >
+        <WalletBar exempt={isExempt} />
         <SessionBar active={sessionActive} startTime={startTime} finalCost={costSummary?.cost ?? null} mode={currentMode} />
 
         <div className="flex flex-col items-center gap-4">
@@ -360,11 +548,32 @@ export default function QuantumDebatePanel() {
           </div>
         )}
 
-        {/* KCP-90 stats panel */}
         <Kcp90InfoPanel
           mode={currentMode}
           tokens={costSummary?.tokens ?? null}
         />
+
+        {/* Chat history */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            paddingTop: 12,
+            marginTop: 4,
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div style={{ fontSize: 14, color: '#64748b', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 8 }}>
+            HISTORY
+          </div>
+          <ChatHistorySidebar
+            activeSessionId={dbSessionId}
+            onSelectSession={handleSelectSession}
+            onNewDebate={handleNewDebate}
+          />
+        </div>
       </aside>
 
       {/* ─────────────────── RIGHT PANEL — chat + cost + input ─────────── */}
@@ -381,10 +590,30 @@ export default function QuantumDebatePanel() {
             }}
           >
             {errorMessage}
+            {showTopUpPrompt && (
+              <button
+                onClick={() => {
+                  setErrorMessage(null)
+                  setShowTopUpPrompt(false)
+                  // Scroll to wallet bar top-up
+                  document.querySelector('[data-wallet-topup]')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+                className="ml-3 rounded px-3 py-1"
+                style={{
+                  fontSize: 14,
+                  color: '#fff',
+                  background: 'rgba(127,119,221,0.5)',
+                  border: '1px solid rgba(127,119,221,0.3)',
+                  cursor: 'pointer',
+                }}
+              >
+                Top Up Now
+              </button>
+            )}
           </div>
         )}
 
-        {/* Chat area — independently scrolling. */}
+        {/* Chat area */}
         <div
           ref={scrollContainerRef}
           className="quantum-chat-area flex-1 overflow-y-auto"
@@ -409,7 +638,7 @@ export default function QuantumDebatePanel() {
                   marginBottom: 4,
                 }}
               >
-                QUESTION
+                {viewingHistory ? 'PREVIOUS QUESTION' : 'QUESTION'}
               </div>
               <p style={{ fontSize: 16, color: '#e8e8f0', lineHeight: 1.55 }}>
                 {question}
@@ -431,7 +660,7 @@ export default function QuantumDebatePanel() {
             </div>
           )}
 
-          {/* Empty state — welcome text only (character ring is in the sidebar) */}
+          {/* Empty state */}
           {!question && messages.length === 0 && (
             <div className="flex flex-col items-center justify-center text-center h-full px-4">
               <p style={{ fontSize: 24, color: '#e2e8f0', fontWeight: 600, marginBottom: 12 }}>
@@ -443,7 +672,7 @@ export default function QuantumDebatePanel() {
             </div>
           )}
 
-          {/* Synthesis — shown prominently when available */}
+          {/* Synthesis */}
           {synthesis && (
             <div
               className="rounded-xl mb-4"
@@ -497,7 +726,7 @@ export default function QuantumDebatePanel() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Cost strip — pinned bottom of right panel */}
+        {/* Cost strip */}
         {costSummary && (
           <div
             className="shrink-0"
@@ -510,8 +739,8 @@ export default function QuantumDebatePanel() {
           </div>
         )}
 
-        {/* Follow-up input — shown after session completes */}
-        {costSummary && sessionId && followUps.length < 5 && (
+        {/* Follow-up input — only for live sessions, not history */}
+        {costSummary && sessionId && !viewingHistory && followUps.length < 5 && (
           <FollowUpInput
             sessionId={sessionId}
             followUps={followUps}
@@ -530,17 +759,41 @@ export default function QuantumDebatePanel() {
           />
         )}
 
-        {/* Input — pinned above floating UI (Jarvis icon, Menu button) */}
-        <div
-          className="shrink-0"
-          style={{ padding: '14px 80px 64px 28px' }}
-        >
-          <QuantumInput
-            onSubmit={handleSubmit}
-            disabled={thinkingIds.length > 0 && messages.length > 0}
-            loading={loading}
-          />
-        </div>
+        {/* Historical session info */}
+        {viewingHistory && costSummary && (
+          <div className="shrink-0 flex items-center justify-center gap-4 py-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <span style={{ fontSize: 14, color: '#64748b' }}>
+              Viewing saved session
+            </span>
+            <button
+              onClick={handleNewDebate}
+              className="rounded-lg px-4 py-2 font-semibold"
+              style={{
+                fontSize: 14,
+                color: '#fff',
+                background: 'rgba(127,119,221,0.5)',
+                border: '1px solid rgba(127,119,221,0.3)',
+                cursor: 'pointer',
+              }}
+            >
+              New Debate
+            </button>
+          </div>
+        )}
+
+        {/* Input — hidden when viewing history */}
+        {!viewingHistory && (
+          <div
+            className="shrink-0"
+            style={{ padding: '14px 80px 64px 28px' }}
+          >
+            <QuantumInput
+              onSubmit={handleSubmit}
+              disabled={thinkingIds.length > 0 && messages.length > 0}
+              loading={loading}
+            />
+          </div>
+        )}
       </section>
     </div>
   )
@@ -607,10 +860,7 @@ interface KcpProfile {
 }
 
 const KCP_PROFILES: Record<QuantumMode, KcpProfile> = {
-  // Standard mode disables Layer 1 (BERT) for fast web sessions, so the
-  // realistic compression ratio is L0+L2 only.
   standard: { label: 'KCP-90 LITE', ratio: 2.5, layers: 'L0 · L2' },
-  // Deep mode runs the full L0+L1+L2 stack — slower but stronger compression.
   deep: { label: 'KCP-90 FULL', ratio: 3.5, layers: 'L0 · L1 · L2' },
 }
 
@@ -622,10 +872,6 @@ function Kcp90InfoPanel({
   tokens: number | null
 }) {
   const profile = KCP_PROFILES[mode]
-  // Estimate tokens saved using the typical ratio for the mode. We
-  // can't know the true compressed-vs-original count without backend
-  // help, so we present an estimate plainly so users understand the
-  // headline number.
   const tokensSaved =
     tokens && tokens > 0
       ? Math.round(tokens * (profile.ratio - 1))
@@ -697,16 +943,8 @@ function Kcp90InfoPanel({
 // Cost strip
 // ─────────────────────────────────────────────────────────────────────
 
-// ── Customer pricing config ──────────────────────────────────────────
-// Customer pays a markup over the raw API cost. Market price represents
-// what it would cost to run 4 separate AI APIs without Quantum.
-const CUSTOMER_MULTIPLIER: Record<string, { markup: number; min: number }> = {
-  standard: { markup: 2.5, min: 0.05 },
-  deep: { markup: 3.5, min: 0.25 },
-}
-const MARKET_MULTIPLIER = 10  // 10× raw cost = "4 separate APIs" baseline
+const MARKET_MULTIPLIER = 10
 
-// Pretty label for each mode as shown in the summary headline.
 const MODE_LABEL: Record<string, string> = {
   standard: 'Standard',
   deep: 'Deep',
@@ -731,15 +969,15 @@ function formatDuration(ms: number): string {
 }
 
 function CostSummaryStrip({ summary }: { summary: CostSummary }) {
-  const apiCost = summary.cost  // raw API cost from backend
+  const apiCost = summary.cost
   const modeName = modeLabel(summary.mode)
   const modeKey = summary.mode === 'deep' || summary.mode === 'verbose' ? 'deep' : 'standard'
   const pricing = CUSTOMER_MULTIPLIER[modeKey]
 
-  const customerPrice = Math.max(pricing.min, apiCost * pricing.markup)
+  const cp = Math.max(pricing.min, apiCost * pricing.markup)
   const marketPrice = apiCost * MARKET_MULTIPLIER
   const savingsPct = marketPrice > 0
-    ? Math.round(((marketPrice - customerPrice) / marketPrice) * 100)
+    ? Math.round(((marketPrice - cp) / marketPrice) * 100)
     : 0
 
   const providerCount = summary.providers.length
@@ -772,7 +1010,6 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         SESSION SUMMARY
       </div>
 
-      {/* Line 1 — narrative headline. */}
       <p style={{ fontSize: 14, color: '#e2e8f0', marginBottom: 8 }}>
         A <span style={{ fontWeight: 700, color: '#a5b4fc' }}>{modeName}</span>{' '}
         Quantum debate with{' '}
@@ -782,7 +1019,6 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         {rounds === 1 ? 'round' : 'rounds'}
       </p>
 
-      {/* Lines 2 & 3 — price comparison (customer-facing). */}
       <div className="flex flex-col gap-1" style={{ fontSize: 14 }}>
         <div>
           <span style={{ color: '#64748b' }}>
@@ -795,7 +1031,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         <div>
           <span style={{ color: '#64748b' }}>Your Quantum price: </span>
           <span style={{ color: '#4ade80', fontWeight: 700, fontSize: 15 }}>
-            {formatCost(customerPrice)}
+            {formatCost(cp)}
           </span>
         </div>
         <div style={{ marginTop: 4 }}>
@@ -805,7 +1041,6 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         </div>
       </div>
 
-      {/* Line 4 — dot-separated meta. */}
       <div
         className="flex flex-wrap gap-y-1"
         style={{
@@ -865,7 +1100,6 @@ function FollowUpInput({
       className="shrink-0"
       style={{ padding: '0 80px 8px 28px' }}
     >
-      {/* Previous follow-ups */}
       {followUps.map((fu, i) => (
         <div
           key={i}
@@ -883,7 +1117,6 @@ function FollowUpInput({
         </div>
       ))}
 
-      {/* Input */}
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <input
           type="text"

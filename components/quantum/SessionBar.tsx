@@ -57,14 +57,16 @@ export default function SessionBar({ active, startTime, finalCost, mode = 'stand
 
   const hasRun = startTime !== null
 
+  const statusLabel = active ? 'Live Session' : hasRun ? 'Session Complete' : 'Ready'
+
   return (
     <div
-      className="flex items-center justify-between gap-3 px-4 py-2 rounded-lg"
+      className="flex items-center gap-3 px-4 py-2.5 rounded-lg"
       style={{
         background: 'rgba(8,8,18,0.8)',
         border: '1px solid rgba(119,119,187,0.2)',
         backdropFilter: 'blur(12px)',
-        minWidth: 200,
+        minWidth: 240,
       }}
     >
       {/* Mac dots */}
@@ -74,36 +76,37 @@ export default function SessionBar({ active, startTime, finalCost, mode = 'stand
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
       </div>
 
-      {/* Status */}
-      <div className="flex items-center gap-2 min-w-0">
-        {active && (
-          <span
-            className="inline-block rounded-full shrink-0"
-            style={{
-              width: 6,
-              height: 6,
-              background: '#4ade80',
-              boxShadow: '0 0 8px #4ade80',
-              animation: 'quantum-pulse 2s ease-in-out infinite',
-            }}
-          />
-        )}
-        <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600, whiteSpace: 'nowrap' }}>
-          {active ? 'Live Session' : hasRun ? 'Session Complete' : 'Ready'}
-        </span>
-      </div>
-
-      {/* Timer + cost — stacked vertically */}
-      {hasRun && (
-        <div className="flex flex-col items-end shrink-0" style={{ minWidth: 70, lineHeight: 1.3 }}>
-          <span style={{ fontSize: 14, color: '#7777bb', fontFamily: 'monospace' }}>
-            {fmtTime(displayElapsed)}
-          </span>
-          <span style={{ fontSize: 14, color: '#64748b', fontFamily: 'monospace' }}>
-            ${displayCost.toFixed(4)}
+      {/* Status + timer + cost — stacked vertically to prevent overlap */}
+      <div className="flex flex-col items-center flex-1" style={{ lineHeight: 1.4 }}>
+        <div className="flex items-center gap-2">
+          {active && (
+            <span
+              className="inline-block rounded-full shrink-0"
+              style={{
+                width: 6,
+                height: 6,
+                background: '#4ade80',
+                boxShadow: '0 0 8px #4ade80',
+                animation: 'quantum-pulse 2s ease-in-out infinite',
+              }}
+            />
+          )}
+          <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600, whiteSpace: 'nowrap' }}>
+            {statusLabel}
           </span>
         </div>
-      )}
+
+        {hasRun && (
+          <>
+            <span style={{ fontSize: 14, color: '#7777bb', fontFamily: 'monospace', marginTop: 2 }}>
+              {fmtTime(displayElapsed)}
+            </span>
+            <span style={{ fontSize: 14, color: '#64748b', fontFamily: 'monospace' }}>
+              ${displayCost.toFixed(4)}
+            </span>
+          </>
+        )}
+      </div>
     </div>
   )
 }
