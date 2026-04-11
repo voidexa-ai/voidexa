@@ -16,42 +16,57 @@
 - Font regler: body 16px min, labels 14px min, opacity 0.5 min
 - Ved AFSLUTNING af HVER session: opdater denne CLAUDE.md med hvad der blev bygget/ændret
 
-# CLAUDE.md — Quantum UI Polish
+## Session 2026-04-11: Quantum UI Fixes (11 fixes)
+### Frontend (voidexa)
+- SessionBar: shows backend final cost on session_complete, min-width 200px, no text overlap
+- CostSummaryStrip: customer pricing (2.5x standard / 3.5x deep, min $0.05/$0.25), market price = 10x (strikethrough), savings %
+- Follow-up label: "+$0.005 per follow-up" (was "~$0.005")
+- QuantumSSEEvent: added kcp_savings field
+- Auth guard: /quantum/chat requires Supabase login, shows sign-in prompt for anonymous users
 
-## What This Is
-Fix 4 specific UI/UX issues in Quantum chat. Read SKILL.md for detailed descriptions.
+### Backend (quantum, webui branch)
+- Fix session DB bug: event type "complete" → "session_complete" in sessions.py — sessions now save to DB
+- KCP-90 savings: kcp_savings included in session_complete SSE event
+- Language matching: ALL provider system prompts now include "Always respond in the same language as the user's question"
+- Admin stats: GET /api/sessions/admin/stats returns total sessions, tokens, cost, per-user breakdowns
 
-## Two Repos
-1. C:\Users\Jixwu\Desktop\voidexa (frontend — Next.js)
-2. C:\Users\Jixwu\Projects\quantum (backend — FastAPI)
+### Manual step needed
+- Fix 11: Add TESTER_EMAILS=tom@voidexa.com in Railway dashboard env variables
 
-## GitNexus
-Quantum repo is indexed. MUST run gitnexus_impact before editing any symbol. MUST run gitnexus_detect_changes before committing.
+## Session 2026-04-11 (2): Debate Engine + Pricing Overhaul (10 fixes)
+### Backend (quantum, webui branch)
+- Question classifier: quantum/classifier.py — keyword-based A/B/C (factual/analytical/creative)
+- Role-based debate: factual → Perplexity+Gemini first; creative → Claude+GPT first; analytical → all
+- Self-eval exclusion: round 2/3 prompts exclude each provider's own response
+- Anti-filler prompts: no greetings, no self-praise, every sentence must add value
+- Compiled synthesis: after final round, Claude compiles all positions into one answer ({"type":"synthesis"})
+- KCP-90 round context fix: compressed text no longer fed to AIs (plain text only, KCP for metrics)
 
-## The 4 Fixes (in priority order)
+### Frontend (voidexa)
+- SessionBar: shows CUSTOMER price (not API cost) — live ticker uses 2.5x/3.5x multiplier
+- Savings label: "You saved ~XX% vs market price" (removed KCP-90 branding from customer-facing text)
+- Synthesis display: "Quantum Consensus" card shown above debate, individual messages in collapsible section
+- Follow-up: "+$0.005 per follow-up question"
 
-### Fix 1: Scroll — only auto-scroll if user is near bottom
-File: voidexa/components/quantum/QuantumDebatePanel.tsx
-Change scrollToBottom to check if user is within 100px of bottom before scrolling.
+## Session 2026-04-11 (3): Wallet System + Chat History + Session Bar Fix
+### Supabase (ihuljnekxkyqgroklurp)
+- Migration: user_wallets, wallet_transactions, quantum_sessions tables with RLS
+- Admin RLS policies for ceo@voidexa.com
+- Indexes on user_id and created_at
 
-### Fix 2: Streaming text — character by character typewriter effect  
-File: voidexa/components/quantum/DebateMessage.tsx
-Ensure the streaming prop renders text progressively. If tokens arrive as 20-char chunks, animate each chunk appearing with CSS transition or requestAnimationFrame.
+### Frontend (voidexa)
+- lib/supabase-admin.ts: service-role client for server-side API routes
+- Wallet API: GET /api/wallet (balance), POST /api/wallet/topup (Stripe Checkout), POST /api/wallet/deduct, POST /api/wallet/webhook
+- WalletBar component: balance display + $5/$10/$25/$50 top-up modal via Stripe
+- Pre-session balance check: blocks session if insufficient, shows "Top Up Now" prompt
+- Admin/tester exemption: ceo@voidexa.com and tom@voidexa.com skip wallet checks
+- Auto-deduct customer price from wallet on session_complete
+- Chat history: sessions saved to quantum_sessions on start, updated on complete (messages, synthesis, cost, tokens, providers, duration)
+- ChatHistorySidebar: left sidebar with session list, click to load old session (read-only), "New Debate" button
+- SessionBar fix: status/timer/price now stacked vertically (no text overlap), min-width 240px
+- Admin stats: GET /api/admin/stats — wallet totals, sessions, profit, top users, recent sessions
 
-### Fix 3: KCP-90 preload — disable Layer 1 for web sessions
-File: quantum/.env — add KCP90_LAYER1_TIMEOUT=0 or KCP90_DISABLE_LAYER1=true
-This prevents BERT model loading during chat sessions.
-
-### Fix 4: AI debate references — round 2 context
-File: quantum/engine.py — check _run_round() for round 2+ context passing.
-AIs should see previous round responses and reference them. This may already work but frontend only shows round 1.
-File: quantum/quantum_api/services/engine_bridge.py — check if all rounds are yielded or just round 1.
-
-## Critical Rules
-1. Read SKILL.md FIRST
-2. Git backup BEFORE changes in both repos
-3. Use GitNexus for impact analysis
-4. Test with both servers running
-5. npm run build must pass
-6. Git commit both repos
-7. Do NOT deploy to vercel — we will review first
+### Manual steps needed
+- Add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET to Vercel env variables
+- Create Stripe webhook pointing to https://voidexa.com/api/wallet/webhook (event: checkout.session.completed)
+- Optionally add STRIPE_WALLET_WEBHOOK_SECRET if using a separate webhook from the subscription one
