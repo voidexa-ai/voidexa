@@ -1,3 +1,21 @@
+## PRODUCTION — QUANTUM ER LIVE
+- Backend: https://quantum-production-dd9d.up.railway.app
+- Frontend: https://voidexa.com/quantum/chat (Vercel)
+- ALDRIG test på localhost. ALDRIG foreslå dev server. Alt er production.
+- Deploy backend: git push (Railway auto-deployer)
+- Deploy frontend: cd C:\Users\Jixwu\Desktop\voidexa && npx vercel --prod
+- Port 8080. httpx<0.28. Guest sessions tilladt.
+- Ejer: Jix (IKKE Jimmi/Jimmy). Virksomhed: voidexa, CVR 46343387.
+
+## WORKFLOW REGLER
+- ALDRIG start building før Jix bekræfter planen
+- ALDRIG troubleshoot manuelt — fix selv
+- ALDRIG foreslå pauser eller at stoppe
+- Én kommando = én build. Byg ALT i én session
+- Git backup FØR store ændringer
+- Font regler: body 16px min, labels 14px min, opacity 0.5 min
+- Ved AFSLUTNING af HVER session: opdater denne CLAUDE.md med hvad der blev bygget/ændret
+
 # CLAUDE.md — Quantum UI Polish
 
 ## What This Is
