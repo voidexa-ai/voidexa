@@ -42,6 +42,13 @@ export async function createQuantumSession(
   }
 }
 
+/** Deep mode runs 3 rounds × 4 providers — allow up to 10 minutes. */
+const STREAM_TIMEOUT_MS = 600_000
+/** Max reconnect attempts before giving up. */
+const MAX_RECONNECTS = 5
+/** Delay between reconnect attempts (ms). */
+const RECONNECT_DELAY_MS = 2_000
+
 export function streamQuantumSession(
   sessionId: string,
   token: string | null,
@@ -49,16 +56,26 @@ export function streamQuantumSession(
   onError: (err: string) => void
 ): () => void {
   let cancelled = false
+  let sessionComplete = false
+  let reconnects = 0
+  let abortController: AbortController | null = null
 
   async function connect() {
+    if (cancelled || sessionComplete) return
+
+    abortController = new AbortController()
+    const timeout = setTimeout(() => abortController?.abort(), STREAM_TIMEOUT_MS)
+
     try {
       const res = await fetch(
         `${API_BASE}/api/sessions/${sessionId}/stream`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
+          signal: abortController.signal,
         }
       )
       if (!res.ok || !res.body) {
+        clearTimeout(timeout)
         onError(`Stream failed: ${res.status}`)
         return
       }
@@ -66,7 +83,10 @@ export function streamQuantumSession(
       const decoder = new TextDecoder()
       let buffer = ''
 
-      while (!cancelled) {
+      // Reset reconnect counter on successful connection
+      reconnects = 0
+
+      while (!cancelled && !sessionComplete) {
         const { done, value } = await reader.read()
         if (done) break
         buffer += decoder.decode(value, { stream: true })
@@ -77,6 +97,7 @@ export function streamQuantumSession(
           if (line.startsWith('data: ')) {
             try {
               const event: QuantumSSEEvent = JSON.parse(line.slice(6))
+              if (event.type === 'session_complete') sessionComplete = true
               onEvent(event)
             } catch {
               // skip malformed events
@@ -84,13 +105,37 @@ export function streamQuantumSession(
           }
         }
       }
+
+      clearTimeout(timeout)
+
+      // Stream ended without session_complete — try reconnecting
+      if (!cancelled && !sessionComplete) {
+        tryReconnect()
+      }
     } catch {
-      if (!cancelled) onError('Connection lost')
+      clearTimeout(timeout)
+      if (cancelled || sessionComplete) return
+
+      // Connection dropped — try reconnecting
+      tryReconnect()
     }
   }
 
+  function tryReconnect() {
+    if (cancelled || sessionComplete) return
+    reconnects++
+    if (reconnects > MAX_RECONNECTS) {
+      onError('Connection to Quantum API lost. Please try again.')
+      return
+    }
+    setTimeout(() => connect(), RECONNECT_DELAY_MS)
+  }
+
   connect()
-  return () => { cancelled = true }
+  return () => {
+    cancelled = true
+    abortController?.abort()
+  }
 }
 
 export async function askFollowUp(
