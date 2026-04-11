@@ -76,6 +76,8 @@ export default function QuantumDebatePanel() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [followUps, setFollowUps] = useState<Array<{ q: string; a: string }>>([])
   const [followUpLoading, setFollowUpLoading] = useState(false)
+  const [synthesis, setSynthesis] = useState<string | null>(null)
+  const [debateExpanded, setDebateExpanded] = useState(false)
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const timerStartRef = useRef<number>(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -126,6 +128,8 @@ export default function QuantumDebatePanel() {
     setConsensus(0)
     setCostSummary(null)
     setErrorMessage(null)
+    setSynthesis(null)
+    setDebateExpanded(false)
     setSessionActive(true)
     setSessionId(null)
     setFollowUps([])
@@ -210,6 +214,11 @@ export default function QuantumDebatePanel() {
                 setConsensus(event.consensus)
               }
               break
+            case 'synthesis':
+              if (event.content) {
+                setSynthesis(event.content)
+              }
+              break
             case 'session_complete': {
               setThinkingIds([])
               setActiveCharId(null)
@@ -224,6 +233,9 @@ export default function QuantumDebatePanel() {
                   mode: event.mode ?? mode,
                   elapsedMs: finalMs,
                 })
+              }
+              if (event.synthesis) {
+                setSynthesis(event.synthesis)
               }
               break
             }
@@ -308,7 +320,7 @@ export default function QuantumDebatePanel() {
           background: 'rgba(8,8,18,0.4)',
         }}
       >
-        <SessionBar active={sessionActive} startTime={startTime} finalCost={costSummary?.cost ?? null} />
+        <SessionBar active={sessionActive} startTime={startTime} finalCost={costSummary?.cost ?? null} mode={currentMode} />
 
         <div className="flex flex-col items-center gap-4">
           <AvatarRing
@@ -431,7 +443,57 @@ export default function QuantumDebatePanel() {
             </div>
           )}
 
-          {renderChatBody()}
+          {/* Synthesis — shown prominently when available */}
+          {synthesis && (
+            <div
+              className="rounded-xl mb-4"
+              style={{
+                background: 'linear-gradient(135deg, rgba(127,119,221,0.1), rgba(74,222,128,0.08))',
+                border: '1px solid rgba(127,119,221,0.25)',
+                padding: '16px 20px',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 14,
+                  color: '#a5b4fc',
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  marginBottom: 8,
+                }}
+              >
+                QUANTUM CONSENSUS
+              </div>
+              <div className="quantum-markdown" style={{ fontSize: 16, color: '#e2e8f0', lineHeight: 1.7 }}>
+                {synthesis.split('\n').map((line, i) => (
+                  <p key={i} style={{ margin: '0 0 8px' }}>{line}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Full debate — collapsible when synthesis exists */}
+          {synthesis && messages.length > 0 && (
+            <button
+              onClick={() => setDebateExpanded(prev => !prev)}
+              className="flex items-center gap-2 mb-3"
+              style={{
+                fontSize: 14,
+                color: '#7777bb',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+              }}
+            >
+              <span style={{ transform: debateExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', display: 'inline-block' }}>
+                ▶
+              </span>
+              {debateExpanded ? 'Hide full debate' : 'View full debate'}
+            </button>
+          )}
+
+          {(!synthesis || debateExpanded) && renderChatBody()}
           <div ref={messagesEndRef} />
         </div>
 
@@ -738,7 +800,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         </div>
         <div style={{ marginTop: 4 }}>
           <span style={{ color: '#4ade80', fontWeight: 600 }}>
-            KCP-90 saved you ~{savingsPct}% on this session
+            You saved ~{savingsPct}% vs market price
           </span>
         </div>
       </div>
@@ -852,7 +914,7 @@ function FollowUpInput({
           {loading ? 'Asking...' : 'Ask Claude'}
         </button>
         <span style={{ fontSize: 14, color: '#475569', whiteSpace: 'nowrap' }}>
-          +$0.005 per follow-up
+          +$0.005 per follow-up question
         </span>
       </form>
     </div>

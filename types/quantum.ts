@@ -41,6 +41,7 @@ export interface QuantumSSEEvent {
     | 'message_complete'
     | 'consensus_update'
     | 'session_complete'
+    | 'synthesis'
     | 'error'
     | 'round_start'
     | 'round_complete'
@@ -70,4 +71,8 @@ export interface QuantumSSEEvent {
   mode?: string
   /** session_complete: KCP-90 savings data per round from backend. */
   kcp_savings?: Array<{ round: number; pct: number; saved_chars: number }>
+  /** synthesis: compiled answer from all providers. */
+  content?: string
+  /** session_complete: compiled synthesis text. */
+  synthesis?: string
 }

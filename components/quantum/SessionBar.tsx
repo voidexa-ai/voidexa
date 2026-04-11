@@ -1,24 +1,38 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import type { QuantumMode } from '@/types/quantum'
+
+// Customer pricing multipliers — must match CostSummaryStrip
+const CUSTOMER_MARKUP: Record<string, { markup: number; min: number }> = {
+  standard: { markup: 2.5, min: 0.05 },
+  deep: { markup: 3.5, min: 0.25 },
+}
+
+function toCustomerPrice(apiCost: number, mode: string): number {
+  const pricing = CUSTOMER_MARKUP[mode === 'deep' || mode === 'verbose' ? 'deep' : 'standard']
+  return Math.max(pricing.min, apiCost * pricing.markup)
+}
 
 interface SessionBarProps {
   active: boolean
   startTime: number | null
-  /** Final cost from session_complete event — replaces the live estimate. */
+  /** Final API cost from session_complete — converted to customer price. */
   finalCost?: number | null
+  /** Current UX mode — determines customer price multiplier. */
+  mode?: QuantumMode
 }
 
-export default function SessionBar({ active, startTime, finalCost }: SessionBarProps) {
+export default function SessionBar({ active, startTime, finalCost, mode = 'standard' }: SessionBarProps) {
   const [elapsed, setElapsed] = useState(0)
-  const [liveCost, setLiveCost] = useState(0)
+  const [liveApiCost, setLiveApiCost] = useState(0)
 
   useEffect(() => {
     if (!active || !startTime) return
     const iv = setInterval(() => {
       const s = Math.floor((Date.now() - startTime) / 1000)
       setElapsed(s)
-      setLiveCost(parseFloat((s * 0.00013).toFixed(5)))
+      setLiveApiCost(parseFloat((s * 0.00013).toFixed(5)))
     }, 1000)
     return () => clearInterval(iv)
   }, [active, startTime])
@@ -33,7 +47,10 @@ export default function SessionBar({ active, startTime, finalCost }: SessionBarP
   }, [active, startTime, finalCost, elapsed, frozenElapsed])
 
   const displayElapsed = frozenElapsed ?? elapsed
-  const displayCost = finalCost != null ? finalCost : liveCost
+  // Always show customer price — never raw API cost
+  const displayCost = finalCost != null
+    ? toCustomerPrice(finalCost, mode)
+    : toCustomerPrice(liveApiCost, mode)
 
   const fmtTime = (s: number) =>
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
