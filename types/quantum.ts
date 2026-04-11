@@ -68,4 +68,6 @@ export interface QuantumSSEEvent {
   rounds?: number
   /** session_complete: the engine mode that was used. */
   mode?: string
+  /** session_complete: KCP-90 savings data per round from backend. */
+  kcp_savings?: Array<{ round: number; pct: number; saved_chars: number }>
 }

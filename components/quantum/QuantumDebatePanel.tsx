@@ -308,7 +308,7 @@ export default function QuantumDebatePanel() {
           background: 'rgba(8,8,18,0.4)',
         }}
       >
-        <SessionBar active={sessionActive} startTime={startTime} />
+        <SessionBar active={sessionActive} startTime={startTime} finalCost={costSummary?.cost ?? null} />
 
         <div className="flex flex-col items-center gap-4">
           <AvatarRing
@@ -635,19 +635,19 @@ function Kcp90InfoPanel({
 // Cost strip
 // ─────────────────────────────────────────────────────────────────────
 
-// Standard-API baseline: what this same debate would cost if each
-// provider were queried independently without KCP-90 prompt
-// compression. 3× the actual session cost is the rule-of-thumb ratio
-// we quote for a typical multi-round debate — the same multi-round
-// eval prompts still run, just without the compression savings.
-const STANDARD_API_MULTIPLIER = 3
+// ── Customer pricing config ──────────────────────────────────────────
+// Customer pays a markup over the raw API cost. Market price represents
+// what it would cost to run 4 separate AI APIs without Quantum.
+const CUSTOMER_MULTIPLIER: Record<string, { markup: number; min: number }> = {
+  standard: { markup: 2.5, min: 0.05 },
+  deep: { markup: 3.5, min: 0.25 },
+}
+const MARKET_MULTIPLIER = 10  // 10× raw cost = "4 separate APIs" baseline
 
 // Pretty label for each mode as shown in the summary headline.
 const MODE_LABEL: Record<string, string> = {
   standard: 'Standard',
   deep: 'Deep',
-  // Legacy values are kept as read-only fallbacks so old completed
-  // sessions still render a sensible label.
   fast: 'Standard',
   verbose: 'Deep',
   quick: 'Standard',
@@ -659,8 +659,6 @@ function modeLabel(mode: string): string {
 
 function formatCost(usd: number): string {
   if (usd <= 0) return '$0.00'
-  // Sub-dollar amounts render at 4 decimals so tiny quantum prices and
-  // their 3× API baselines stay at matching precision in the strip.
   if (usd < 1) return `$${usd.toFixed(4)}`
   return `$${usd.toFixed(2)}`
 }
@@ -671,9 +669,17 @@ function formatDuration(ms: number): string {
 }
 
 function CostSummaryStrip({ summary }: { summary: CostSummary }) {
-  const quantumPrice = summary.cost
-  const standardApiPrice = quantumPrice * STANDARD_API_MULTIPLIER
+  const apiCost = summary.cost  // raw API cost from backend
   const modeName = modeLabel(summary.mode)
+  const modeKey = summary.mode === 'deep' || summary.mode === 'verbose' ? 'deep' : 'standard'
+  const pricing = CUSTOMER_MULTIPLIER[modeKey]
+
+  const customerPrice = Math.max(pricing.min, apiCost * pricing.markup)
+  const marketPrice = apiCost * MARKET_MULTIPLIER
+  const savingsPct = marketPrice > 0
+    ? Math.round(((marketPrice - customerPrice) / marketPrice) * 100)
+    : 0
+
   const providerCount = summary.providers.length
   const rounds = summary.rounds || 0
   const tokens = summary.tokens || 0
@@ -704,7 +710,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         SESSION SUMMARY
       </div>
 
-      {/* Line 1 — narrative headline describing the debate itself. */}
+      {/* Line 1 — narrative headline. */}
       <p style={{ fontSize: 14, color: '#e2e8f0', marginBottom: 8 }}>
         A <span style={{ fontWeight: 700, color: '#a5b4fc' }}>{modeName}</span>{' '}
         Quantum debate with{' '}
@@ -714,30 +720,30 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         {rounds === 1 ? 'round' : 'rounds'}
       </p>
 
-      {/* Lines 2 & 3 — price comparison. */}
+      {/* Lines 2 & 3 — price comparison (customer-facing). */}
       <div className="flex flex-col gap-1" style={{ fontSize: 14 }}>
         <div>
           <span style={{ color: '#64748b' }}>
-            Standard API cost for this debate:{' '}
+            Market price (4 separate APIs):{' '}
           </span>
           <span style={{ color: '#94a3b8', textDecoration: 'line-through' }}>
-            ~{formatCost(standardApiPrice)}
+            ~{formatCost(marketPrice)}
           </span>
         </div>
         <div>
-          <span style={{ color: '#64748b' }}>Your price: </span>
-          <span style={{ color: '#e2e8f0', fontWeight: 700, fontSize: 15 }}>
-            {formatCost(quantumPrice)}
+          <span style={{ color: '#64748b' }}>Your Quantum price: </span>
+          <span style={{ color: '#4ade80', fontWeight: 700, fontSize: 15 }}>
+            {formatCost(customerPrice)}
           </span>
         </div>
         <div style={{ marginTop: 4 }}>
           <span style={{ color: '#4ade80', fontWeight: 600 }}>
-            KCP-90 saved you ~{Math.round(((standardApiPrice - quantumPrice) / standardApiPrice) * 100)}% on this session
+            KCP-90 saved you ~{savingsPct}% on this session
           </span>
         </div>
       </div>
 
-      {/* Line 4 — dot-separated meta (providers / tokens / time). */}
+      {/* Line 4 — dot-separated meta. */}
       <div
         className="flex flex-wrap gap-y-1"
         style={{
@@ -846,7 +852,7 @@ function FollowUpInput({
           {loading ? 'Asking...' : 'Ask Claude'}
         </button>
         <span style={{ fontSize: 14, color: '#475569', whiteSpace: 'nowrap' }}>
-          ~$0.005
+          +$0.005 per follow-up
         </span>
       </form>
     </div>

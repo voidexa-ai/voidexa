@@ -1,5 +1,8 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 import QuantumDebatePanel from '@/components/quantum/QuantumDebatePanel'
 
 // Reserved space for the fixed top nav (~60px) plus a small breathing
@@ -9,6 +12,55 @@ import QuantumDebatePanel from '@/components/quantum/QuantumDebatePanel'
 const PAGE_RESERVED_PX = 84
 
 export default function QuantumChatPage() {
+  const [authChecked, setAuthChecked] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setIsLoggedIn(!!data.session)
+      setAuthChecked(true)
+    })
+  }, [])
+
+  if (!authChecked) {
+    return (
+      <div
+        className="flex items-center justify-center w-full"
+        style={{ height: `calc(100dvh - ${PAGE_RESERVED_PX}px)`, marginTop: PAGE_RESERVED_PX - 16 }}
+      >
+        <span style={{ color: '#64748b', fontSize: 16 }}>Loading...</span>
+      </div>
+    )
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div
+        className="flex flex-col items-center justify-center gap-4 w-full"
+        style={{ height: `calc(100dvh - ${PAGE_RESERVED_PX}px)`, marginTop: PAGE_RESERVED_PX - 16 }}
+      >
+        <p style={{ fontSize: 20, color: '#e2e8f0', fontWeight: 600 }}>
+          Sign in to use Quantum
+        </p>
+        <p style={{ fontSize: 16, color: '#64748b', maxWidth: 400, textAlign: 'center', lineHeight: 1.6 }}>
+          Quantum runs 4 AIs debating your question in real-time. Sign in to start a session.
+        </p>
+        <Link
+          href="/auth/login"
+          className="rounded-lg px-6 py-3 font-semibold"
+          style={{
+            fontSize: 16,
+            color: '#fff',
+            background: 'rgba(127,119,221,0.5)',
+            border: '1px solid rgba(127,119,221,0.3)',
+          }}
+        >
+          Sign In
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <div
       className="w-full"

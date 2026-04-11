@@ -5,21 +5,35 @@ import { useEffect, useState } from 'react'
 interface SessionBarProps {
   active: boolean
   startTime: number | null
+  /** Final cost from session_complete event — replaces the live estimate. */
+  finalCost?: number | null
 }
 
-export default function SessionBar({ active, startTime }: SessionBarProps) {
+export default function SessionBar({ active, startTime, finalCost }: SessionBarProps) {
   const [elapsed, setElapsed] = useState(0)
-  const [cost, setCost] = useState(0)
+  const [liveCost, setLiveCost] = useState(0)
 
   useEffect(() => {
     if (!active || !startTime) return
     const iv = setInterval(() => {
       const s = Math.floor((Date.now() - startTime) / 1000)
       setElapsed(s)
-      setCost(parseFloat((s * 0.00013).toFixed(5)))
+      setLiveCost(parseFloat((s * 0.00013).toFixed(5)))
     }, 1000)
     return () => clearInterval(iv)
   }, [active, startTime])
+
+  // When session completes, freeze the elapsed time
+  const [frozenElapsed, setFrozenElapsed] = useState<number | null>(null)
+  useEffect(() => {
+    if (!active && startTime && finalCost != null && frozenElapsed === null) {
+      setFrozenElapsed(elapsed)
+    }
+    if (active) setFrozenElapsed(null)
+  }, [active, startTime, finalCost, elapsed, frozenElapsed])
+
+  const displayElapsed = frozenElapsed ?? elapsed
+  const displayCost = finalCost != null ? finalCost : liveCost
 
   const fmtTime = (s: number) =>
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
@@ -33,10 +47,11 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
         background: 'rgba(8,8,18,0.8)',
         border: '1px solid rgba(119,119,187,0.2)',
         backdropFilter: 'blur(12px)',
+        minWidth: 200,
       }}
     >
       {/* Mac dots */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 shrink-0">
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#eab308' }} />
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e' }} />
@@ -63,12 +78,12 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
 
       {/* Timer + cost — stacked vertically */}
       {hasRun && (
-        <div className="flex flex-col items-end shrink-0" style={{ lineHeight: 1.3 }}>
+        <div className="flex flex-col items-end shrink-0" style={{ minWidth: 70, lineHeight: 1.3 }}>
           <span style={{ fontSize: 14, color: '#7777bb', fontFamily: 'monospace' }}>
-            {fmtTime(elapsed)}
+            {fmtTime(displayElapsed)}
           </span>
           <span style={{ fontSize: 14, color: '#64748b', fontFamily: 'monospace' }}>
-            ${cost.toFixed(4)}
+            ${displayCost.toFixed(4)}
           </span>
         </div>
       )}
