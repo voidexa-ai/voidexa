@@ -49,7 +49,7 @@ export default function QuantumInput({
   const currentMode = MODE_OPTIONS.find(m => m.value === mode)!
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full relative">
+    <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full relative" style={{ maxWidth: 'calc(100% - 60px)' }}>
       <input
         type="text"
         value={value}

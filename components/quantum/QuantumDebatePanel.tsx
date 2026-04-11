@@ -145,6 +145,7 @@ export default function QuantumDebatePanel() {
         setErrorMessage(result.error)
         setLoading(false)
         setThinkingIds([])
+        setSessionActive(false)
         stopTimer()
         return
       }
@@ -212,6 +213,7 @@ export default function QuantumDebatePanel() {
             case 'session_complete': {
               setThinkingIds([])
               setActiveCharId(null)
+              setSessionActive(false)
               const finalMs = stopTimer()
               if (typeof event.cost === 'number') {
                 setCostSummary({
@@ -227,12 +229,14 @@ export default function QuantumDebatePanel() {
             }
             case 'error':
               setErrorMessage(event.error ?? 'Engine error')
+              setSessionActive(false)
               stopTimer()
               break
           }
         },
         () => {
           setErrorMessage('Connection to Quantum API lost. Please try again.')
+          setSessionActive(false)
           stopTimer()
         }
       )
@@ -241,6 +245,7 @@ export default function QuantumDebatePanel() {
       setErrorMessage('Quantum API is currently unavailable. Please try again later.')
       setLoading(false)
       setThinkingIds([])
+      setSessionActive(false)
       stopTimer()
     }
   }, [startTimer, stopTimer])
@@ -463,10 +468,10 @@ export default function QuantumDebatePanel() {
           />
         )}
 
-        {/* Input — pinned bottom */}
+        {/* Input — pinned above floating UI (Jarvis icon, Menu button) */}
         <div
           className="shrink-0"
-          style={{ padding: '14px 28px 20px' }}
+          style={{ padding: '14px 28px 64px' }}
         >
           <QuantumInput
             onSubmit={handleSubmit}
@@ -683,6 +688,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
         border: '1px solid rgba(74,222,128,0.18)',
         padding: '12px 16px',
         overflow: 'hidden',
+        overflowWrap: 'break-word',
         wordBreak: 'break-word',
       }}
     >
@@ -834,6 +840,9 @@ function FollowUpInput({
         >
           {loading ? 'Asking...' : 'Ask Claude'}
         </button>
+        <span style={{ fontSize: 14, color: '#475569', whiteSpace: 'nowrap' }}>
+          ~$0.005
+        </span>
       </form>
     </div>
   )

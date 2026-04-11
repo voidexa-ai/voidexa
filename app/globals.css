@@ -23,7 +23,10 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  font-size: 18px;
+}
 
 body {
   background: var(--background);
@@ -34,6 +37,7 @@ body {
   font-weight: 300;
   letter-spacing: 0.01em;
   line-height: 1.65;
+  font-size: 18px;
 }
 
 /* ── Base typography — unlayered so it beats Tailwind @layer utilities ── */
