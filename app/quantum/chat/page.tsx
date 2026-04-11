@@ -14,8 +14,8 @@ export default function QuantumChatPage() {
       className="w-full"
       style={{
         height: `calc(100dvh - ${PAGE_RESERVED_PX}px)`,
-        minHeight: 600,
         marginTop: PAGE_RESERVED_PX - 16,
+        overflow: 'hidden',
       }}
     >
       <style>{`
