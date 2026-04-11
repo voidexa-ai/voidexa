@@ -24,9 +24,16 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
   const fmtTime = (s: number) =>
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
+  const hasRun = startTime !== null
+  const statusLabel = active
+    ? '— Live Session'
+    : hasRun
+    ? '— Session Complete'
+    : '— Ready'
+
   return (
     <div
-      className="flex items-center justify-between gap-4 px-4 py-2 rounded-lg"
+      className="flex items-center justify-between gap-3 px-4 py-2 rounded-lg"
       style={{
         background: 'rgba(8,8,18,0.8)',
         border: '1px solid rgba(119,119,187,0.2)',
@@ -41,10 +48,10 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
       </div>
 
       {/* Status */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 min-w-0">
         {active && (
           <span
-            className="inline-block rounded-full"
+            className="inline-block rounded-full shrink-0"
             style={{
               width: 6,
               height: 6,
@@ -54,20 +61,22 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
             }}
           />
         )}
-        <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>
-          Quantum {active ? '— Live Session' : '— Ready'}
+        <span className="truncate" style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>
+          Quantum {statusLabel}
         </span>
       </div>
 
-      {/* Timer + cost */}
-      <div className="flex items-center gap-4">
-        <span style={{ fontSize: 14, color: '#7777bb', fontFamily: 'monospace' }}>
-          {fmtTime(elapsed)}
-        </span>
-        <span style={{ fontSize: 14, color: '#64748b', fontFamily: 'monospace' }}>
-          ${cost.toFixed(4)}
-        </span>
-      </div>
+      {/* Timer + cost — stacked vertically */}
+      {hasRun && (
+        <div className="flex flex-col items-end shrink-0" style={{ lineHeight: 1.3 }}>
+          <span style={{ fontSize: 14, color: '#7777bb', fontFamily: 'monospace' }}>
+            {fmtTime(elapsed)}
+          </span>
+          <span style={{ fontSize: 14, color: '#64748b', fontFamily: 'monospace' }}>
+            ${cost.toFixed(4)}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

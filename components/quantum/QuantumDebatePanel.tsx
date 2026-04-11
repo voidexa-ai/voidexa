@@ -376,7 +376,7 @@ export default function QuantumDebatePanel() {
         <div
           ref={scrollContainerRef}
           className="quantum-chat-area flex-1 overflow-y-auto"
-          style={{ padding: '24px 28px', minHeight: 0 }}
+          style={{ padding: '24px 80px 24px 28px', minHeight: 0 }}
         >
           {/* Question header */}
           {question && (
@@ -419,13 +419,20 @@ export default function QuantumDebatePanel() {
             </div>
           )}
 
-          {/* Empty state */}
+          {/* Empty state — visually rich welcome */}
           {!question && messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center text-center py-20">
-              <p style={{ fontSize: 16, color: '#94a3b8', marginBottom: 6 }}>
+            <div className="flex flex-col items-center justify-center text-center h-full">
+              <div className="mb-8">
+                <AvatarRing
+                  characters={CHARACTERS}
+                  activeId={null}
+                  thinkingIds={[]}
+                />
+              </div>
+              <p style={{ fontSize: 24, color: '#e2e8f0', fontWeight: 600, marginBottom: 8 }}>
                 Ask a question and watch 4 AIs debate it live.
               </p>
-              <p style={{ fontSize: 14, color: '#64748b' }}>
+              <p style={{ fontSize: 16, color: '#64748b', maxWidth: 440 }}>
                 They&apos;ll challenge each other, cite sources, and converge on the best answer.
               </p>
             </div>
@@ -440,7 +447,7 @@ export default function QuantumDebatePanel() {
           <div
             className="shrink-0"
             style={{
-              padding: '12px 28px 0',
+              padding: '12px 80px 0 28px',
               borderTop: '1px solid rgba(255,255,255,0.06)',
             }}
           >
@@ -471,7 +478,7 @@ export default function QuantumDebatePanel() {
         {/* Input — pinned above floating UI (Jarvis icon, Menu button) */}
         <div
           className="shrink-0"
-          style={{ padding: '14px 28px 64px' }}
+          style={{ padding: '14px 80px 64px 28px' }}
         >
           <QuantumInput
             onSubmit={handleSubmit}
@@ -730,6 +737,11 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
             {formatCost(quantumPrice)}
           </span>
         </div>
+        <div style={{ marginTop: 4 }}>
+          <span style={{ color: '#4ade80', fontWeight: 600 }}>
+            KCP-90 saved you ~{Math.round(((standardApiPrice - quantumPrice) / standardApiPrice) * 100)}% on this session
+          </span>
+        </div>
       </div>
 
       {/* Line 4 — dot-separated meta (providers / tokens / time). */}
@@ -790,7 +802,7 @@ function FollowUpInput({
   return (
     <div
       className="shrink-0"
-      style={{ padding: '0 28px 8px' }}
+      style={{ padding: '0 80px 8px 28px' }}
     >
       {/* Previous follow-ups */}
       {followUps.map((fu, i) => (

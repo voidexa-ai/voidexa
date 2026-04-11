@@ -49,7 +49,7 @@ export default function QuantumInput({
   const currentMode = MODE_OPTIONS.find(m => m.value === mode)!
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full relative" style={{ maxWidth: 'calc(100% - 60px)' }}>
+    <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full relative">
       <input
         type="text"
         value={value}
@@ -166,7 +166,7 @@ export default function QuantumInput({
       <button
         type="submit"
         disabled={disabled || !value.trim()}
-        className="flex items-center gap-2 rounded-lg px-5 py-3 font-semibold transition-all"
+        className={`flex items-center gap-2 rounded-lg px-5 py-3 font-semibold transition-all ${!disabled && !loading ? 'quantum-btn-glow' : ''}`}
         style={{
           fontSize: 14,
           color: '#fff',

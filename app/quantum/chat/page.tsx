@@ -30,6 +30,13 @@ export default function QuantumChatPage() {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+        @keyframes quantum-glow {
+          0%, 100% { box-shadow: 0 0 8px rgba(119,119,187,0.3); }
+          50% { box-shadow: 0 0 20px rgba(119,119,187,0.6), 0 0 40px rgba(99,102,241,0.3); }
+        }
+        .quantum-btn-glow {
+          animation: quantum-glow 2s ease-in-out infinite;
+        }
         /* Markdown rendering inside debate message cards. Sized to
            match the voidexa font-size rule (body >=16px) and the dark
            sci-fi palette of the surrounding chat. */
