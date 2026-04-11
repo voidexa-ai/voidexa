@@ -59,8 +59,6 @@ export default function JarvisAssistant() {
   // Hide on star map homepage only
   if (pathname === '/') return null
 
-  const isQuantumChat = pathname.startsWith('/quantum/chat')
-
   function send() {
     const text = input.trim()
     if (!text) return
@@ -82,7 +80,7 @@ export default function JarvisAssistant() {
   return (
     <>
       {/* Floating orb — living breathing design */}
-      <div className="fixed right-6 z-50" style={{ bottom: isQuantumChat ? 140 : 24 }}>
+      <div className="fixed bottom-6 right-6 z-50">
         {/* Outer breathing ring */}
         <motion.div
           className="absolute inset-0 rounded-full"
