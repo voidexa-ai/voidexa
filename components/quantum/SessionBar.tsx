@@ -25,11 +25,6 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
     `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
   const hasRun = startTime !== null
-  const statusLabel = active
-    ? '— Live Session'
-    : hasRun
-    ? '— Session Complete'
-    : '— Ready'
 
   return (
     <div
@@ -61,8 +56,8 @@ export default function SessionBar({ active, startTime }: SessionBarProps) {
             }}
           />
         )}
-        <span className="truncate" style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>
-          Quantum {statusLabel}
+        <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600, whiteSpace: 'nowrap' }}>
+          {active ? 'Live Session' : hasRun ? 'Session Complete' : 'Ready'}
         </span>
       </div>
 

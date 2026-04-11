@@ -56,8 +56,8 @@ export default function JarvisAssistant() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Hide on star map homepage — all hooks called above
-  if (pathname === '/') return null
+  // Hide on star map homepage and quantum chat (full-viewport layout)
+  if (pathname === '/' || pathname.startsWith('/quantum/chat')) return null
 
   function send() {
     const text = input.trim()

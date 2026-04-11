@@ -224,8 +224,8 @@ export default function Navigation() {
 
             </div>
 
-            {/* Desktop right: CTA (non-admin only) + auth */}
-            <div className="hidden lg:flex items-center gap-2 shrink-0">
+            {/* Desktop right: CTA (non-admin only) + admin icon + auth */}
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
               {!isAdmin && (
                 <button
                   onClick={() => openModal()}
@@ -234,6 +234,36 @@ export default function Navigation() {
                 >
                   Get in touch
                 </button>
+              )}
+              {isAdmin && (
+                <Link
+                  href="/control-plane"
+                  title="Control Plane"
+                  className="flex items-center justify-center"
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: 8,
+                    background: 'rgba(0,212,255,0.07)',
+                    border: '1px solid rgba(0,212,255,0.25)',
+                    color: 'rgba(0,212,255,0.7)',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(0,212,255,0.18)'
+                    el.style.color = '#00d4ff'
+                    el.style.borderColor = 'rgba(0,212,255,0.5)'
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.background = 'rgba(0,212,255,0.07)'
+                    el.style.color = 'rgba(0,212,255,0.7)'
+                    el.style.borderColor = 'rgba(0,212,255,0.25)'
+                  }}
+                >
+                  <LayoutDashboard size={15} />
+                </Link>
               )}
               <AuthButton />
             </div>
@@ -252,44 +282,7 @@ export default function Navigation() {
 
       </div>
 
-      {/* Admin icon — fixed far-right, vertically centered with nav bar, desktop only */}
-      {isAdmin && (
-        <Link
-          href="/control-plane"
-          title="Control Plane"
-          className="hidden lg:flex"
-          style={{
-            position: 'fixed',
-            top: 10,
-            right: 16,
-            zIndex: 51,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 34,
-            height: 34,
-            borderRadius: 8,
-            background: 'rgba(0,212,255,0.07)',
-            border: '1px solid rgba(0,212,255,0.25)',
-            color: 'rgba(0,212,255,0.7)',
-            transition: 'all 0.2s',
-            backdropFilter: 'blur(12px)',
-          }}
-          onMouseEnter={e => {
-            const el = e.currentTarget as HTMLElement
-            el.style.background = 'rgba(0,212,255,0.18)'
-            el.style.color = '#00d4ff'
-            el.style.borderColor = 'rgba(0,212,255,0.5)'
-          }}
-          onMouseLeave={e => {
-            const el = e.currentTarget as HTMLElement
-            el.style.background = 'rgba(0,212,255,0.07)'
-            el.style.color = 'rgba(0,212,255,0.7)'
-            el.style.borderColor = 'rgba(0,212,255,0.25)'
-          }}
-        >
-          <LayoutDashboard size={15} />
-        </Link>
-      )}
+      {/* Admin icon — removed from fixed position, now inline in desktop nav right area */}
 
       {/* FIX 3: Floating side button — right edge, vertically centered, pulsing glow */}
       <motion.button
