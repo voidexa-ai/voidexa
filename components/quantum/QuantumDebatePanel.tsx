@@ -86,6 +86,7 @@ export default function QuantumDebatePanel() {
   const [synthesis, setSynthesis] = useState<string | null>(null)
   const [debateExpanded, setDebateExpanded] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userLoaded, setUserLoaded] = useState(false)
   const [dbSessionId, setDbSessionId] = useState<string | null>(null)
   // Viewing a historical session (read-only)
   const [viewingHistory, setViewingHistory] = useState(false)
@@ -106,6 +107,7 @@ export default function QuantumDebatePanel() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUserEmail(data.user?.email ?? null)
+      setUserLoaded(true)
     })
   }, [])
 
@@ -499,15 +501,28 @@ export default function QuantumDebatePanel() {
     <div className="flex flex-col lg:flex-row h-full w-full" style={{ overflow: 'hidden', maxWidth: '100vw' }}>
       {/* ─────────────────── LEFT PANEL — sticky ─────────────────── */}
       <aside
-        className="shrink-0 flex flex-col gap-4 px-4 py-5 overflow-y-auto"
+        className="shrink-0 flex flex-col gap-4 px-3 py-5 overflow-y-auto"
         style={{
-          width: '280px',
+          width: '260px',
           maxWidth: '100%',
           borderRight: '1px solid rgba(255,255,255,0.06)',
           background: 'rgba(8,8,18,0.4)',
+          overflowX: 'hidden',
         }}
       >
-        <WalletBar exempt={isExempt} />
+        {userLoaded ? (
+          <WalletBar exempt={isExempt} />
+        ) : (
+          <div
+            className="flex items-center justify-center px-4 py-2 rounded-lg"
+            style={{
+              background: 'rgba(127,119,221,0.06)',
+              border: '1px solid rgba(127,119,221,0.15)',
+            }}
+          >
+            <span style={{ fontSize: 14, color: '#64748b' }}>Loading wallet...</span>
+          </div>
+        )}
         <SessionBar active={sessionActive} startTime={startTime} finalCost={costSummary?.cost ?? null} mode={currentMode} />
 
         <div className="flex flex-col items-center gap-4">

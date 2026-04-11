@@ -10,7 +10,7 @@ export default function ConsensusMeter({ value }: ConsensusMeterProps) {
   const clampedValue = Math.min(100, Math.max(0, value))
 
   return (
-    <div className="w-full max-w-[280px] mx-auto mt-4">
+    <div className="w-full max-w-[220px] mx-auto mt-4">
       <div className="flex items-center justify-between mb-1.5">
         <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600, letterSpacing: '0.1em' }}>
           CONSENSUS

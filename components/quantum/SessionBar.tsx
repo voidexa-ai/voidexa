@@ -66,7 +66,7 @@ export default function SessionBar({ active, startTime, finalCost, mode = 'stand
         background: 'rgba(8,8,18,0.8)',
         border: '1px solid rgba(119,119,187,0.2)',
         backdropFilter: 'blur(12px)',
-        minWidth: 240,
+        minWidth: 0,
       }}
     >
       {/* Mac dots */}

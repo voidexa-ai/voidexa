@@ -10,8 +10,8 @@ interface AvatarRingProps {
 }
 
 export default function AvatarRing({ characters, activeId, thinkingIds }: AvatarRingProps) {
-  const size = 280
-  const radius = 100
+  const size = 220
+  const radius = 80
   const center = size / 2
 
   return (
@@ -63,8 +63,8 @@ export default function AvatarRing({ characters, activeId, thinkingIds }: Avatar
       {/* Avatars */}
       {characters.map((char, i) => {
         const angle = (i / characters.length) * Math.PI * 2 - Math.PI / 2
-        const x = center + radius * Math.cos(angle) - 24
-        const y = center + radius * Math.sin(angle) - 24
+        const x = center + radius * Math.cos(angle) - 20
+        const y = center + radius * Math.sin(angle) - 20
         const isActive = activeId === char.id
         const isThinking = thinkingIds.includes(char.id)
 
@@ -72,7 +72,7 @@ export default function AvatarRing({ characters, activeId, thinkingIds }: Avatar
           <motion.div
             key={char.id}
             className="absolute flex flex-col items-center"
-            style={{ left: x, top: y, width: 48 }}
+            style={{ left: x, top: y, width: 40 }}
             animate={
               isThinking
                 ? { scale: [1, 1.08, 1], opacity: [1, 0.7, 1] }
@@ -89,8 +89,8 @@ export default function AvatarRing({ characters, activeId, thinkingIds }: Avatar
             <div
               className="rounded-full overflow-hidden"
               style={{
-                width: 48,
-                height: 48,
+                width: 40,
+                height: 40,
                 border: `2px solid ${isActive ? char.color : 'rgba(119,119,187,0.3)'}`,
                 boxShadow: isActive ? `0 0 16px ${char.glow}` : 'none',
                 transition: 'border-color 0.3s, box-shadow 0.3s',
@@ -105,15 +105,9 @@ export default function AvatarRing({ characters, activeId, thinkingIds }: Avatar
             </div>
             <span
               className="text-center mt-1 font-medium"
-              style={{ fontSize: 14, color: isActive ? char.color : '#94a3b8' }}
+              style={{ fontSize: 11, color: isActive ? char.color : '#94a3b8', whiteSpace: 'nowrap' }}
             >
               {char.name}
-            </span>
-            <span
-              className="text-center"
-              style={{ fontSize: 14, color: '#64748b' }}
-            >
-              {char.role}
             </span>
           </motion.div>
         )
