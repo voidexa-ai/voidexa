@@ -419,20 +419,13 @@ export default function QuantumDebatePanel() {
             </div>
           )}
 
-          {/* Empty state — visually rich welcome */}
+          {/* Empty state — welcome text only (character ring is in the sidebar) */}
           {!question && messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center text-center h-full">
-              <div className="mb-8">
-                <AvatarRing
-                  characters={CHARACTERS}
-                  activeId={null}
-                  thinkingIds={[]}
-                />
-              </div>
-              <p style={{ fontSize: 24, color: '#e2e8f0', fontWeight: 600, marginBottom: 8 }}>
+            <div className="flex flex-col items-center justify-center text-center h-full px-4">
+              <p style={{ fontSize: 24, color: '#e2e8f0', fontWeight: 600, marginBottom: 12 }}>
                 Ask a question and watch 4 AIs debate it live.
               </p>
-              <p style={{ fontSize: 16, color: '#64748b', maxWidth: 440 }}>
+              <p style={{ fontSize: 16, color: '#64748b', maxWidth: 440, lineHeight: 1.6 }}>
                 They&apos;ll challenge each other, cite sources, and converge on the best answer.
               </p>
             </div>
