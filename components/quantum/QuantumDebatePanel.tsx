@@ -7,7 +7,7 @@ import type {
   QuantumMode,
   QuantumSSEEvent,
 } from '@/types/quantum'
-import { createQuantumSession, streamQuantumSession } from '@/lib/quantum/client'
+import { createQuantumSession, streamQuantumSession, askFollowUp } from '@/lib/quantum/client'
 import AvatarRing from './AvatarRing'
 import ConsensusMeter from './ConsensusMeter'
 import DebateMessage from './DebateMessage'
@@ -73,6 +73,9 @@ export default function QuantumDebatePanel() {
   // hidden from the live readout so the summary owns the final figure.
   const [elapsedMs, setElapsedMs] = useState(0)
   const [timerRunning, setTimerRunning] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [followUps, setFollowUps] = useState<Array<{ q: string; a: string }>>([])
+  const [followUpLoading, setFollowUpLoading] = useState(false)
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const timerStartRef = useRef<number>(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -124,6 +127,8 @@ export default function QuantumDebatePanel() {
     setCostSummary(null)
     setErrorMessage(null)
     setSessionActive(true)
+    setSessionId(null)
+    setFollowUps([])
     setStartTime(Date.now())
     setThinkingIds(CHARACTERS.map(c => c.id))
     setCurrentMode(mode)
@@ -145,6 +150,7 @@ export default function QuantumDebatePanel() {
       }
 
       setLoading(false)
+      setSessionId(result.id)
       const cancel = streamQuantumSession(
         result.id,
         null,
@@ -437,6 +443,26 @@ export default function QuantumDebatePanel() {
           </div>
         )}
 
+        {/* Follow-up input — shown after session completes */}
+        {costSummary && sessionId && followUps.length < 5 && (
+          <FollowUpInput
+            sessionId={sessionId}
+            followUps={followUps}
+            loading={followUpLoading}
+            onSubmit={async (q) => {
+              if (!sessionId) return
+              setFollowUpLoading(true)
+              const res = await askFollowUp(sessionId, q, null)
+              setFollowUpLoading(false)
+              if ('error' in res) {
+                setErrorMessage(res.error)
+              } else {
+                setFollowUps(prev => [...prev, { q, a: res.answer }])
+              }
+            }}
+          />
+        )}
+
         {/* Input — pinned bottom */}
         <div
           className="shrink-0"
@@ -656,6 +682,8 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
           'linear-gradient(135deg, rgba(74,222,128,0.08), rgba(99,102,241,0.08))',
         border: '1px solid rgba(74,222,128,0.18)',
         padding: '12px 16px',
+        overflow: 'hidden',
+        wordBreak: 'break-word',
       }}
     >
       <div
@@ -700,6 +728,7 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
 
       {/* Line 4 — dot-separated meta (providers / tokens / time). */}
       <div
+        className="flex flex-wrap gap-y-1"
         style={{
           fontSize: 14,
           color: '#64748b',
@@ -724,6 +753,88 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
           Time: <span style={{ color: '#cbd5e1' }}>{timeStr}</span>
         </span>
       </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Follow-up input
+// ─────────────────────────────────────────────────────────────────────
+
+function FollowUpInput({
+  followUps,
+  loading,
+  onSubmit,
+}: {
+  sessionId: string
+  followUps: Array<{ q: string; a: string }>
+  loading: boolean
+  onSubmit: (question: string) => void
+}) {
+  const [value, setValue] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const q = value.trim()
+    if (!q || loading) return
+    onSubmit(q)
+    setValue('')
+  }
+
+  return (
+    <div
+      className="shrink-0"
+      style={{ padding: '0 28px 8px' }}
+    >
+      {/* Previous follow-ups */}
+      {followUps.map((fu, i) => (
+        <div
+          key={i}
+          className="rounded-lg mb-2"
+          style={{
+            background: 'rgba(127,119,221,0.06)',
+            border: '1px solid rgba(127,119,221,0.18)',
+            padding: '10px 14px',
+          }}
+        >
+          <p style={{ fontSize: 14, color: '#a5b4fc', fontWeight: 600, marginBottom: 4 }}>
+            Follow-up: {fu.q}
+          </p>
+          <p style={{ fontSize: 16, color: '#c8c8d0', margin: 0, lineHeight: 1.6 }}>{fu.a}</p>
+        </div>
+      ))}
+
+      {/* Input */}
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={`Ask a follow-up (${5 - followUps.length} remaining)...`}
+          disabled={loading}
+          className="flex-1 rounded-lg px-3 py-2 outline-none"
+          style={{
+            fontSize: 14,
+            color: '#e2e8f0',
+            background: 'rgba(8,8,18,0.5)',
+            border: '1px solid rgba(127,119,221,0.2)',
+          }}
+        />
+        <button
+          type="submit"
+          disabled={loading || !value.trim()}
+          className="rounded-lg px-4 py-2 font-semibold"
+          style={{
+            fontSize: 14,
+            color: '#fff',
+            background: loading ? 'rgba(127,119,221,0.2)' : 'rgba(127,119,221,0.5)',
+            border: '1px solid rgba(127,119,221,0.3)',
+            cursor: loading ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {loading ? 'Asking...' : 'Ask Claude'}
+        </button>
+      </form>
     </div>
   )
 }

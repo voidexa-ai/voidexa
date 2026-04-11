@@ -88,7 +88,7 @@ export default function Kcp90Stats() {
             flexShrink: 0,
           }} />
           <span style={{
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: 800,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',

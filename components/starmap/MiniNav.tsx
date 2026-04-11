@@ -59,7 +59,7 @@ export default function MiniNav() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 9,
+            fontSize: 14,
             fontWeight: 700,
             color: '#00d4ff',
             fontFamily: 'var(--font-space)',

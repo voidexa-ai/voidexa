@@ -93,6 +93,33 @@ export function streamQuantumSession(
   return () => { cancelled = true }
 }
 
+export async function askFollowUp(
+  sessionId: string,
+  question: string,
+  token: string | null
+): Promise<{ answer: string; followup_count: number } | { error: string }> {
+  try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    const res = await fetch(`${API_BASE}/api/sessions/${sessionId}/followup`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ question }),
+    })
+    if (!res.ok) {
+      const text = await res.text()
+      return { error: `API returned ${res.status}: ${text}` }
+    }
+    return await res.json()
+  } catch {
+    return { error: 'Failed to send follow-up question' }
+  }
+}
+
 export async function getSessionStatus(
   sessionId: string,
   token: string | null

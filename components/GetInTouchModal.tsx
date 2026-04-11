@@ -215,7 +215,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                                   border: `1px solid ${checked ? '#00d4ff' : 'rgba(255,255,255,0.15)'}`,
                                 }}
                               >
-                                {checked && <span style={{ color: '#00d4ff', fontSize: 9, lineHeight: 1 }}>✓</span>}
+                                {checked && <span style={{ color: '#00d4ff', fontSize: 14, lineHeight: 1 }}>✓</span>}
                               </span>
                               {label}
                             </button>
@@ -242,7 +242,7 @@ export function GetInTouchProvider({ children }: { children: React.ReactNode }) 
                           border: `1px solid ${newsletter ? '#a78bfa' : 'rgba(255,255,255,0.15)'}`,
                         }}
                       >
-                        {newsletter && <span style={{ color: '#a78bfa', fontSize: 9, lineHeight: 1 }}>✓</span>}
+                        {newsletter && <span style={{ color: '#a78bfa', fontSize: 14, lineHeight: 1 }}>✓</span>}
                       </span>
                       Subscribe to newsletter — general updates
                     </button>

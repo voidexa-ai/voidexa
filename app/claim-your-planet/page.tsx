@@ -396,7 +396,7 @@ export default function ClaimYourPlanetPage() {
                 background: 'rgba(245,158,11,0.06)',
               }}>
                 <Star size={13} style={{ color: '#f59e0b' }} />
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#f59e0b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: '#f59e0b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                   First 5 Pioneers
                 </span>
               </div>
@@ -465,7 +465,7 @@ export default function ClaimYourPlanetPage() {
                   }}
                 >
                   <p style={{
-                    fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
+                    fontSize: 14, fontWeight: 600, letterSpacing: '0.1em',
                     textTransform: 'uppercase', color: card.color, marginBottom: 12,
                   }}>
                     {card.milestone}
@@ -552,7 +552,7 @@ export default function ClaimYourPlanetPage() {
                 >
                   <div style={{ fontSize: 32, marginBottom: 16 }}>{item.icon}</div>
                   <p style={{
-                    fontSize: 12, fontWeight: 600, letterSpacing: '0.1em',
+                    fontSize: 14, fontWeight: 600, letterSpacing: '0.1em',
                     textTransform: 'uppercase', color: item.color, marginBottom: 8,
                   }}>
                     {item.phase}
@@ -885,7 +885,7 @@ export default function ClaimYourPlanetPage() {
                 background: 'rgba(255,60,0,0.03)',
               }}>
               <p style={{
-                fontSize: 13, fontWeight: 600, letterSpacing: '0.1em',
+                fontSize: 14, fontWeight: 600, letterSpacing: '0.1em',
                 textTransform: 'uppercase', color: 'rgba(255,100,0,0.6)', marginBottom: 10,
               }}>
                 Abandoned Planet Policy
@@ -926,7 +926,7 @@ export default function ClaimYourPlanetPage() {
               background: 'rgba(245,158,11,0.06)',
             }}>
               <Star size={13} style={{ color: '#f59e0b' }} />
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#f59e0b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: 14, fontWeight: 600, color: '#f59e0b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 5 Pioneer Slots Available
               </span>
             </div>

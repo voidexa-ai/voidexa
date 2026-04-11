@@ -88,7 +88,7 @@ export default function TeamPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="font-mono uppercase tracking-[0.28em] mb-4"
-          style={{ fontSize: 13, color: 'rgba(119,119,187,0.65)' }}
+          style={{ fontSize: 14, color: 'rgba(119,119,187,0.7)' }}
         >
           The Cast
         </motion.p>

@@ -79,7 +79,7 @@ export default function AppsPage() {
               <h3 className="text-sm font-medium text-[#e2e8f0]" style={{ fontFamily: 'var(--font-space)' }}>
                 Comlink — Encrypted Messenger App
               </h3>
-              <p className="text-[13px] text-[#8b5cf6] mt-0.5">Your private app. Your own private network.</p>
+              <p className="text-sm text-[#8b5cf6] mt-0.5">Your private app. Your own private network.</p>
             </div>
             <span
               className="inline-block text-sm font-medium uppercase tracking-widest px-3 py-1 rounded-full"

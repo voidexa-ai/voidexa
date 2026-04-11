@@ -136,7 +136,7 @@ function Kcp90FloatingPanel() {
         </div>
 
         {/* Status line with blinking cursor */}
-        <div style={{ ...mono, fontSize: 12, color: 'rgba(59,130,246,0.4)', marginTop: 2 }}>
+        <div style={{ ...mono, fontSize: 14, color: 'rgba(59,130,246,0.5)', marginTop: 2 }}>
           $ binary: active | shm: active{' '}
           <span style={{ color: '#60a5fa', animation: 'blink 1s infinite' }}>_</span>
         </div>

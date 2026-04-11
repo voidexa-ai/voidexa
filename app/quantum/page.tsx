@@ -830,7 +830,7 @@ export default function QuantumPage() {
                 style={{ background: card.bg, border: `1px solid ${card.border}`, backdropFilter: 'blur(8px)' }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.18em] px-2.5 py-1 rounded-md"
+                  <span className="font-mono text-sm font-bold uppercase tracking-[0.18em] px-2.5 py-1 rounded-md"
                     style={{ color: card.color, background: `${card.border}`, border: `1px solid ${card.border}` }}>
                     {card.tag}
                   </span>
