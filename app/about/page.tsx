@@ -199,6 +199,36 @@ export default function AboutPage() {
           </p>
         </motion.div>
 
+        {/* ── Divider ── */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', margin: '48px 0 32px' }} />
+
+        {/* ── Disclaimer ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2
+            className="text-sm font-semibold uppercase tracking-[0.14em] mb-4"
+            style={{ color: 'rgba(148,163,184,0.6)' }}
+          >
+            Disclaimer
+          </h2>
+          <p
+            style={{
+              fontSize: 14,
+              lineHeight: 1.7,
+              color: 'rgba(148,163,184,0.65)',
+              fontFamily: 'var(--font-space)',
+            }}
+          >
+            voidexa.com is owned and operated by Jimmi Wulff, registered in Denmark under CVR
+            46343387. voidexa.com is not affiliated with, associated with, or related to
+            voidexa.online or any other similarly named entities.
+          </p>
+        </motion.div>
+
       </div>
     </div>
   )
