@@ -94,6 +94,7 @@ export default function QuantumDebatePanel() {
   const [synthesis, setSynthesis] = useState<string | null>(null)
   const [debateExpanded, setDebateExpanded] = useState(false)
   const [followUpMode, setFollowUpMode] = useState<FollowUpMode>('claude_only')
+  const [scaffoldMode, setScaffoldMode] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userLoaded, setUserLoaded] = useState(false)
   const [dbSessionId, setDbSessionId] = useState<string | null>(null)
@@ -829,9 +830,17 @@ export default function QuantumDebatePanel() {
             style={{ padding: '14px 28px 64px 28px' }}
           >
             <QuantumInput
-              onSubmit={handleSubmit}
+              onSubmit={(q, m) => {
+                const composed = scaffoldMode
+                  ? `${SCAFFOLD_PREFIX}\n\n[User request]\n${q}`
+                  : q
+                setScaffoldMode(false)
+                handleSubmit(composed, m)
+              }}
               disabled={thinkingIds.length > 0 && messages.length > 0}
               loading={loading}
+              scaffoldMode={scaffoldMode}
+              onScaffoldToggle={setScaffoldMode}
             />
           </div>
         )}
@@ -1136,7 +1145,6 @@ function FollowUpToggles({
 }) {
   const all = mode !== 'claude_only'
   const challenge = mode === 'challenge'
-  const scaffold = mode === 'scaffold'
 
   const toggleAll = () => {
     if (disabled) return
@@ -1146,10 +1154,6 @@ function FollowUpToggles({
   const toggleChallenge = () => {
     if (disabled) return
     onChange(challenge ? 'all_providers' : 'challenge')
-  }
-  const toggleScaffold = () => {
-    if (disabled) return
-    onChange(scaffold ? 'all_providers' : 'scaffold')
   }
 
   return (
@@ -1168,14 +1172,6 @@ function FollowUpToggles({
         label="Challenge"
         icon="⚡"
         tooltip={FOLLOWUP_TOOLTIPS.challenge}
-        disabled={disabled}
-      />
-      <ToggleButton
-        active={scaffold}
-        onClick={toggleScaffold}
-        label="Scaffold"
-        icon="▣"
-        tooltip={FOLLOWUP_TOOLTIPS.scaffold}
         disabled={disabled}
       />
       {all && (

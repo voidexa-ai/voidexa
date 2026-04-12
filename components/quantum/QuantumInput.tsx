@@ -8,7 +8,12 @@ interface QuantumInputProps {
   onSubmit: (question: string, mode: QuantumMode) => void
   disabled?: boolean
   loading?: boolean
+  scaffoldMode?: boolean
+  onScaffoldToggle?: (next: boolean) => void
 }
+
+const SCAFFOLD_TOOLTIP =
+  'Quantum builds a complete project scaffold with CLAUDE.md, SKILL.md, file structure, and build commands — ready to paste into Claude Code. Describe what you want to build.'
 
 interface ModeOption {
   value: QuantumMode
@@ -33,10 +38,13 @@ export default function QuantumInput({
   onSubmit,
   disabled = false,
   loading = false,
+  scaffoldMode = false,
+  onScaffoldToggle,
 }: QuantumInputProps) {
   const [value, setValue] = useState('')
   const [mode, setMode] = useState<QuantumMode>('standard')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scaffoldHover, setScaffoldHover] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,7 +62,7 @@ export default function QuantumInput({
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Ask Quantum a question..."
+        placeholder={scaffoldMode ? 'Describe what you want to build...' : 'Ask Quantum a question...'}
         disabled={disabled}
         className="flex-1 rounded-lg px-4 py-3 outline-none"
         style={{
@@ -71,6 +79,62 @@ export default function QuantumInput({
           e.currentTarget.style.borderColor = 'rgba(119,119,187,0.25)'
         }}
       />
+
+      {/* Scaffold mode toggle — always visible */}
+      {onScaffoldToggle && (
+        <div
+          className="relative"
+          onMouseEnter={() => setScaffoldHover(true)}
+          onMouseLeave={() => setScaffoldHover(false)}
+        >
+          <button
+            type="button"
+            onClick={() => onScaffoldToggle(!scaffoldMode)}
+            disabled={disabled}
+            aria-pressed={scaffoldMode}
+            className="rounded-lg px-3 py-3 flex items-center gap-1.5 transition-all"
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: scaffoldMode ? '#fff' : '#cbd5e1',
+              background: scaffoldMode
+                ? 'linear-gradient(135deg, rgba(127,119,221,0.4), rgba(99,102,241,0.35))'
+                : 'rgba(8,8,18,0.7)',
+              border: scaffoldMode
+                ? '1px solid rgba(127,119,221,0.7)'
+                : '1px solid rgba(119,119,187,0.25)',
+              boxShadow: scaffoldMode ? '0 0 14px rgba(127,119,221,0.45)' : 'none',
+              cursor: disabled ? 'not-allowed' : 'pointer',
+              opacity: disabled ? 0.5 : 1,
+            }}
+          >
+            <span style={{ fontSize: 14 }}>▣</span>
+            Scaffold
+          </button>
+          {scaffoldHover && (
+            <div
+              className="absolute rounded-lg"
+              style={{
+                bottom: 'calc(100% + 8px)',
+                right: 0,
+                width: 280,
+                background: 'rgba(8,8,18,0.97)',
+                border: '1px solid rgba(127,119,221,0.35)',
+                padding: '10px 12px',
+                fontSize: 14,
+                color: '#e2e8f0',
+                lineHeight: 1.5,
+                zIndex: 60,
+                boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+                backdropFilter: 'blur(10px)',
+                pointerEvents: 'none',
+              }}
+            >
+              {SCAFFOLD_TOOLTIP}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Mode dropdown */}
       <div className="relative">
@@ -192,7 +256,7 @@ export default function QuantumInput({
         ) : (
           <Zap size={16} />
         )}
-        Ask Quantum
+        {scaffoldMode ? 'Build Scaffold' : 'Ask Quantum'}
       </button>
     </form>
   )
