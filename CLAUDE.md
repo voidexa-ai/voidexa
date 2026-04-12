@@ -92,3 +92,12 @@
 - QuantumInput: added `scaffoldMode` + `onScaffoldToggle` props, placeholder switches to "Describe what you want to build...", submit button becomes "Build Scaffold" when active
 - QuantumDebatePanel: `scaffoldMode` state, wraps question with SCAFFOLD_PREFIX on submit, resets after submit
 - Follow-up toggles now only "All Providers" and "Challenge" (scaffold removed — it's a pre-question mode, not follow-up)
+
+## Session 2026-04-12 (3): Scaffold Downloads
+- QuantumDebatePanel tracks `sessionWasScaffold` when scaffold-mode submit fires
+- After synthesis renders, shows a `ScaffoldDownloads` card (glassmorphism, indigo/teal gradient) with buttons:
+  - Download CLAUDE.md, Download SKILL.md, Download Build Command (shown only when section is detected)
+  - Download Complete Scaffold (always, primary button)
+- Parser `extractScaffoldSection` finds markdown/bare headings for CLAUDE.md / SKILL.md / Build Command and slices up to the next major heading (#, or sibling labels like SKILL.md/Build Command/File Structure)
+- Downloads via Blob + createObjectURL, no server round-trip
+- Fallback message if no sections detected — user still gets full scaffold
