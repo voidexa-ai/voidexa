@@ -86,3 +86,9 @@
 - Scaffold prefix: generates CLAUDE.md + SKILL.md + file structure + build command, provider-specialized (Claude=architecture, GPT=spec, Gemini=alternatives, Perplexity=libraries)
 - Submit button label + placeholder adapt to active mode; cost label switches between "+$0.005 per follow-up" and "Costs same as a new session"
 - Follow-up mode resets to claude_only on new debate
+
+## Session 2026-04-12 (2): Scaffold Mode Standalone
+- Moved "Scaffold" toggle out of follow-up toggles into QuantumInput (always visible next to mode dropdown)
+- QuantumInput: added `scaffoldMode` + `onScaffoldToggle` props, placeholder switches to "Describe what you want to build...", submit button becomes "Build Scaffold" when active
+- QuantumDebatePanel: `scaffoldMode` state, wraps question with SCAFFOLD_PREFIX on submit, resets after submit
+- Follow-up toggles now only "All Providers" and "Challenge" (scaffold removed — it's a pre-question mode, not follow-up)
