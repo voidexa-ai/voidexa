@@ -95,6 +95,7 @@ export default function QuantumDebatePanel() {
   const [debateExpanded, setDebateExpanded] = useState(false)
   const [followUpMode, setFollowUpMode] = useState<FollowUpMode>('claude_only')
   const [scaffoldMode, setScaffoldMode] = useState(false)
+  const [sessionWasScaffold, setSessionWasScaffold] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userLoaded, setUserLoaded] = useState(false)
   const [dbSessionId, setDbSessionId] = useState<string | null>(null)
@@ -474,6 +475,7 @@ export default function QuantumDebatePanel() {
     setActiveCharId(null)
     setShowTopUpPrompt(false)
     setFollowUpMode('claude_only')
+    setSessionWasScaffold(false)
     stopTimer()
   }, [stopTimer])
 
@@ -727,6 +729,11 @@ export default function QuantumDebatePanel() {
             </div>
           )}
 
+          {/* Scaffold download card */}
+          {synthesis && sessionWasScaffold && (
+            <ScaffoldDownloads synthesis={synthesis} />
+          )}
+
           {/* Full debate — collapsible when synthesis exists */}
           {synthesis && messages.length > 0 && (
             <button
@@ -831,10 +838,12 @@ export default function QuantumDebatePanel() {
           >
             <QuantumInput
               onSubmit={(q, m) => {
-                const composed = scaffoldMode
+                const isScaffold = scaffoldMode
+                const composed = isScaffold
                   ? `${SCAFFOLD_PREFIX}\n\n[User request]\n${q}`
                   : q
                 setScaffoldMode(false)
+                setSessionWasScaffold(isScaffold)
                 handleSubmit(composed, m)
               }}
               disabled={thinkingIds.length > 0 && messages.length > 0}
@@ -1359,5 +1368,132 @@ function FollowUpInput({
         </span>
       </form>
     </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Scaffold downloads
+// ─────────────────────────────────────────────────────────────────────
+
+function extractScaffoldSection(text: string, name: string): string | null {
+  // Match headings like "# CLAUDE.md", "## CLAUDE.md", "CLAUDE.md:" etc.
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const startRe = new RegExp(
+    `(^|\\n)\\s*(?:#{1,6}\\s*)?${escaped}\\s*:?\\s*\\n`,
+    'i'
+  )
+  const m = startRe.exec(text)
+  if (!m) return null
+  const startIdx = m.index + m[0].length
+  const rest = text.slice(startIdx)
+  // Next major heading = line starting with # (any level) OR a line that's a bare label like "SKILL.md" / "Build Command" / "File Structure"
+  const nextRe = /\n\s*(?:#{1,6}\s+|(?:CLAUDE\.md|SKILL\.md|Build Command|File Structure|Dependencies|Environment Variables)\s*:?\s*\n)/i
+  const nextMatch = nextRe.exec(rest)
+  const body = nextMatch ? rest.slice(0, nextMatch.index) : rest
+  const trimmed = body.trim()
+  return trimmed.length > 0 ? trimmed : null
+}
+
+function triggerDownload(filename: string, content: string) {
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  setTimeout(() => URL.revokeObjectURL(url), 0)
+}
+
+function ScaffoldDownloads({ synthesis }: { synthesis: string }) {
+  const claudeMd = extractScaffoldSection(synthesis, 'CLAUDE.md')
+  const skillMd = extractScaffoldSection(synthesis, 'SKILL.md')
+  const buildCmd = extractScaffoldSection(synthesis, 'Build Command')
+
+  return (
+    <div
+      className="rounded-xl mb-4"
+      style={{
+        background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(93,202,165,0.08))',
+        border: '1px solid rgba(127,119,221,0.3)',
+        padding: '16px 20px',
+      }}
+    >
+      <div
+        style={{
+          fontSize: 14,
+          color: '#5dcaa5',
+          fontWeight: 700,
+          letterSpacing: '0.12em',
+          marginBottom: 10,
+        }}
+      >
+        DOWNLOAD SCAFFOLD FILES
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {claudeMd && (
+          <ScaffoldDownloadButton
+            label="Download CLAUDE.md"
+            onClick={() => triggerDownload('CLAUDE.md', claudeMd)}
+          />
+        )}
+        {skillMd && (
+          <ScaffoldDownloadButton
+            label="Download SKILL.md"
+            onClick={() => triggerDownload('SKILL.md', skillMd)}
+          />
+        )}
+        {buildCmd && (
+          <ScaffoldDownloadButton
+            label="Download Build Command"
+            onClick={() => triggerDownload('BUILD_COMMAND.txt', buildCmd)}
+          />
+        )}
+        <ScaffoldDownloadButton
+          label="Download Complete Scaffold"
+          onClick={() => triggerDownload('FULL_SCAFFOLD.md', synthesis)}
+          primary
+        />
+      </div>
+      {!claudeMd && !skillMd && !buildCmd && (
+        <p style={{ fontSize: 14, color: '#94a3b8', marginTop: 8, lineHeight: 1.5 }}>
+          Couldn&apos;t detect distinct CLAUDE.md / SKILL.md / Build Command sections. Download the complete scaffold above.
+        </p>
+      )}
+    </div>
+  )
+}
+
+function ScaffoldDownloadButton({
+  label,
+  onClick,
+  primary = false,
+}: {
+  label: string
+  onClick: () => void
+  primary?: boolean
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-lg px-4 py-2 font-semibold transition-all flex items-center gap-2"
+      style={{
+        fontSize: 14,
+        color: '#fff',
+        background: primary
+          ? 'linear-gradient(135deg, #7777bb, #6366f1)'
+          : 'rgba(127,119,221,0.25)',
+        border: primary
+          ? '1px solid rgba(127,119,221,0.5)'
+          : '1px solid rgba(127,119,221,0.3)',
+        boxShadow: primary ? '0 0 12px rgba(127,119,221,0.35)' : 'none',
+        cursor: 'pointer',
+      }}
+    >
+      <span style={{ fontSize: 14 }}>⬇</span>
+      {label}
+    </button>
   )
 }
