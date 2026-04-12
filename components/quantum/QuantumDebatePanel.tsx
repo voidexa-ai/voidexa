@@ -47,6 +47,14 @@ type LiveMessage = QuantumMessage & {
   round?: number
 }
 
+type FollowUpMode = 'claude_only' | 'all_providers' | 'challenge' | 'scaffold'
+
+const CHALLENGE_PREFIX =
+  'The user challenges your previous conclusions. Re-examine your reasoning. Find weaknesses in your own arguments. If you find you were wrong, say so. Perplexity: search for sources that CONTRADICT the previous consensus.'
+
+const SCAFFOLD_PREFIX =
+  'The user wants a complete project scaffold. Work together to produce: 1) A CLAUDE.md file with project rules, architecture, build order, and constraints. 2) A SKILL.md file with reusable patterns and best practices. 3) A complete file/folder structure. 4) A single Claude Code command that builds everything. 5) List of dependencies and environment variables needed. Output must be ready to copy-paste into Claude Code and run. Be specific, not generic. Each provider contributes from their strength: Claude=architecture, GPT=technical spec, Gemini=alternatives, Perplexity=finds libraries and existing solutions.'
+
 const TOTAL_PROVIDERS = 4
 
 const MODE_ROUND_COUNT: Record<QuantumMode, number> = {
@@ -85,6 +93,7 @@ export default function QuantumDebatePanel() {
   const [followUpLoading, setFollowUpLoading] = useState(false)
   const [synthesis, setSynthesis] = useState<string | null>(null)
   const [debateExpanded, setDebateExpanded] = useState(false)
+  const [followUpMode, setFollowUpMode] = useState<FollowUpMode>('claude_only')
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userLoaded, setUserLoaded] = useState(false)
   const [dbSessionId, setDbSessionId] = useState<string | null>(null)
@@ -463,6 +472,7 @@ export default function QuantumDebatePanel() {
     setThinkingIds([])
     setActiveCharId(null)
     setShowTopUpPrompt(false)
+    setFollowUpMode('claude_only')
     stopTimer()
   }, [stopTimer])
 
@@ -760,16 +770,32 @@ export default function QuantumDebatePanel() {
             sessionId={sessionId}
             followUps={followUps}
             loading={followUpLoading}
+            mode={followUpMode}
+            onModeChange={setFollowUpMode}
             onSubmit={async (q) => {
               if (!sessionId) return
-              setFollowUpLoading(true)
-              const res = await askFollowUp(sessionId, q, null)
-              setFollowUpLoading(false)
-              if ('error' in res) {
-                setErrorMessage(res.error)
-              } else {
-                setFollowUps(prev => [...prev, { q, a: res.answer }])
+              if (followUpMode === 'claude_only') {
+                setFollowUpLoading(true)
+                const res = await askFollowUp(sessionId, q, null)
+                setFollowUpLoading(false)
+                if ('error' in res) {
+                  setErrorMessage(res.error)
+                } else {
+                  setFollowUps(prev => [...prev, { q, a: res.answer }])
+                }
+                return
               }
+              // all_providers / challenge / scaffold — start a new debate
+              // with context from the current session prepended.
+              const contextBlock = synthesis
+                ? `[Previous Quantum debate synthesis]\n${synthesis}\n\n`
+                : ''
+              let prefix = ''
+              if (followUpMode === 'challenge') prefix = CHALLENGE_PREFIX + '\n\n'
+              else if (followUpMode === 'scaffold') prefix = SCAFFOLD_PREFIX + '\n\n'
+              const composed = `${contextBlock}${prefix}[User follow-up]\n${q}`
+              setFollowUpMode('claude_only')
+              await handleSubmit(composed, currentMode)
             }}
           />
         )}
@@ -1090,14 +1116,156 @@ function CostSummaryStrip({ summary }: { summary: CostSummary }) {
 // Follow-up input
 // ─────────────────────────────────────────────────────────────────────
 
+const FOLLOWUP_TOOLTIPS: Record<Exclude<FollowUpMode, 'claude_only'>, string> = {
+  all_providers:
+    'Send your follow-up to all 4 providers instead of just Claude. Each provider responds from their role with context from the previous debate. Costs the same as a new session.',
+  challenge:
+    'Forces all providers to question their own conclusions based on your input. Write what you want them to reconsider. They will actively try to find flaws in their previous answers.',
+  scaffold:
+    'Quantum builds a complete project scaffold with CLAUDE.md, SKILL.md, file structure, and build commands — ready to paste into Claude Code. Describe what you want to build.',
+}
+
+function FollowUpToggles({
+  mode,
+  onChange,
+  disabled,
+}: {
+  mode: FollowUpMode
+  onChange: (m: FollowUpMode) => void
+  disabled: boolean
+}) {
+  const all = mode !== 'claude_only'
+  const challenge = mode === 'challenge'
+  const scaffold = mode === 'scaffold'
+
+  const toggleAll = () => {
+    if (disabled) return
+    if (all) onChange('claude_only')
+    else onChange('all_providers')
+  }
+  const toggleChallenge = () => {
+    if (disabled) return
+    onChange(challenge ? 'all_providers' : 'challenge')
+  }
+  const toggleScaffold = () => {
+    if (disabled) return
+    onChange(scaffold ? 'all_providers' : 'scaffold')
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-2" style={{ marginBottom: 8 }}>
+      <ToggleButton
+        active={all}
+        onClick={toggleAll}
+        label="All Providers"
+        icon="◇"
+        tooltip={FOLLOWUP_TOOLTIPS.all_providers}
+        disabled={disabled}
+      />
+      <ToggleButton
+        active={challenge}
+        onClick={toggleChallenge}
+        label="Challenge"
+        icon="⚡"
+        tooltip={FOLLOWUP_TOOLTIPS.challenge}
+        disabled={disabled}
+      />
+      <ToggleButton
+        active={scaffold}
+        onClick={toggleScaffold}
+        label="Scaffold"
+        icon="▣"
+        tooltip={FOLLOWUP_TOOLTIPS.scaffold}
+        disabled={disabled}
+      />
+      {all && (
+        <span style={{ fontSize: 14, color: '#a5b4fc', marginLeft: 4 }}>
+          Costs same as a new session
+        </span>
+      )}
+    </div>
+  )
+}
+
+function ToggleButton({
+  active,
+  onClick,
+  label,
+  icon,
+  tooltip,
+  disabled,
+}: {
+  active: boolean
+  onClick: () => void
+  label: string
+  icon: string
+  tooltip: string
+  disabled: boolean
+}) {
+  const [hover, setHover] = useState(false)
+  return (
+    <div className="relative" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      <button
+        type="button"
+        onClick={onClick}
+        disabled={disabled}
+        className="rounded-full px-3 py-1.5 transition-all flex items-center gap-1.5"
+        style={{
+          fontSize: 14,
+          fontWeight: 600,
+          color: active ? '#fff' : '#94a3b8',
+          background: active
+            ? 'linear-gradient(135deg, rgba(127,119,221,0.4), rgba(99,102,241,0.35))'
+            : 'transparent',
+          border: active
+            ? '1px solid rgba(127,119,221,0.7)'
+            : '1px solid rgba(127,119,221,0.25)',
+          boxShadow: active ? '0 0 14px rgba(127,119,221,0.45)' : 'none',
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          opacity: disabled ? 0.5 : 1,
+        }}
+      >
+        <span style={{ fontSize: 14 }}>{icon}</span>
+        {label}
+      </button>
+      {hover && (
+        <div
+          className="absolute rounded-lg"
+          style={{
+            bottom: 'calc(100% + 8px)',
+            left: 0,
+            width: 280,
+            background: 'rgba(8,8,18,0.97)',
+            border: '1px solid rgba(127,119,221,0.35)',
+            padding: '10px 12px',
+            fontSize: 14,
+            color: '#e2e8f0',
+            lineHeight: 1.5,
+            zIndex: 60,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+            backdropFilter: 'blur(10px)',
+            pointerEvents: 'none',
+          }}
+        >
+          {tooltip}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function FollowUpInput({
   followUps,
   loading,
+  mode,
+  onModeChange,
   onSubmit,
 }: {
   sessionId: string
   followUps: Array<{ q: string; a: string }>
   loading: boolean
+  mode: FollowUpMode
+  onModeChange: (m: FollowUpMode) => void
   onSubmit: (question: string) => void
 }) {
   const [value, setValue] = useState('')
@@ -1109,6 +1277,28 @@ function FollowUpInput({
     onSubmit(q)
     setValue('')
   }
+
+  const allProviders = mode !== 'claude_only'
+  const submitLabel = loading
+    ? 'Asking...'
+    : mode === 'challenge'
+    ? 'Challenge Quantum'
+    : mode === 'scaffold'
+    ? 'Build Scaffold'
+    : allProviders
+    ? 'Ask All Providers'
+    : 'Ask Claude'
+  const costLabel = allProviders
+    ? 'Costs same as a new session'
+    : '+$0.005 per follow-up question'
+  const placeholder =
+    mode === 'challenge'
+      ? 'What should they reconsider?'
+      : mode === 'scaffold'
+      ? 'Describe what you want to build...'
+      : allProviders
+      ? 'Ask all 4 providers a follow-up...'
+      : `Ask a follow-up (${5 - followUps.length} remaining)...`
 
   return (
     <div
@@ -1132,16 +1322,18 @@ function FollowUpInput({
         </div>
       ))}
 
+      <FollowUpToggles mode={mode} onChange={onModeChange} disabled={loading} />
+
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder={`Ask a follow-up (${5 - followUps.length} remaining)...`}
+          placeholder={placeholder}
           disabled={loading}
           className="flex-1 rounded-lg px-3 py-2 outline-none"
           style={{
-            fontSize: 14,
+            fontSize: 16,
             color: '#e2e8f0',
             background: 'rgba(8,8,18,0.5)',
             border: '1px solid rgba(127,119,221,0.2)',
@@ -1154,15 +1346,20 @@ function FollowUpInput({
           style={{
             fontSize: 14,
             color: '#fff',
-            background: loading ? 'rgba(127,119,221,0.2)' : 'rgba(127,119,221,0.5)',
+            background: loading
+              ? 'rgba(127,119,221,0.2)'
+              : allProviders
+              ? 'linear-gradient(135deg, #7777bb, #6366f1)'
+              : 'rgba(127,119,221,0.5)',
             border: '1px solid rgba(127,119,221,0.3)',
             cursor: loading ? 'not-allowed' : 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
-          {loading ? 'Asking...' : 'Ask Claude'}
+          {submitLabel}
         </button>
         <span style={{ fontSize: 14, color: '#475569', whiteSpace: 'nowrap' }}>
-          +$0.005 per follow-up question
+          {costLabel}
         </span>
       </form>
     </div>
