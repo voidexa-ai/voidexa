@@ -70,3 +70,19 @@
 - Add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET to Vercel env variables
 - Create Stripe webhook pointing to https://voidexa.com/api/wallet/webhook (event: checkout.session.completed)
 - Optionally add STRIPE_WALLET_WEBHOOK_SECRET if using a separate webhook from the subscription one
+
+## Session 2026-04-12: Quantum Follow-up Upgrade
+### Frontend (voidexa)
+- QuantumDebatePanel: added `followUpMode` state ('claude_only' | 'all_providers' | 'challenge' | 'scaffold')
+- FollowUpToggles pill-buttons below follow-up input: "All Providers", "Challenge", "Scaffold"
+  - Inactive = outline only, Active = glowing purple/indigo gradient
+  - Hover shows tooltip popup (280px, 14px text, dark glass)
+  - Challenge/Scaffold auto-enable All Providers, mutually exclusive
+  - Toggling All Providers off resets to claude_only
+- Follow-up submission routing:
+  - claude_only (default): existing askFollowUp API (+$0.005)
+  - all_providers/challenge/scaffold: composes context block from previous synthesis + optional challenge/scaffold prefix + user's q, then calls handleSubmit to start a new full debate (costs same as new session)
+- Challenge prefix: "The user challenges your previous conclusions. Re-examine... Perplexity: search for sources that CONTRADICT..."
+- Scaffold prefix: generates CLAUDE.md + SKILL.md + file structure + build command, provider-specialized (Claude=architecture, GPT=spec, Gemini=alternatives, Perplexity=libraries)
+- Submit button label + placeholder adapt to active mode; cost label switches between "+$0.005 per follow-up" and "Costs same as a new session"
+- Follow-up mode resets to claude_only on new debate
