@@ -1,3 +1,6 @@
+## READ THESE FIRST
+- Read docs/STAR_SYSTEM_SPEC.md for the complete voidexa star system ecosystem design (visual architecture, economic engine, data model, build phases).
+
 ## PRODUCTION — QUANTUM ER LIVE
 - Backend: https://quantum-production-dd9d.up.railway.app
 - Frontend: https://voidexa.com/quantum/chat (Vercel)
@@ -135,3 +138,36 @@
 - `npx vercel env pull .env.prod-check --environment=production --yes` — inspect prod env values for hidden chars (delete file after!)
 - Direct Stripe API for webhook management: `curl -u $STRIPE_SECRET_KEY: https://api.stripe.com/v1/webhook_endpoints` (list/create/delete)
 - Stripe API doesn't expose existing webhook signing secrets — only returned on endpoint creation. To "rotate": delete + recreate.
+# ============================================
+# APPEND THIS TO THE BOTTOM OF YOUR EXISTING CLAUDE.md
+# in C:\Users\Jixwu\Desktop\voidexa\CLAUDE.md
+# ============================================
+
+---
+
+## Star System Ecosystem
+
+### Required reading before any star system work
+Read these files before touching anything related to star map, planets, claiming, ecosystem, or inter-planet features:
+- `docs/STAR_SYSTEM_SPEC.md` — Complete ecosystem design (visual + economic + data model + build phases)
+- `docs/SKILL_STAR_SYSTEM.md` — Build rules and priorities for star system work
+
+### Key architecture decisions
+- The EXISTING star map on the homepage is Level 2 for voidexa (voidexa's internal system)
+- Level 1 (Galaxy View) is a NEW parent view showing all company planets
+- Level 2 is reusable per company — same Three.js mechanics, different data
+- All commerce in GHAI — no second token
+- Service Mesh is voluntary for planet owners
+- Build everything, enable features based on planet count thresholds (see STAR_SYSTEM_SPEC.md Phase 5-10)
+- Claim Your Planet page at /claim-your-planet explains the full ecosystem value proposition
+
+### Supabase tables for star system
+Tables defined in STAR_SYSTEM_SPEC.md Part 3: companies, industries, sectors, company_services, trade_routes, gravity_score_snapshots, gravity_events, planet_claim_leads, company_tags.
+
+### Non-negotiable rules
+1. Never show 500 labeled planets at once
+2. Current star map is preserved as Level 2 for voidexa
+3. Mobile prioritizes search/list over 3D
+4. First 10 planets onboarded personally by Jix
+5. Match existing dark space aesthetic exactly
+6. Minimum font 16px body, 14px labels
