@@ -362,8 +362,11 @@ export default function GhostAIPage() {
             </span>
           </div>
           <h2 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
-            Earn GHAI
+            Pioneer Rewards
           </h2>
+          <p className="mt-2 text-sm" style={{ color: '#64748b' }}>
+            Token rewards structure pending legal review. GHAI integration coming soon — subject to regulatory approval.
+          </p>
         </motion.div>
 
         <div className="space-y-2">

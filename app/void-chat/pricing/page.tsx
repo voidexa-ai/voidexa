@@ -47,7 +47,7 @@ export default function PricingPage() {
             <p className="text-3xl font-bold mb-1" style={{ color: '#888' }}>TBA</p>
             <p className="text-gray-500 mb-6">per message</p>
             <ul className="space-y-3 text-gray-500 mb-8">
-              <li>Pay with GHAI tokens</li>
+              <li>GHAI integration coming soon — subject to regulatory approval</li>
               <li>All models including premium</li>
               <li>No subscription required</li>
               <li>Join the waitlist to be first</li>

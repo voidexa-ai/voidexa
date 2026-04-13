@@ -51,7 +51,7 @@ const BEHIND_THE_SCENES = [
   },
   {
     date: 'Mar 2026',
-    update: 'GHAI token live on Solana. Platform credit system integrated.',
+    update: 'Platform credit system integrated. GHAI integration coming soon — subject to regulatory approval.',
   },
   {
     date: 'Mar 2026',

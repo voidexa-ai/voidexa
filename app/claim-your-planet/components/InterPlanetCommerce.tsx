@@ -6,8 +6,8 @@ import { fadeUp, sectionHeading, sectionSub } from './shared'
 type Split = { who: string; pct: string; desc: string; color: string }
 
 const splits: Split[] = [
-  { who: 'You (service provider)', pct: '70%', desc: 'Paid in GHAI every time another planet hits your API.', color: '#22c55e' },
-  { who: 'Routing planet', pct: '15%', desc: 'The planet that integrated your service gets a cut for the referral.', color: '#00d4ff' },
+  { who: 'Service provider', pct: '70%', desc: 'The planet that publishes the API keeps the majority share of revenue.', color: '#22c55e' },
+  { who: 'Routing planet', pct: '15%', desc: 'The planet that integrated the service takes a referral share.', color: '#00d4ff' },
   { who: 'voidexa', pct: '15%', desc: 'Infrastructure, orchestration, and network maintenance.', color: '#a855f7' },
 ]
 
@@ -24,8 +24,8 @@ export function InterPlanetCommerce() {
         >
           <h2 style={sectionHeading}>How Inter-Planet Commerce Works</h2>
           <p style={sectionSub}>
-            You offer a service. Another planet uses it. GHAI flows. Everyone
-            wins proportionally to what they brought.
+            You offer a service. Another planet uses it. Revenue splits
+            proportionally across the participants.
           </p>
         </motion.div>
 
@@ -42,8 +42,9 @@ export function InterPlanetCommerce() {
           <p style={{ margin: 0 }}>
             <span style={{ color: '#22c55e', fontWeight: 600 }}>Planet A</span> publishes a medical chatbot API.{' '}
             <span style={{ color: '#00d4ff', fontWeight: 600 }}>Planet B</span> calls it from their edtech app.
-            Each call settles in GHAI and splits automatically — visible as a glowing trade
-            route on the star map.
+            Each call splits automatically across the revenue participants — visible as
+            a glowing trade route on the star map. Settlement in GHAI coming soon,
+            subject to regulatory approval.
           </p>
         </motion.div>
 

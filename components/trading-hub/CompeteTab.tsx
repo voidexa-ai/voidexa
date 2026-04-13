@@ -101,7 +101,7 @@ export default function CompeteTab() {
                 <div style={{ color: '#e2e8f0', fontSize: '1.375rem', fontWeight: 500, letterSpacing: '0.02em', lineHeight: 1 }}>
                   {amount.toLocaleString()}
                 </div>
-                <div style={{ color: '#475569', fontSize: '0.875rem', marginTop: 2 }}>GHAI</div>
+                <div style={{ color: '#475569', fontSize: '0.875rem', marginTop: 2 }}>pts</div>
               </div>
             ))}
           </div>
@@ -170,7 +170,7 @@ export default function CompeteTab() {
           </h3>
         </div>
         <p style={{ color: '#64748b', fontSize: '0.9375rem', lineHeight: 1.6, marginBottom: 16 }}>
-          The voidexa All-Season bot has returned +194.79% over its lifetime. Any bot on the leaderboard that beats this benchmark earns a permanent spot in the Hall of Fame and 5,000 GHAI.
+          The voidexa All-Season bot has returned +194.79% over its lifetime. Any bot on the leaderboard that beats this benchmark earns a permanent spot in the Hall of Fame. Prize structure pending legal review.
         </p>
         <div className="flex flex-wrap gap-4">
           <div>
@@ -183,7 +183,7 @@ export default function CompeteTab() {
           </div>
           <div>
             <div style={{ color: '#475569', fontSize: '0.875rem' }}>Reward</div>
-            <div style={{ color: ACCENT, fontWeight: 500, fontSize: '1.5rem', letterSpacing: '0.02em' }}>5,000 GHAI</div>
+            <div style={{ color: ACCENT, fontWeight: 500, fontSize: '1.125rem', letterSpacing: '0.02em' }}>Pending legal review</div>
           </div>
         </div>
       </motion.div>

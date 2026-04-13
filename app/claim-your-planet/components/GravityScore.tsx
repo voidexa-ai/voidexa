@@ -43,7 +43,7 @@ export function GravityScore() {
               What it measures
             </p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 15, color: '#cbd5e1', lineHeight: 1.9 }}>
-              <li>Transactions — every GHAI flow through your planet</li>
+              <li>Transactions — every revenue flow through your planet</li>
               <li>Services — APIs, products, and integrations you publish</li>
               <li>Tenure — how long you&apos;ve been orbiting</li>
             </ul>

@@ -41,7 +41,8 @@ export function Pricing() {
               $500 <span style={{ fontSize: 18, color: '#64748b', fontWeight: 500 }}>USD</span>
             </p>
             <p style={{ fontSize: 15, color: '#94a3b8', lineHeight: 1.65, marginBottom: 12 }}>
-              One-time. Paid in GHAI at the daily rate with a 15% discount, or in USD.
+              One-time, paid in USD. Discount available when paying with GHAI (coming
+              soon — subject to regulatory approval).
             </p>
             <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.65 }}>
               Funds ecosystem infrastructure — servers, APIs, scaling. Transparent allocation.

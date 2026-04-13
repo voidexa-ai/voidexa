@@ -11,7 +11,7 @@ const items: Item[] = [
   {
     icon: <Network size={22} />,
     title: 'Service Mesh',
-    desc: 'Sell your API services to other planets. Every call earns you GHAI. Voluntary — turn it on only when you have something to offer.',
+    desc: 'Offer your API services to other planets through the ecosystem. Voluntary — turn it on only when you have something to offer. Settlement in GHAI coming soon, subject to regulatory approval.',
     color: '#00d4ff',
   },
   {
@@ -34,8 +34,8 @@ const items: Item[] = [
   },
   {
     icon: <ArrowRightLeft size={22} />,
-    title: 'You earn when others use your services',
-    desc: 'This isn\'t hosting — it\'s an economy. Every planet that integrates your API is a passive income stream.',
+    title: 'Value flows when others use your services',
+    desc: 'This isn\'t hosting — it\'s an economy. Every planet that integrates your API plugs into the ecosystem routing layer.',
     color: '#ec4899',
   },
 ]

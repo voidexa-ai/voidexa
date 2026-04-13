@@ -64,16 +64,16 @@ export default function ClaimPlanetTeaser() {
           maxWidth: 520, margin: '0 auto 14px',
         }}>
           Own a sovereign node in the voidexa star system.
-          Fuel it with GHAI, build something real, and become
-          part of the infrastructure that runs itself.
+          Build something real and become part of the infrastructure
+          that runs itself.
         </p>
 
         <p style={{
           fontSize: 15, color: '#475569', lineHeight: 1.6,
           maxWidth: 480, margin: '0 auto 32px',
         }}>
-          The first 5 habitable planets receive a special pioneer reward:
-          exclusive pioneer rewards vested over 18 months.
+          The first habitable planets receive pioneer benefits —
+          details shared during onboarding, subject to regulatory approval.
         </p>
 
         <Link

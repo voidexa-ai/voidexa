@@ -73,14 +73,14 @@ const ROADMAP: RoadmapItem[] = [
   // ── PLANNED ──────────────────────────────────────────────────────────────
   {
     title: 'Node System',
-    desc: 'Validator nodes earning GHAI.',
+    desc: 'Validator node program — details pending regulatory review.',
     tooltip: undefined,
     status: 'planned',
     phase: 'Phase 8',
   },
   {
     title: 'Competitions',
-    desc: 'Monthly GHAI prize pools.',
+    desc: 'Monthly competitions — prize structure pending legal review.',
     tooltip: undefined,
     status: 'planned',
     phase: 'Phase 9',
@@ -129,7 +129,7 @@ const ROADMAP: RoadmapItem[] = [
   },
   {
     title: 'Referrals',
-    desc: 'Earn GHAI for bringing builders.',
+    desc: 'Referral rewards — details shared during onboarding.',
     tooltip: undefined,
     status: 'planned',
     phase: 'Phase 16',

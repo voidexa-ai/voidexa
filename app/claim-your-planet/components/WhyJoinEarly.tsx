@@ -8,8 +8,8 @@ type Item = { title: string; desc: string }
 
 const items: Item[] = [
   {
-    title: 'Pioneer GHAI grants decrease over time',
-    desc: 'Planet 1 gets 10M. Planet 51 gets 3M. Planet 101 gets 1M. The door is closing as it opens.',
+    title: 'Pioneer tiers shrink as the galaxy fills',
+    desc: 'Tier 1 is reserved for the first 10 planets. Tier 2 and 3 follow. The door is closing as it opens.',
   },
   {
     title: 'Early planets claim key marketplace niches',
@@ -20,8 +20,8 @@ const items: Item[] = [
     desc: 'Your vote weight grows as your Gravity Score grows. Later arrivals spend years catching up to your early head start.',
   },
   {
-    title: 'Pioneer Royalties create permanent passive income',
-    desc: 'Every derivative built on top of what you ship pays you 2% — forever.',
+    title: 'Derivative recognition for foundational work',
+    desc: 'Pioneers are recognized when later planets build on top of what they ship — recognition model pending legal review.',
   },
 ]
 

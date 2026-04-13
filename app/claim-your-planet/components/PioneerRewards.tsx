@@ -6,7 +6,7 @@ import { fadeUp, sectionHeading, sectionSub } from './shared'
 
 type Tier = {
   range: string
-  ghai: string
+  headline: string
   governance: string
   featured: string
   color: string
@@ -14,9 +14,9 @@ type Tier = {
 }
 
 const tiers: Tier[] = [
-  { range: 'Planet 1–10', ghai: '10M GHAI', governance: '2x governance', featured: '12 months featured', color: '#f59e0b', glow: 'rgba(245,158,11,0.12)' },
-  { range: 'Planet 11–25', ghai: '7M GHAI', governance: '1.5x governance', featured: '6 months featured', color: '#00d4ff', glow: 'rgba(0,212,255,0.12)' },
-  { range: 'Planet 26–50', ghai: '5M GHAI', governance: '1x governance', featured: '3 months featured', color: '#8b5cf6', glow: 'rgba(139,92,246,0.12)' },
+  { range: 'Planet 1–10', headline: 'Tier 1 Pioneer', governance: '2x governance', featured: '12 months featured', color: '#f59e0b', glow: 'rgba(245,158,11,0.12)' },
+  { range: 'Planet 11–25', headline: 'Tier 2 Pioneer', governance: '1.5x governance', featured: '6 months featured', color: '#00d4ff', glow: 'rgba(0,212,255,0.12)' },
+  { range: 'Planet 26–50', headline: 'Tier 3 Pioneer', governance: '1x governance', featured: '3 months featured', color: '#8b5cf6', glow: 'rgba(139,92,246,0.12)' },
 ]
 
 export function PioneerRewards() {
@@ -40,8 +40,8 @@ export function PioneerRewards() {
           </div>
           <h2 style={sectionHeading}>The earlier you land, the more you carry.</h2>
           <p style={sectionSub}>
-            Tiered GHAI grants, governance weight, and featured placement — scaled to how
-            early you stake your planet.
+            Tiered pioneer benefits — governance weight, featured placement, and token
+            incentives scaled to how early you stake your planet.
           </p>
         </motion.div>
 
@@ -69,15 +69,16 @@ export function PioneerRewards() {
                 {t.range}
               </p>
               <p style={{
-                fontSize: 32, fontWeight: 800, color: '#e2e8f0',
+                fontSize: 28, fontWeight: 800, color: '#e2e8f0',
                 letterSpacing: '-0.02em', marginBottom: 14,
                 fontFamily: 'var(--font-space)',
               }}>
-                {t.ghai}
+                {t.headline}
               </p>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 15, color: '#cbd5e1', lineHeight: 1.8 }}>
                 <li>{t.governance}</li>
                 <li>{t.featured}</li>
+                <li style={{ color: '#94a3b8' }}>Pioneer token incentives</li>
               </ul>
             </motion.div>
           ))}
@@ -98,11 +99,11 @@ export function PioneerRewards() {
             background: 'rgba(0,212,255,0.04)',
           }}>
             <p style={{ fontSize: 14, fontWeight: 600, color: '#00d4ff', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
-              Vesting
+              Token incentives
             </p>
             <p style={{ fontSize: 15, color: '#cbd5e1', lineHeight: 1.65, margin: 0 }}>
-              20% of your GHAI grant unlocks immediately. The remaining 80% vests over
-              18 months.
+              Pioneer token incentives — details shared during onboarding. Token rewards
+              structure pending legal review.
             </p>
           </div>
           <div style={{
@@ -111,14 +112,26 @@ export function PioneerRewards() {
             background: 'rgba(139,92,246,0.05)',
           }}>
             <p style={{ fontSize: 14, fontWeight: 600, color: '#a855f7', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
-              Pioneer Royalties
+              Derivative credits
             </p>
             <p style={{ fontSize: 15, color: '#cbd5e1', lineHeight: 1.65, margin: 0 }}>
-              Earn 2% of any derivative service built on top of your work — permanent,
-              passive, compounding.
+              Pioneers are recognized when later planets build on top of their work —
+              recognition model subject to regulatory approval.
             </p>
           </div>
         </motion.div>
+
+        <motion.p
+          initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
+          style={{
+            fontSize: 13, color: '#64748b', marginTop: 24, textAlign: 'center',
+            maxWidth: 620, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6,
+            fontStyle: 'italic',
+          }}
+        >
+          GHAI integration coming soon — subject to regulatory approval. Not a
+          securities offering. Not financial advice.
+        </motion.p>
       </div>
     </section>
   )

@@ -544,11 +544,11 @@ function TradingBotPanel() {
 
 function GhaiPanel() {
   const data = [
-    { label: 'price',    value: '$0.0042', color: BLUE },
-    { label: '24h change', value: '+3.2%', color: '#4ade80' },
-    { label: 'supply',   value: '700M GHAI', color: '#94a3b8' },
-    { label: 'burned',   value: '2.4M GHAI', color: RED },
-    { label: 'holders',  value: '847', color: '#f1f5f9' },
+    { label: 'price',    value: 'Coming Soon', color: 'rgba(136,136,136,0.5)' },
+    { label: '24h change', value: '—', color: 'rgba(136,136,136,0.5)' },
+    { label: 'supply',   value: 'Pending review', color: 'rgba(136,136,136,0.5)' },
+    { label: 'burned',   value: '—', color: 'rgba(136,136,136,0.5)' },
+    { label: 'holders',  value: '—', color: 'rgba(136,136,136,0.5)' },
     { label: 'contract', value: 'Coming Soon', color: 'rgba(136,136,136,0.5)' },
   ];
   return (
