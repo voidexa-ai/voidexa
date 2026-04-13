@@ -8,7 +8,7 @@ export const STRIPE_PRO = {
   pricePerMonth: 500, // $5.00 in cents
   unlimitedStandardModels: true,
   premiumModelsRequireGHAI: true, // Opus etc. still cost GHAI even for Pro subs
-  stripePriceId: process.env.STRIPE_PRICE_ID_PRO || '',
+  stripePriceId: (process.env.STRIPE_PRICE_ID_PRO || '').trim(),
 } as const;
 
 export const GHAI_DISCOUNT_PERCENT = 15; // GHAI payments are 15% cheaper than Stripe equivalent

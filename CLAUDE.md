@@ -101,3 +101,37 @@
 - Parser `extractScaffoldSection` finds markdown/bare headings for CLAUDE.md / SKILL.md / Build Command and slices up to the next major heading (#, or sibling labels like SKILL.md/Build Command/File Structure)
 - Downloads via Blob + createObjectURL, no server round-trip
 - Fallback message if no sections detected — user still gets full scaffold
+
+## Session 2026-04-13: Stripe Wallet Top-Up Recovery
+### Problem
+- Wallet top-ups completed in Stripe but balance stayed at $0 — webhook was not crediting
+- Earlier Stripe checkout errors: `ERR_INVALID_CHAR` on Authorization header, then `success_url` "Not a valid URL"
+- Vercel env vars had trailing `\n` / `\r\n` on multiple values (`NEXT_PUBLIC_SITE_URL`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_ID_PRO`) from paste artifacts
+
+### Root Cause
+- `STRIPE_WEBHOOK_SECRET` in Vercel production was set to the value of `STRIPE_SECRET_KEY` (`sk_test_...`) instead of a `whsec_...` signing secret → every Stripe delivery failed signature verification with 400, Stripe marked event as pending indefinitely
+
+### Defensive code fix — `.trim()` on all Stripe/site env reads
+- `lib/stripe/client.ts:8` — `STRIPE_SECRET_KEY`
+- `app/api/wallet/topup/route.ts:26` — `NEXT_PUBLIC_SITE_URL` (extracted into `siteUrl` const)
+- `app/api/wallet/webhook/route.ts:21` — `STRIPE_WALLET_WEBHOOK_SECRET || STRIPE_WEBHOOK_SECRET`
+- `app/api/stripe/webhook/route.ts:25` — `STRIPE_WEBHOOK_SECRET`
+- `app/api/stripe/checkout/route.ts:27` — `NEXT_PUBLIC_SITE_URL`
+- `config/pricing.ts:11` — `STRIPE_PRICE_ID_PRO`
+
+### Infrastructure fix
+- Created new Stripe webhook endpoint `we_1TLluLDVfBjAC4z8878uAbqXl` → URL `https://voidexa.com/api/wallet/webhook`, event `checkout.session.completed`
+- Captured new signing secret (`whsec_hR4n...`, 38 chars) and replaced `STRIPE_WEBHOOK_SECRET` in Vercel production via `vercel env rm` + `vercel env add`
+- Deleted old broken endpoint `we_1TLjO2DVfBjAC4z8MFCdFtqh`
+- Redeployed with `npx vercel --prod`
+
+### Missed top-up recovery
+- User `fc0f1632-9724-42c8-a31d-d05a466e7588` had a successful $5 Stripe test payment (session `cs_test_a1M4WKJM78QstRIlLm1ktnbWIpMLqFDmHgAFAappFZYD0ji3y1JnfR2bs9`) but wallet = $0
+- Credited directly via Supabase SQL: `balance_usd` and `total_deposited_usd` += $5, inserted `wallet_transactions` row with the `stripe_session_id` for idempotency (prevents double-credit if Stripe replays)
+
+### Debugging workflow reference
+- `npx vercel logs voidexa.com --environment production --since 4h --expand --no-follow --query "path"` — filtered prod logs
+- `npx vercel logs ... --status-code 400` — find 4xx only (must be specific code, not `4xx`)
+- `npx vercel env pull .env.prod-check --environment=production --yes` — inspect prod env values for hidden chars (delete file after!)
+- Direct Stripe API for webhook management: `curl -u $STRIPE_SECRET_KEY: https://api.stripe.com/v1/webhook_endpoints` (list/create/delete)
+- Stripe API doesn't expose existing webhook signing secrets — only returned on endpoint creation. To "rotate": delete + recreate.

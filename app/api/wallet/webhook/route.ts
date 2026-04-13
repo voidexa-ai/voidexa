@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WALLET_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET!
+      (process.env.STRIPE_WALLET_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET!).trim()
     )
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Webhook verification failed'

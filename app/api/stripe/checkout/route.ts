@@ -24,6 +24,8 @@ export async function POST(req: NextRequest) {
   try {
     const customerId = await getOrCreateStripeCustomer(user.id, user.email);
 
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://voidexa.com').trim();
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -33,8 +35,8 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://voidexa.com'}/ghost-ai/chat?subscription=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://voidexa.com'}/ghost-ai/pricing?subscription=cancelled`,
+      success_url: `${siteUrl}/ghost-ai/chat?subscription=success`,
+      cancel_url: `${siteUrl}/ghost-ai/pricing?subscription=cancelled`,
       metadata: {
         supabase_user_id: user.id,
       },

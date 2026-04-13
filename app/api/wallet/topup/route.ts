@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid amount. Choose $5, $10, $25, or $50.' }, { status: 400 })
   }
 
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://voidexa.com').trim()
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -36,8 +38,8 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://voidexa.com'}/quantum/chat?topup=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://voidexa.com'}/quantum/chat?topup=cancelled`,
+      success_url: `${siteUrl}/quantum/chat?topup=success`,
+      cancel_url: `${siteUrl}/quantum/chat?topup=cancelled`,
       metadata: {
         supabase_user_id: user.id,
         wallet_topup: 'true',
