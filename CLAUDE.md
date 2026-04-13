@@ -171,3 +171,19 @@ Tables defined in STAR_SYSTEM_SPEC.md Part 3: companies, industries, sectors, co
 4. First 10 planets onboarded personally by Jix
 5. Match existing dark space aesthetic exactly
 6. Minimum font 16px body, 14px labels
+
+## Session 2026-04-13 (2): Claim Your Planet rebuild (full ecosystem)
+### Frontend (voidexa)
+- Split /claim-your-planet into 11 section components in app/claim-your-planet/components/
+  - Hero, WhatYouGet, Ecosystem, PioneerRewards, PioneerSlots, Pricing, GravityScore, InterPlanetCommerce, Governance, WhyJoinEarly, CTA
+- shared.tsx (fadeUp, ShimmerText, sectionHeading/Sub, glassCard) used across sections
+- Hero copy: "You're not renting a page. You're building a sovereign system inside the voidexa galaxy."
+- PioneerRewards: tiered cards (1-10: 10M/2x/12mo, 11-25: 7M/1.5x/6mo, 26-50: 5M/1x/3mo) + vesting (20% immediate, 80% over 18 months) + 2% Pioneer Royalties
+- PioneerSlots: 10 dashed circles, "X of 10 Pioneer slots remaining"
+- Pricing: $500 deposit (GHAI 15% discount) + $50/mo, self-sustaining at critical mass
+- GravityScore: what it measures (transactions/services/tenure) vs affects (size/ranking/governance)
+- InterPlanetCommerce: 70/15/15 split cards (provider / routing / voidexa)
+- Governance: vote weight = Gravity Score × Pioneer multiplier
+- WhyJoinEarly: 4 FOMO points, "Planet #50 will wish they were Planet #5"
+- CTA: mailto:contact@voidexa.com, 10 Pioneer Slots badge
+- Deployed via npx vercel --prod (dpl_Fr9Br2pYfx3KNArtuEQsdHXyT3cJ)
