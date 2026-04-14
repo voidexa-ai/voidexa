@@ -73,6 +73,7 @@ export default function FreeFlightPage() {
         }}>
           <div>WASD · Thrust</div>
           <div>Mouse · Look (click to lock)</div>
+          <div>RMB · Free Look · Scroll · Zoom</div>
           <div>Shift · Boost · Space · Brake</div>
           <div>V · Toggle Cockpit · ESC · Menu</div>
         </div>

@@ -12,8 +12,9 @@ interface Props {
 }
 
 const MAX_SPEED = 60
-const BOOST_SPEED = 120
-const ACCELERATION = 30
+const BOOST_SPEED = 160
+const ACCELERATION = 60
+const BOOST_ACCEL_MULT = 4
 const BRAKE_DECEL = 50
 const DRIFT_DAMP = 0.992
 const ROT_SENSITIVITY = 0.0022
@@ -97,7 +98,7 @@ export default function FlightControls({ ship, shipGroup, enabled }: Props) {
     s.brake = !!k['Space']
 
     const maxSpeed = s.boost ? BOOST_SPEED : MAX_SPEED
-    const accel = ACCELERATION * (s.boost ? 2 : 1)
+    const accel = ACCELERATION * (s.boost ? BOOST_ACCEL_MULT : 1)
 
     s.velocity.addScaledVector(thrust, accel * dt)
 

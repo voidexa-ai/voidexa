@@ -28,7 +28,7 @@ export default function CockpitHUD({ ship, visible }: Props) {
     if (d < nearestDist) { nearest = p; nearestDist = d }
   }
 
-  const speedPct = Math.min(100, (s.speed / 120) * 100)
+  const speedPct = Math.min(100, (s.speed / 160) * 100)
 
   const panel: React.CSSProperties = {
     position: 'absolute',

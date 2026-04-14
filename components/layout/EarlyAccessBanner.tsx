@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
 
 const STORAGE_KEY = 'voidexa_eab_v2_dismissed'
@@ -17,6 +18,7 @@ function getCountdown(): string {
 }
 
 export default function EarlyAccessBanner() {
+  const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [countdown, setCountdown] = useState('')
   const [isLive, setIsLive] = useState(false)
@@ -47,6 +49,7 @@ export default function EarlyAccessBanner() {
   }, [])
 
   if (!visible) return null
+  if (pathname === '/freeflight') return null
 
   return (
     <div

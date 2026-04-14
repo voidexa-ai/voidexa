@@ -7,8 +7,10 @@ import ShipModel from './ships/ShipModel'
 import FlightControls from './controls/FlightControls'
 import CameraManager from './controls/CameraManager'
 import AsteroidField from './environment/AsteroidField'
+import PlanetCollision from './environment/PlanetCollision'
 import SpaceStations from './environment/SpaceStation'
 import NPCManager from './environment/NPCManager'
+import CockpitFrame from './cockpit/CockpitFrame'
 import { PLANETS, createShipState } from './types'
 
 interface Props {
@@ -56,7 +58,7 @@ export default function FreeFlightScene({ onShipState, onDockPromptChange, onFir
         </group>
       ))}
 
-      <ShipModel ref={shipGroupRef} visible={!firstPerson} />
+      <ShipModel ref={shipGroupRef} ship={shipRef} visible={!firstPerson} />
 
       <FlightControls ship={shipRef} shipGroup={shipGroupRef} enabled={true} />
       <CameraManager
@@ -64,6 +66,9 @@ export default function FreeFlightScene({ onShipState, onDockPromptChange, onFir
         onModeChange={(fp) => { setFirstPerson(fp); onFirstPersonChange?.(fp) }}
       />
 
+      <CockpitFrame ship={shipRef} visible={firstPerson} />
+
+      <PlanetCollision ship={shipRef} />
       <AsteroidField ship={shipRef} />
       <SpaceStations ship={shipRef} onDockPromptChange={onDockPromptChange} />
       <NPCManager />
