@@ -7,6 +7,8 @@ import * as THREE from 'three'
 import NodeMesh from './NodeMesh'
 import { STAR_MAP_NODES } from './nodes'
 import NebulaBg from './NebulaBg'
+import WarpStreaks from './WarpStreaks'
+import CameraRig from './CameraRig'
 
 // ── Custom starfield: 5000 particles with twinkle ──────────────────────────
 function StarField() {
@@ -186,6 +188,7 @@ function EnergyPulses() {
 // ── Main scene ─────────────────────────────────────────────────────────────
 export default function StarMapScene() {
   const [warping, setWarping] = useState(false)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   return (
     <>
@@ -200,13 +203,24 @@ export default function StarMapScene() {
       <StarField />
       <AmbientDust />
 
+      {/* Warp streaks — visible only during warp */}
+      <WarpStreaks active={warping} />
+
+      {/* Camera rig: parallax + hover dolly (disabled during warp) */}
+      <CameraRig hoveredId={hoveredId} disabled={warping} />
+
       {/* Constellation network */}
       <ConstellationLines />
       <EnergyPulses />
 
       {/* Planets */}
       {STAR_MAP_NODES.map(node => (
-        <NodeMesh key={node.id} node={node} onWarpStart={() => setWarping(true)} />
+        <NodeMesh
+          key={node.id}
+          node={node}
+          onWarpStart={() => setWarping(true)}
+          onHoverChange={setHoveredId}
+        />
       ))}
 
       {/* Unmount OrbitControls during warp so it can't fight the camera animation */}

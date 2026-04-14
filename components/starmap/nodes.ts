@@ -1,3 +1,15 @@
+export type PlanetType =
+  | 'sun'
+  | 'desert'
+  | 'ocean'
+  | 'ice'
+  | 'jungle'
+  | 'gas'
+  | 'volcanic'
+  | 'tech'
+  | 'mystery'
+  | 'station'
+
 export interface StarNode {
   id: string
   label: string
@@ -10,6 +22,7 @@ export interface StarNode {
   isCenter: boolean
   sublabel: string
   isDiscovered: boolean
+  planetType?: PlanetType
 }
 
 export const STAR_MAP_NODES: StarNode[] = [
@@ -25,6 +38,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: true,
     sublabel: 'Sovereign AI Infrastructure',
     isDiscovered: true,
+    planetType: 'sun',
   },
   {
     id: 'trading',
@@ -38,6 +52,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Autonomous Bot Systems',
     isDiscovered: true,
+    planetType: 'volcanic',
   },
   {
     id: 'apps',
@@ -51,6 +66,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Secure Tools · Private by Design',
     isDiscovered: true,
+    planetType: 'tech',
   },
   {
     id: 'ai-tools',
@@ -64,6 +80,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Multi-AI Orchestration Suite',
     isDiscovered: true,
+    planetType: 'jungle',
   },
   {
     id: 'services',
@@ -77,6 +94,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Custom AI · Data Intelligence',
     isDiscovered: true,
+    planetType: 'volcanic',
   },
   {
     id: 'about',
@@ -90,6 +108,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Born from the void',
     isDiscovered: true,
+    planetType: 'ice',
   },
   {
     id: 'contact',
@@ -103,6 +122,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Get in touch',
     isDiscovered: true,
+    planetType: 'desert',
   },
   // ── Undiscovered mystery nodes ──────────────────────────────────────────
   {
@@ -117,6 +137,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Multi-AI chat with KCP-90 compression. Claude, ChatGPT & Gemini.',
     isDiscovered: true,
+    planetType: 'gas',
   },
   {
     id: 'quantum',
@@ -130,6 +151,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Live — 960 Tests Passed',
     isDiscovered: true,
+    planetType: 'gas',
   },
   {
     id: 'trading-hub',
@@ -143,6 +165,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Build · Compete · Learn',
     isDiscovered: true,
+    planetType: 'desert',
   },
   {
     id: 'station',
@@ -156,6 +179,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Content Hub',
     isDiscovered: true,
+    planetType: 'station',
   },
   {
     id: 'claim-your-planet',
@@ -169,6 +193,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     isCenter: false,
     sublabel: 'Claim your planet',
     isDiscovered: false,
+    planetType: 'mystery',
   },
 ]
 

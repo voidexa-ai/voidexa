@@ -6,17 +6,35 @@ import type { ThreeEvent } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import { useRouter } from 'next/navigation'
 import * as THREE from 'three'
-import type { StarNode } from './nodes'
+import gsap from 'gsap'
+import type { StarNode, PlanetType } from './nodes'
 
 interface NodeMeshProps {
   node: StarNode
   onWarpStart?: (node: StarNode) => void
+  onHoverChange?: (id: string | null) => void
 }
 
-export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
+const ATMOSPHERE_BY_TYPE: Record<PlanetType, { scale: number; opacity: number; color?: string }> = {
+  sun:      { scale: 2.0, opacity: 0.18 },
+  desert:   { scale: 1.55, opacity: 0.14 },
+  ocean:    { scale: 1.70, opacity: 0.20 },
+  ice:      { scale: 1.75, opacity: 0.22, color: '#a8d8ff' },
+  jungle:   { scale: 1.60, opacity: 0.18 },
+  gas:      { scale: 1.95, opacity: 0.26 },
+  volcanic: { scale: 1.55, opacity: 0.22 },
+  tech:     { scale: 1.65, opacity: 0.18 },
+  mystery:  { scale: 1.50, opacity: 0.08 },
+  station:  { scale: 1.00, opacity: 0.00 },
+}
+
+export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshProps) {
   const { position, size, color, emissive, emissiveIntensity, label, sublabel, path, isCenter, isDiscovered } = node
+  const planetType: PlanetType = node.planetType ?? 'desert'
+  const atmo = ATMOSPHERE_BY_TYPE[planetType]
   const meshRef  = useRef<THREE.Mesh>(null)
   const glowRef  = useRef<THREE.Mesh>(null)
+  const atmoRef  = useRef<THREE.Mesh>(null)
   const ringRef  = useRef<THREE.Mesh>(null)
   const stationRingRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
@@ -27,32 +45,16 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   // Click guard: track pointer-down position to distinguish click from drag
   const pointerDownAt = useRef<[number, number] | null>(null)
 
-  // Travel-zoom animation state
-  const travelRef = useRef<{
-    active: boolean
-    progress: number
-    startPos: THREE.Vector3
-    targetPos: THREE.Vector3
-    lookAtPos: THREE.Vector3
-    path: string
-    navigated: boolean
-  }>({
-    active: false,
-    progress: 0,
-    startPos: new THREE.Vector3(),
-    targetPos: new THREE.Vector3(),
-    lookAtPos: new THREE.Vector3(),
-    path: '',
-    navigated: false,
-  })
+  // Warp state — progress drives emissive fade; GSAP handles camera
+  const warpRef = useRef({ active: false, progress: 0 })
 
-  useFrame(({ clock, camera: cam }) => {
+  useFrame(({ clock }) => {
     const t = clock.elapsedTime
     const pulse = Math.sin(t * 1.4 + phaseOffset) * 0.12 + 0.88
-    const travel = travelRef.current
+    const warp = warpRef.current
 
     // Fade emissive/glow during warp approach to prevent bloom overflow
-    const warpFade = travel.active ? Math.max(0.08, 1 - travel.progress * 0.92) : 1
+    const warpFade = warp.active ? Math.max(0.08, 1 - warp.progress * 0.92) : 1
 
     if (meshRef.current) {
       const mat = meshRef.current.material as THREE.MeshStandardMaterial
@@ -69,6 +71,15 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       mat.opacity = isDiscovered ? (hovered ? 0.28 : pulse * 0.1) * warpFade : 0
     }
 
+    if (atmoRef.current && planetType !== 'station') {
+      const mat = atmoRef.current.material as THREE.MeshBasicMaterial
+      const base = atmo.opacity
+      const breath = 0.85 + Math.sin(t * 0.8 + phaseOffset) * 0.15
+      mat.opacity = isDiscovered
+        ? (hovered ? base * 1.6 : base * breath) * warpFade
+        : base * 0.3 * warpFade
+    }
+
     if (ringRef.current && isCenter) {
       ringRef.current.rotation.y = t * 0.25
       ringRef.current.rotation.x = Math.sin(t * 0.15) * 0.3 + 0.4
@@ -79,36 +90,21 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
       stationRingRef.current.rotation.x = Math.sin(t * 0.25) * 0.5 + Math.PI / 4
     }
 
-    // Warp travel animation toward clicked node
-    if (travel.active) {
-      travel.progress = Math.min(travel.progress + 0.016, 1)
-      const ease = 1 - Math.pow(1 - travel.progress, 3)
-
-      cam.position.lerpVectors(travel.startPos, travel.targetPos, ease)
-      cam.lookAt(travel.lookAtPos)
-
-      if (travel.progress >= 0.8 && !travel.navigated) {
-        travel.navigated = true
-        router.push(travel.path)
-      }
-
-      if (travel.progress >= 1) {
-        travel.active = false
-      }
-    }
   })
 
   const onEnter = useCallback(() => {
     if (!isDiscovered && !path && node.id !== 'claim-your-planet') return
     if (!path) return
     setHovered(true)
+    onHoverChange?.(node.id)
     document.body.style.cursor = 'pointer'
-  }, [isDiscovered, path, node.id])
+  }, [isDiscovered, path, node.id, onHoverChange])
 
   const onLeave = useCallback(() => {
     setHovered(false)
+    onHoverChange?.(null)
     document.body.style.cursor = 'grab'
-  }, [])
+  }, [onHoverChange])
 
   // onPointerDown: record screen position for click-vs-drag detection
   const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -120,24 +116,65 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
   // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
   const handleNodeClick = useCallback(() => {
     if (!path) return
+    if (warpRef.current.active) return
     console.log('CLICK:', label, path, isCenter)
 
-    if (onWarpStart) onWarpStart(node)
+    onWarpStart?.(node)
 
-    const travel = travelRef.current
-    travel.active = true
-    travel.progress = 0
-    travel.navigated = false
-    travel.startPos = camera.position.clone()
-    travel.path = path
-
-    // Camera-relative direction — works for all nodes including center at [0,0,0]
     const planetPos = new THREE.Vector3(...position)
     const camToNode = planetPos.clone().sub(camera.position).normalize()
     const dist = camera.position.distanceTo(planetPos)
-    travel.targetPos = camera.position.clone().add(camToNode.multiplyScalar(Math.max(dist - 2.5, 0.5)))
-    travel.lookAtPos = planetPos.clone()
-  }, [path, label, camera, position, node, router, onWarpStart, isDiscovered])
+    const targetPos = camera.position.clone().add(camToNode.multiplyScalar(Math.max(dist - 2.5, 0.5)))
+
+    const persp = camera as THREE.PerspectiveCamera
+    const startFov = persp.fov ?? 60
+
+    const state = { progress: 0, fov: startFov }
+    warpRef.current.active = true
+    warpRef.current.progress = 0
+
+    const look = new THREE.Vector3()
+    let navigated = false
+
+    gsap.killTweensOf(state)
+    gsap.killTweensOf(camera.position)
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        warpRef.current.active = false
+        warpRef.current.progress = 0
+        persp.fov = startFov
+        persp.updateProjectionMatrix()
+      },
+    })
+
+    tl.to(state, {
+      progress: 1,
+      fov: 92,
+      duration: 1.0,
+      ease: 'power3.in',
+      onUpdate: () => {
+        warpRef.current.progress = state.progress
+        persp.fov = state.fov
+        persp.updateProjectionMatrix()
+        if (state.progress >= 0.75 && !navigated) {
+          navigated = true
+          router.push(path)
+        }
+      },
+    })
+      .to(camera.position, {
+        x: targetPos.x,
+        y: targetPos.y,
+        z: targetPos.z,
+        duration: 1.0,
+        ease: 'power3.in',
+        onUpdate: () => {
+          look.copy(planetPos)
+          camera.lookAt(look)
+        },
+      }, 0)
+  }, [path, label, camera, position, node, router, onWarpStart, isCenter])
 
   // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
   const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -231,8 +268,25 @@ export default function NodeMesh({ node, onWarpStart }: NodeMeshProps) {
           opacity={0.1}
           depthWrite={false}
           side={THREE.BackSide}
+          toneMapped={false}
         />
       </mesh>
+
+      {/* Planet-type atmosphere shell */}
+      {planetType !== 'station' && (
+        <mesh ref={atmoRef} scale={atmo.scale} raycast={() => null}>
+          <sphereGeometry args={[size, 24, 24]} />
+          <meshBasicMaterial
+            color={atmo.color ?? emissive}
+            transparent
+            opacity={atmo.opacity}
+            depthWrite={false}
+            side={THREE.BackSide}
+            toneMapped={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      )}
 
       {/* Point light */}
       <pointLight
