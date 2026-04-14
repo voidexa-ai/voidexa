@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 
 const links = [
+  { href: '/starmap',  label: 'Galaxy'   },
   { href: '/trading',  label: 'Trading'  },
   { href: '/apps',     label: 'Apps'     },
   { href: '/ai-tools', label: 'AI Tools' },

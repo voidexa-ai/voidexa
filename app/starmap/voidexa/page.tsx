@@ -12,7 +12,7 @@ export default function VoidexaSystem() {
         onClick={() => router.push('/starmap')}
         style={{
           position: 'fixed',
-          top: 18,
+          top: 80,
           left: 18,
           zIndex: 60,
           padding: '8px 16px',

@@ -27,6 +27,9 @@ export default function GalaxyPage() {
   const handleWarpTo = (planet: CompanyPlanet) => {
     setHighlightedId(planet.id)
     setFocusTarget([planet.position[0], planet.position[1], planet.position[2]])
+    if (planet.path) {
+      window.setTimeout(() => router.push(planet.path), 650)
+    }
   }
 
   return (
@@ -94,6 +97,35 @@ export default function GalaxyPage() {
       }}>
         Drag to rotate · Scroll to zoom · Click a planet to enter its system
       </div>
+
+      {/* Explore the Universe (Free Flight entry) */}
+      <button
+        onClick={() => router.push('/freeflight')}
+        disabled={warping}
+        style={{
+          position: 'fixed',
+          bottom: 80,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 30,
+          padding: '12px 28px',
+          background: 'linear-gradient(135deg, rgba(0,120,180,0.5), rgba(139,92,246,0.45))',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(0, 212, 255, 0.5)',
+          borderRadius: 999,
+          color: '#fff',
+          fontSize: 16,
+          fontFamily: 'var(--font-space, system-ui)',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          cursor: warping ? 'default' : 'pointer',
+          boxShadow: '0 0 22px rgba(0, 212, 255, 0.35)',
+          textShadow: '0 0 10px #00d4ff',
+          opacity: warping ? 0.4 : 1,
+        }}
+      >
+        Explore the Universe
+      </button>
 
       {/* Back to voidexa home */}
       <button
