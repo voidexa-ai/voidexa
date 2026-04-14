@@ -338,3 +338,36 @@ Steps 1.1–1.4 were already in place (postprocessing, emissive nodes, nebula, s
 
 ### Note
 Backup commit `7841bc9` also landed 7 pre-existing untracked `.glb` files in `public/models/glb-ready/` (that path is not gitignored, unlike `ships/`/`cockpits/`/`stations/`). Left alone; if you want them untracked, add `public/models/glb-ready/**` to `.gitignore` (keep `!README.md` negation for the one tracked doc there).
+
+## Session 2026-04-15: Star System Phase 2 — Level 1 Galaxy View
+Added a new parent view at `/starmap` that wraps the existing (Level 2) star map per spec. Existing home at `/` and `components/starmap/` untouched.
+
+### New files (`components/galaxy/`)
+- `companies.ts` — `CompanyPlanet` + `Industry` types, `GALAXY_PLANETS` array (voidexa sun + claim-your-planet mystery), `INDUSTRY_META` palette. Shape ready for Supabase `companies` rows.
+- `CompanyPlanet.tsx` — single planet mesh with distance-based LOD (far >45: dot only / med 22–45: shape + atmosphere + label fade / close <22: sublabel visible). Reuses the same GSAP warp pattern as `NodeMesh.tsx` (FOV 60→92, router.push at 75% progress). `highlightedId` prop boosts emissive when sidebar hover/search matches.
+- `Constellations.tsx` — pairs all planets sharing an industry (excluding sun/mystery) into dashed lines. Renders nothing at v1 (only one real planet) but the data path is live.
+- `GalaxyScene.tsx` — own starfield (radius 55–70), reuses `NebulaBg` + `WarpStreaks` from starmap. OrbitControls minDistance 8 / maxDistance 70 (wider than Level 2 to allow the far LOD tier to trigger). Target `[0,0,0]`.
+- `GalaxyCanvas.tsx` — same post-processing stack as `StarMapCanvas` (Bloom 0.9/1.8 mipmapBlur, ChromaticAberration, Noise overlay, Vignette). Includes `FocusController` that GSAP-tweens the camera toward a `focusTarget` (used by sidebar click-to-warp; desired dist = clamp(12, currentDist*0.6, 30)).
+- `GalaxyPage.tsx` — top shell: dynamic-imports canvas (ssr:false), mounts `DirectorySidebar`, "Galaxy View · Level 1" top badge, UPPERCASE hint, "← Home" button top-right (routes to `/`).
+- `DirectorySidebar.tsx` — collapsible left panel (300px open / 44px collapsed, backdrop-blur 14px). Search input triggers `onHighlight` on the first match as user types. List sorted sun-first then alphabetical. Each row shows emissive dot, name, industry label. Click → `onWarpTo` → `FocusController` tween.
+
+### Routes
+- `app/starmap/page.tsx` — imports `GalaxyPage` (static).
+- `app/starmap/voidexa/page.tsx` — wraps `StarMapPage` as a client component, overlays "← Back to Galaxy" button top-left (zIndex 60 to sit above `MiniNav`/KCP panel).
+
+### Verification
+- `npx next build` clean — `/starmap` and `/starmap/voidexa` both prerendered static (○). Only pre-existing bigint bindings warning.
+- No new dependencies (uses already-installed `@react-three/fiber`, `@react-three/drei`, `@react-three/postprocessing`, `gsap`, `three`).
+- `public/models/` untouched per instruction.
+- Existing `/` (home star map) and `components/starmap/` untouched — preserved as Level 2.
+
+### Commits + deploy
+- `bfdc001` backup before phase 2 galaxy view build (empty)
+- `6488220` feat(galaxy): phase 2 Level 1 galaxy view
+- Pushed `main:master`
+- Vercel: `dpl_EQ9zHNCt7n9Qgd4BURdCqyRtnKAu` → https://voidexa.com/starmap (ready)
+
+### Notes / next steps
+- The root `/` still renders the Level 2 star map directly — `/starmap/voidexa` is the canonical Level 2 route per spec, but the old home entry wasn't changed. If you want `/` to redirect to `/starmap`, it's a one-line change in `app/page.tsx`.
+- Constellation edges only render when ≥2 planets share an industry. First real company added via Supabase will trigger them once `GALAXY_PLANETS` becomes data-driven.
+- Level 2 already warps to a page (e.g. `/quantum`) when you click a node — for a fully consistent three-level nav, future work should intercept those and route them under `/starmap/voidexa/<slug>` instead of leaving the star map entirely.
