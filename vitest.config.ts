@@ -11,6 +11,7 @@ export default defineConfig({
       "lib/shop/__tests__/**/*.test.ts",
       "lib/cards/__tests__/**/*.test.ts",
       "lib/chat/__tests__/**/*.test.ts",
+      "lib/achievements/__tests__/**/*.test.ts",
     ],
     environment: "node",
     globals: false,
