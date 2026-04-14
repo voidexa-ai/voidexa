@@ -315,3 +315,26 @@ public/models/
 
 ### Next (when starting Phase 1 build)
 Per Phase 1-3 spec: pick 1 fighter / 1 cruiser / 1 battleship from `ships/free/quaternius-spaceships/`, 1 free cockpit from `cockpits/`, and either modular station parts from `stations/` or procedural geometry. Convert to Draco `.glb`, place in `converted/`, regenerate inventory, commit.
+
+## Session 2026-04-14 (2): Star Map Phase 1 gap-fill
+Steps 1.1–1.4 were already in place (postprocessing, emissive nodes, nebula, star twinkle). Gap-filled 1.5–1.7.
+
+### Frontend (components/starmap/)
+- `WarpStreaks.tsx` (new) — 700 line segments anchored to camera via group.position/quaternion copy, stretch length driven by lerped strength float. Additive blending, `toneMapped={false}`.
+- `NodeMesh.tsx` — replaced manual useFrame lerp with GSAP timeline: camera.position tween + parallel FOV tween 60→92 (`power3.in`, 1.0s). `router.push(path)` fires at 75% progress. `persp.updateProjectionMatrix()` in onUpdate. `gsap.killTweensOf()` guards re-click. `warpRef.active` still drives emissive/glow fade in useFrame.
+- `nodes.ts` — added `PlanetType` discriminated union (sun/desert/ocean/ice/jungle/gas/volcanic/tech/mystery/station) and assigned per node.
+- `NodeMesh.tsx` — per-type atmosphere shell: `ATMOSPHERE_BY_TYPE` map (scale 1.5–2.0, opacity 0.08–0.26), additive BackSide sphere outside the existing glowRef halo. Breathing opacity via sin(t*0.8). Skipped for `station` type (uses HTML image).
+- `CameraRig.tsx` (new) — mouse parallax (camera-local right/up axes, ±0.35/0.22) + hover dolly (toward hovered node, 0.15–0.55 forward). Subtracts prev frame's offset before applying new → no drift, OrbitControls stays authoritative. Disabled during warp.
+- `StarMapScene.tsx` — lifted `hoveredId` state, threads `onHoverChange` to every NodeMesh, mounts `<WarpStreaks active={warping} />` and `<CameraRig hoveredId={...} disabled={warping} />`.
+
+### Verification
+- `npx next build` clean (only pre-existing non-fatal bigint warning)
+- No new dependencies — `gsap` and `postprocessing` already installed; `three-custom-shader-material` avoided by using plain shell geometry for atmosphere
+- `public/models/` untouched per instruction
+
+### Commits
+- `7841bc9` backup before phase 1 gap-fill
+- `987c40b` feat(starmap): phase 1 gap-fill — GSAP warp, atmosphere shells, camera rig
+
+### Note
+Backup commit `7841bc9` also landed 7 pre-existing untracked `.glb` files in `public/models/glb-ready/` (that path is not gitignored, unlike `ships/`/`cockpits/`/`stations/`). Left alone; if you want them untracked, add `public/models/glb-ready/**` to `.gitignore` (keep `!README.md` negation for the one tracked doc there).
