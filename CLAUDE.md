@@ -371,3 +371,52 @@ Added a new parent view at `/starmap` that wraps the existing (Level 2) star map
 - The root `/` still renders the Level 2 star map directly — `/starmap/voidexa` is the canonical Level 2 route per spec, but the old home entry wasn't changed. If you want `/` to redirect to `/starmap`, it's a one-line change in `app/page.tsx`.
 - Constellation edges only render when ≥2 planets share an industry. First real company added via Supabase will trigger them once `GALAXY_PLANETS` becomes data-driven.
 - Level 2 already warps to a page (e.g. `/quantum`) when you click a node — for a fully consistent three-level nav, future work should intercept those and route them under `/starmap/voidexa/<slug>` instead of leaving the star map entirely.
+
+## Session 2026-04-15 (2): Phase 3 Free Flight + galaxy fixes + test runner fix
+### Test runner (Windows)
+- `npm test` failed: `vitest` not on PATH + `npm` bug missing optional dep `@rollup/rollup-win32-x64-msvc`
+- `package.json` scripts → `node node_modules/vitest/vitest.mjs run` (absolute entry, works regardless of PATH)
+- Added `@rollup/rollup-win32-x64-msvc` to `optionalDependencies` so the Rollup native binding is installed on Windows
+- `lib/shop/items.ts` had `export { CardRarity as ShopRarity }` + `export type ShopRarity = CardRarity` which TS flagged as conflicting declarations. Replaced with `export type ShopRarity = CardRarity; export const ShopRarity = CardRarity;` (type+value alias pattern)
+- After fix: `npm test` → 140/142 pass. The 2 failures are in `lib/cards/__tests__/deck.test.ts` (untracked, pre-existing; not part of `lib/game/` which still has 77/77 green)
+
+### Galaxy view fixes (existing Phase 2 code)
+- `app/starmap/voidexa/page.tsx` — Back-to-Galaxy button moved from `top:18` to `top:80` so it no longer covers the `VX voidexa` logo in `MiniNav`
+- `components/galaxy/GalaxyPage.tsx` — `handleWarpTo` now also `router.push(planet.path)` after a 650ms focus-tween delay, so sidebar click on "Claim Your Planet" routes to `/claim-your-planet` (previously it only camera-focused)
+- `components/starmap/MiniNav.tsx` — added `{ href: '/starmap', label: 'Galaxy' }` as the first nav link on the homepage, giving a persistent entry point to Level 1
+
+### Phase 3 Free Flight (`/freeflight`)
+New directory `components/freeflight/` — game scene reuses the same R3F + postprocessing stack:
+- `types.ts` — `ShipState` (position/quaternion/velocity/speed/boost/brake/health/shield/firstPerson/shake), `PLANETS` (voidexa hub + alpha/beta/gamma/delta), `STATIONS` (3 docks)
+- `ships/ShipModel.tsx` — `useGLTF('/models/glb-ready/qs_bob.glb')` (preloaded), forwardRef group, engine glow point light + emissive sphere at rear, LOD scale lookup per frame (full <100m / 0.7× 100-500m / 0.3× billboard-ish >500m)
+- `controls/FlightControls.tsx` — keyboard refs (WASD thrust, Q/E or Ctrl/RShift vertical, Shift boost, Space brake). Mouse yaw/pitch via pointer lock (clamped ±π/2.1). Momentum: accel 30 u/s² (×2 boost), drift damp 0.992, max 60 u/s (120 boost). Writes `shipGroup.position/quaternion` each frame from `ShipState`
+- `controls/CameraManager.tsx` — V key toggles `firstPerson`. Offset lerps (rate 8) between `(0, 0.4, -0.2)` FPV and `(0, 2, 8)` chase. Camera shake when `shakeUntil > now` — random jitter ×`shakeStrength`. Always `lookAt` 10 units forward along ship quaternion
+- `cockpit/CockpitHUD.tsx` — HTML overlay (not R3F Hud — kept simple). Crosshair center; bottom-left speed panel w/ velocity bar + BOOST/BRAKE pips; bottom-right Hull+Shield bars (`#66ff99` / `#00d4ff`); top-right nearest-planet readout; top-left mode/keys hints. Cyan `textShadow` + `boxShadow` glow matches voidexa palette. Re-renders 12.5× per second via `setInterval`
+- `environment/AsteroidField.tsx` — 260 `IcosahedronGeometry` instances with per-vertex sin/cos noise (seeded rng), rotated each frame via setMatrixAt. Collision: every frame builds `Obstacle[]` from the seed data and calls `checkCollision` from `lib/game/physics.ts` with ship radius 1.5. On hit: 400ms shake, `velocity.multiplyScalar(-0.3)`, shield -5, 500ms cooldown
+- `environment/SpaceStation.tsx` — 3 procedural stations (cylinder body + torus ring rotating + antenna + `#00d4ff` beacon point light pulsing). Per-frame distance check vs `STATIONS[].dockRadius` emits `onDockPromptChange(name)` when crossing threshold
+- `environment/NPCManager.tsx` — 8 `ConeGeometry` instances. Route built with `generatePatrolRoute` from `lib/game/npcs.ts` (waypoints 3, spread 40, seeded rng) between consecutive stations. Each tick moves along forward vector at `NPC_DEFS[Patrol].speed * 0.3` (18 u/s), advances waypoint when within 2u. Cones orient by `setFromUnitVectors(up, forward)`
+- `FreeFlightScene.tsx` — composes ambient+directional light, drei `<Stars>` (3500 count, radius 1200), planet spheres with emissive + atmosphere shell, ShipModel (hidden in FPV), FlightControls, CameraManager, AsteroidField, SpaceStations, NPCManager. Ship ref is hoisted via `onShipState` callback
+- `FreeFlightCanvas.tsx` — Canvas wrapper with Bloom (0.25 thresh, 1.2 intensity, mipmapBlur) + Vignette
+- `FreeFlightPage.tsx` — fullscreen layout. ESC toggles menu + exits pointer lock. E while `dockPrompt` set opens menu ("Docked · X"). Menu buttons: Resume, Return to Galaxy (→ `/starmap`). Chase-cam help overlay (bottom-left) shown when not FPV. "Free Flight" pill top-center also opens menu.
+
+### Entry points
+- `app/freeflight/page.tsx` thin wrapper around `FreeFlightPage`
+- `components/galaxy/GalaxyPage.tsx` — "Explore the Universe" CTA pill (bottom 80, centered, cyan/purple gradient) routes to `/freeflight`
+- Layer 2 (asteroids, NPCs, stations) exists only inside `/freeflight` — Galaxy View and Level 2 star map don't import `components/freeflight/*`
+
+### Verify
+- `npx next build` clean — `/freeflight` prerenders static (○)
+- Existing routes untouched in behavior (homepage, /starmap, /starmap/voidexa)
+- `public/models/` not modified; only reads `qs_bob.glb` at runtime via `useGLTF`
+
+### Commits + deploy
+- `af5af71` backup before phase 3 free flight build
+- `780c35b` feat: phase 3 Free Flight + galaxy fixes + test runner fix
+- Pushed `main:master`
+- Vercel production → https://voidexa.com/freeflight (aliased live)
+
+### Gotchas
+- R3F `useRef<THREE.Group>(null)` is nullable under React 19 strict types — `ref.current` must be guarded in `useFrame` (ShipModel LOD block). `ref.current.position` with `ref` typed as `MutableRefObject<Group>` forces `forwardRef` to accept nullable.
+- `lib/shop/items.ts` TS duplicate export: `export { X as Y }` alongside `export type Y` emits 2300. The `type Y = X; const Y = X` idiom keeps both namespaces consistent.
+- The "click to lock mouse" flow means the pointer lock drops when ESC menu opens. Users must click the canvas again after Resume.
+
