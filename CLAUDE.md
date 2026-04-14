@@ -187,3 +187,90 @@ Tables defined in STAR_SYSTEM_SPEC.md Part 3: companies, industries, sectors, co
 - WhyJoinEarly: 4 FOMO points, "Planet #50 will wish they were Planet #5"
 - CTA: mailto:contact@voidexa.com, 10 Pioneer Slots badge
 - Deployed via npx vercel --prod (dpl_Fr9Br2pYfx3KNArtuEQsdHXyT3cJ)
+# ============================================
+# STAR SYSTEM — APPEND TO EXISTING CLAUDE.md
+# File: C:\Users\Jixwu\Desktop\voidexa\CLAUDE.md
+# ============================================
+
+---
+
+## Star System + Free Flight Ecosystem
+
+### Master Plan
+The complete plan is in `docs/VOIDEXA_STAR_SYSTEM_COMPLETE_PLAN_v1.2_FINAL.md`.
+READ THIS FILE BEFORE ANY STAR SYSTEM WORK. It contains all decisions, specs, and rules.
+
+### Architecture Overview
+The star system has three navigation levels plus a game mode:
+- Level 1: Galaxy View (new) — all company planets, zoom reveal, constellation grouping
+- Level 2: Company System — existing star map, upgraded with premium effects. IS Level 2 for voidexa
+- Level 3: Page Surface — existing, click planet → land on page
+- Free Flight: same 3D scene as Level 1/2, different controls (WASD ship instead of orbit)
+
+The EXISTING star map code in `components/starmap/` is preserved and becomes Level 2.
+Level 1 wraps around it. Free Flight reuses the same scene with different camera/controls.
+
+### Required Reading Before Any Work
+- `docs/VOIDEXA_STAR_SYSTEM_COMPLETE_PLAN_v1.2_FINAL.md` — complete spec
+- `docs/SKILL_STAR_SYSTEM_PHASE1-3.md` — build instructions for phases 1-3
+
+### Tech Stack for Star System
+- React Three Fiber (`@react-three/fiber`)
+- `@react-three/postprocessing` for bloom, chromatic aberration, vignette
+- `@react-three/drei` for helpers (Stars, Float, etc.)
+- GSAP for warp transitions and camera animations
+- Three.js custom shaders for nebula, star twinkle, energy tendrils
+- Draco-compressed .glb models for ships (loaded via useGLTF)
+- Supabase for player data, chat, achievements, cards, wagers
+- Supabase Realtime for Universe Chat and multiplayer sync
+
+### Existing Files — DO NOT DELETE
+```
+components/starmap/
+├── nodes.ts              — node positions/colors — MODIFY for premium
+├── CSSStarfield.tsx      — CSS stars fallback — KEEP
+├── MiniNav.tsx           — compact nav — KEEP
+├── NodeMesh.tsx          — R3F sphere nodes — HEAVY MODIFICATION
+├── StarMapScene.tsx      — full R3F scene — HEAVY MODIFICATION
+├── StarMapCanvas.tsx     — Canvas wrapper — MODIFY (add postprocessing)
+└── StarMapPage.tsx       — progressive loader — KEEP
+```
+
+### New Directory Structure
+```
+components/starmap/           — Level 2 (existing, upgraded)
+components/galaxy/            — Level 1 (new galaxy view)
+components/freeflight/        — Free Flight mode
+  ├── cockpit/                — first person cockpit HUD
+  ├── controls/               — WASD ship controls
+  ├── ships/                  — ship models, LOD, skins
+  ├── environment/            — asteroids, nebula, stations, NPCs
+  └── combat/                 — PvP, races, card system (later phases)
+components/chat/              — Universe Chat
+components/shop/              — Ship/card shop
+public/models/                — .glb ship models (Draco compressed)
+public/models/cockpits/       — cockpit models
+public/models/stations/       — station models
+lib/game/                     — game logic (not React)
+  ├── physics.ts              — collision detection (distance checks)
+  ├── alientech.ts            — alien tech spawn/use/backfire
+  ├── cards.ts                — card system logic
+  ├── ranks.ts                — rank/matchmaking
+  └── npcs.ts                 — NPC behavior/routes
+```
+
+### Non-Negotiable Rules
+1. NEVER delete existing star map code — modify and extend
+2. Current star map = Level 2 for voidexa. Do not change this relationship
+3. Minimum font: 16px body, 14px labels, opacity minimum 0.5
+4. Ship models load via useGLTF with Draco compression
+5. Free Flight layer 2 content (asteroids, NPCs) loads ONLY in Free Flight mode
+6. Cockpit model loads ONLY in Free Flight mode
+7. Post-processing: use half-res for bloom, mipmapBlur, multisampling={0}
+8. Mobile: disable post-processing, use search/list nav, no Free Flight
+9. All shop payments via Stripe USD — NO GHAI until explicitly told otherwise
+10. No pay-to-win: shop = cosmetics only, gameplay = stats only
+11. Achievement ships are soulbound — never transferable
+12. Test after every change. Git backup before major modifications
+13. Match existing dark space aesthetic exactly
+14. Performance: max 5000 particles, instanced mesh for asteroids/NPCs, LOD for ships
