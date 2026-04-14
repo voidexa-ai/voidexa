@@ -1,0 +1,124 @@
+'use client'
+
+import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import CSSStarfield from '../starmap/CSSStarfield'
+import DirectorySidebar from './DirectorySidebar'
+import { GALAXY_PLANETS, type CompanyPlanet } from './companies'
+
+const GalaxyCanvas = dynamic(() => import('./GalaxyCanvas'), {
+  ssr: false,
+  loading: () => null,
+})
+
+export default function GalaxyPage() {
+  const router = useRouter()
+  const [highlightedId, setHighlightedId] = useState<string | null>(null)
+  const [warping, setWarping] = useState(false)
+  const [focusTarget, setFocusTarget] = useState<[number, number, number] | null>(null)
+
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
+  const handleWarpTo = (planet: CompanyPlanet) => {
+    setHighlightedId(planet.id)
+    setFocusTarget([planet.position[0], planet.position[1], planet.position[2]])
+  }
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
+      <CSSStarfield />
+      <GalaxyCanvas
+        highlightedId={highlightedId}
+        onHoverChange={setHighlightedId}
+        onWarpChange={setWarping}
+        focusTarget={focusTarget}
+        onFocusConsumed={() => setFocusTarget(null)}
+      />
+
+      <DirectorySidebar
+        planets={GALAXY_PLANETS}
+        highlightedId={highlightedId}
+        onHighlight={setHighlightedId}
+        onWarpTo={handleWarpTo}
+      />
+
+      {/* Top badge */}
+      <div style={{
+        position: 'fixed',
+        top: 18,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 20,
+        padding: '8px 18px',
+        background: 'rgba(6, 8, 18, 0.55)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(0, 212, 255, 0.25)',
+        borderRadius: 999,
+        color: 'rgba(255,255,255,0.92)',
+        fontSize: 14,
+        fontFamily: 'var(--font-space, system-ui)',
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        pointerEvents: 'none',
+      }}>
+        Galaxy View · Level 1
+      </div>
+
+      {/* Hint */}
+      <div style={{
+        position: 'absolute',
+        bottom: 28,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 20,
+        color: 'rgba(255,255,255,0.55)',
+        fontSize: 14,
+        letterSpacing: '0.08em',
+        fontFamily: 'var(--font-inter, system-ui)',
+        pointerEvents: 'none',
+        whiteSpace: 'nowrap',
+        textTransform: 'uppercase',
+      }}>
+        Drag to rotate · Scroll to zoom · Click a planet to enter its system
+      </div>
+
+      {/* Back to voidexa home */}
+      <button
+        onClick={() => router.push('/')}
+        disabled={warping}
+        style={{
+          position: 'fixed',
+          top: 18,
+          right: 18,
+          zIndex: 30,
+          padding: '8px 16px',
+          background: 'rgba(6, 8, 18, 0.65)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(0, 212, 255, 0.3)',
+          borderRadius: 6,
+          color: 'rgba(255,255,255,0.9)',
+          fontSize: 14,
+          fontFamily: 'var(--font-inter, system-ui)',
+          letterSpacing: '0.04em',
+          cursor: warping ? 'default' : 'pointer',
+          opacity: warping ? 0.4 : 1,
+        }}
+      >
+        ← Home
+      </button>
+    </div>
+  )
+}
