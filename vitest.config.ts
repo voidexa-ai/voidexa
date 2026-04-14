@@ -13,6 +13,7 @@ export default defineConfig({
       "lib/chat/__tests__/**/*.test.ts",
       "lib/achievements/__tests__/**/*.test.ts",
       "lib/race/__tests__/**/*.test.ts",
+      "lib/missions/__tests__/**/*.test.ts",
     ],
     environment: "node",
     globals: false,
