@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useRef } from 'react'
+import { forwardRef, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -9,16 +9,16 @@ import type { ShipState } from '../types'
 interface Props {
   visible: boolean
   ship: React.MutableRefObject<ShipState>
-  url?: string
+  url: string
+  scale?: number
 }
 
-const DEFAULT_URL = '/models/glb-ready/qs_bob.glb'
-
 const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
-  { visible, ship, url = DEFAULT_URL },
+  { visible, ship, url, scale = 1.2 },
   ref,
 ) {
   const gltf = useGLTF(url)
+  const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
   const engineLight = useRef<THREE.PointLight>(null)
   const engineMesh = useRef<THREE.Mesh>(null)
   const trailMesh = useRef<THREE.Mesh>(null)
@@ -34,7 +34,7 @@ const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
       else lodScale.current = 1
     }
     const s = ship.current
-    const speedN = Math.min(1, s.speed / 120)
+    const speedN = Math.min(1, s.speed / 160)
     const boost = s.boost ? 1 : 0
     if (engineLight.current) {
       engineLight.current.intensity = 2 + speedN * 4 + boost * 6
@@ -56,11 +56,9 @@ const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
 
   return (
     <group ref={ref} visible={visible}>
-      {/* Fix 1: rotate model 180° on Y so front faces forward (-Z) */}
       <group rotation={[0, Math.PI, 0]}>
-        <primitive object={gltf.scene.clone()} scale={1.2} />
+        <primitive object={scene} scale={scale} />
       </group>
-      {/* Engine glow */}
       <pointLight
         ref={engineLight}
         position={[0, 0, 2]}
@@ -72,7 +70,6 @@ const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
         <sphereGeometry args={[0.45, 12, 12]} />
         <meshBasicMaterial color="#00ffff" toneMapped={false} />
       </mesh>
-      {/* Engine trail — cone tip forward so it streams behind (+Z) */}
       <mesh ref={trailMesh} position={[0, 0, 2.5]} rotation={[-Math.PI / 2, 0, 0]}>
         <coneGeometry args={[0.35, 1, 12, 1, true]} />
         <meshBasicMaterial
@@ -88,7 +85,5 @@ const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
     </group>
   )
 })
-
-useGLTF.preload(DEFAULT_URL)
 
 export default ShipModel

@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo, useRef, useEffect } from 'react'
+import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { NPCType, NPC_DEFS, generatePatrolRoute } from '@/lib/game/npcs'
 import { STATIONS } from '../types'
@@ -11,18 +12,73 @@ interface NPCInstance {
   route: THREE.Vector3[]
   routeIdx: number
   speed: number
-  type: NPCType
-  hostile: boolean
+  quat: THREE.Quaternion
 }
 
 const PATROL_COUNT = 8
 const PIRATE_COUNT = 4
+const PATROL_MODEL = '/models/glb-ready/qs_challenger.glb'
+const PIRATE_MODEL = '/models/glb-ready/qs_executioner.glb'
+const PATROL_SCALE = 0.4
+const PIRATE_SCALE = 0.45
+
+interface NPCShipProps {
+  instance: NPCInstance
+  scene: THREE.Group
+  scale: number
+  glowColor: string
+  glowOpacity: number
+  refCallback: (g: THREE.Group | null) => void
+  lightRef: (l: THREE.PointLight | null) => void
+}
+
+function NPCShip({ instance, scene, scale, glowColor, glowOpacity, refCallback, lightRef }: NPCShipProps) {
+  return (
+    <group ref={refCallback}>
+      <group rotation={[0, Math.PI, 0]}>
+        <primitive object={scene} scale={scale} />
+      </group>
+      {/* Engine light */}
+      <pointLight
+        ref={lightRef}
+        position={[0, 0, 1.5]}
+        color={glowColor}
+        intensity={2}
+        distance={12}
+      />
+      {/* Engine glow sphere */}
+      <mesh position={[0, 0, 1.5]}>
+        <sphereGeometry args={[0.28, 10, 10]} />
+        <meshBasicMaterial color={glowColor} toneMapped={false} />
+      </mesh>
+      {/* Outer halo */}
+      <mesh raycast={() => null}>
+        <sphereGeometry args={[1.4, 12, 12]} />
+        <meshBasicMaterial
+          color={glowColor}
+          transparent
+          opacity={glowOpacity}
+          toneMapped={false}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  )
+}
 
 export default function NPCManager() {
-  const patrolRef = useRef<THREE.InstancedMesh>(null)
-  const pirateRef = useRef<THREE.InstancedMesh>(null)
-  const patrolGlowRef = useRef<THREE.InstancedMesh>(null)
-  const pirateGlowRef = useRef<THREE.InstancedMesh>(null)
+  const patrolGltf = useGLTF(PATROL_MODEL)
+  const pirateGltf = useGLTF(PIRATE_MODEL)
+
+  const patrolScenes = useMemo(
+    () => Array.from({ length: PATROL_COUNT }, () => patrolGltf.scene.clone()),
+    [patrolGltf.scene],
+  )
+  const pirateScenes = useMemo(
+    () => Array.from({ length: PIRATE_COUNT }, () => pirateGltf.scene.clone()),
+    [pirateGltf.scene],
+  )
 
   const { patrols, pirates } = useMemo(() => {
     const rng = (() => {
@@ -43,7 +99,7 @@ export default function NPCManager() {
         pos: route[0].clone(),
         route, routeIdx: 1,
         speed: NPC_DEFS[NPCType.Patrol].speed * 0.3,
-        type: NPCType.Patrol, hostile: false,
+        quat: new THREE.Quaternion(),
       })
     }
 
@@ -62,88 +118,29 @@ export default function NPCManager() {
         pos: route[0].clone(),
         route, routeIdx: 1,
         speed: NPC_DEFS[NPCType.Pirate].speed * 0.35,
-        type: NPCType.Pirate, hostile: true,
+        quat: new THREE.Quaternion(),
       })
     }
 
     return { patrols, pirates }
   }, [])
 
-  // Ship-like shape: elongated octahedron (stretched on Z so it looks like a craft)
-  const shipGeo = useMemo(() => {
-    const g = new THREE.OctahedronGeometry(1, 0)
-    g.scale(0.9, 0.6, 2.0) // elongated along +Z (nose)
-    return g
-  }, [])
-
-  const glowGeo = useMemo(() => new THREE.SphereGeometry(0.8, 10, 10), [])
-
-  const patrolMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: '#c2d6e8',
-    emissive: '#00a0d0',
-    emissiveIntensity: 1.4,
-    metalness: 0.85,
-    roughness: 0.25,
-  }), [])
-
-  const pirateMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: '#5a2020',
-    emissive: '#ff2a2a',
-    emissiveIntensity: 1.8,
-    metalness: 0.7,
-    roughness: 0.35,
-  }), [])
-
-  const patrolGlowMat = useMemo(() => new THREE.MeshBasicMaterial({
-    color: '#00d4ff',
-    transparent: true,
-    opacity: 0.35,
-    toneMapped: false,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  }), [])
-
-  const pirateGlowMat = useMemo(() => new THREE.MeshBasicMaterial({
-    color: '#ff3355',
-    transparent: true,
-    opacity: 0.45,
-    toneMapped: false,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  }), [])
-
-  useEffect(() => {
-    const m = new THREE.Matrix4()
-    const q = new THREE.Quaternion()
-    const scl = new THREE.Vector3(1, 1, 1)
-    const gscl = new THREE.Vector3(1.4, 1.4, 1.4)
-    patrols.forEach((n, i) => {
-      m.compose(n.pos, q, scl)
-      patrolRef.current?.setMatrixAt(i, m)
-      m.compose(n.pos, q, gscl)
-      patrolGlowRef.current?.setMatrixAt(i, m)
-    })
-    pirates.forEach((n, i) => {
-      m.compose(n.pos, q, scl)
-      pirateRef.current?.setMatrixAt(i, m)
-      m.compose(n.pos, q, gscl)
-      pirateGlowRef.current?.setMatrixAt(i, m)
-    })
-    if (patrolRef.current) patrolRef.current.instanceMatrix.needsUpdate = true
-    if (patrolGlowRef.current) patrolGlowRef.current.instanceMatrix.needsUpdate = true
-    if (pirateRef.current) pirateRef.current.instanceMatrix.needsUpdate = true
-    if (pirateGlowRef.current) pirateGlowRef.current.instanceMatrix.needsUpdate = true
-  }, [patrols, pirates])
+  const patrolGroupRefs = useRef<(THREE.Group | null)[]>([])
+  const pirateGroupRefs = useRef<(THREE.Group | null)[]>([])
+  const patrolLightRefs = useRef<(THREE.PointLight | null)[]>([])
+  const pirateLightRefs = useRef<(THREE.PointLight | null)[]>([])
 
   const forward = useRef(new THREE.Vector3()).current
-  const dummyQuat = useRef(new THREE.Quaternion()).current
-  const matrix = useRef(new THREE.Matrix4()).current
   const zAxis = useRef(new THREE.Vector3(0, 0, 1)).current
+  const tmpQuat = useRef(new THREE.Quaternion()).current
 
-  const step = (list: NPCInstance[], mesh: THREE.InstancedMesh | null, glow: THREE.InstancedMesh | null, dt: number, glowScale: number) => {
-    if (!mesh) return
-    const scl = new THREE.Vector3(1, 1, 1)
-    const gscl = new THREE.Vector3(glowScale, glowScale, glowScale)
+  const step = (
+    list: NPCInstance[],
+    groupRefs: (THREE.Group | null)[],
+    lightRefs: (THREE.PointLight | null)[],
+    dt: number,
+    pulse: number,
+  ) => {
     list.forEach((n, i) => {
       const target = n.route[n.routeIdx]
       forward.copy(target).sub(n.pos)
@@ -154,32 +151,56 @@ export default function NPCManager() {
         forward.normalize()
         n.pos.addScaledVector(forward, n.speed * dt)
       }
-      // Orient ship nose (+Z) toward movement
-      dummyQuat.setFromUnitVectors(zAxis, forward)
-      matrix.compose(n.pos, dummyQuat, scl)
-      mesh.setMatrixAt(i, matrix)
-      if (glow) {
-        matrix.compose(n.pos, dummyQuat, gscl)
-        glow.setMatrixAt(i, matrix)
+      // Smoothly orient toward forward
+      tmpQuat.setFromUnitVectors(zAxis, forward)
+      n.quat.slerp(tmpQuat, 0.1)
+
+      const g = groupRefs[i]
+      if (g) {
+        g.position.copy(n.pos)
+        g.quaternion.copy(n.quat)
       }
+      const l = lightRefs[i]
+      if (l) l.intensity = 2 + pulse * 1.2
     })
-    mesh.instanceMatrix.needsUpdate = true
-    if (glow) glow.instanceMatrix.needsUpdate = true
   }
 
   useFrame(({ clock }, delta) => {
     const dt = Math.min(delta, 0.05)
-    const pulse = 1 + Math.sin(clock.elapsedTime * 4) * 0.12
-    step(patrols, patrolRef.current, patrolGlowRef.current, dt, 1.4 * pulse)
-    step(pirates, pirateRef.current, pirateGlowRef.current, dt, 1.6 * pulse)
+    const pulse = 0.5 + Math.sin(clock.elapsedTime * 4) * 0.5
+    step(patrols, patrolGroupRefs.current, patrolLightRefs.current, dt, pulse)
+    step(pirates, pirateGroupRefs.current, pirateLightRefs.current, dt, pulse)
   })
 
   return (
     <>
-      <instancedMesh ref={patrolRef} args={[shipGeo, patrolMat, PATROL_COUNT]} />
-      <instancedMesh ref={patrolGlowRef} args={[glowGeo, patrolGlowMat, PATROL_COUNT]} />
-      <instancedMesh ref={pirateRef} args={[shipGeo, pirateMat, PIRATE_COUNT]} />
-      <instancedMesh ref={pirateGlowRef} args={[glowGeo, pirateGlowMat, PIRATE_COUNT]} />
+      {patrols.map((n, i) => (
+        <NPCShip
+          key={`patrol-${i}`}
+          instance={n}
+          scene={patrolScenes[i]}
+          scale={PATROL_SCALE}
+          glowColor="#00d4ff"
+          glowOpacity={0.22}
+          refCallback={(g) => { patrolGroupRefs.current[i] = g }}
+          lightRef={(l) => { patrolLightRefs.current[i] = l }}
+        />
+      ))}
+      {pirates.map((n, i) => (
+        <NPCShip
+          key={`pirate-${i}`}
+          instance={n}
+          scene={pirateScenes[i]}
+          scale={PIRATE_SCALE}
+          glowColor="#ff3355"
+          glowOpacity={0.32}
+          refCallback={(g) => { pirateGroupRefs.current[i] = g }}
+          lightRef={(l) => { pirateLightRefs.current[i] = l }}
+        />
+      ))}
     </>
   )
 }
+
+useGLTF.preload(PATROL_MODEL)
+useGLTF.preload(PIRATE_MODEL)

@@ -13,7 +13,7 @@ import NPCManager from './environment/NPCManager'
 import NebulaZones from './environment/NebulaZones'
 import DerelictShips from './environment/DerelictShips'
 import WarpGates from './environment/WarpGates'
-import CockpitFrame from './cockpit/CockpitFrame'
+import CockpitModel from './cockpit/CockpitModel'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 
 interface Props {
@@ -23,6 +23,8 @@ interface Props {
   onNebulaChange?: (color: string | null) => void
   onWarpJump?: (fromId: string, toId: string) => void
   onFirstPersonChange?: (fp: boolean) => void
+  shipUrl: string
+  shipScale: number
 }
 
 export default function FreeFlightScene({
@@ -32,6 +34,8 @@ export default function FreeFlightScene({
   onNebulaChange,
   onWarpJump,
   onFirstPersonChange,
+  shipUrl,
+  shipScale,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -69,7 +73,13 @@ export default function FreeFlightScene({
         </group>
       ))}
 
-      <ShipModel ref={shipGroupRef} ship={shipRef} visible={!firstPerson} />
+      <ShipModel
+        ref={shipGroupRef}
+        ship={shipRef}
+        visible={!firstPerson}
+        url={shipUrl}
+        scale={shipScale}
+      />
 
       <FlightControls ship={shipRef} shipGroup={shipGroupRef} enabled={true} />
       <CameraManager
@@ -77,7 +87,7 @@ export default function FreeFlightScene({
         onModeChange={(fp) => { setFirstPerson(fp); onFirstPersonChange?.(fp) }}
       />
 
-      <CockpitFrame ship={shipRef} visible={firstPerson} />
+      <CockpitModel visible={firstPerson} />
 
       <PlanetCollision ship={shipRef} />
       <AsteroidField ship={shipRef} />

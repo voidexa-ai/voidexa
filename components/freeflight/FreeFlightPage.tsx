@@ -4,9 +4,11 @@ import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CockpitHUD from './cockpit/CockpitHUD'
+import ShipPicker from './ships/ShipPicker'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
+import { findShip, getStoredShipId, type ShipCatalogEntry } from './ships/catalog'
 
 const FreeFlightCanvas = dynamic(() => import('./FreeFlightCanvas'), {
   ssr: false,
@@ -31,6 +33,17 @@ export default function FreeFlightPage() {
   const [lorePopup, setLorePopup] = useState<{ title: string; body: string } | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
   const toastIdRef = useRef(0)
+  const [selectedShip, setSelectedShip] = useState<ShipCatalogEntry | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(true)
+
+  useEffect(() => {
+    const storedId = getStoredShipId()
+    if (storedId) {
+      const ship = findShip(storedId)
+      setSelectedShip(ship)
+      setPickerOpen(false)
+    }
+  }, [])
 
   const pushToast = (text: string, color = '#66ff99') => {
     const id = ++toastIdRef.current
@@ -118,14 +131,30 @@ export default function FreeFlightPage() {
       position: 'fixed', inset: 0, width: '100vw', height: '100vh',
       overflow: 'hidden', background: '#02030a',
     }}>
-      <FreeFlightCanvas
-        onShipState={onShipState}
-        onDockStationChange={setDockStation}
-        onNearDerelictChange={setNearDerelict}
-        onNebulaChange={setNebulaColor}
-        onWarpJump={onWarpJump}
-        onFirstPersonChange={setFirstPerson}
-      />
+      {selectedShip && (
+        <FreeFlightCanvas
+          onShipState={onShipState}
+          onDockStationChange={setDockStation}
+          onNearDerelictChange={setNearDerelict}
+          onNebulaChange={setNebulaColor}
+          onWarpJump={onWarpJump}
+          onFirstPersonChange={setFirstPerson}
+          shipUrl={selectedShip.url}
+          shipScale={selectedShip.ingameScale}
+        />
+      )}
+
+      {pickerOpen && (
+        <ShipPicker
+          currentId={selectedShip?.id}
+          onPick={(ship) => {
+            setSelectedShip(ship)
+            setPickerOpen(false)
+            pushToast(`LAUNCHED · ${ship.name.toUpperCase()}`, '#00d4ff')
+          }}
+          onCancel={selectedShip ? () => setPickerOpen(false) : undefined}
+        />
+      )}
 
       {/* Nebula fog overlay */}
       {nebulaColor && (
@@ -328,6 +357,7 @@ export default function FreeFlightPage() {
           )}
 
           <button onClick={() => { setMenuOpen(false); setDockedAt(null) }} style={btnStyle('#00d4ff')}>Resume</button>
+          <button onClick={() => { setMenuOpen(false); setDockedAt(null); setPickerOpen(true) }} style={btnStyle('#a866ff')}>Change Ship</button>
           <button onClick={exitToGalaxy} style={btnStyle('#ff6699')}>Return to Galaxy</button>
           <div style={{ marginTop: 20, fontSize: 14, opacity: 0.6, letterSpacing: '0.06em' }}>
             Click the canvas to re-lock mouse after resuming

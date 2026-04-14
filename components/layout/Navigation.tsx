@@ -22,6 +22,7 @@ const mainLinks = [
   { href: '/quantum',     label: 'Quantum',     badge: null   },
   { href: '/team',        label: 'Team',        badge: null   },
   { href: '/break-room', label: 'Break Room',  badge: null   },
+  { href: '/freeflight', label: 'Free Flight', badge: 'NEW'  },
 ]
 
 // FIX 3: Info panel links (removed from top nav)

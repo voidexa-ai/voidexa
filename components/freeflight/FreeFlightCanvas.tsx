@@ -13,6 +13,8 @@ interface Props {
   onNebulaChange?: (color: string | null) => void
   onWarpJump?: (fromId: string, toId: string) => void
   onFirstPersonChange?: (fp: boolean) => void
+  shipUrl: string
+  shipScale: number
 }
 
 export default function FreeFlightCanvas(props: Props) {
