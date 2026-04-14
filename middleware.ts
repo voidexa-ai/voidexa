@@ -57,11 +57,13 @@ const SECURITY_HEADERS: Record<string, string> = {
   'Permissions-Policy':        'camera=(), microphone=(), geolocation=()',
   'Content-Security-Policy':
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; " +
+    "worker-src 'self' blob:; " +
+    "child-src 'self' blob:; " +
     "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
+    "img-src 'self' data: https: blob:; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' https: http://localhost:8888;",
+    "connect-src 'self' https: http://localhost:8888 blob: data:;",
 };
 
 function applySecurityHeaders(response: NextResponse): NextResponse {
