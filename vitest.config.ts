@@ -10,6 +10,7 @@ export default defineConfig({
       "lib/game/__tests__/**/*.test.ts",
       "lib/shop/__tests__/**/*.test.ts",
       "lib/cards/__tests__/**/*.test.ts",
+      "lib/chat/__tests__/**/*.test.ts",
     ],
     environment: "node",
     globals: false,
