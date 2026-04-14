@@ -51,3 +51,9 @@ service-account*.json
 next-env.d.ts
 
 .env*.local
+
+# 3D asset binaries — tracked via public/models/ASSET_INVENTORY.md only
+public/models/ships/
+public/models/cockpits/
+public/models/stations/
+!public/models/ASSET_INVENTORY.md
