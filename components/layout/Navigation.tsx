@@ -86,6 +86,9 @@ export default function Navigation() {
       .catch(() => setIsAdmin(false))
   }, [user?.id])
 
+  // Hide nav entirely in Free Flight (immersion mode)
+  if (pathname === '/freeflight') return null
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
