@@ -1,12 +1,32 @@
 # 3D Asset Inventory
 
 Generated: 2026-04-14T20:47Z
+Last texture rebind: 2026-04-15 (all paid models now have PBR textures bound — see `TEXTURE_FIX_GUIDE.md`).
 
 Location: `public/models/`
 
 Binary assets are gitignored — this file is the authoritative record of what should be on disk. Re-extract from the original zips in `Downloads/` if anything is missing.
 
 Hidden-file note: USC and Hirez packs contain many Adobe Fuse `.fuse_hidden*` tempfiles. They are counted in the totals but excluded from the Formats list; counted separately as "Fuse hidden".
+
+## glb-ready texture status (2026-04-15)
+
+| File | Pack | Images | Textures bound? |
+|---|---|---:|---|
+| `qs_bob.glb` … `qs_zenith.glb` (11) | Quaternius (CC0) | 1 each | ✅ Baked atlas from source gltf |
+| `cockpit_free_seat.glb` | Sketchfab (free) | 30 | ✅ PBR preserved from pack |
+| `station_modular_interior.glb` | Sketchfab (free) | 40 | ✅ PBR preserved from pack |
+| `hirez_cockpit01.glb` | Hi-Rez (paid) | 4 | ✅ Rebound 2026-04-15 (BaseColor Grey + Normal + Roughness + Emission) |
+| `hirez_spaceship01.glb` | Hi-Rez (paid) | 3 | ✅ Rebound 2026-04-15 (BaseColor Grey + Normal + Roughness) |
+| `usc_astroeagle01.glb` | USC (paid) | 3 | ✅ Rebound 2026-04-15 |
+| `usc_cosmicshark01.glb` | USC (paid) | 4 | ✅ Rebound 2026-04-15 |
+| `usc_voidwhale01.glb` | USC (paid) | 3 | ✅ Rebound 2026-04-15 |
+| `uscx_galacticokamoto1.glb` | USC Expansion (paid) | 4 | ✅ Rebound 2026-04-15 |
+| `uscx_starforce01.glb` | USC Expansion (paid) | 4 | ✅ Rebound 2026-04-15 |
+
+All paid-model rebinds default to the **Grey** color variant. Each pack ships multiple color options (Blue / Red / Silver / Purple / etc.) — see `TEXTURE_FIX_GUIDE.md` for swapping the base color or adding variant glbs.
+
+Paid-model texture-rebind summary: **7 of 7** paid ship/cockpit models in the current test set have working PBR textures.
 
 ## ships/paid/usc
 
