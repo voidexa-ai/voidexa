@@ -4,11 +4,14 @@ import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import FreeFlightScene from './FreeFlightScene'
-import type { ShipState } from './types'
+import type { ShipState, StationDef, DerelictDef } from './types'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ShipState>) => void
-  onDockPromptChange?: (name: string | null) => void
+  onDockStationChange?: (station: StationDef | null) => void
+  onNearDerelictChange?: (derelict: DerelictDef | null) => void
+  onNebulaChange?: (color: string | null) => void
+  onWarpJump?: (fromId: string, toId: string) => void
   onFirstPersonChange?: (fp: boolean) => void
 }
 

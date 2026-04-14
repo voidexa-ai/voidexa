@@ -4,20 +4,39 @@ import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CockpitHUD from './cockpit/CockpitHUD'
-import type { ShipState } from './types'
+import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
+import { recordArchaeologist, recordSalvager } from './achievements'
 
 const FreeFlightCanvas = dynamic(() => import('./FreeFlightCanvas'), {
   ssr: false,
   loading: () => null,
 })
 
+interface Toast {
+  id: number
+  text: string
+  color: string
+}
+
 export default function FreeFlightPage() {
   const router = useRouter()
   const shipRef = useRef<ShipState>(createShipState())
   const [firstPerson, setFirstPerson] = useState(false)
-  const [dockPrompt, setDockPrompt] = useState<string | null>(null)
+  const [dockStation, setDockStation] = useState<StationDef | null>(null)
+  const [nearDerelict, setNearDerelict] = useState<DerelictDef | null>(null)
+  const [nebulaColor, setNebulaColor] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [dockedAt, setDockedAt] = useState<StationDef | null>(null)
+  const [lorePopup, setLorePopup] = useState<{ title: string; body: string } | null>(null)
+  const [toasts, setToasts] = useState<Toast[]>([])
+  const toastIdRef = useRef(0)
+
+  const pushToast = (text: string, color = '#66ff99') => {
+    const id = ++toastIdRef.current
+    setToasts(ts => [...ts, { id, text, color }])
+    setTimeout(() => setToasts(ts => ts.filter(t => t.id !== id)), 2800)
+  }
 
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -25,23 +44,71 @@ export default function FreeFlightPage() {
     return () => { document.body.style.overflow = prev }
   }, [])
 
+  const handleDock = () => {
+    if (!dockStation) return
+    if (document.pointerLockElement) document.exitPointerLock()
+    setDockedAt(dockStation)
+
+    if (dockStation.kind === 'repair') {
+      shipRef.current.health = 100
+      shipRef.current.shield = 100
+      pushToast('REPAIRED · HULL 100 · SHIELD 100', '#66ff99')
+      // Repair stations don't open menu — instant top-up
+      setDockedAt(null)
+      return
+    }
+    if (dockStation.kind === 'abandoned') {
+      const res = recordArchaeologist(dockStation.id)
+      setLorePopup({
+        title: `${dockStation.name} · Salvaged Data`,
+        body: `Station Log #001: Last entry dated 2089. Emergency evacuation ordered. Reason: [CORRUPTED]\n\nArchaeologist progress: ${res.total} / 1 station${res.isNew ? ' · NEW DISCOVERY' : ''}`,
+      })
+      if (res.isNew) pushToast(`ARCHAEOLOGIST +1 · ${res.total} stations logged`, '#ff6699')
+      return
+    }
+    if (dockStation.kind === 'trading') {
+      setMenuOpen(true)
+      return
+    }
+    // hub
+    setMenuOpen(true)
+  }
+
+  const handleScanDerelict = () => {
+    if (!nearDerelict) return
+    const res = recordSalvager(nearDerelict.id)
+    setLorePopup({
+      title: nearDerelict.name,
+      body: `${nearDerelict.lore}\n\nSalvager progress: ${res.total} / 3 derelicts scanned${res.isNew ? ' · NEW DISCOVERY' : ''}`,
+    })
+    if (res.isNew) pushToast(`SALVAGER +1 · ${res.total} ships scanned`, '#00d4ff')
+  }
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
+        if (lorePopup) { setLorePopup(null); return }
         setMenuOpen(v => !v)
+        setDockedAt(null)
         if (document.pointerLockElement) document.exitPointerLock()
       }
-      if (e.code === 'KeyE' && dockPrompt) {
-        setMenuOpen(true)
-        if (document.pointerLockElement) document.exitPointerLock()
+      if (e.code === 'KeyE' && dockStation && !menuOpen && !lorePopup) {
+        handleDock()
+      }
+      if (e.code === 'KeyF' && nearDerelict && !menuOpen && !lorePopup) {
+        handleScanDerelict()
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [dockPrompt])
+  }, [dockStation, nearDerelict, menuOpen, lorePopup])
 
   const onShipState = (ref: React.MutableRefObject<ShipState>) => {
     shipRef.current = ref.current
+  }
+
+  const onWarpJump = (_from: string, to: string) => {
+    pushToast(`WARP JUMP · ARRIVED AT ${to.toUpperCase()}`, '#a866ff')
   }
 
   const exitToGalaxy = () => router.push('/starmap')
@@ -53,14 +120,34 @@ export default function FreeFlightPage() {
     }}>
       <FreeFlightCanvas
         onShipState={onShipState}
-        onDockPromptChange={setDockPrompt}
+        onDockStationChange={setDockStation}
+        onNearDerelictChange={setNearDerelict}
+        onNebulaChange={setNebulaColor}
+        onWarpJump={onWarpJump}
         onFirstPersonChange={setFirstPerson}
       />
 
-      <CockpitHUD ship={shipRef} visible={firstPerson && !menuOpen} />
+      {/* Nebula fog overlay */}
+      {nebulaColor && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 5,
+          pointerEvents: 'none',
+          background: `radial-gradient(circle at center, ${nebulaColor}22 0%, ${nebulaColor}11 40%, transparent 80%)`,
+          mixBlendMode: 'screen',
+          animation: 'nebulaPulse 6s ease-in-out infinite',
+        }}>
+          <style>{`
+            @keyframes nebulaPulse {
+              0%,100%{opacity:0.6}
+              50%{opacity:0.9}
+            }
+          `}</style>
+        </div>
+      )}
 
-      {/* Chase cam HUD (lite) */}
-      {!firstPerson && !menuOpen && (
+      <CockpitHUD ship={shipRef} visible={firstPerson && !menuOpen && !lorePopup} />
+
+      {!firstPerson && !menuOpen && !lorePopup && (
         <div style={{
           position: 'fixed', bottom: 20, left: 20, zIndex: 10,
           color: '#6fe6ff', fontFamily: 'var(--font-space, monospace)',
@@ -75,29 +162,111 @@ export default function FreeFlightPage() {
           <div>Mouse · Look (click to lock)</div>
           <div>RMB · Free Look · Scroll · Zoom</div>
           <div>Shift · Boost · Space · Brake</div>
-          <div>V · Toggle Cockpit · ESC · Menu</div>
+          <div>V · Cockpit · E · Dock · F · Scan · ESC · Menu</div>
         </div>
       )}
 
       {/* Dock prompt */}
-      {dockPrompt && !menuOpen && (
+      {dockStation && !menuOpen && !lorePopup && (
+        <PromptBanner
+          text={`Press E to dock · ${dockStation.name}${dockStation.kind === 'abandoned' ? ' · ABANDONED' : ''}`}
+          color={
+            dockStation.kind === 'repair' ? '#66ff99' :
+            dockStation.kind === 'trading' ? '#ffaa33' :
+            dockStation.kind === 'abandoned' ? '#ff3355' :
+            '#00d4ff'
+          }
+        />
+      )}
+
+      {/* Scan prompt */}
+      {nearDerelict && !menuOpen && !lorePopup && !dockStation && (
+        <PromptBanner text={`Press F to scan · ${nearDerelict.name}`} color="#ff8855" offset={60} />
+      )}
+
+      {/* Toasts */}
+      <div style={{
+        position: 'fixed', top: 80, right: 24, zIndex: 25,
+        display: 'flex', flexDirection: 'column', gap: 8,
+      }}>
+        {toasts.map(t => (
+          <div key={t.id} style={{
+            padding: '10px 16px',
+            background: 'rgba(6, 10, 20, 0.75)',
+            border: `1px solid ${t.color}88`,
+            borderRadius: 6,
+            color: '#fff',
+            fontFamily: 'var(--font-space, monospace)',
+            fontSize: 14,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            boxShadow: `0 0 18px ${t.color}55`,
+            textShadow: `0 0 8px ${t.color}`,
+            backdropFilter: 'blur(8px)',
+          }}>
+            {t.text}
+          </div>
+        ))}
+      </div>
+
+      {/* Lore popup */}
+      {lorePopup && (
         <div style={{
-          position: 'fixed', top: '62%', left: '50%',
-          transform: 'translate(-50%, -50%)', zIndex: 15,
-          color: '#00ffff', fontFamily: 'var(--font-space, monospace)',
-          fontSize: 16, letterSpacing: '0.1em', textTransform: 'uppercase',
-          padding: '10px 20px',
-          background: 'rgba(0, 40, 60, 0.45)',
-          border: '1px solid rgba(0, 212, 255, 0.55)',
-          borderRadius: 6, backdropFilter: 'blur(8px)',
-          boxShadow: '0 0 24px rgba(0, 212, 255, 0.35)',
-          textShadow: '0 0 10px #00d4ff',
+          position: 'fixed', inset: 0, zIndex: 60,
+          background: 'rgba(2, 4, 14, 0.88)',
+          backdropFilter: 'blur(12px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
         }}>
-          Press E to dock · {dockPrompt}
+          <div style={{
+            maxWidth: 560,
+            padding: '28px 32px',
+            background: 'linear-gradient(135deg, rgba(20,10,30,0.85), rgba(10,20,30,0.75))',
+            border: '1px solid rgba(255, 136, 85, 0.5)',
+            borderRadius: 10,
+            boxShadow: '0 0 40px rgba(255, 136, 85, 0.3)',
+            color: '#fff',
+            fontFamily: 'var(--font-inter, system-ui)',
+          }}>
+            <div style={{
+              fontSize: 18, fontWeight: 700, letterSpacing: '0.12em',
+              textTransform: 'uppercase', color: '#ffaa77',
+              textShadow: '0 0 12px #ff8855',
+              marginBottom: 14,
+              fontFamily: 'var(--font-space, monospace)',
+            }}>
+              {lorePopup.title}
+            </div>
+            <div style={{
+              fontSize: 16, lineHeight: 1.6, whiteSpace: 'pre-wrap',
+              color: 'rgba(255,255,255,0.88)',
+            }}>
+              {lorePopup.body}
+            </div>
+            <button
+              onClick={() => setLorePopup(null)}
+              style={{
+                marginTop: 22,
+                padding: '10px 22px',
+                background: 'rgba(255, 136, 85, 0.15)',
+                border: '1px solid rgba(255, 136, 85, 0.6)',
+                borderRadius: 6,
+                color: '#fff',
+                fontFamily: 'var(--font-space, monospace)',
+                fontSize: 14,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                textShadow: '0 0 8px #ff8855',
+              }}
+            >
+              Close · ESC
+            </button>
+          </div>
         </div>
       )}
 
-      {/* ESC menu */}
+      {/* ESC / Dock menu */}
       {menuOpen && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 50,
@@ -112,9 +281,53 @@ export default function FreeFlightPage() {
             textTransform: 'uppercase', color: '#00ffff',
             textShadow: '0 0 16px #00d4ff',
           }}>
-            {dockPrompt ? `Docked · ${dockPrompt}` : 'Flight Menu'}
+            {dockedAt ? `Docked · ${dockedAt.name}` : 'Flight Menu'}
           </div>
-          <button onClick={() => setMenuOpen(false)} style={btnStyle('#00d4ff')}>Resume</button>
+
+          {dockedAt?.kind === 'trading' && (
+            <div style={{
+              maxWidth: 440,
+              padding: '18px 24px',
+              background: 'rgba(255, 170, 51, 0.1)',
+              border: '1px solid rgba(255, 170, 51, 0.5)',
+              borderRadius: 8,
+              textAlign: 'center',
+              fontSize: 15, lineHeight: 1.6,
+              color: '#ffd699',
+              textShadow: '0 0 10px #ffaa33',
+              fontFamily: 'var(--font-inter, system-ui)',
+            }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, letterSpacing: '0.1em' }}>
+                TRADING POST
+              </div>
+              Player-to-player trade terminal. Post offers, browse open contracts, complete exchanges.
+              <div style={{ marginTop: 14, opacity: 0.75, fontStyle: 'italic' }}>
+                Coming Soon · Phase 9
+              </div>
+            </div>
+          )}
+
+          {dockedAt?.kind === 'hub' && (
+            <div style={{
+              maxWidth: 440,
+              padding: '18px 24px',
+              background: 'rgba(0, 212, 255, 0.1)',
+              border: '1px solid rgba(0, 212, 255, 0.5)',
+              borderRadius: 8,
+              textAlign: 'center',
+              fontSize: 15, lineHeight: 1.6,
+              color: '#a8ecff',
+              textShadow: '0 0 10px #00d4ff',
+              fontFamily: 'var(--font-inter, system-ui)',
+            }}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6, letterSpacing: '0.1em' }}>
+                VOIDEXA HUB
+              </div>
+              Universal spawn. Shop, leaderboard, missions, card terminal — all landing here in future phases.
+            </div>
+          )}
+
+          <button onClick={() => { setMenuOpen(false); setDockedAt(null) }} style={btnStyle('#00d4ff')}>Resume</button>
           <button onClick={exitToGalaxy} style={btnStyle('#ff6699')}>Return to Galaxy</button>
           <div style={{ marginTop: 20, fontSize: 14, opacity: 0.6, letterSpacing: '0.06em' }}>
             Click the canvas to re-lock mouse after resuming
@@ -122,8 +335,7 @@ export default function FreeFlightPage() {
         </div>
       )}
 
-      {/* Exit badge (always visible) */}
-      {!menuOpen && (
+      {!menuOpen && !lorePopup && (
         <button
           onClick={() => setMenuOpen(true)}
           style={{
@@ -144,6 +356,27 @@ export default function FreeFlightPage() {
           Free Flight
         </button>
       )}
+    </div>
+  )
+}
+
+function PromptBanner({ text, color, offset = 0 }: { text: string; color: string; offset?: number }) {
+  return (
+    <div style={{
+      position: 'fixed',
+      top: `calc(62% - ${offset}px)`,
+      left: '50%',
+      transform: 'translate(-50%, -50%)', zIndex: 15,
+      color: '#fff', fontFamily: 'var(--font-space, monospace)',
+      fontSize: 16, letterSpacing: '0.1em', textTransform: 'uppercase',
+      padding: '10px 20px',
+      background: 'rgba(6, 10, 20, 0.55)',
+      border: `1px solid ${color}88`,
+      borderRadius: 6, backdropFilter: 'blur(8px)',
+      boxShadow: `0 0 24px ${color}55`,
+      textShadow: `0 0 10px ${color}`,
+    }}>
+      {text}
     </div>
   )
 }

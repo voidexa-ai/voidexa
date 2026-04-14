@@ -10,21 +10,33 @@ import AsteroidField from './environment/AsteroidField'
 import PlanetCollision from './environment/PlanetCollision'
 import SpaceStations from './environment/SpaceStation'
 import NPCManager from './environment/NPCManager'
+import NebulaZones from './environment/NebulaZones'
+import DerelictShips from './environment/DerelictShips'
+import WarpGates from './environment/WarpGates'
 import CockpitFrame from './cockpit/CockpitFrame'
-import { PLANETS, createShipState } from './types'
+import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ReturnType<typeof createShipState>>) => void
-  onDockPromptChange?: (name: string | null) => void
+  onDockStationChange?: (station: StationDef | null) => void
+  onNearDerelictChange?: (derelict: DerelictDef | null) => void
+  onNebulaChange?: (color: string | null) => void
+  onWarpJump?: (fromId: string, toId: string) => void
   onFirstPersonChange?: (fp: boolean) => void
 }
 
-export default function FreeFlightScene({ onShipState, onDockPromptChange, onFirstPersonChange }: Props) {
+export default function FreeFlightScene({
+  onShipState,
+  onDockStationChange,
+  onNearDerelictChange,
+  onNebulaChange,
+  onWarpJump,
+  onFirstPersonChange,
+}: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
   const [firstPerson, setFirstPerson] = useState(false)
 
-  // Register ship ref upward once
   const registered = useRef(false)
   if (!registered.current) {
     registered.current = true
@@ -38,7 +50,6 @@ export default function FreeFlightScene({ onShipState, onDockPromptChange, onFir
 
       <Stars radius={1200} depth={600} count={3500} factor={4} saturation={0} fade speed={0.5} />
 
-      {/* Planets */}
       {PLANETS.map(p => (
         <group key={p.id} position={p.position.toArray()}>
           <mesh>
@@ -70,7 +81,10 @@ export default function FreeFlightScene({ onShipState, onDockPromptChange, onFir
 
       <PlanetCollision ship={shipRef} />
       <AsteroidField ship={shipRef} />
-      <SpaceStations ship={shipRef} onDockPromptChange={onDockPromptChange} />
+      <NebulaZones ship={shipRef} onNebulaChange={onNebulaChange} />
+      <SpaceStations ship={shipRef} onDockStationChange={onDockStationChange} />
+      <DerelictShips ship={shipRef} onNearChange={onNearDerelictChange} />
+      <WarpGates ship={shipRef} onJump={onWarpJump} />
       <NPCManager />
     </>
   )
