@@ -274,3 +274,44 @@ lib/game/                     — game logic (not React)
 12. Test after every change. Git backup before major modifications
 13. Match existing dark space aesthetic exactly
 14. Performance: max 5000 particles, instanced mesh for asteroids/NPCs, LOD for ships
+
+## Session 2026-04-14: 3D Asset Library Organized (Pre-Phase-1)
+### Files on disk (public/models/, gitignored — not in repo)
+Downloaded zips unpacked into the canonical layout:
+```
+public/models/
+├── ASSET_INVENTORY.md          (tracked)
+├── ships/paid/usc/             956 files, 1.44 GB  (USC FBX)
+├── ships/paid/usc-expansion/   172 files, 175 MB   (USC Expansion FBX)
+├── ships/paid/hirez/          1308 files, 2.14 GB  (HiRez OBJ)
+├── ships/free/quaternius-spaceships/      129 files, 295 MB
+├── ships/free/quaternius-space-kit/       467 files, 143 MB
+├── ships/free/quaternius-modular-scifi/   366 files,  53 MB
+├── ships/free/sketchfab/      103 files across 10 packs, 199 MB
+├── cockpits/                    62 files, 107 MB
+└── stations/                    43 files,  34 MB
+```
+**Grand total:** 3,606 files, 4.48 GB.
+
+### Repo changes (tracked)
+- `public/models/ASSET_INVENTORY.md` — authoritative record of expected on-disk contents
+- `.gitignore` — added `public/models/ships/`, `public/models/cockpits/`, `public/models/stations/` with `!ASSET_INVENTORY.md` negation
+- `.claude/skills/3d-asset-pipeline/SKILL.md` — folder convention, LOD tiers, conversion workflow, license table, add-new-pack checklist
+- `.claude/skills/3d-asset-pipeline/regenerate-inventory.ps1` — idempotent inventory rebuild script
+- Commits: `517feae` backup, `9fb33fd docs: 3D asset inventory`
+
+### Conventions (see 3d-asset-pipeline skill for full detail)
+- Source packs live in their vendor-named folder under `ships/paid/*` or `ships/free/*`
+- Runtime-loadable Draco `.glb` files go in a `converted/` subfolder inside each pack
+- Never commit binary assets. Never delete original zips in `Downloads/`
+- LOD mandatory for ship models: `_high` (<100m), `_med` (100-500m), `_low` (>500m billboard)
+- Sketchfab packs: one subfolder per pack (slug from zip name), license file preserved
+
+### Gotchas discovered
+- Cowork mount cannot unlink files — git operations leave stale `.git/*.lock`. Prefer native PowerShell git on this repo.
+- Task spec had `sci_fi_spaceship_cockpit_02.zip` (underscores); real file is `sci-fi_spaceship_cockpit_02.zip` (dash). Always verify with `Get-ChildItem`.
+- USC/HiRez packs include Adobe Fuse `.fuse_hidden*` tempfiles — counted in totals but excluded from Formats in inventory.
+- Two Quaternius Spaceships bundles arrived (different server timestamps, identical contents) — extract either.
+
+### Next (when starting Phase 1 build)
+Per Phase 1-3 spec: pick 1 fighter / 1 cruiser / 1 battleship from `ships/free/quaternius-spaceships/`, 1 free cockpit from `cockpits/`, and either modular station parts from `stations/` or procedural geometry. Convert to Draco `.glb`, place in `converted/`, regenerate inventory, commit.
