@@ -325,27 +325,27 @@ export interface AssemblyJson {
 export type ValidationSeverity = 'info' | 'warning' | 'error'
 
 export type ValidationRuleCode =
-  | 'missing_required_role'
-  | 'role_overflow'
-  | 'broken_root'
-  | 'hard_collision'
-  | 'seat_collision'
-  | 'control_blockage'
-  | 'exterior_interior_mismatch'
-  | 'screen_through_hull'
-  | 'excessive_embed'
-  | 'pilot_sightline_blocked'
-  | 'hud_unreadable'
-  | 'frontal_clutter'
-  | 'broken_bilateral_pair'
-  | 'centerline_drift'
-  | 'density_overflow'
-  | 'reach_failure'
-  | 'seat_visibility'
-  | 'entry_obstruction'
-  | 'forbidden_pair'
-  | 'template_mismatch'
-  | 'style_incoherence'
+  | 'VF_REQ_001' // missing required role
+  | 'VF_REQ_002' // role overflow
+  | 'VF_REQ_003' // broken root shell
+  | 'VF_COL_001' // hard collision
+  | 'VF_COL_002' // seat collision
+  | 'VF_COL_003' // control blockage
+  | 'VF_CLIP_001' // exterior-interior mismatch
+  | 'VF_CLIP_002' // screen through hull
+  | 'VF_CLIP_003' // excessive embed
+  | 'VF_OCC_001' // pilot sightline blocked
+  | 'VF_OCC_002' // HUD unreadable
+  | 'VF_OCC_003' // frontal clutter
+  | 'VF_SYM_001' // broken bilateral pair
+  | 'VF_SYM_002' // centerline drift
+  | 'VF_SYM_003' // density overflow
+  | 'VF_ERG_001' // reach failure
+  | 'VF_ERG_002' // seat visibility failure
+  | 'VF_ERG_003' // entry obstruction
+  | 'VF_SEM_001' // forbidden pair
+  | 'VF_SEM_002' // template mismatch
+  | 'VF_SEM_003' // style incoherence
 
 export interface ValidationIssue {
   severity: ValidationSeverity
