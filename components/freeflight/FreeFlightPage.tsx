@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import CockpitHUD from './cockpit/CockpitHUD'
 import CockpitPicker from './cockpit/CockpitPicker'
 import ShipPicker from './ships/ShipPicker'
+import AchievementPanel from '@/components/achievements/AchievementPanel'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
@@ -39,6 +40,7 @@ export default function FreeFlightPage() {
   const [pickerOpen, setPickerOpen] = useState(true)
   const [selectedCockpit, setSelectedCockpit] = useState<CockpitCatalogEntry>(() => findCockpit(null))
   const [cockpitPickerOpen, setCockpitPickerOpen] = useState(false)
+  const [achievementsOpen, setAchievementsOpen] = useState(false)
 
   useEffect(() => {
     const storedId = getStoredShipId()
@@ -107,6 +109,7 @@ export default function FreeFlightPage() {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         if (lorePopup) { setLorePopup(null); return }
+        if (achievementsOpen) { setAchievementsOpen(false); return }
         setMenuOpen(v => !v)
         setDockedAt(null)
         if (document.pointerLockElement) document.exitPointerLock()
@@ -120,7 +123,7 @@ export default function FreeFlightPage() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [dockStation, nearDerelict, menuOpen, lorePopup])
+  }, [dockStation, nearDerelict, menuOpen, lorePopup, achievementsOpen])
 
   const onShipState = (ref: React.MutableRefObject<ShipState>) => {
     shipRef.current = ref.current
@@ -161,6 +164,10 @@ export default function FreeFlightPage() {
           }}
           onCancel={selectedShip ? () => setPickerOpen(false) : undefined}
         />
+      )}
+
+      {achievementsOpen && (
+        <AchievementPanel overlay onClose={() => setAchievementsOpen(false)} />
       )}
 
       {cockpitPickerOpen && (
@@ -378,6 +385,7 @@ export default function FreeFlightPage() {
           <button onClick={() => { setMenuOpen(false); setDockedAt(null) }} style={btnStyle('#00d4ff')}>Resume</button>
           <button onClick={() => { setMenuOpen(false); setDockedAt(null); setPickerOpen(true) }} style={btnStyle('#a866ff')}>Change Ship</button>
           <button onClick={() => { setMenuOpen(false); setDockedAt(null); setCockpitPickerOpen(true) }} style={btnStyle('#66e6ff')}>Change Cockpit</button>
+          <button onClick={() => { setMenuOpen(false); setDockedAt(null); setAchievementsOpen(true) }} style={btnStyle('#f5b642')}>Achievements</button>
           <button onClick={exitToGalaxy} style={btnStyle('#ff6699')}>Return to Galaxy</button>
           <div style={{ marginTop: 20, fontSize: 14, opacity: 0.6, letterSpacing: '0.06em' }}>
             Click the canvas to re-lock mouse after resuming

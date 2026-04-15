@@ -1,5 +1,8 @@
-// Lightweight localStorage-backed achievement tracker for Free Flight.
-// Formal integration with lib/achievements/ can replace this later — the keys are stable.
+// Lightweight localStorage tracker for Free Flight — tracks unique station/derelict
+// discoveries for deduplication and mirrors progress into the unified
+// achievement store (lib/achievements/client-progress) so AchievementPanel reflects it.
+
+import { incrementProgress, getProgress } from '@/lib/achievements/client-progress'
 
 export type AchievementId = 'archaeologist' | 'salvager'
 
@@ -29,6 +32,7 @@ export function recordArchaeologist(stationId: string): { total: number; isNew: 
   if (isNew) {
     state.archaeologist.unlockedIds.push(stationId)
     save(state)
+    incrementProgress('archaeologist', 1)
   }
   return { total: state.archaeologist.unlockedIds.length, isNew }
 }
@@ -39,6 +43,7 @@ export function recordSalvager(derelictId: string): { total: number; isNew: bool
   if (isNew) {
     state.salvager.unlockedIds.push(derelictId)
     save(state)
+    incrementProgress('salvager', 1)
   }
   return { total: state.salvager.unlockedIds.length, isNew }
 }

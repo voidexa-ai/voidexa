@@ -23,6 +23,8 @@ const mainLinks = [
   { href: '/team',        label: 'Team',        badge: null   },
   { href: '/break-room', label: 'Break Room',  badge: null   },
   { href: '/freeflight', label: 'Free Flight', badge: 'NEW'  },
+  { href: '/shop',          label: 'Shop',         badge: null },
+  { href: '/achievements',  label: 'Achievements', badge: null },
 ]
 
 // FIX 3: Info panel links (removed from top nav)
