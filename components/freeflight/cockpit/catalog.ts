@@ -1,15 +1,15 @@
+import { MODEL_URLS } from '@/lib/config/modelUrls'
+
 export interface CockpitCatalogEntry {
   id: string
   name: string
   url: string
 }
 
+// Only cockpits hosted on Supabase Storage are listed. Additional cockpit skins
+// will be enabled as their .glb files are uploaded to the `models` bucket.
 export const COCKPIT_CATALOG: CockpitCatalogEntry[] = [
-  { id: 'hirez_01', name: 'Cockpit 01', url: '/models/glb-ready/hirez_cockpit01.glb' },
-  { id: 'hirez_02', name: 'Cockpit 02', url: '/models/glb-ready/hirez_cockpit02.glb' },
-  { id: 'hirez_03', name: 'Cockpit 03', url: '/models/glb-ready/hirez_cockpit03.glb' },
-  { id: 'hirez_04', name: 'Cockpit 04', url: '/models/glb-ready/hirez_cockpit04.glb' },
-  { id: 'hirez_05', name: 'Cockpit 05', url: '/models/glb-ready/hirez_cockpit05.glb' },
+  { id: 'hirez_01', name: 'Cockpit 01', url: MODEL_URLS.hirez_cockpit01 },
 ]
 
 export const DEFAULT_COCKPIT_ID = 'hirez_01'

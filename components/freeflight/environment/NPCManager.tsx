@@ -5,6 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { NPCType, NPC_DEFS, generatePatrolRoute } from '@/lib/game/npcs'
+import { MODEL_URLS } from '@/lib/config/modelUrls'
 import { STATIONS } from '../types'
 
 interface NPCInstance {
@@ -17,8 +18,8 @@ interface NPCInstance {
 
 const PATROL_COUNT = 8
 const PIRATE_COUNT = 4
-const PATROL_MODEL = '/models/glb-ready/qs_challenger.glb'
-const PIRATE_MODEL = '/models/glb-ready/qs_executioner.glb'
+const PATROL_MODEL = MODEL_URLS.qs_challenger
+const PIRATE_MODEL = MODEL_URLS.qs_executioner
 const PATROL_SCALE = 0.4
 const PIRATE_SCALE = 0.45
 

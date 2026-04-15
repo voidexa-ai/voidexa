@@ -5,6 +5,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Stars, useGLTF, OrbitControls } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
+import ModelErrorBoundary from '../freeflight/ModelErrorBoundary'
 
 interface Props {
   url: string
@@ -67,9 +68,11 @@ export default function ShopItemPreviewCanvas({
 
       <Stars radius={60} depth={40} count={900} factor={3} saturation={0} fade speed={0.3} />
 
-      <Suspense fallback={null}>
-        <AutoFitModel url={url} scale={scale} rotateSpeed={rotateSpeed} />
-      </Suspense>
+      <ModelErrorBoundary>
+        <Suspense fallback={null}>
+          <AutoFitModel url={url} scale={scale} rotateSpeed={rotateSpeed} />
+        </Suspense>
+      </ModelErrorBoundary>
 
       {orbit && (
         <OrbitControls enableZoom enablePan={false} minDistance={3} maxDistance={14} target={[0, 0, 0]} />

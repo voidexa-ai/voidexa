@@ -14,6 +14,7 @@ import NebulaZones from './environment/NebulaZones'
 import DerelictShips from './environment/DerelictShips'
 import WarpGates from './environment/WarpGates'
 import CockpitModel from './cockpit/CockpitModel'
+import ModelErrorBoundary from './ModelErrorBoundary'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 
 interface Props {
@@ -75,13 +76,15 @@ export default function FreeFlightScene({
         </group>
       ))}
 
-      <ShipModel
-        ref={shipGroupRef}
-        ship={shipRef}
-        visible={!firstPerson}
-        url={shipUrl}
-        scale={shipScale}
-      />
+      <ModelErrorBoundary>
+        <ShipModel
+          ref={shipGroupRef}
+          ship={shipRef}
+          visible={!firstPerson}
+          url={shipUrl}
+          scale={shipScale}
+        />
+      </ModelErrorBoundary>
 
       <FlightControls ship={shipRef} shipGroup={shipGroupRef} enabled={true} />
       <CameraManager
@@ -89,15 +92,21 @@ export default function FreeFlightScene({
         onModeChange={(fp) => { setFirstPerson(fp); onFirstPersonChange?.(fp) }}
       />
 
-      <CockpitModel visible={firstPerson} url={cockpitUrl} />
+      <ModelErrorBoundary>
+        <CockpitModel visible={firstPerson} url={cockpitUrl} />
+      </ModelErrorBoundary>
 
       <PlanetCollision ship={shipRef} />
       <AsteroidField ship={shipRef} />
       <NebulaZones ship={shipRef} onNebulaChange={onNebulaChange} />
       <SpaceStations ship={shipRef} onDockStationChange={onDockStationChange} />
-      <DerelictShips ship={shipRef} onNearChange={onNearDerelictChange} />
+      <ModelErrorBoundary>
+        <DerelictShips ship={shipRef} onNearChange={onNearDerelictChange} />
+      </ModelErrorBoundary>
       <WarpGates ship={shipRef} onJump={onWarpJump} />
-      <NPCManager />
+      <ModelErrorBoundary>
+        <NPCManager />
+      </ModelErrorBoundary>
     </>
   )
 }

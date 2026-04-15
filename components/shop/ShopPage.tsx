@@ -11,6 +11,7 @@ import {
 } from '@/lib/shop/rotation'
 import { useT, format } from '@/lib/i18n/context'
 import type { Dict } from '@/lib/i18n/types'
+import { MODEL_URLS } from '@/lib/config/modelUrls'
 
 const ShopItemPreviewCanvas = dynamic(() => import('./ShopItemPreviewCanvas'), {
   ssr: false,
@@ -39,12 +40,12 @@ const itemDesc = (t: Dict, item: ShopItem): string => t.shop.items[item.id]?.des
 // Map shop-item IDs to actual .glb paths for 3D preview. Only ship skins and
 // cockpit themes get a real model — everything else renders a geometric shape.
 const ITEM_MODEL: Record<string, { url: string; scale?: number }> = {
-  'skin-crimson-fighter': { url: '/models/glb-ready/qs_bob.glb',            scale: 1.0 },
-  'skin-chrome-cruiser':  { url: '/models/glb-ready/usc_astroeagle01.glb',  scale: 0.6 },
-  'skin-obsidian-stealth':{ url: '/models/glb-ready/usc_cosmicshark01.glb', scale: 0.55 },
-  'skin-void-legend':     { url: '/models/glb-ready/usc_voidwhale01.glb',   scale: 0.25 },
-  'cockpit-carbon':       { url: '/models/glb-ready/hirez_cockpit01.glb',   scale: 1.0 },
-  'cockpit-gilded':       { url: '/models/glb-ready/hirez_cockpit02.glb',   scale: 1.0 },
+  'skin-crimson-fighter': { url: MODEL_URLS.qs_bob,            scale: 1.0 },
+  'skin-chrome-cruiser':  { url: MODEL_URLS.usc_astroeagle01,  scale: 0.6 },
+  'skin-obsidian-stealth':{ url: MODEL_URLS.usc_cosmicshark01, scale: 0.55 },
+  'skin-void-legend':     { url: MODEL_URLS.usc_voidwhale01,   scale: 0.25 },
+  'cockpit-carbon':       { url: MODEL_URLS.hirez_cockpit01,   scale: 1.0 },
+  // 'cockpit-gilded' — awaiting hirez_cockpit02.glb upload to Supabase
 }
 
 type TabKey = 'all' | ShopCategory

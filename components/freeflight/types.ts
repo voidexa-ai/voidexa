@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { MODEL_URLS } from '@/lib/config/modelUrls'
 
 export interface ShipState {
   position: THREE.Vector3
@@ -75,7 +76,7 @@ export const DERELICTS: DerelictDef[] = [
     name: 'Derelict · UEV Horizon',
     position: new THREE.Vector3(-40, 10, -220),
     rotation: [0.4, 1.2, 0.9],
-    model: '/models/glb-ready/qs_challenger.glb',
+    model: MODEL_URLS.qs_challenger,
     lore: 'Horizon — flight recorder recovered. Final log: "They came from the nebula. Comms dead. Hull breached. Abandoning..."',
   },
   {
@@ -83,7 +84,7 @@ export const DERELICTS: DerelictDef[] = [
     name: 'Derelict · Tiberius',
     position: new THREE.Vector3(220, -10, 40),
     rotation: [0.8, 0.3, -0.2],
-    model: '/models/glb-ready/qs_executioner.glb',
+    model: MODEL_URLS.qs_executioner,
     lore: 'Tiberius — class-III hauler. Cargo manifest wiped. Scorch pattern consistent with high-energy weapons fire.',
   },
   {
@@ -91,7 +92,8 @@ export const DERELICTS: DerelictDef[] = [
     name: 'Derelict · Shrike',
     position: new THREE.Vector3(-260, 40, 60),
     rotation: [-0.3, 2.0, 0.6],
-    model: '/models/glb-ready/qs_spitfire.glb',
+    // qs_spitfire not yet hosted on Supabase — reuse challenger hull for now
+    model: MODEL_URLS.qs_challenger,
     lore: 'Shrike — scout frigate. Navcom log contains coordinates to an unmapped sector. Partially corrupted.',
   },
 ]

@@ -6,6 +6,7 @@ import { useGLTF, Stars, OrbitControls } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import type { ShipCatalogEntry } from './catalog'
+import ModelErrorBoundary from '../ModelErrorBoundary'
 
 interface Props {
   ship: ShipCatalogEntry
@@ -59,9 +60,11 @@ export default function ShipPreviewCanvas({ ship }: Props) {
 
       <Stars radius={80} depth={40} count={1200} factor={3} saturation={0} fade speed={0.3} />
 
-      <Suspense fallback={null}>
-        <RotatingShip key={ship.id} url={ship.url} scale={ship.previewScale} />
-      </Suspense>
+      <ModelErrorBoundary>
+        <Suspense fallback={null}>
+          <RotatingShip key={ship.id} url={ship.url} scale={ship.previewScale} />
+        </Suspense>
+      </ModelErrorBoundary>
 
       <OrbitControls
         enableZoom

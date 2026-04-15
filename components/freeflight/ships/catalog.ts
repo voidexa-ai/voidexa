@@ -1,3 +1,5 @@
+import { MODEL_URLS } from '@/lib/config/modelUrls'
+
 export interface ShipCatalogEntry {
   id: string
   name: string
@@ -12,7 +14,7 @@ export const SHIP_CATALOG: ShipCatalogEntry[] = [
   {
     id: 'qs_bob',
     name: 'Bob · Starter',
-    url: '/models/glb-ready/qs_bob.glb',
+    url: MODEL_URLS.qs_bob,
     tier: 'starter',
     description: 'Reliable rookie frame. Balanced stats, free for all pilots.',
     previewScale: 1.0,
@@ -21,7 +23,7 @@ export const SHIP_CATALOG: ShipCatalogEntry[] = [
   {
     id: 'usc_astroeagle',
     name: 'AstroEagle',
-    url: '/models/glb-ready/usc_astroeagle01.glb',
+    url: MODEL_URLS.usc_astroeagle01,
     tier: 'premium',
     description: 'Swift interceptor. Sharp silhouette, agile handling.',
     previewScale: 0.6,
@@ -30,7 +32,7 @@ export const SHIP_CATALOG: ShipCatalogEntry[] = [
   {
     id: 'usc_cosmicshark',
     name: 'CosmicShark',
-    url: '/models/glb-ready/usc_cosmicshark01.glb',
+    url: MODEL_URLS.usc_cosmicshark01,
     tier: 'premium',
     description: 'Predator profile, aggressive strike craft.',
     previewScale: 0.5,
@@ -39,7 +41,7 @@ export const SHIP_CATALOG: ShipCatalogEntry[] = [
   {
     id: 'usc_voidwhale',
     name: 'VoidWhale',
-    url: '/models/glb-ready/usc_voidwhale01.glb',
+    url: MODEL_URLS.usc_voidwhale01,
     tier: 'premium',
     description: 'Capital-class hauler. Massive, slow, imposing.',
     previewScale: 0.25,
@@ -48,7 +50,7 @@ export const SHIP_CATALOG: ShipCatalogEntry[] = [
   {
     id: 'uscx_galacticokamoto',
     name: 'GalacticOkamoto',
-    url: '/models/glb-ready/uscx_galacticokamoto1.glb',
+    url: MODEL_URLS.uscx_galacticokamoto1,
     tier: 'premium',
     description: 'Signature skin, handcrafted paneling.',
     previewScale: 0.5,
@@ -57,7 +59,7 @@ export const SHIP_CATALOG: ShipCatalogEntry[] = [
   {
     id: 'uscx_starforce',
     name: 'StarForce',
-    url: '/models/glb-ready/uscx_starforce01.glb',
+    url: MODEL_URLS.uscx_starforce01,
     tier: 'premium',
     description: 'Elite squadron livery. Turn-key dogfighter.',
     previewScale: 0.5,
