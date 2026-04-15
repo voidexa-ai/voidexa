@@ -47,6 +47,16 @@ export default function CardCollectionView() {
   const [fuseTarget, setFuseTarget] = useState<CoreSetCard | null>(null)
   const [toast, setToast] = useState<string | null>(null)
 
+  // Dev helpers only appear in dev builds, or when ?dev=true is in the URL.
+  const [devMode, setDevMode] = useState(false)
+  useEffect(() => {
+    const inDev = process.env.NODE_ENV === 'development'
+    const hasFlag =
+      typeof window !== 'undefined' &&
+      new URLSearchParams(window.location.search).get('dev') === 'true'
+    setDevMode(inDev || hasFlag)
+  }, [])
+
   // Persist on every change
   useEffect(() => {
     saveCollection(collection)
@@ -193,21 +203,23 @@ export default function CardCollectionView() {
             >
               Deck Builder →
             </Link>
-            <button
-              onClick={handleSeedAll}
-              style={{
-                padding: '10px 14px',
-                background: 'rgba(34,211,238,0.05)',
-                border: '1px dashed rgba(34,211,238,0.4)',
-                color: 'rgba(34,211,238,0.7)',
-                borderRadius: 8,
-                fontSize: 14,
-                cursor: 'pointer',
-              }}
-              title="Dev: grant 2 of every non-Legendary card + 1 of every Legendary"
-            >
-              Seed all (dev)
-            </button>
+            {devMode && (
+              <button
+                onClick={handleSeedAll}
+                style={{
+                  padding: '10px 14px',
+                  background: 'rgba(34,211,238,0.05)',
+                  border: '1px dashed rgba(34,211,238,0.4)',
+                  color: 'rgba(34,211,238,0.7)',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  cursor: 'pointer',
+                }}
+                title="Dev: grant 2 of every non-Legendary card + 1 of every Legendary"
+              >
+                Seed all (dev)
+              </button>
+            )}
           </div>
         </div>
 
@@ -346,7 +358,6 @@ export default function CardCollectionView() {
                   card={card}
                   owned={owned}
                   collection={collection}
-                  expanded={selected?.id === card.id}
                   onDisenchant={() => handleDisenchant(card)}
                   onCraft={() => handleCraft(card)}
                   onFuse={() => handleFuseStart(card)}
@@ -401,7 +412,6 @@ function CardActions({
   card,
   owned,
   collection,
-  expanded,
   onDisenchant,
   onCraft,
   onFuse,
@@ -409,7 +419,6 @@ function CardActions({
   card: CoreSetCard
   owned: number
   collection: CardCollection
-  expanded: boolean
   onDisenchant: () => void
   onCraft: () => void
   onFuse: () => void
@@ -418,14 +427,6 @@ function CardActions({
   const cost = CRAFT_COSTS[card.rarity]
   const canCraftIt = collection.dust >= cost
   const canFuseIt = owned >= 2 && card.rarity !== CardRarity.Legendary
-
-  if (!expanded) {
-    return (
-      <div style={{ height: 32, display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, opacity: 0.6 }}>
-        Click card for actions
-      </div>
-    )
-  }
 
   const btn = (label: string, onClick: () => void, enabled: boolean, color: string) => (
     <button

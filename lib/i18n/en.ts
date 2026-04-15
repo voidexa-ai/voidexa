@@ -68,6 +68,7 @@ export const en: Dict = {
     metaDescription: 'Cosmetic ship skins, trails, cockpit themes and card packs for voidexa Free Flight.',
     tabs: {
       all: 'All',
+      featured: 'Featured',
       ships: 'Ships',
       trails: 'Trails',
       cardPacks: 'Card Packs',
@@ -166,5 +167,10 @@ export const en: Dict = {
     english: 'English',
     danish: 'Dansk',
     switchTo: 'Switch language',
+  },
+  notFound: {
+    title: '404 — Page not found',
+    message: "This page could not be found.",
+    backHome: 'Back to home',
   },
 }

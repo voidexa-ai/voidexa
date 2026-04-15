@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Stars } from '@react-three/drei'
 import ShipModel from './ships/ShipModel'
 import BoostTrail from './ships/BoostTrail'
+import ShipWireframe from './ships/ShipWireframe'
 import FlightControls from './controls/FlightControls'
 import CameraManager from './controls/CameraManager'
 import AsteroidField from './environment/AsteroidField'
@@ -79,14 +80,16 @@ export default function FreeFlightScene({
       ))}
 
       <ModelErrorBoundary>
-        <ShipModel
-          ref={shipGroupRef}
-          ship={shipRef}
-          visible={!firstPerson}
-          url={shipUrl}
-          scale={shipScale}
-          onSize={setShipSize}
-        />
+        <Suspense fallback={<ShipWireframe ship={shipRef} visible={!firstPerson} />}>
+          <ShipModel
+            ref={shipGroupRef}
+            ship={shipRef}
+            visible={!firstPerson}
+            url={shipUrl}
+            scale={shipScale}
+            onSize={setShipSize}
+          />
+        </Suspense>
       </ModelErrorBoundary>
 
       <BoostTrail ship={shipRef} />

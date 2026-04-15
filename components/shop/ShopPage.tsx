@@ -66,16 +66,15 @@ const ITEM_IMAGE: Record<string, string> = {
 type TabKey = 'featured' | ShopCategory
 
 function buildTabs(t: Dict): { key: TabKey; label: string }[] {
-  // Fortnite-style: Featured lands first, then category-focused shelves.
+  // Fortnite-style: Featured lands first, then the six canonical shelves.
+  // Skins surfaces hull-customization attachments (fins, antennas, cannons).
   return [
     { key: 'featured',                label: 'Featured' },
     { key: ShopCategory.ShipSkin,     label: t.shop.tabs.ships },
+    { key: ShopCategory.Attachment,   label: 'Skins' },
     { key: ShopCategory.Trail,        label: t.shop.tabs.trails },
     { key: ShopCategory.CardPack,     label: t.shop.tabs.cardPacks },
     { key: ShopCategory.CockpitTheme, label: t.shop.tabs.cockpits },
-    { key: ShopCategory.Attachment,   label: t.shop.tabs.attachments },
-    { key: ShopCategory.Effect,       label: t.shop.tabs.effects },
-    { key: ShopCategory.Emote,        label: t.shop.tabs.emotes },
   ]
 }
 

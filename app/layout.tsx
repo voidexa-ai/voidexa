@@ -60,7 +60,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <GlobalStarfield />
               <EarlyAccessBanner />
               <Navigation />
-              <main className="relative">{children}</main>
+              {/* paddingTop offsets the fixed Navigation (~69px) so page titles
+                  aren't hidden behind it. Fullscreen pages (freeflight, starmap,
+                  galaxy) use position:fixed and so are unaffected. */}
+              <main className="relative" style={{ paddingTop: 72 }}>{children}</main>
               <ConditionalFooter />
               <JarvisAssistant />
               <UniverseChat />

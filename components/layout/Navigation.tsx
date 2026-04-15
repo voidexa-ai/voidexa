@@ -41,12 +41,12 @@ export default function Navigation() {
     {
       label: t.nav.products,
       children: [
-        { href: '/quantum',     label: tLink('/quantum', 'Quantum'),         description: tDesc('/quantum') },
-        { href: '/trading',     label: tLink('/trading', 'AI Trading'),      description: tDesc('/trading') },
-        { href: '/trading-hub', label: tLink('/trading-hub', 'Trading Hub'), description: tDesc('/trading-hub') },
-        { href: '/ai-tools',    label: tLink('/ai-tools', 'AI Tools'),       description: tDesc('/ai-tools') },
-        { href: '/void-chat',   label: tLink('/void-chat', 'Void Chat'),     description: tDesc('/void-chat') },
-        { href: '/services',    label: tLink('/services', 'Services'),       description: tDesc('/services') },
+        { href: '/trading',  label: tLink('/trading', 'AI Trading (LIVE)'),            description: tDesc('/trading') },
+        { href: '/apps',     label: tLink('/apps', 'Custom Apps (BETA)'),              description: tDesc('/apps') },
+        { href: '/ai-tools', label: tLink('/ai-tools', 'AI Book Creator (IN DEV)'),    description: tDesc('/ai-tools') },
+        { href: '/ai-tools', label: tLink('/ai-tools', 'AI Website Builder (SOON)'),   description: tDesc('/ai-tools') },
+        { href: '/services', label: tLink('/services', 'Data Intelligence (SERVICES)'),description: tDesc('/services') },
+        { href: '/services', label: tLink('/services', 'AI Consulting (SERVICES)'),    description: tDesc('/services') },
       ],
     },
     {
@@ -66,6 +66,7 @@ export default function Navigation() {
         { href: '/station',    label: tLink('/station', 'Station'),        description: tDesc('/station') },
         { href: '/apps',       label: tLink('/apps', 'Apps'),              description: tDesc('/apps') },
         { href: '/whitepaper', label: tLink('/whitepaper', 'White Paper'), description: tDesc('/whitepaper') },
+        { href: '/contact',    label: tLink('/contact', 'Contact'),        description: tDesc('/contact') },
       ],
     },
     { label: t.nav.breakRoom, href: '/break-room' },
@@ -237,7 +238,7 @@ export default function Navigation() {
                               pathname === link.href || pathname.startsWith(link.href + '/')
                             return (
                               <Link
-                                key={link.href}
+                                key={`${link.href}-${link.label}`}
                                 href={localizeHref(link.href)}
                                 onClick={() => setOpenGroup(null)}
                                 style={{
@@ -423,7 +424,7 @@ export default function Navigation() {
                                 pathname === link.href || pathname.startsWith(link.href + '/')
                               return (
                                 <Link
-                                  key={link.href}
+                                  key={`${link.href}-${link.label}`}
                                   href={localizeHref(link.href)}
                                   style={{
                                     display: 'block',

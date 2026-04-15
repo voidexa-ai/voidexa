@@ -54,6 +54,7 @@ export interface Dict {
     metaDescription: string
     tabs: {
       all: string
+      featured: string
       ships: string
       trails: string
       cardPacks: string
@@ -107,5 +108,10 @@ export interface Dict {
     english: string
     danish: string
     switchTo: string
+  }
+  notFound: {
+    title: string
+    message: string
+    backHome: string
   }
 }

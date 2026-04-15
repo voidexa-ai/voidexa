@@ -68,6 +68,7 @@ export const da: Dict = {
     metaDescription: 'Kosmetiske skibsskins, haler, cockpittemaer og kortpakker til voidexa Fri Flyvning.',
     tabs: {
       all: 'Alle',
+      featured: 'Udvalgte',
       ships: 'Skibe',
       trails: 'Haler',
       cardPacks: 'Kortpakker',
@@ -166,5 +167,10 @@ export const da: Dict = {
     english: 'English',
     danish: 'Dansk',
     switchTo: 'Skift sprog',
+  },
+  notFound: {
+    title: '404 — Siden blev ikke fundet',
+    message: 'Denne side kunne ikke findes.',
+    backHome: 'Tilbage til forsiden',
   },
 }

@@ -11,8 +11,7 @@ interface Props {
   url: string
 }
 
-// Map each cockpit frame to its matching interior .glb on Supabase. Equipments +
-// screens are authored for the cockpit01 set only; other frames get interior only.
+// Map each cockpit frame to its matching interior .glb on Supabase.
 const INTERIOR_FOR_FRAME: Record<string, { interior: string; extras: string[] }> = {
   [MODEL_URLS.hirez_cockpit01]: {
     interior: MODEL_URLS.hirez_cockpit01_interior,
@@ -24,23 +23,42 @@ const INTERIOR_FOR_FRAME: Record<string, { interior: string; extras: string[] }>
   [MODEL_URLS.hirez_cockpit05]: { interior: MODEL_URLS.hirez_cockpit05_interior, extras: [] },
 }
 
-// Interior pieces share the frame's scale but sit lower + further back so the
-// dashboard drops below eye level and the front canopy stays clear for the
-// player to see through.
-const INTERIOR_OFFSET = { y: -0.55, z: 0.9 }
+// Camera sits at world-origin of the cockpit group looking down -Z (forward).
+// These offsets shift the whole assembly so the pilot's viewpoint lands at
+// the front of the canopy — not buried inside the dashboard.
+//
+// The Y rotation (π) flips GLTFs that are authored +Z-forward into -Z-forward
+// space, which aligns the dashboard with the camera's forward direction. Then
+// the positive Z offset drops it behind / below the camera, NOT in front.
+const FRAME_POS: [number, number, number] = [0, -0.9, 1.6]
+const INTERIOR_POS: [number, number, number] = [0, -1.1, 2.0]
+const ASSEMBLY_ROTATION: [number, number, number] = [0, Math.PI, 0]
+const TARGET_MAX = 4.8 // larger frame → canopy edges sit at screen corners
 
-function CockpitPiece({ url, scale, center }: { url: string; scale: number; center: THREE.Vector3 }) {
+function CockpitPiece({
+  url,
+  scale,
+  center,
+  offset,
+}: {
+  url: string
+  scale: number
+  center: THREE.Vector3
+  offset: [number, number, number]
+}) {
   const gltf = useGLTF(url)
   const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
   return (
-    <group
-      position={[
-        -center.x * scale,
-        -center.y * scale + INTERIOR_OFFSET.y,
-        -center.z * scale + INTERIOR_OFFSET.z,
-      ]}
-    >
-      <primitive object={scene} scale={scale} />
+    <group rotation={ASSEMBLY_ROTATION}>
+      <group
+        position={[
+          -center.x * scale + offset[0],
+          -center.y * scale + offset[1],
+          -center.z * scale + offset[2],
+        ]}
+      >
+        <primitive object={scene} scale={scale} />
+      </group>
     </group>
   )
 }
@@ -51,7 +69,6 @@ export default function CockpitModel({ visible, url }: Props) {
   const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
   const groupRef = useRef<THREE.Group>(null)
 
-  // Fit frame so canopy edges sit at the screen corners, not directly in front.
   const fit = useMemo(() => {
     const box = new THREE.Box3().setFromObject(scene)
     const size = new THREE.Vector3()
@@ -59,10 +76,7 @@ export default function CockpitModel({ visible, url }: Props) {
     box.getSize(size)
     box.getCenter(center)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    // Larger target so the frame reads as surrounding the viewport rather than
-    // blocking it — camera sits further "inside" the cockpit.
-    const targetMax = 3.6
-    return { scale: targetMax / maxDim, center }
+    return { scale: TARGET_MAX / maxDim, center }
   }, [scene])
 
   const interiorSpec = INTERIOR_FOR_FRAME[url]
@@ -77,22 +91,33 @@ export default function CockpitModel({ visible, url }: Props) {
 
   return (
     <group ref={groupRef} renderOrder={999}>
-      {/* Frame — shifted down + back so the camera sits inside the canopy,
-          looking out through the windshield instead of at the dashboard. */}
-      <group
-        position={[
-          -fit.center.x * fit.scale,
-          -fit.center.y * fit.scale - 0.4,
-          -fit.center.z * fit.scale + 0.7,
-        ]}
-      >
-        <primitive object={scene} scale={fit.scale} />
+      <group rotation={ASSEMBLY_ROTATION}>
+        <group
+          position={[
+            -fit.center.x * fit.scale + FRAME_POS[0],
+            -fit.center.y * fit.scale + FRAME_POS[1],
+            -fit.center.z * fit.scale + FRAME_POS[2],
+          ]}
+        >
+          <primitive object={scene} scale={fit.scale} />
+        </group>
       </group>
       {interiorSpec && (
         <>
-          <CockpitPiece url={interiorSpec.interior} scale={fit.scale} center={fit.center} />
+          <CockpitPiece
+            url={interiorSpec.interior}
+            scale={fit.scale}
+            center={fit.center}
+            offset={INTERIOR_POS}
+          />
           {interiorSpec.extras.map(u => (
-            <CockpitPiece key={u} url={u} scale={fit.scale} center={fit.center} />
+            <CockpitPiece
+              key={u}
+              url={u}
+              scale={fit.scale}
+              center={fit.center}
+              offset={INTERIOR_POS}
+            />
           ))}
         </>
       )}
