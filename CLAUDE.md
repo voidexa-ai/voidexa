@@ -420,3 +420,61 @@ New directory `components/freeflight/` — game scene reuses the same R3F + post
 - `lib/shop/items.ts` TS duplicate export: `export { X as Y }` alongside `export type Y` emits 2300. The `type Y = X; const Y = X` idiom keeps both namespaces consistent.
 - The "click to lock mouse" flow means the pointer lock drops when ESC menu opens. Users must click the canvas again after Resume.
 
+
+## Session 2026-04-15 (continued): Phases 4–9 + asset library + UIs
+
+### Phase 4–9 data foundations — all complete (lib/*)
+- `lib/shop/` — items + rotation + 7 categories + PRICE_BANDS (v2 rarity-aligned: $0.50→$12)
+- `lib/cards/` — deck management, collection (disenchant/craft/fuse), 40-card Core Set
+- `lib/chat/` — types, command parser, moderation (rate limit + spam + banned words), formatting (rank colors)
+- `lib/achievements/` — 23 achievements + 23 title fragments + tracker + composeTitle
+- `lib/race/` — 5 fixed tracks + daily random + 9 power-ups (rubber-banding) + scoring + 8/16 tournament brackets
+- `lib/missions/` — 12 missions (3 timed + 3 exploration + 1 daily + 5 story chain → "Chronicler of the Void" title)
+- **Test suite:** 342 vitest cases passing across 29 suites (`npm run test`)
+
+### Phase 8 deployed (Free Flight content)
+- Stations, nebula zones, derelict ships, warp gates rendered in `/freeflight`
+
+### UI components built
+- `components/chat/UniverseChat.tsx` — floating bubble + 3-tab panel + Free Flight overlay (10s fade)
+- Shop UI deployed at `/shop`, Achievement UI at `/achievements`
+
+### 3D asset library — 689 .glb files, 6.8 GB
+- All paid models (USC 347 + USCX 58 + Hi-Rez 88 = 493) carry PBR textures
+- All Quaternius packs (qsk 92 + qmsf 91 + qs 11) use baseColorFactor material colors (no PNG)
+- Pipeline: fbx2gltf + obj2gltf + @gltf-transform + gltf-pipeline Draco level 7
+- Documented in `public/models/TEXTURE_FIX_GUIDE.md`
+
+### Preview renders — 59 PNGs at 512x512
+- `public/images/renders/` with subfolders: legendary, epic, soulbound, weapons, cockpits, rare, uncommon, starter, cockpit-interiors
+- Pipeline: puppeteer + headless Chromium + Three.js r158 (swiftshader WebGL)
+- Index at `public/images/renders/INDEX.md`
+
+### Catalog & economy
+- `docs/SHIP_CATALOG.md` — every glb categorized: 320 Uncommon, 85 Rare, 19 Epic, 5 Legendary, 5 Soulbound (per master plan Part 3)
+- `docs/CARD_ART_MAPPING.md` — 40 cards mapped to 25 distinct 3D assets + 6 procedural fallbacks
+- `docs/VOIDEXA_FIX_LIST_AND_REMAINING_WORK.md` — open punch list
+- `docs/VOIDEXA_PLANET_OWNER_ECOSYSTEM_v2.md` — 3 participation tiers, task board, 30/23/15/12% revenue split
+- `docs/VOIDEXA_SHIP_CATALOG_AND_ECONOMY.md` — economy model with PvP Legendary Purchase Token system (underdog discount)
+
+### Skills + agents added
+- `.claude/skills/card-combat/SKILL.md` — Phase 11 turn-based combat spec (with frontmatter)
+- `.claude/skills/game-agents/` — 6 voidexa-adapted consultants (economy, combat, systems, level, qa, ux) extracted from CCGS upstream + README
+- `docs/templates/` — economy-model.md, balance-sheet.md, gdd.md (voidexa-defaults pre-filled)
+
+### External
+- voidexa.dk domain purchased (74 kr) — Danish landing page TBD
+- Nav bar consolidation + SEO + shop redesign in progress (Claude Code session)
+
+### Next priorities (in order)
+1. Nav bar + shop redesign (Claude Code is building)
+2. Card combat system (Phase 11) — use `.claude/skills/card-combat/SKILL.md`
+3. Boost trail particle system (Free Flight polish)
+4. Danish landing page on voidexa.dk
+5. Supabase tables for player data (decks, collections, ranks, stats)
+
+### Gotchas worth remembering
+- **Mount + git:** `.git/*.lock` files can't be unlinked through the cowork mount. Run `Get-ChildItem .git -Recurse -Filter "*.lock" -Force | Remove-Item -Force` natively before any git op.
+- **Mount + streaming writes:** `gltf-pipeline`, `obj2gltf`, `fbx2gltf`, Next.js `next build` all write through stream APIs that the mount drops to 0 bytes. Pipeline always works in `/tmp` then `cp` to mount — `cp` is fine.
+- **Headless Chromium + WebGL:** needs `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist --enable-webgl`. Without these flags `getContext('webgl')` returns null even on the latest puppeteer-bundled Chromium.
+- **`lib/shop/items.ts` type+const alias pattern is intentional** — `export type ShopRarity = CardRarity; export const ShopRarity = CardRarity;`. Don't revert to `export { CardRarity as ShopRarity }` (TS 2300 conflict).
