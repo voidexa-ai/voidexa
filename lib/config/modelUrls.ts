@@ -9,10 +9,22 @@ export const MODEL_URLS = {
   uscx_starforce01:      `${SUPABASE_MODELS}/uscx_starforce01.glb`,
   hirez_cockpit01:          `${SUPABASE_MODELS}/hirez_cockpit01.glb`,
   hirez_cockpit01_interior: `${SUPABASE_MODELS}/hirez_cockpit01_interior.glb`,
+  hirez_cockpit02:          `${SUPABASE_MODELS}/hirez_cockpit02.glb`,
+  hirez_cockpit02_interior: `${SUPABASE_MODELS}/hirez_cockpit02_interior.glb`,
+  hirez_cockpit03:          `${SUPABASE_MODELS}/hirez_cockpit03.glb`,
+  hirez_cockpit03_interior: `${SUPABASE_MODELS}/hirez_cockpit03_interior.glb`,
+  hirez_cockpit04:          `${SUPABASE_MODELS}/hirez_cockpit04.glb`,
+  hirez_cockpit04_interior: `${SUPABASE_MODELS}/hirez_cockpit04_interior.glb`,
+  hirez_cockpit05:          `${SUPABASE_MODELS}/hirez_cockpit05.glb`,
+  hirez_cockpit05_interior: `${SUPABASE_MODELS}/hirez_cockpit05_interior.glb`,
   hirez_equipments:         `${SUPABASE_MODELS}/hirez_equipments.glb`,
   hirez_screens:            `${SUPABASE_MODELS}/hirez_screens.glb`,
   qs_challenger:         `${SUPABASE_MODELS}/qs_challenger.glb`,
   qs_executioner:        `${SUPABASE_MODELS}/qs_executioner.glb`,
+  qs_striker:            `${SUPABASE_MODELS}/qs_striker.glb`,
+  qs_imperial:           `${SUPABASE_MODELS}/qs_imperial.glb`,
+  qs_omen:               `${SUPABASE_MODELS}/qs_omen.glb`,
+  qs_spitfire:           `${SUPABASE_MODELS}/qs_spitfire.glb`,
 } as const
 
 export type ModelKey = keyof typeof MODEL_URLS

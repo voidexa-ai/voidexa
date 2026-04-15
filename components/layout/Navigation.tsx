@@ -55,6 +55,7 @@ export default function Navigation() {
         { href: '/starmap',      label: tLink('/starmap', 'Star Map'),           description: tDesc('/starmap') },
         { href: '/freeflight',   label: tLink('/freeflight', 'Free Flight'),    description: tDesc('/freeflight') },
         { href: '/shop',         label: tLink('/shop', 'Shop'),                 description: tDesc('/shop') },
+        { href: '/cards',        label: tLink('/cards', 'Cards'),               description: tDesc('/cards') },
         { href: '/achievements', label: tLink('/achievements', 'Achievements'), description: tDesc('/achievements') },
       ],
     },

@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useMemo, useRef } from 'react'
+import { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -11,18 +11,30 @@ interface Props {
   ship: React.MutableRefObject<ShipState>
   url: string
   scale?: number
+  /** Fires once after the ship GLTF loads with the max world-space bbox extent. */
+  onSize?: (size: number) => void
 }
 
 const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
-  { visible, ship, url, scale = 1.2 },
+  { visible, ship, url, scale = 1.2, onSize },
   ref,
 ) {
   const gltf = useGLTF(url)
   const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
   const engineLight = useRef<THREE.PointLight>(null)
   const engineMesh = useRef<THREE.Mesh>(null)
-  const trailMesh = useRef<THREE.Mesh>(null)
   const { camera } = useThree()
+
+  const measuredSize = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(scene)
+    const size = new THREE.Vector3()
+    box.getSize(size)
+    return Math.max(size.x, size.y, size.z) * scale
+  }, [scene, scale])
+
+  useEffect(() => {
+    onSize?.(measuredSize)
+  }, [measuredSize, onSize])
 
   const lodScale = useRef(1)
 
@@ -44,14 +56,8 @@ const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
       const hot = s.boost ? new THREE.Color('#ffaa00') : new THREE.Color('#00ffff')
       mat.color.copy(hot)
     }
-    if (trailMesh.current) {
-      const len = 1 + speedN * 6 + boost * 8
-      trailMesh.current.scale.set(1 + boost * 0.8, 1 + boost * 0.8, len)
-      trailMesh.current.position.z = 1.5 + len / 2
-      const mat = trailMesh.current.material as THREE.MeshBasicMaterial
-      mat.opacity = 0.35 + speedN * 0.35 + boost * 0.25
-      mat.color.set(s.boost ? '#ffaa55' : '#00d4ff')
-    }
+    // Boost trail is now a sibling Points system rendered in world space.
+    void boost
   })
 
   return (
@@ -69,18 +75,6 @@ const ShipModel = forwardRef<THREE.Group, Props>(function ShipModel(
       <mesh ref={engineMesh} position={[0, 0, 2]}>
         <sphereGeometry args={[0.45, 12, 12]} />
         <meshBasicMaterial color="#00ffff" toneMapped={false} />
-      </mesh>
-      <mesh ref={trailMesh} position={[0, 0, 2.5]} rotation={[-Math.PI / 2, 0, 0]}>
-        <coneGeometry args={[0.35, 1, 12, 1, true]} />
-        <meshBasicMaterial
-          color="#00d4ff"
-          transparent
-          opacity={0.4}
-          toneMapped={false}
-          side={THREE.DoubleSide}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
       </mesh>
     </group>
   )

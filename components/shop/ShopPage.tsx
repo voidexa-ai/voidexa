@@ -9,7 +9,7 @@ import {
   getWeeklyFeatured,
   getActiveLimitedEditions,
 } from '@/lib/shop/rotation'
-import { useT, format } from '@/lib/i18n/context'
+import { useT } from '@/lib/i18n/context'
 import type { Dict } from '@/lib/i18n/types'
 import { MODEL_URLS } from '@/lib/config/modelUrls'
 
@@ -63,11 +63,12 @@ const ITEM_IMAGE: Record<string, string> = {
   'cockpit-gilded':         '/images/renders/cockpits/hirez_cockpit02.png',
 }
 
-type TabKey = 'all' | ShopCategory
+type TabKey = 'featured' | ShopCategory
 
 function buildTabs(t: Dict): { key: TabKey; label: string }[] {
+  // Fortnite-style: Featured lands first, then category-focused shelves.
   return [
-    { key: 'all',                     label: t.shop.tabs.all },
+    { key: 'featured',                label: 'Featured' },
     { key: ShopCategory.ShipSkin,     label: t.shop.tabs.ships },
     { key: ShopCategory.Trail,        label: t.shop.tabs.trails },
     { key: ShopCategory.CardPack,     label: t.shop.tabs.cardPacks },
@@ -77,6 +78,8 @@ function buildTabs(t: Dict): { key: TabKey; label: string }[] {
     { key: ShopCategory.Emote,        label: t.shop.tabs.emotes },
   ]
 }
+
+const PAGE_SIZE = 8
 
 function formatPrice(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`
@@ -525,8 +528,8 @@ export default function ShopPage() {
   const t = useT()
   const TABS = buildTabs(t)
   const [selected, setSelected] = useState<ShopItem | null>(null)
-  const [activeTab, setActiveTab] = useState<TabKey>('all')
-  const [showAll, setShowAll] = useState(false)
+  const [activeTab, setActiveTab] = useState<TabKey>('featured')
+  const [page, setPage] = useState(0)
   const countdown = useCountdownToUtcMidnight()
 
   const today = useMemo(() => new Date(), [])
@@ -542,14 +545,15 @@ export default function ShopPage() {
     return [primary, secondary].filter((x): x is ShopItem => Boolean(x))
   }, [daily, weekly])
 
-  useEffect(() => { setShowAll(false) }, [activeTab])
+  useEffect(() => { setPage(0) }, [activeTab])
 
-  const filtered = useMemo(() => {
-    if (activeTab === 'all') return STARTER_SHOP_ITEMS
+  const tabItems = useMemo(() => {
+    if (activeTab === 'featured') return [] as readonly ShopItem[]
     return STARTER_SHOP_ITEMS.filter(i => i.category === activeTab)
   }, [activeTab])
 
-  const visible = showAll ? filtered : filtered.slice(0, 8)
+  const pageCount = Math.max(1, Math.ceil(tabItems.length / PAGE_SIZE))
+  const pagedItems = tabItems.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)
 
   return (
     <div style={{
@@ -666,8 +670,44 @@ export default function ShopPage() {
           </div>
         </div>
 
-        {/* Daily Featured banner */}
-        {featured.length > 0 && (
+        {/* Fortnite-style tab bar — moved above shelves so switching shows a clean surface */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 10,
+          marginBottom: 28,
+          paddingBottom: 10,
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+        }}>
+          {TABS.map(tab => {
+            const active = activeTab === tab.key
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                style={{
+                  padding: '12px 22px',
+                  background: active ? 'rgba(0,212,255,0.14)' : 'transparent',
+                  border: `1px solid ${active ? 'rgba(0,212,255,0.7)' : 'rgba(255,255,255,0.1)'}`,
+                  borderRadius: 999,
+                  color: active ? '#fff' : 'rgba(255,255,255,0.7)',
+                  fontSize: 14,
+                  fontFamily: 'var(--font-space, monospace)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  textShadow: active ? '0 0 10px #00d4ff' : 'none',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {tab.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Daily Featured banner — only on the Featured tab */}
+        {activeTab === 'featured' && featured.length > 0 && (
           <section style={{ marginBottom: 36 }}>
             <div style={{
               display: 'flex',
@@ -852,8 +892,8 @@ export default function ShopPage() {
           </section>
         )}
 
-        {/* Limited Edition strip */}
-        {limited.length > 0 && (
+        {/* Limited Edition strip — only on the Featured tab */}
+        {activeTab === 'featured' && limited.length > 0 && (
           <section style={{ marginBottom: 36 }}>
             <h2 style={{
               margin: '0 0 14px',
@@ -881,75 +921,91 @@ export default function ShopPage() {
           </section>
         )}
 
-        {/* Tabs */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 8,
-          marginBottom: 20,
-          paddingBottom: 6,
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-        }}>
-          {TABS.map(t => {
-            const active = activeTab === t.key
-            return (
-              <button
-                key={t.key}
-                onClick={() => setActiveTab(t.key)}
-                style={{
-                  padding: '10px 18px',
-                  background: active ? 'rgba(0,212,255,0.12)' : 'transparent',
-                  border: `1px solid ${active ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.1)'}`,
-                  borderRadius: 999,
-                  color: active ? '#fff' : 'rgba(255,255,255,0.65)',
-                  fontSize: 14,
+        {/* Paginated grid — category tabs only */}
+        {activeTab !== 'featured' && (
+          <>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+              gap: 28,
+            }}>
+              {pagedItems.map(item => (
+                <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
+              ))}
+              {pagedItems.length === 0 && (
+                <div style={{
+                  gridColumn: '1 / -1',
+                  padding: '60px 0',
+                  textAlign: 'center',
+                  color: 'rgba(255,255,255,0.5)',
                   fontFamily: 'var(--font-space, monospace)',
-                  letterSpacing: '0.1em',
+                  letterSpacing: '0.14em',
                   textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  textShadow: active ? '0 0 8px #00d4ff' : 'none',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {t.label}
-              </button>
-            )
-          })}
-        </div>
+                }}>
+                  No items in this category yet.
+                </div>
+              )}
+            </div>
 
-        {/* Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 18,
-        }}>
-          {visible.map(item => (
-            <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
-          ))}
-        </div>
-
-        {filtered.length > 8 && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28 }}>
-            <button
-              onClick={() => setShowAll(v => !v)}
-              style={{
-                padding: '12px 26px',
-                background: 'rgba(0,212,255,0.08)',
-                border: '1px solid rgba(0,212,255,0.4)',
-                borderRadius: 999,
-                color: '#fff',
-                fontFamily: 'var(--font-space, monospace)',
-                fontSize: 14,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                textShadow: '0 0 10px #00d4ff77',
-              }}
-            >
-              {showAll ? t.common.showLess : format(t.common.showAll, { count: filtered.length })}
-            </button>
-          </div>
+            {pageCount > 1 && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 18,
+                marginTop: 36,
+              }}>
+                <button
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  style={{
+                    padding: '10px 22px',
+                    background: 'rgba(0,212,255,0.08)',
+                    border: '1px solid rgba(0,212,255,0.4)',
+                    borderRadius: 999,
+                    color: '#fff',
+                    fontFamily: 'var(--font-space, monospace)',
+                    fontSize: 14,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    cursor: page === 0 ? 'not-allowed' : 'pointer',
+                    opacity: page === 0 ? 0.45 : 1,
+                  }}
+                >
+                  ← Prev
+                </button>
+                <span style={{
+                  fontSize: 14,
+                  color: 'rgba(255,255,255,0.7)',
+                  fontFamily: 'var(--font-space, monospace)',
+                  letterSpacing: '0.12em',
+                }}>
+                  {page + 1} / {pageCount}
+                </span>
+                <button
+                  onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))}
+                  disabled={page >= pageCount - 1}
+                  style={{
+                    padding: '10px 22px',
+                    background: 'rgba(0,212,255,0.08)',
+                    border: '1px solid rgba(0,212,255,0.4)',
+                    borderRadius: 999,
+                    color: '#fff',
+                    fontFamily: 'var(--font-space, monospace)',
+                    fontSize: 14,
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    cursor: page >= pageCount - 1 ? 'not-allowed' : 'pointer',
+                    opacity: page >= pageCount - 1 ? 0.45 : 1,
+                  }}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
         )}
+
       </div>
 
       {selected && <ItemModal item={selected} onClose={() => setSelected(null)} />}

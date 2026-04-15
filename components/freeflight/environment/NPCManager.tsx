@@ -18,8 +18,8 @@ interface NPCInstance {
 
 const PATROL_COUNT = 8
 const PIRATE_COUNT = 4
-const PATROL_MODEL = MODEL_URLS.qs_challenger
-const PIRATE_MODEL = MODEL_URLS.qs_executioner
+const PATROL_MODELS = [MODEL_URLS.qs_challenger, MODEL_URLS.qs_striker, MODEL_URLS.qs_imperial]
+const PIRATE_MODELS = [MODEL_URLS.qs_executioner, MODEL_URLS.qs_omen, MODEL_URLS.qs_spitfire]
 const PATROL_SCALE = 0.4
 const PIRATE_SCALE = 0.45
 
@@ -69,17 +69,22 @@ function NPCShip({ instance, scene, scale, glowColor, glowOpacity, refCallback, 
 }
 
 export default function NPCManager() {
-  const patrolGltf = useGLTF(PATROL_MODEL)
-  const pirateGltf = useGLTF(PIRATE_MODEL)
+  // Load all three model variants for each faction so patrols/pirates don't look identical.
+  const patrolA = useGLTF(PATROL_MODELS[0])
+  const patrolB = useGLTF(PATROL_MODELS[1])
+  const patrolC = useGLTF(PATROL_MODELS[2])
+  const pirateA = useGLTF(PIRATE_MODELS[0])
+  const pirateB = useGLTF(PIRATE_MODELS[1])
+  const pirateC = useGLTF(PIRATE_MODELS[2])
 
-  const patrolScenes = useMemo(
-    () => Array.from({ length: PATROL_COUNT }, () => patrolGltf.scene.clone()),
-    [patrolGltf.scene],
-  )
-  const pirateScenes = useMemo(
-    () => Array.from({ length: PIRATE_COUNT }, () => pirateGltf.scene.clone()),
-    [pirateGltf.scene],
-  )
+  const patrolScenes = useMemo(() => {
+    const pool = [patrolA.scene, patrolB.scene, patrolC.scene]
+    return Array.from({ length: PATROL_COUNT }, (_, i) => pool[i % pool.length].clone())
+  }, [patrolA.scene, patrolB.scene, patrolC.scene])
+  const pirateScenes = useMemo(() => {
+    const pool = [pirateA.scene, pirateB.scene, pirateC.scene]
+    return Array.from({ length: PIRATE_COUNT }, (_, i) => pool[i % pool.length].clone())
+  }, [pirateA.scene, pirateB.scene, pirateC.scene])
 
   const { patrols, pirates } = useMemo(() => {
     const rng = (() => {
@@ -203,5 +208,5 @@ export default function NPCManager() {
   )
 }
 
-useGLTF.preload(PATROL_MODEL)
-useGLTF.preload(PIRATE_MODEL)
+PATROL_MODELS.forEach(u => useGLTF.preload(u))
+PIRATE_MODELS.forEach(u => useGLTF.preload(u))

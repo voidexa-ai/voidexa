@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { ShipState } from '../types'
@@ -8,18 +8,34 @@ import type { ShipState } from '../types'
 interface Props {
   ship: React.MutableRefObject<ShipState>
   onModeChange?: (firstPerson: boolean) => void
+  /** Max bbox extent (world units) of the active ship — drives default camera distance. */
+  shipSize?: number
 }
 
 const FIRST_PERSON_OFFSET = new THREE.Vector3(0, 0.4, -0.2)
-const THIRD_MIN = 3
-const THIRD_MAX = 20
 const LERP_RATE = 8
 
-export default function CameraManager({ ship, onModeChange }: Props) {
+export default function CameraManager({ ship, onModeChange, shipSize = 4 }: Props) {
   const { camera, gl } = useThree()
   const currentOffset = useRef(new THREE.Vector3(0, 2, 8))
   const thirdDistance = useRef(8)
   const thirdHeight = useRef(2)
+  // Derive zoom range from the ship's bounding box: small fighters stay close,
+  // capital ships pull back automatically.
+  const zoomRange = useMemo(() => {
+    const preferred = Math.max(5, Math.min(20, shipSize * 1.8))
+    return {
+      min: Math.max(3, preferred * 0.4),
+      max: Math.max(12, preferred * 2.2),
+      preferred,
+    }
+  }, [shipSize])
+
+  // Apply the preferred distance whenever the ship changes size.
+  useEffect(() => {
+    thirdDistance.current = zoomRange.preferred
+    thirdHeight.current = zoomRange.preferred * 0.25
+  }, [zoomRange])
 
   // Free look: yaw/pitch around ship, active while right mouse held
   const freeLook = useRef(false)
@@ -40,9 +56,10 @@ export default function CameraManager({ ship, onModeChange }: Props) {
     const onWheel = (e: WheelEvent) => {
       if (ship.current.firstPerson) return
       e.preventDefault()
+      const step = Math.max(0.8, zoomRange.preferred * 0.15)
       thirdDistance.current = Math.max(
-        THIRD_MIN,
-        Math.min(THIRD_MAX, thirdDistance.current + Math.sign(e.deltaY) * 1.2),
+        zoomRange.min,
+        Math.min(zoomRange.max, thirdDistance.current + Math.sign(e.deltaY) * step),
       )
       thirdHeight.current = thirdDistance.current * 0.25
     }
@@ -83,7 +100,7 @@ export default function CameraManager({ ship, onModeChange }: Props) {
       window.removeEventListener('mouseup', onMouseUp)
       window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [gl, ship, onModeChange])
+  }, [gl, ship, onModeChange, zoomRange])
 
   const tmp = useRef(new THREE.Vector3()).current
   const tmp2 = useRef(new THREE.Vector3()).current

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Stars } from '@react-three/drei'
 import ShipModel from './ships/ShipModel'
+import BoostTrail from './ships/BoostTrail'
 import FlightControls from './controls/FlightControls'
 import CameraManager from './controls/CameraManager'
 import AsteroidField from './environment/AsteroidField'
@@ -43,6 +44,7 @@ export default function FreeFlightScene({
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
   const [firstPerson, setFirstPerson] = useState(false)
+  const [shipSize, setShipSize] = useState(4)
 
   const registered = useRef(false)
   if (!registered.current) {
@@ -83,12 +85,16 @@ export default function FreeFlightScene({
           visible={!firstPerson}
           url={shipUrl}
           scale={shipScale}
+          onSize={setShipSize}
         />
       </ModelErrorBoundary>
+
+      <BoostTrail ship={shipRef} />
 
       <FlightControls ship={shipRef} shipGroup={shipGroupRef} enabled={true} />
       <CameraManager
         ship={shipRef}
+        shipSize={shipSize}
         onModeChange={(fp) => { setFirstPerson(fp); onFirstPersonChange?.(fp) }}
       />
 

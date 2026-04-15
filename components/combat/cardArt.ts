@@ -33,8 +33,20 @@ export const CATEGORY_COLORS: Readonly<Record<string, string>> = {
   Alien:      '#a855f7',
 }
 
+/**
+ * CW-2 mapping rules (star-system-polish SKILL.md):
+ *   Attack     → weapons/
+ *   Defense    → cockpits/ (exteriors + interiors)
+ *   Tactical   → uncommon/
+ *   Deployment → starter/ or uncommon/
+ *   Alien      → legendary/
+ *
+ * Every one of the 40 starter cards has a real render. No procedural fallbacks needed.
+ * Within a category cards may share the same render — the UI layer distinguishes them
+ * via VFX overlay (muzzle flash colour, shield dome hue, etc).
+ */
 const CARD_ART: Readonly<Record<string, string>> = {
-  // Attack
+  // ── Attack (13) → weapons/ ────────────────────────────────────────────────
   'laser-pulse':         '/images/renders/weapons/hirez_weapon_blaster.png',
   'plasma-bolt':         '/images/renders/weapons/hirez_weapon_blaster.png',
   'micro-missile':       '/images/renders/weapons/hirez_weapon_missile.png',
@@ -47,35 +59,40 @@ const CARD_ART: Readonly<Record<string, string>> = {
   'phase-beam':          '/images/renders/weapons/hirez_weapon_bigmachinegun.png',
   'void-lance':          '/images/renders/weapons/hirez_weapon_biglauncher.png',
   'nova-barrage':        '/images/renders/weapons/hirez_weapon_trilauncher.png',
-  'stellar-annihilator': '/images/renders/legendary/hirez_ship09_full.png',
+  'stellar-annihilator': '/images/renders/weapons/hirez_weapon_biglauncher.png',
 
-  // Defense (mostly cockpit interiors + ship)
-  'energy-shield-small':    '/images/renders/cockpit-interiors/hirez_cockpit01_interior.png',
-  'emergency-weld':         '/images/renders/cockpit-interiors/hirez_cockpit02_interior.png',
+  // ── Defense (9) → cockpits/ + cockpit-interiors/ ─────────────────────────
+  'energy-shield-small':    '/images/renders/cockpits/hirez_cockpit01.png',
+  'emergency-weld':         '/images/renders/cockpits/hirez_cockpit02.png',
   'decoy-flare':            '/images/renders/cockpits/hirez_cockpit03.png',
-  'evasive-roll':           '/images/renders/uncommon/usc_lightfox01.png',
-  'magnetic-shield':        '/images/renders/cockpit-interiors/hirez_cockpit03_interior.png',
-  'nano-repair':            '/images/renders/cockpits/hirez_cockpit04.png',
-  'mirror-shield':          '/images/renders/epic/hirez_ship04_full.png',
-  'phase-shift-defense':    '/images/renders/uncommon/usc_nightaye01.png',
-  'plasma-ablative-shield': '/images/renders/cockpit-interiors/hirez_cockpit05_interior.png',
+  'evasive-roll':           '/images/renders/cockpits/hirez_cockpit04.png',
+  'magnetic-shield':        '/images/renders/cockpits/hirez_cockpit05.png',
+  'nano-repair':            '/images/renders/cockpit-interiors/hirez_cockpit01_interior.png',
+  'mirror-shield':          '/images/renders/cockpit-interiors/hirez_cockpit02_interior.png',
+  'phase-shift-defense':    '/images/renders/cockpit-interiors/hirez_cockpit03_interior.png',
+  'plasma-ablative-shield': '/images/renders/cockpit-interiors/hirez_cockpit04_interior.png',
 
-  // Tactical (mostly procedural — provide a few fallbacks)
+  // ── Tactical (8) → uncommon/ ─────────────────────────────────────────────
   'speed-boost':     '/images/renders/uncommon/usc_hyperfalcon01.png',
-  'jam-weapons':     '/images/renders/cockpits/hirez_cockpit02.png',
-  'damage-booster':  '/images/renders/weapons/hirez_weapon_blaster.png',
-  'create-nebula':   '/images/renders/epic/hirez_ship03_full.png',
+  'jam-weapons':     '/images/renders/uncommon/usc_nightaye01.png',
+  'scan-target':     '/images/renders/uncommon/usc_lightfox01.png',
+  'damage-booster':  '/images/renders/uncommon/usc_galaxyraptor01.png',
+  'blind-pulse':     '/images/renders/uncommon/usc_meteormantis01.png',
+  'crit-amplifier':  '/images/renders/uncommon/usc_forcebadger01.png',
+  'create-nebula':   '/images/renders/uncommon/usc_craizanstar01.png',
+  'mind-read':       '/images/renders/uncommon/usc_striderox01.png',
 
-  // Deployment (drones + turret)
-  'laser-drone':     '/images/renders/soulbound/qs_dispatcher.png',
-  'point-defense':   '/images/renders/weapons/hirez_weapon_smallmachinegun.png',
-  'missile-drone':   '/images/renders/starter/qs_bob.png',
-  'shield-drone':    '/images/renders/uncommon/usc_lightfox01.png',
-  'kamikaze-drone':  '/images/renders/uncommon/usc_cosmicshark01.png',
-  'fortress-turret': '/images/renders/weapons/hirez_weapon_biglauncher.png',
+  // ── Deployment (6) → starter/ + uncommon/ ────────────────────────────────
+  'laser-drone':     '/images/renders/starter/qs_bob.png',
+  'point-defense':   '/images/renders/uncommon/usc_astroeagle01.png',
+  'missile-drone':   '/images/renders/uncommon/usc_cosmicshark01.png',
+  'shield-drone':    '/images/renders/uncommon/usc_galacticleopard1.png',
+  'kamikaze-drone':  '/images/renders/uncommon/usc_voidwhale01.png',
+  'fortress-turret': '/images/renders/uncommon/usc_protonlegacy01.png',
 
-  // Alien (uscx uniques)
-  'void-pulse':   '/images/renders/rare/uscx_pullora.png',
-  'time-reverse': '/images/renders/rare/uscx_nova.png',
-  'reality-warp': '/images/renders/rare/uscx_spidership.png',
+  // ── Alien (4) → legendary/ ───────────────────────────────────────────────
+  'minor-phase-ripple': '/images/renders/legendary/hirez_ship01_full.png',
+  'void-pulse':         '/images/renders/legendary/hirez_ship06_full.png',
+  'time-reverse':       '/images/renders/legendary/hirez_ship09_full.png',
+  'reality-warp':       '/images/renders/legendary/hirez_ship16_full.png',
 }

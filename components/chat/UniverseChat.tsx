@@ -473,7 +473,7 @@ function MessageRow({
 // Free Flight compact overlay — 10s fade, clickable to expand
 // ─────────────────────────────────────────────────────────────────────────────
 
-const FADE_MS = 10_000
+const FADE_MS = 8_000
 
 function FreeFlightOverlay({
   messages,
@@ -494,48 +494,61 @@ function FreeFlightOverlay({
   // Show only messages newer than FADE_MS.
   const visible = messages.filter((m) => now - m.timestamp < FADE_MS).slice(-4)
 
+  // WoW-style: thin text strip centered at bottom, no bubble, no background
+  // panels — just faded text the player reads mid-flight. Clicking the strip
+  // opens the full panel.
   return (
     <div
-      className="fixed bottom-6 left-6 z-40 flex flex-col items-start gap-2 pointer-events-none"
+      onClick={onOpen}
       aria-live="polite"
+      className="fixed z-40 flex flex-col items-center gap-1 cursor-pointer"
+      style={{
+        left: '50%',
+        bottom: 90,
+        transform: 'translateX(-50%)',
+        width: 'min(820px, 80vw)',
+        pointerEvents: visible.length > 0 ? 'auto' : 'none',
+      }}
     >
       <AnimatePresence>
-        {visible.map((m) => (
-          <motion.div
-            key={m.id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.25 }}
-            className="px-3 py-1 rounded-lg text-[14px] max-w-[420px]"
-            style={{
-              background: 'rgba(0, 0, 0, 0.55)',
-              border: '1px solid rgba(34, 211, 238, 0.3)',
-              backdropFilter: 'blur(6px)',
-              WebkitBackdropFilter: 'blur(6px)',
-              color: 'rgba(229, 247, 250, 0.9)',
-            }}
-          >
-            <MessageRow message={m} selfId={selfId} />
-          </motion.div>
-        ))}
+        {visible.map((m) => {
+          const age = now - m.timestamp
+          const fade = Math.max(0, 1 - age / FADE_MS)
+          const senderMeta = formatPlayerName(m.senderName, m.senderRank)
+          const isSelf = m.senderId === selfId
+          return (
+            <motion.div
+              key={m.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: fade, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="text-[14px] leading-snug text-center"
+              style={{
+                color: 'rgba(229, 247, 250, 0.95)',
+                textShadow: '0 1px 3px rgba(0,0,0,0.95), 0 0 8px rgba(0,0,0,0.85)',
+                maxWidth: '100%',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {m.isSystem ? (
+                <span style={{ color: '#a7f3d0', fontStyle: 'italic' }}>
+                  * {m.content}
+                </span>
+              ) : (
+                <>
+                  <span style={{ color: senderMeta.color, fontWeight: 600 }}>
+                    [{isSelf ? 'You' : senderMeta.name}]
+                  </span>
+                  <span style={{ color: 'rgba(229, 247, 250, 0.75)' }}>: {m.content}</span>
+                </>
+              )}
+            </motion.div>
+          )
+        })}
       </AnimatePresence>
-
-      <button
-        type="button"
-        onClick={onOpen}
-        aria-label="Open Universe Chat"
-        className="pointer-events-auto h-12 w-12 rounded-full flex items-center justify-center transition-colors"
-        style={{
-          background: 'rgba(0, 0, 0, 0.6)',
-          border: '1px solid rgba(34, 211, 238, 0.55)',
-          color: '#67e8f9',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-        }}
-      >
-        <MessageCircle size={20} />
-      </button>
     </div>
   )
 }
