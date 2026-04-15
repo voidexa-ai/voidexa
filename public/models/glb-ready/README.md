@@ -2,28 +2,39 @@
 
 Draco-compressed `.glb` files ready to load with `useGLTF` in the voidexa Phase 1-3 build. This is a **test set**, not the final asset library — pick representative models from each pack before committing to full conversion.
 
-Last updated: 2026-04-15 (full Hi-Rez expansion: cockpit interiors, 24 complete ships, 7 weapons). Total: 62 files, 450 MB on disk.
+Last updated: 2026-04-15 (full conversion of every paid + free pack — 689 files, 6.8 GB on disk).
 
-## Texture status
+## Inventory by prefix
 
-| Model | Images | Status |
+| Prefix | Count | Source pack | Texture status |
+|---|---:|---|---|
+| `usc_` | 347 | Ultimate Spaceships Creator (paid FBX) | ✅ All carry PBR textures (Grey base) — rebound via fbx2gltf + gltf-transform |
+| `uscx_` | 58 | USC Expansion (paid FBX) | ✅ All carry PBR textures (Grey base) |
+| `hirez_` | 88 | HiRez Spaceship Creator (paid OBJ) | ✅ All carry PBR textures (Grey base) — see breakdown below |
+| `qsk_` | 92 | Quaternius Ultimate Space Kit (CC0 gltf) | ✅ Material colors via `baseColorFactor` (no PNG textures by pack design) |
+| `qmsf_` | 91 | Quaternius Ultimate Modular Sci-Fi (CC0 OBJ) | ✅ Material colors via `baseColorFactor` (no PNG textures by pack design) |
+| `qs_` | 11 | Quaternius Ultimate Spaceships (CC0 gltf) | ✅ 1 baked atlas per ship |
+| `cockpit_free_seat` | 1 | Sketchfab "Spaceship Cockpit + Seat" (CC) | ✅ 30 PBR textures |
+| `station_modular_interior` | 1 | Sketchfab "Sci-Fi Ship Interior" (CC) | ✅ 40 PBR textures |
+| **Total** | **689** | | **6.8 GB on disk** |
+
+**100% of paid-model glbs** (USC 347 + USCX 58 + Hirez 88 = **493 files**) now carry ≥ 2 PBR texture images. The Quaternius packs (qsk + qmsf + qs = 194 files) use Blender material-color exports — `baseColorFactor` instead of PNG textures — so they don't appear "textured" in image audits but render correctly.
+
+See `../TEXTURE_FIX_GUIDE.md` for the rebinding pipeline. Default base color across every paid model: **Grey** (override per ship by re-running `add_textures.mjs` with a different color preference).
+
+### Hi-Rez breakdown (88 files)
+
+| Subset | Count | Notes |
 |---|---:|---|
-| qs_bob.glb … qs_zenith.glb (11 files) | 1 each | ✅ Baked atlas from source gltf |
-| cockpit_free_seat.glb | 30 | ✅ Sketchfab pack (full PBR) |
-| station_modular_interior.glb | 40 | ✅ Sketchfab pack (full PBR) |
-| hirez_cockpit01.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
-| hirez_cockpit02.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
-| hirez_cockpit03.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
-| hirez_cockpit04.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
-| hirez_cockpit05.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
-| hirez_spaceship01.glb | 3 | ✅ Rebound via MTL patch |
-| usc_astroeagle01.glb | 3 | ✅ Rebound via gltf-transform post-process |
-| usc_cosmicshark01.glb | 4 | ✅ Rebound via gltf-transform post-process |
-| usc_voidwhale01.glb | 3 | ✅ Rebound via gltf-transform post-process |
-| uscx_galacticokamoto1.glb | 4 | ✅ Rebound via gltf-transform post-process |
-| uscx_starforce01.glb | 4 | ✅ Rebound via gltf-transform post-process |
-
-Every `.glb` in this folder now carries bound PBR textures. See `../TEXTURE_FIX_GUIDE.md` for the rebinding pipeline.
+| Cockpits (exterior) | 5 | `hirez_cockpit01..05.glb` |
+| Cockpit interiors + dressing | 7 | `hirez_cockpit01_interior..05_interior.glb` + `hirez_equipments.glb` + `hirez_screens.glb` |
+| Engines | 11 | `hirez_engine01..11.glb` |
+| Thrusters | 8 | `hirez_thruster01..08.glb` (shared Thrusters_BaseColor + Emission set) |
+| MainBodies | 16 | `hirez_mainbody01..16.glb` |
+| Wings | 9 | `hirez_wing01..09.glb` (Wing05/06 fall back to Black base — pack lacks Grey) |
+| Spaceships (exterior) | 1 | `hirez_spaceship01.glb` |
+| Spaceships (with interior, full) | 24 | `hirez_ship01_full..24_full.glb` (rotates MainBody1..16 textures for visual variety) |
+| Weapons | 7 | `hirez_weapon_biglauncher`, `_bigmachinegun`, `_blaster`, `_missile`, `_smalllauncher`, `_smallmachinegun`, `_trilauncher` |
 
 ## Conversion pipeline
 
