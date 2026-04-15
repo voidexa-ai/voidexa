@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useEffect, useState, useRef } from 'react'
 import CSSStarfield from './CSSStarfield'
+import { useT } from '@/lib/i18n/context'
 
 // R3F canvas — client-side only, no SSR
 const StarMapCanvas = dynamic(() => import('./StarMapCanvas'), {
@@ -38,6 +39,7 @@ function useCountUp(target: number, run: boolean, duration = 1200) {
 }
 
 function Kcp90FloatingPanel() {
+  const t = useT()
   const [summary, setSummary] = useState<KcpSummary | null | undefined>(undefined)
   const [visible, setVisible] = useState(true)
   const hasData = summary != null
@@ -87,7 +89,7 @@ function Kcp90FloatingPanel() {
           <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px solid #3b82f6', background: '#3b82f6', display: 'inline-block' }} />
         </div>
         <span style={{ ...mono, fontSize: 14, color: 'rgba(59,130,246,0.5)', letterSpacing: '0.04em' }}>
-          kcp-90://protocol
+          {t.home.kcpTitle}
         </span>
         <button
           onClick={() => setVisible(false)}
@@ -116,28 +118,28 @@ function Kcp90FloatingPanel() {
 
         {/* sessions */}
         <div style={{ ...mono, display: 'flex' }}>
-          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>sessions</span>
+          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>{t.home.kcpSessions}</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
           <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>{sessions}</span>
         </div>
 
         {/* compress */}
         <div style={{ ...mono, display: 'flex' }}>
-          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>compress</span>
+          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>{t.home.kcpCompress}</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
           <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>95%</span>
         </div>
 
         {/* range */}
         <div style={{ ...mono, display: 'flex' }}>
-          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>range</span>
+          <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>{t.home.kcpRange}</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
           <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>95%</span>
         </div>
 
         {/* Status line with blinking cursor */}
         <div style={{ ...mono, fontSize: 14, color: 'rgba(59,130,246,0.5)', marginTop: 2 }}>
-          $ binary: active | shm: active{' '}
+          {t.home.kcpStatus}{' '}
           <span style={{ color: '#60a5fa', animation: 'blink 1s infinite' }}>_</span>
         </div>
 
@@ -156,6 +158,7 @@ function Kcp90FloatingPanel() {
 // ── Main page ──────────────────────────────────────────────────────────────
 
 export default function StarMapPage() {
+  const t = useT()
   // Lock scroll while on homepage
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -199,7 +202,7 @@ export default function StarMapPage() {
           textTransform: 'uppercase',
         }}
       >
-        Drag to rotate · Click a star to explore
+        {t.home.hint}
       </div>
     </div>
   )

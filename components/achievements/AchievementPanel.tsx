@@ -22,6 +22,8 @@ import {
   getSelectedTitleFragments,
   saveSelectedTitleFragments,
 } from '@/lib/achievements/client-progress'
+import { useT, format } from '@/lib/i18n/context'
+import type { Dict } from '@/lib/i18n/types'
 
 const TIER_COLOR: Record<AchievementTier, string> = {
   [AchievementTier.Bronze]: '#cd7f32',
@@ -75,6 +77,7 @@ interface Props {
 }
 
 export default function AchievementPanel({ overlay = false, onClose, context }: Props) {
+  const t = useT()
   const [progressMap, setProgressMap] = useState<Record<string, AchievementProgress>>({})
   const [selectedFragments, setSelectedFragments] = useState<string[]>([])
 
@@ -96,10 +99,15 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
   const unlockedCount = completedAchievements.length
   const totalCount = ACHIEVEMENTS.length
 
+  const translateFragment = (achievementId: string, fallback: string): string =>
+    t.achievements.items[achievementId]?.titleFragment ?? fallback
+
   const composedTitle = useMemo(() => {
-    const selected = availableFragments.filter(f => selectedFragments.includes(f.achievementId))
+    const selected = availableFragments
+      .filter(f => selectedFragments.includes(f.achievementId))
+      .map(f => translateFragment(f.achievementId, f.fragment))
     return composeTitle(selected, { context })
-  }, [availableFragments, selectedFragments, context])
+  }, [availableFragments, selectedFragments, context, t])
 
   const toggleFragment = (achievementId: string) => {
     setSelectedFragments(prev => {
@@ -154,7 +162,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
               color: 'rgba(0,212,255,0.75)',
               fontFamily: 'var(--font-space, monospace)',
             }}>
-              voidexa · Hall of Records
+              {t.achievements.eyebrow}
             </div>
             <h1 style={{
               fontSize: 44,
@@ -166,13 +174,13 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}>
-              Achievements
+              {t.achievements.title}
             </h1>
             <div style={{
               fontSize: 16,
               color: 'rgba(255,255,255,0.65)',
             }}>
-              {unlockedCount} / {totalCount} unlocked
+              {format(t.achievements.progress, { unlocked: unlockedCount, total: totalCount })}
             </div>
           </div>
           {overlay && onClose && (
@@ -192,7 +200,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
                 textShadow: '0 0 8px #00d4ff88',
               }}
             >
-              Close · ESC
+              {t.achievements.closeEsc}
             </button>
           )}
         </header>
@@ -218,7 +226,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
                 paddingLeft: 12,
                 textShadow: `0 0 10px ${CATEGORY_COLOR[cat]}66`,
               }}>
-                {cat}
+                {t.achievements.categories[cat as keyof Dict['achievements']['categories']] ?? cat}
               </h2>
             </div>
             <div style={{
@@ -227,7 +235,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
               gap: 14,
             }}>
               {getAchievementsByCategory(cat).map(a => (
-                <AchievementCard key={a.id} ach={a} progress={getProgress(a.id)} />
+                <AchievementCard key={a.id} ach={a} progress={getProgress(a.id)} t={t} />
               ))}
             </div>
           </section>
@@ -254,7 +262,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
               paddingLeft: 12,
               textShadow: '0 0 10px #f59e0b66',
             }}>
-              Title Composer
+              {t.achievements.titleComposer}
             </h2>
           </div>
 
@@ -273,7 +281,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
               fontFamily: 'var(--font-space, monospace)',
               marginBottom: 8,
             }}>
-              Preview
+              {t.achievements.preview}
             </div>
             <div style={{
               fontSize: 22,
@@ -286,7 +294,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
             }}>
               {composedTitle || (
                 <span style={{ color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>
-                  Unlock achievements to reveal title fragments.
+                  {t.achievements.emptyComposer}
                 </span>
               )}
             </div>
@@ -302,7 +310,7 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
                   marginTop: 18,
                   marginBottom: 10,
                 }}>
-                  Available Fragments · tap to toggle
+                  {t.achievements.availableFragments}
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {availableFragments.map(f => {
@@ -326,7 +334,8 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
                           boxShadow: active ? '0 0 14px rgba(245,158,11,0.35)' : 'none',
                         }}
                       >
-                        {f.fragment.replace(/\[planet name\]/g, context?.planetName ?? 'your planet')}
+                        {translateFragment(f.achievementId, f.fragment)
+                          .replace(/\[planet name\]/g, context?.planetName ?? 'your planet')}
                       </button>
                     )
                   })}
@@ -340,8 +349,12 @@ export default function AchievementPanel({ overlay = false, onClose, context }: 
   )
 }
 
-function AchievementCard({ ach, progress }: { ach: Achievement; progress: AchievementProgress }) {
+function AchievementCard({ ach, progress, t }: { ach: Achievement; progress: AchievementProgress; t: Dict }) {
   const completed = progress.currentCount >= ach.requiredCount
+  const tName = t.achievements.items[ach.id]?.name ?? ach.name
+  const tDesc = t.achievements.items[ach.id]?.description ?? ach.description
+  const tTier = t.achievements.tiers[ach.tier as keyof Dict['achievements']['tiers']] ?? ach.tier
+  const tCat = t.achievements.categories[ach.category as keyof Dict['achievements']['categories']] ?? ach.category
   const pct = Math.min(100, (progress.currentCount / ach.requiredCount) * 100)
   const color = completed
     ? TIER_COLOR[ach.tier]
@@ -397,9 +410,9 @@ function AchievementCard({ ach, progress }: { ach: Achievement; progress: Achiev
             fontFamily: 'var(--font-space, monospace)',
             textShadow: `0 0 6px ${TIER_COLOR[ach.tier]}77`,
           }}>
-            <span>{ach.tier}</span>
+            <span>{tTier}</span>
             <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
-            <span style={{ color: 'rgba(255,255,255,0.55)' }}>{ach.category}</span>
+            <span style={{ color: 'rgba(255,255,255,0.55)' }}>{tCat}</span>
           </div>
           <div style={{
             fontSize: 16,
@@ -409,7 +422,7 @@ function AchievementCard({ ach, progress }: { ach: Achievement; progress: Achiev
             fontFamily: 'var(--font-space, system-ui)',
             color: '#fff',
           }}>
-            {ach.name}
+            {tName}
           </div>
           <div style={{
             fontSize: 13,
@@ -417,7 +430,7 @@ function AchievementCard({ ach, progress }: { ach: Achievement; progress: Achiev
             marginTop: 4,
             lineHeight: 1.45,
           }}>
-            {ach.description}
+            {tDesc}
           </div>
           <div style={{ marginTop: 10 }}>
             <div style={{
@@ -452,7 +465,7 @@ function AchievementCard({ ach, progress }: { ach: Achievement; progress: Achiev
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
               }}>
-                {completed ? 'Unlocked' : 'Locked'}
+                {completed ? t.common.unlocked : t.common.locked}
               </span>
             </div>
           </div>

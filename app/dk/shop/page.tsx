@@ -1,10 +1,10 @@
 import ShopPage from '@/components/shop/ShopPage'
 
 export const metadata = {
-  title: 'voidexa Shop — Ship Skins, Card Packs & Cosmetics',
-  description: 'Cosmetic ship skins, trails, cockpit themes and card packs for voidexa Free Flight.',
+  title: 'voidexa Butik — Skibsskins, kortpakker & kosmetik',
+  description: 'Kosmetiske skibsskins, haler, cockpittemaer og kortpakker til voidexa Fri Flyvning.',
   alternates: {
-    canonical: '/shop',
+    canonical: '/dk/shop',
     languages: {
       'en': '/shop',
       'da': '/dk/shop',

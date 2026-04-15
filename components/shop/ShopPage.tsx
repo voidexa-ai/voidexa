@@ -9,6 +9,8 @@ import {
   getWeeklyFeatured,
   getActiveLimitedEditions,
 } from '@/lib/shop/rotation'
+import { useT, format } from '@/lib/i18n/context'
+import type { Dict } from '@/lib/i18n/types'
 
 const ShopItemPreviewCanvas = dynamic(() => import('./ShopItemPreviewCanvas'), {
   ssr: false,
@@ -23,23 +25,16 @@ const RARITY_COLOR: Record<CardRarity, string> = {
   [CardRarity.Legendary]: '#f59e0b',
 }
 
-const RARITY_LABEL: Record<CardRarity, string> = {
-  [CardRarity.Common]:    'Common',
-  [CardRarity.Uncommon]:  'Uncommon',
-  [CardRarity.Rare]:      'Rare',
-  [CardRarity.Epic]:      'Epic',
-  [CardRarity.Legendary]: 'Legendary',
+const rarityLabel = (t: Dict, r: CardRarity): string => {
+  const key = CardRarity[r] as keyof Dict['shop']['rarity']
+  return t.shop.rarity[key] ?? key
 }
-
-const CATEGORY_LABEL: Record<ShopCategory, string> = {
-  [ShopCategory.ShipSkin]:     'Ship Skin',
-  [ShopCategory.Attachment]:   'Attachment',
-  [ShopCategory.Effect]:       'Effect',
-  [ShopCategory.Trail]:        'Trail',
-  [ShopCategory.CockpitTheme]: 'Cockpit',
-  [ShopCategory.Emote]:        'Emote',
-  [ShopCategory.CardPack]:     'Card Pack',
+const categoryLabel = (t: Dict, c: ShopCategory): string => {
+  const key = c as keyof Dict['shop']['category']
+  return t.shop.category[key] ?? String(c)
 }
+const itemName = (t: Dict, item: ShopItem): string => t.shop.items[item.id]?.name ?? item.name
+const itemDesc = (t: Dict, item: ShopItem): string => t.shop.items[item.id]?.description ?? item.description
 
 // Map shop-item IDs to actual .glb paths for 3D preview. Only ship skins and
 // cockpit themes get a real model — everything else renders a geometric shape.
@@ -54,16 +49,18 @@ const ITEM_MODEL: Record<string, { url: string; scale?: number }> = {
 
 type TabKey = 'all' | ShopCategory
 
-const TABS: { key: TabKey; label: string }[] = [
-  { key: 'all',                      label: 'All' },
-  { key: ShopCategory.ShipSkin,      label: 'Ships' },
-  { key: ShopCategory.Trail,         label: 'Trails' },
-  { key: ShopCategory.CardPack,      label: 'Card Packs' },
-  { key: ShopCategory.CockpitTheme,  label: 'Cockpits' },
-  { key: ShopCategory.Attachment,    label: 'Attachments' },
-  { key: ShopCategory.Effect,        label: 'Effects' },
-  { key: ShopCategory.Emote,         label: 'Emotes' },
-]
+function buildTabs(t: Dict): { key: TabKey; label: string }[] {
+  return [
+    { key: 'all',                     label: t.shop.tabs.all },
+    { key: ShopCategory.ShipSkin,     label: t.shop.tabs.ships },
+    { key: ShopCategory.Trail,        label: t.shop.tabs.trails },
+    { key: ShopCategory.CardPack,     label: t.shop.tabs.cardPacks },
+    { key: ShopCategory.CockpitTheme, label: t.shop.tabs.cockpits },
+    { key: ShopCategory.Attachment,   label: t.shop.tabs.attachments },
+    { key: ShopCategory.Effect,       label: t.shop.tabs.effects },
+    { key: ShopCategory.Emote,        label: t.shop.tabs.emotes },
+  ]
+}
 
 function formatPrice(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`
@@ -155,6 +152,7 @@ function CategoryShape({ category, color, size = 120 }: { category: ShopCategory
 }
 
 function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: () => void; large?: boolean }) {
+  const t = useT()
   const color = RARITY_COLOR[item.rarity]
   const hasModel = !!ITEM_MODEL[item.id]
   return (
@@ -220,7 +218,7 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
             textShadow: '0 0 8px #f59e0b',
             fontFamily: 'var(--font-space, monospace)',
           }}>
-            ★ LIMITED
+            {t.shop.limited}
           </span>
         )}
       </div>
@@ -239,7 +237,7 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
             textShadow: `0 0 8px ${color}77`,
             fontFamily: 'var(--font-space, monospace)',
           }}>
-            {RARITY_LABEL[item.rarity]}
+            {rarityLabel(t, item.rarity)}
           </span>
           <span style={{
             fontSize: 12,
@@ -250,7 +248,7 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
             background: 'rgba(255,255,255,0.06)',
             borderRadius: 999,
           }}>
-            {CATEGORY_LABEL[item.category]}
+            {categoryLabel(t, item.category)}
           </span>
         </div>
         <div style={{
@@ -260,7 +258,7 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
           marginTop: 8,
           fontFamily: 'var(--font-space, system-ui)',
         }}>
-          {item.name}
+          {itemName(t, item)}
         </div>
         <div style={{
           fontSize: 14,
@@ -273,7 +271,7 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
         }}>
-          {item.description}
+          {itemDesc(t, item)}
         </div>
         <div style={{ marginTop: 14 }}>
           <span style={{
@@ -292,10 +290,11 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
 }
 
 function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
+  const t = useT()
   const color = RARITY_COLOR[item.rarity]
   const modelSpec = ITEM_MODEL[item.id]
   const isCardPack = item.category === ShopCategory.CardPack
-  const packContents = isCardPack ? parseCardPackContents(item.description) : []
+  const packContents = isCardPack ? parseCardPackContents(itemDesc(t, item)) : []
   const isShipSkin = item.category === ShopCategory.ShipSkin
 
   useEffect(() => {
@@ -386,17 +385,17 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
             flexWrap: 'wrap',
           }}>
             <span style={{ color, textShadow: `0 0 8px ${color}` }}>
-              {RARITY_LABEL[item.rarity]}
+              {rarityLabel(t, item.rarity)}
             </span>
             <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
             <span style={{ color: 'rgba(255,255,255,0.7)' }}>
-              {CATEGORY_LABEL[item.category]}
+              {categoryLabel(t, item.category)}
             </span>
             {item.isLimitedEdition && (
               <>
                 <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
                 <span style={{ color: '#f59e0b', textShadow: '0 0 8px #f59e0b' }}>
-                  ★ Limited
+                  {t.shop.limited}
                 </span>
               </>
             )}
@@ -408,7 +407,7 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
             lineHeight: 1.1,
             fontFamily: 'var(--font-space, system-ui)',
           }}>
-            {item.name}
+            {itemName(t, item)}
           </div>
           <div style={{
             fontSize: 16,
@@ -416,7 +415,7 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
             marginTop: 14,
             lineHeight: 1.55,
           }}>
-            {item.description}
+            {itemDesc(t, item)}
           </div>
           {isCardPack && packContents.length > 0 && (
             <div style={{
@@ -434,7 +433,7 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
                 fontFamily: 'var(--font-space, monospace)',
                 marginBottom: 8,
               }}>
-                Pack Contents
+                {t.shop.packContents}
               </div>
               <ul style={{
                 margin: 0,
@@ -454,7 +453,7 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
               color: 'rgba(0,212,255,0.75)',
               fontStyle: 'italic',
             }}>
-              Preview in Free Flight after purchase.
+              {t.shop.previewNote}
             </div>
           )}
 
@@ -493,7 +492,7 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
                 cursor: 'not-allowed',
               }}
             >
-              Coming Soon · Stripe
+              {t.shop.comingSoonStripe}
             </button>
           </div>
         </div>
@@ -503,6 +502,8 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
 }
 
 export default function ShopPage() {
+  const t = useT()
+  const TABS = buildTabs(t)
   const [selected, setSelected] = useState<ShopItem | null>(null)
   const [activeTab, setActiveTab] = useState<TabKey>('all')
   const [showAll, setShowAll] = useState(false)
@@ -547,7 +548,7 @@ export default function ShopPage() {
             color: 'rgba(0,212,255,0.75)',
             fontFamily: 'var(--font-space, monospace)',
           }}>
-            voidexa · Storefront
+            {t.shop.eyebrow}
           </div>
           <h1 style={{
             fontSize: 48,
@@ -559,7 +560,7 @@ export default function ShopPage() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>
-            Shop
+            {t.shop.title}
           </h1>
           <p style={{
             fontSize: 16,
@@ -567,8 +568,7 @@ export default function ShopPage() {
             maxWidth: 680,
             lineHeight: 1.6,
           }}>
-            Cosmetic ship skins, trails, cockpit themes and card packs. No pay-to-win —
-            gameplay earns stats, the shop only sells looks.
+            {t.shop.subtitle}
           </p>
         </header>
 
@@ -595,7 +595,7 @@ export default function ShopPage() {
               fontFamily: 'var(--font-space, monospace)',
               textShadow: '0 0 8px #00d4ff',
             }}>
-              New Pilot Bundle
+              {t.shop.newPilotBundle}
             </div>
             <div style={{
               fontSize: 28,
@@ -604,7 +604,7 @@ export default function ShopPage() {
               marginTop: 6,
               fontFamily: 'var(--font-space, system-ui)',
             }}>
-              Starter Pack
+              {t.shop.starterPack}
             </div>
             <div style={{
               fontSize: 15,
@@ -612,7 +612,7 @@ export default function ShopPage() {
               marginTop: 6,
               lineHeight: 1.5,
             }}>
-              1 Uncommon ship skin · 5 card packs — a 70%+ savings vs buying piecemeal.
+              {t.shop.starterDesc}
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -641,7 +641,7 @@ export default function ShopPage() {
                 textShadow: '0 0 8px #00d4ff',
               }}
             >
-              Coming Soon · Stripe
+              {t.shop.comingSoonStripe}
             </button>
           </div>
         </div>
@@ -674,7 +674,7 @@ export default function ShopPage() {
                   paddingLeft: 12,
                   textShadow: '0 0 12px rgba(0,212,255,0.6)',
                 }}>
-                  Daily Featured
+                  {t.shop.dailyFeatured}
                 </h2>
               </div>
               <div style={{
@@ -682,7 +682,7 @@ export default function ShopPage() {
                 color: 'rgba(255,255,255,0.6)',
                 fontFamily: 'var(--font-space, monospace)',
               }}>
-                Resets in{' '}
+                {t.shop.resetsIn}{' '}
                 <span style={{
                   color: '#00ffff',
                   textShadow: '0 0 8px #00d4ff',
@@ -763,7 +763,7 @@ export default function ShopPage() {
                         textShadow: `0 0 8px ${color}`,
                         backdropFilter: 'blur(8px)',
                       }}>
-                        {RARITY_LABEL[item.rarity]}
+                        {rarityLabel(t, item.rarity)}
                       </div>
                     </div>
                     <div style={{ padding: '22px 26px' }}>
@@ -773,7 +773,7 @@ export default function ShopPage() {
                         textTransform: 'uppercase',
                         color: 'rgba(255,255,255,0.55)',
                       }}>
-                        {CATEGORY_LABEL[item.category]}
+                        {categoryLabel(t, item.category)}
                       </div>
                       <div style={{
                         fontSize: 26,
@@ -782,7 +782,7 @@ export default function ShopPage() {
                         marginTop: 4,
                         fontFamily: 'var(--font-space, system-ui)',
                       }}>
-                        {item.name}
+                        {itemName(t, item)}
                       </div>
                       <div style={{
                         fontSize: 15,
@@ -790,7 +790,7 @@ export default function ShopPage() {
                         marginTop: 8,
                         lineHeight: 1.5,
                       }}>
-                        {item.description}
+                        {itemDesc(t, item)}
                       </div>
                       <div style={{
                         display: 'flex',
@@ -813,7 +813,7 @@ export default function ShopPage() {
                           color: 'rgba(255,255,255,0.5)',
                           fontFamily: 'var(--font-space, monospace)',
                         }}>
-                          View Details →
+                          {t.common.viewDetails}
                         </span>
                       </div>
                     </div>
@@ -839,7 +839,7 @@ export default function ShopPage() {
               paddingLeft: 12,
               textShadow: '0 0 12px rgba(245,158,11,0.55)',
             }}>
-              Last Chance · Limited Edition
+              {t.shop.limitedEdition}
             </h2>
             <div style={{
               display: 'grid',
@@ -918,7 +918,7 @@ export default function ShopPage() {
                 textShadow: '0 0 10px #00d4ff77',
               }}
             >
-              {showAll ? 'Show Less' : `Show All · ${filtered.length} items`}
+              {showAll ? t.common.showLess : format(t.common.showAll, { count: filtered.length })}
             </button>
           </div>
         )}

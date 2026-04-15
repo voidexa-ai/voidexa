@@ -1,10 +1,10 @@
 import AchievementPanel from '@/components/achievements/AchievementPanel'
 
 export const metadata = {
-  title: 'voidexa Hall of Records — Achievements',
-  description: 'Unlock titles, ships, and badges across Product, Exploration and PvP tracks.',
+  title: 'voidexa Mindehal — Bedrifter',
+  description: 'Lås titler, skibe og badges op på tværs af Produkt, Udforskning og PvP.',
   alternates: {
-    canonical: '/achievements',
+    canonical: '/dk/achievements',
     languages: {
       'en': '/achievements',
       'da': '/dk/achievements',

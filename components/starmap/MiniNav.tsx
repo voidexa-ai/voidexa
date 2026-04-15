@@ -4,23 +4,24 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { STAR_MAP_NODES } from '@/components/starmap/nodes'
+import { useI18n } from '@/lib/i18n/context'
+import { stripLocale } from '@/lib/i18n/locale'
 
-const links = [
-  { href: '/starmap',  label: 'Galaxy'   },
-  { href: '/trading',  label: 'Trading'  },
-  { href: '/apps',     label: 'Apps'     },
-  { href: '/ai-tools', label: 'AI Tools' },
-  { href: '/services', label: 'Services' },
-  { href: '/about',    label: 'About'    },
-  { href: '/contact',  label: 'Contact'  },
-]
+const LINK_HREFS = ['/starmap', '/trading', '/apps', '/ai-tools', '/services', '/about', '/contact']
+const FALLBACK: Record<string, string> = {
+  '/starmap': 'Galaxy', '/trading': 'Trading', '/apps': 'Apps', '/ai-tools': 'AI Tools',
+  '/services': 'Services', '/about': 'About', '/contact': 'Contact',
+}
 
 // path → planet emissive color
 const PATH_COLOR: Record<string, string> = {}
 STAR_MAP_NODES.forEach(n => { if (n.path) PATH_COLOR[n.path] = n.emissive })
 
 export default function MiniNav() {
-  const pathname = usePathname()
+  const rawPathname = usePathname()
+  const pathname = stripLocale(rawPathname)
+  const { t, localizeHref } = useI18n()
+  const links = LINK_HREFS.map(href => ({ href, label: t.nav.items[href]?.label ?? FALLBACK[href] }))
   const [hoveredHref, setHoveredHref] = useState<string | null>(null)
 
   return (
@@ -42,7 +43,7 @@ export default function MiniNav() {
     >
       {/* Logo */}
       <Link
-        href="/"
+        href={localizeHref('/')}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -96,7 +97,7 @@ export default function MiniNav() {
           return (
             <Link
               key={href}
-              href={href}
+              href={localizeHref(href)}
               onMouseEnter={() => setHoveredHref(href)}
               onMouseLeave={() => setHoveredHref(null)}
               style={{

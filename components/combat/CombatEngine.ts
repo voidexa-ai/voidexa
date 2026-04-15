@@ -520,10 +520,16 @@ export function createEngine(opts: SetupOptions): CombatEngine {
       me.energy = 0 // doesn't carry
       // Check victory before swapping
       checkVictory()
-      // After checkVictory(), state.phase may have flipped to Won/Lost/Draw —
-      // assert as CombatPhase for the comparison since TS narrowed too tightly.
-      const phaseAfter: CombatPhase = state.phase
-      if (phaseAfter === CombatPhase.Won || phaseAfter === CombatPhase.Lost || phaseAfter === CombatPhase.Draw) return
+      // TS narrows `state.phase` at function entry to TurnA|TurnB so the
+      // comparison below looks unreachable — but `checkVictory()` mutates it.
+      // Cast through `string` to bypass the narrowing without using `any`.
+      const phaseAfter = state.phase as string
+      if (
+        phaseAfter === CombatPhase.Won ||
+        phaseAfter === CombatPhase.Lost ||
+        phaseAfter === CombatPhase.Draw
+      )
+        return
 
       // Swap turn
       state.current = state.current === CombatantSide.A ? CombatantSide.B : CombatantSide.A

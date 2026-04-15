@@ -8,6 +8,9 @@ import { ChevronDown, LayoutDashboard, Menu, X } from 'lucide-react'
 import AuthButton from '@/components/AuthButton'
 import { useGetInTouchModal } from '@/components/GetInTouchModal'
 import { useAuth } from '@/components/AuthProvider'
+import { useI18n } from '@/lib/i18n/context'
+import { stripLocale } from '@/lib/i18n/locale'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
 interface NavLink {
   href: string
@@ -21,40 +24,6 @@ interface NavGroup {
   children?: NavLink[]
 }
 
-const NAV_GROUPS: NavGroup[] = [
-  { label: 'Home', href: '/' },
-  {
-    label: 'Products',
-    children: [
-      { href: '/quantum',     label: 'Quantum',     description: 'Multi-AI debate engine' },
-      { href: '/trading',     label: 'AI Trading',  description: 'Autonomous crypto bot' },
-      { href: '/trading-hub', label: 'Trading Hub', description: 'Bot leaderboard' },
-      { href: '/ai-tools',    label: 'AI Tools',    description: 'Creator suite' },
-      { href: '/void-chat',   label: 'Void Chat',   description: 'Multi-AI chat' },
-      { href: '/services',    label: 'Services',    description: 'AI development & consulting' },
-    ],
-  },
-  {
-    label: 'Universe',
-    children: [
-      { href: '/starmap',      label: 'Star Map',     description: 'Galaxy view' },
-      { href: '/freeflight',   label: 'Free Flight',  description: 'Pilot your ship' },
-      { href: '/shop',         label: 'Shop',         description: 'Skins & card packs' },
-      { href: '/achievements', label: 'Achievements', description: 'Hall of records' },
-    ],
-  },
-  {
-    label: 'About',
-    children: [
-      { href: '/team',        label: 'Team',        description: 'Meet the crew' },
-      { href: '/station',     label: 'Station',     description: 'Content hub' },
-      { href: '/apps',        label: 'Apps',        description: 'Encrypted comms & more' },
-      { href: '/whitepaper',  label: 'White Paper', description: 'Vision document' },
-    ],
-  },
-  { label: 'Break Room', href: '/break-room' },
-]
-
 function isActiveGroup(group: NavGroup, pathname: string): boolean {
   if (group.href && pathname === group.href) return true
   if (group.children?.some(c => pathname === c.href || pathname.startsWith(c.href + '/'))) return true
@@ -62,7 +31,44 @@ function isActiveGroup(group: NavGroup, pathname: string): boolean {
 }
 
 export default function Navigation() {
-  const pathname = usePathname()
+  const rawPathname = usePathname()
+  const pathname = stripLocale(rawPathname)
+  const { t, localizeHref } = useI18n()
+  const tLink = (href: string, fallback: string) => t.nav.items[href]?.label ?? fallback
+  const tDesc = (href: string) => t.nav.items[href]?.description
+  const NAV_GROUPS: NavGroup[] = [
+    { label: t.nav.home, href: '/' },
+    {
+      label: t.nav.products,
+      children: [
+        { href: '/quantum',     label: tLink('/quantum', 'Quantum'),         description: tDesc('/quantum') },
+        { href: '/trading',     label: tLink('/trading', 'AI Trading'),      description: tDesc('/trading') },
+        { href: '/trading-hub', label: tLink('/trading-hub', 'Trading Hub'), description: tDesc('/trading-hub') },
+        { href: '/ai-tools',    label: tLink('/ai-tools', 'AI Tools'),       description: tDesc('/ai-tools') },
+        { href: '/void-chat',   label: tLink('/void-chat', 'Void Chat'),     description: tDesc('/void-chat') },
+        { href: '/services',    label: tLink('/services', 'Services'),       description: tDesc('/services') },
+      ],
+    },
+    {
+      label: t.nav.universe,
+      children: [
+        { href: '/starmap',      label: tLink('/starmap', 'Star Map'),           description: tDesc('/starmap') },
+        { href: '/freeflight',   label: tLink('/freeflight', 'Free Flight'),    description: tDesc('/freeflight') },
+        { href: '/shop',         label: tLink('/shop', 'Shop'),                 description: tDesc('/shop') },
+        { href: '/achievements', label: tLink('/achievements', 'Achievements'), description: tDesc('/achievements') },
+      ],
+    },
+    {
+      label: t.nav.about,
+      children: [
+        { href: '/team',       label: tLink('/team', 'Team'),              description: tDesc('/team') },
+        { href: '/station',    label: tLink('/station', 'Station'),        description: tDesc('/station') },
+        { href: '/apps',       label: tLink('/apps', 'Apps'),              description: tDesc('/apps') },
+        { href: '/whitepaper', label: tLink('/whitepaper', 'White Paper'), description: tDesc('/whitepaper') },
+      ],
+    },
+    { label: t.nav.breakRoom, href: '/break-room' },
+  ]
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openGroup, setOpenGroup] = useState<string | null>(null)
@@ -126,7 +132,7 @@ export default function Navigation() {
         >
           <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group shrink-0">
+            <Link href={localizeHref('/')} className="flex items-center gap-2 group shrink-0">
               <div className="relative w-8 h-8">
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#00d4ff] to-[#8b5cf6] opacity-20 group-hover:opacity-40 transition-opacity" />
                 <div className="absolute inset-[2px] rounded-md bg-[#0a0a0f] flex items-center justify-center">
@@ -150,7 +156,7 @@ export default function Navigation() {
                   return (
                     <Link
                       key={group.label}
-                      href={group.href!}
+                      href={localizeHref(group.href!)}
                       style={{
                         padding: '7px 14px',
                         borderRadius: 8,
@@ -231,7 +237,7 @@ export default function Navigation() {
                             return (
                               <Link
                                 key={link.href}
-                                href={link.href}
+                                href={localizeHref(link.href)}
                                 onClick={() => setOpenGroup(null)}
                                 style={{
                                   display: 'block',
@@ -287,13 +293,14 @@ export default function Navigation() {
 
             {/* Desktop right */}
             <div className="hidden lg:flex items-center gap-3 shrink-0">
+              <LanguageSwitcher />
               {!isAdmin && (
                 <button
                   onClick={() => openModal()}
                   className="px-4 py-1.5 text-sm font-semibold rounded-full text-[#0a0a0f] transition-opacity hover:opacity-90"
                   style={{ background: 'linear-gradient(135deg,#00d4ff,#8b5cf6)' }}
                 >
-                  Get in touch
+                  {t.common.getInTouch}
                 </button>
               )}
               {isAdmin && (
@@ -353,7 +360,7 @@ export default function Navigation() {
                   return (
                     <Link
                       key={group.label}
-                      href={group.href!}
+                      href={localizeHref(group.href!)}
                       style={{
                         display: 'block',
                         padding: '14px 18px',
@@ -416,7 +423,7 @@ export default function Navigation() {
                               return (
                                 <Link
                                   key={link.href}
-                                  href={link.href}
+                                  href={localizeHref(link.href)}
                                   style={{
                                     display: 'block',
                                     padding: '10px 16px',
@@ -448,11 +455,12 @@ export default function Navigation() {
                 className="py-3 text-[15px] font-semibold rounded-full text-[#0a0a0f]"
                 style={{ background: 'linear-gradient(135deg,#00d4ff,#8b5cf6)' }}
               >
-                Get in touch
+                {t.common.getInTouch}
               </button>
 
-              <div style={{ marginTop: 12 }}>
+              <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 10 }}>
                 <AuthButton />
+                <LanguageSwitcher variant="full" />
               </div>
             </nav>
           </motion.div>

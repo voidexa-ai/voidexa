@@ -1,4 +1,9 @@
+'use client'
+
+import { useT, format } from '@/lib/i18n/context'
+
 export default function Footer() {
+  const t = useT()
   return (
     <footer
       className="relative border-t"
@@ -8,11 +13,9 @@ export default function Footer() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-sm text-[#334155]">{t.footer.operating}</p>
         <p className="text-sm text-[#334155]">
-          Operating globally from Denmark. &nbsp;CVR-nr: 46343387
-        </p>
-        <p className="text-sm text-[#334155]">
-          © {new Date().getFullYear()} voidexa. All rights reserved.
+          {format(t.footer.rights, { year: new Date().getFullYear() })}
         </p>
       </div>
     </footer>
