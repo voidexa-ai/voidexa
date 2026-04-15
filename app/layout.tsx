@@ -25,12 +25,15 @@ const syne = Syne({
 })
 
 export const metadata: Metadata = {
-  title: 'voidexa — Intelligent systems that work for you',
+  title: {
+    default: 'voidexa — Sovereign AI Infrastructure',
+    template: '%s',
+  },
   description:
     'voidexa builds AI-powered trading systems, encrypted communication apps, and intelligent automation tools. Technology that thinks, adapts, and executes.',
   keywords: 'AI trading bot, encrypted communication, AI consulting, custom software, data intelligence',
   openGraph: {
-    title: 'voidexa',
+    title: 'voidexa — Sovereign AI Infrastructure',
     description: 'Intelligent systems that work for you',
     type: 'website',
   },

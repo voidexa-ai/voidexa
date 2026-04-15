@@ -6,6 +6,10 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { VoidChatShell } from '@/components/ghost-ai/VoidChatShell';
 
+export const metadata = {
+  title: 'voidexa Void Chat — Multi-AI Chat',
+}
+
 export default async function ChatLayout({
   children,
 }: {

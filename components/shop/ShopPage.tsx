@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useState } from 'react'
 import { CardRarity } from '@/lib/game/cards'
 import { STARTER_SHOP_ITEMS, ShopCategory, type ShopItem } from '@/lib/shop/items'
@@ -8,6 +9,11 @@ import {
   getWeeklyFeatured,
   getActiveLimitedEditions,
 } from '@/lib/shop/rotation'
+
+const ShopItemPreviewCanvas = dynamic(() => import('./ShopItemPreviewCanvas'), {
+  ssr: false,
+  loading: () => <div style={{ width: '100%', height: '100%', background: '#050813' }} />,
+})
 
 const RARITY_COLOR: Record<CardRarity, string> = {
   [CardRarity.Common]:    '#94a3b8',
@@ -35,18 +41,38 @@ const CATEGORY_LABEL: Record<ShopCategory, string> = {
   [ShopCategory.CardPack]:     'Card Pack',
 }
 
-const CATEGORY_ICON: Record<ShopCategory, string> = {
-  [ShopCategory.ShipSkin]:     '🚀',
-  [ShopCategory.Attachment]:   '🔩',
-  [ShopCategory.Effect]:       '✨',
-  [ShopCategory.Trail]:        '🌠',
-  [ShopCategory.CockpitTheme]: '🛸',
-  [ShopCategory.Emote]:        '😎',
-  [ShopCategory.CardPack]:     '🃏',
+// Map shop-item IDs to actual .glb paths for 3D preview. Only ship skins and
+// cockpit themes get a real model — everything else renders a geometric shape.
+const ITEM_MODEL: Record<string, { url: string; scale?: number }> = {
+  'skin-crimson-fighter': { url: '/models/glb-ready/qs_bob.glb',            scale: 1.0 },
+  'skin-chrome-cruiser':  { url: '/models/glb-ready/usc_astroeagle01.glb',  scale: 0.6 },
+  'skin-obsidian-stealth':{ url: '/models/glb-ready/usc_cosmicshark01.glb', scale: 0.55 },
+  'skin-void-legend':     { url: '/models/glb-ready/usc_voidwhale01.glb',   scale: 0.25 },
+  'cockpit-carbon':       { url: '/models/glb-ready/hirez_cockpit01.glb',   scale: 1.0 },
+  'cockpit-gilded':       { url: '/models/glb-ready/hirez_cockpit02.glb',   scale: 1.0 },
 }
+
+type TabKey = 'all' | ShopCategory
+
+const TABS: { key: TabKey; label: string }[] = [
+  { key: 'all',                      label: 'All' },
+  { key: ShopCategory.ShipSkin,      label: 'Ships' },
+  { key: ShopCategory.Trail,         label: 'Trails' },
+  { key: ShopCategory.CardPack,      label: 'Card Packs' },
+  { key: ShopCategory.CockpitTheme,  label: 'Cockpits' },
+  { key: ShopCategory.Attachment,    label: 'Attachments' },
+  { key: ShopCategory.Effect,        label: 'Effects' },
+  { key: ShopCategory.Emote,         label: 'Emotes' },
+]
 
 function formatPrice(cents: number): string {
   return `$${(cents / 100).toFixed(2)}`
+}
+
+function parseCardPackContents(description: string): string[] {
+  const m = description.match(/:\s*(.*)$/)
+  if (!m) return []
+  return m[1].split(/\s*\+\s*/).map(s => s.trim())
 }
 
 function useCountdownToUtcMidnight(): string {
@@ -64,15 +90,73 @@ function useCountdownToUtcMidnight(): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
-function parseCardPackContents(description: string): string[] {
-  // Rough heuristic: split after "5 cards:" on "+"
-  const m = description.match(/:\s*(.*)$/)
-  if (!m) return []
-  return m[1].split(/\s*\+\s*/).map(s => s.trim())
+// Geometric SVG placeholders per category — neutral, readable, no emoji.
+function CategoryShape({ category, color, size = 120 }: { category: ShopCategory; color: string; size?: number }) {
+  const stroke = color
+  const fill = `${color}22`
+  const strokeWidth = 2.4
+  const props = { width: size, height: size, viewBox: '0 0 100 100' as const }
+  const glow = `0 0 24px ${color}88`
+  const common = { stroke, strokeWidth, fill, style: { filter: `drop-shadow(${glow})` } }
+  switch (category) {
+    case ShopCategory.ShipSkin:
+      return (
+        <svg {...props}>
+          <polygon points="50,10 86,82 50,68 14,82" {...common} />
+        </svg>
+      )
+    case ShopCategory.Attachment:
+      return (
+        <svg {...props}>
+          <rect x="20" y="20" width="60" height="60" rx="10" {...common} />
+          <circle cx="50" cy="50" r="10" {...common} />
+        </svg>
+      )
+    case ShopCategory.Effect:
+      return (
+        <svg {...props}>
+          <circle cx="50" cy="50" r="30" {...common} />
+          <circle cx="50" cy="50" r="42" stroke={stroke} strokeWidth="1.5" fill="none" opacity="0.6" />
+          <circle cx="50" cy="50" r="14" stroke={stroke} strokeWidth="1.2" fill="none" opacity="0.8" />
+        </svg>
+      )
+    case ShopCategory.Trail:
+      return (
+        <svg {...props}>
+          <path d="M10 65 L40 60 L58 50 L74 40 L90 22" stroke={stroke} strokeWidth={strokeWidth} fill="none" style={{ filter: `drop-shadow(${glow})` }} strokeLinecap="round" />
+          <path d="M12 75 L44 70 L60 62 L78 54 L92 40" stroke={stroke} strokeWidth={strokeWidth - 0.6} fill="none" opacity="0.6" strokeLinecap="round" />
+        </svg>
+      )
+    case ShopCategory.CockpitTheme:
+      return (
+        <svg {...props}>
+          <path d="M20 66 Q50 20 80 66 L80 82 L20 82 Z" {...common} />
+          <path d="M30 66 Q50 34 70 66" stroke={stroke} strokeWidth="1.5" fill="none" opacity="0.7" />
+        </svg>
+      )
+    case ShopCategory.Emote:
+      return (
+        <svg {...props}>
+          <circle cx="50" cy="50" r="34" {...common} />
+          <circle cx="40" cy="44" r="3" fill={stroke} />
+          <circle cx="60" cy="44" r="3" fill={stroke} />
+          <path d="M36 62 Q50 74 64 62" stroke={stroke} strokeWidth="2" fill="none" strokeLinecap="round" />
+        </svg>
+      )
+    case ShopCategory.CardPack:
+      return (
+        <svg {...props}>
+          <rect x="22" y="14" width="44" height="72" rx="6" stroke={stroke} strokeWidth={strokeWidth - 0.4} fill={fill} opacity="0.5" transform="rotate(-12 50 50)" />
+          <rect x="30" y="18" width="44" height="72" rx="6" stroke={stroke} strokeWidth={strokeWidth - 0.2} fill={fill} opacity="0.7" transform="rotate(-4 50 50)" />
+          <rect x="34" y="20" width="44" height="72" rx="6" {...common} />
+        </svg>
+      )
+  }
 }
 
-function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
+function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: () => void; large?: boolean }) {
   const color = RARITY_COLOR[item.rarity]
+  const hasModel = !!ITEM_MODEL[item.id]
   return (
     <button
       onClick={onClick}
@@ -80,51 +164,76 @@ function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
         position: 'relative',
         textAlign: 'left',
         padding: 0,
-        background: 'linear-gradient(180deg, rgba(10,14,24,0.8), rgba(6,10,18,0.9))',
-        border: `1px solid ${color}66`,
-        borderRadius: 10,
+        background: 'linear-gradient(180deg, rgba(10,14,24,0.85), rgba(6,10,18,0.92))',
+        border: `1px solid ${color}55`,
+        borderRadius: 14,
         overflow: 'hidden',
         cursor: 'pointer',
-        boxShadow: `0 0 18px ${color}22`,
+        boxShadow: `0 0 24px ${color}22`,
         color: '#fff',
         fontFamily: 'var(--font-inter, system-ui)',
-        transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
+        transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s',
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)'
-        ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 28px ${color}66`
+        ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-3px)'
+        ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 38px ${color}88`
         ;(e.currentTarget as HTMLButtonElement).style.borderColor = color
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'
-        ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 18px ${color}22`
-        ;(e.currentTarget as HTMLButtonElement).style.borderColor = `${color}66`
+        ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'
+        ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 24px ${color}22`
+        ;(e.currentTarget as HTMLButtonElement).style.borderColor = `${color}55`
       }}
     >
-      {/* Preview / icon area */}
       <div style={{
-        aspectRatio: '4 / 3',
+        aspectRatio: large ? '5 / 4' : '4 / 3',
         background: `radial-gradient(circle at 50% 55%, ${color}33 0%, rgba(5,8,16,0.95) 70%)`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: 64,
-        textShadow: `0 0 24px ${color}aa`,
-        borderBottom: `1px solid ${color}44`,
+        borderBottom: `1px solid ${color}33`,
+        position: 'relative',
       }}>
-        {CATEGORY_ICON[item.category]}
+        {hasModel ? (
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <ShopItemPreviewCanvas
+              url={ITEM_MODEL[item.id].url}
+              scale={ITEM_MODEL[item.id].scale}
+              accent={color}
+              rotateSpeed={0.5}
+            />
+          </div>
+        ) : (
+          <CategoryShape category={item.category} color={color} size={large ? 160 : 110} />
+        )}
+        {item.isLimitedEdition && (
+          <span style={{
+            position: 'absolute',
+            top: 12, left: 12,
+            fontSize: 11,
+            letterSpacing: '0.18em',
+            padding: '4px 10px',
+            borderRadius: 999,
+            color: '#f59e0b',
+            background: 'rgba(245,158,11,0.12)',
+            border: '1px solid rgba(245,158,11,0.5)',
+            textShadow: '0 0 8px #f59e0b',
+            fontFamily: 'var(--font-space, monospace)',
+          }}>
+            ★ LIMITED
+          </span>
+        )}
       </div>
-      {/* Body */}
-      <div style={{ padding: 14 }}>
+      <div style={{ padding: large ? 20 : 16 }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 6,
+          gap: 8,
         }}>
           <span style={{
             fontSize: 12,
-            letterSpacing: '0.14em',
+            letterSpacing: '0.16em',
             textTransform: 'uppercase',
             color,
             textShadow: `0 0 8px ${color}77`,
@@ -137,7 +246,7 @@ function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
             color: 'rgba(255,255,255,0.55)',
-            padding: '2px 8px',
+            padding: '3px 10px',
             background: 'rgba(255,255,255,0.06)',
             borderRadius: 999,
           }}>
@@ -145,10 +254,10 @@ function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
           </span>
         </div>
         <div style={{
-          fontSize: 16,
-          fontWeight: 600,
+          fontSize: large ? 20 : 17,
+          fontWeight: 700,
           letterSpacing: '-0.01em',
-          marginTop: 6,
+          marginTop: 8,
           fontFamily: 'var(--font-space, system-ui)',
         }}>
           {item.name}
@@ -156,9 +265,9 @@ function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
         <div style={{
           fontSize: 14,
           color: 'rgba(255,255,255,0.65)',
-          marginTop: 4,
+          marginTop: 6,
           lineHeight: 1.45,
-          minHeight: '2.8em',
+          minHeight: '2.9em',
           display: '-webkit-box',
           WebkitLineClamp: 2,
           WebkitBoxOrient: 'vertical',
@@ -166,31 +275,16 @@ function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
         }}>
           {item.description}
         </div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginTop: 10,
-        }}>
+        <div style={{ marginTop: 14 }}>
           <span style={{
-            fontSize: 18,
-            fontWeight: 700,
+            fontSize: 22,
+            fontWeight: 800,
             color: '#fff',
-            textShadow: '0 0 10px #00d4ff88',
+            textShadow: '0 0 10px #00d4ff66',
+            fontFamily: 'var(--font-space, system-ui)',
           }}>
             {formatPrice(item.price)}
           </span>
-          {item.isLimitedEdition && (
-            <span style={{
-              fontSize: 11,
-              letterSpacing: '0.16em',
-              color: '#f59e0b',
-              textShadow: '0 0 8px #f59e0b',
-              fontFamily: 'var(--font-space, monospace)',
-            }}>
-              ★ LIMITED
-            </span>
-          )}
         </div>
       </div>
     </button>
@@ -199,16 +293,24 @@ function ItemCard({ item, onClick }: { item: ShopItem; onClick: () => void }) {
 
 function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
   const color = RARITY_COLOR[item.rarity]
+  const modelSpec = ITEM_MODEL[item.id]
   const isCardPack = item.category === ShopCategory.CardPack
   const packContents = isCardPack ? parseCardPackContents(item.description) : []
   const isShipSkin = item.category === ShopCategory.ShipSkin
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   return (
     <div
       onClick={onClose}
       style={{
-        position: 'fixed', inset: 0, zIndex: 80,
-        background: 'rgba(2, 4, 14, 0.85)',
-        backdropFilter: 'blur(12px)',
+        position: 'fixed', inset: 0, zIndex: 90,
+        background: 'rgba(2, 4, 14, 0.92)',
+        backdropFilter: 'blur(14px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 24,
       }}
@@ -216,58 +318,94 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: '100%', maxWidth: 640,
-          background: 'linear-gradient(160deg, rgba(14,18,30,0.95), rgba(6,10,18,0.95))',
+          width: '100%', maxWidth: 1100, maxHeight: '92vh',
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1.3fr) minmax(300px, 1fr)',
+          gap: 0,
+          background: 'linear-gradient(160deg, rgba(14,18,30,0.96), rgba(6,10,18,0.98))',
           border: `1px solid ${color}`,
-          borderRadius: 14,
+          borderRadius: 16,
           overflow: 'hidden',
-          boxShadow: `0 0 40px ${color}44`,
+          boxShadow: `0 0 50px ${color}55`,
           color: '#fff',
           fontFamily: 'var(--font-inter, system-ui)',
         }}
       >
         <div style={{
-          aspectRatio: '16 / 9',
-          background: `radial-gradient(circle at 50% 55%, ${color}44 0%, rgba(5,8,16,0.95) 70%)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 120,
-          textShadow: `0 0 40px ${color}`,
-          borderBottom: `1px solid ${color}66`,
+          position: 'relative',
+          background: `radial-gradient(circle at 50% 55%, ${color}33 0%, rgba(5,8,16,0.97) 75%)`,
+          borderRight: `1px solid ${color}44`,
+          minHeight: 420,
         }}>
-          {CATEGORY_ICON[item.category]}
+          {modelSpec ? (
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <ShopItemPreviewCanvas url={modelSpec.url} scale={modelSpec.scale} accent={color} orbit rotateSpeed={0.25} />
+            </div>
+          ) : (
+            <div style={{
+              position: 'absolute', inset: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <CategoryShape category={item.category} color={color} size={240} />
+            </div>
+          )}
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            style={{
+              position: 'absolute',
+              top: 16, right: 16,
+              width: 36, height: 36,
+              borderRadius: '50%',
+              background: 'rgba(6,8,18,0.75)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              color: '#fff',
+              fontSize: 22, lineHeight: 1,
+              cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            ×
+          </button>
         </div>
-        <div style={{ padding: '22px 26px 26px' }}>
+
+        <div style={{
+          padding: '30px 32px',
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+        }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            fontSize: 13,
+            fontSize: 12.5,
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             fontFamily: 'var(--font-space, monospace)',
+            flexWrap: 'wrap',
           }}>
             <span style={{ color, textShadow: `0 0 8px ${color}` }}>
               {RARITY_LABEL[item.rarity]}
             </span>
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>·</span>
+            <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
             <span style={{ color: 'rgba(255,255,255,0.7)' }}>
               {CATEGORY_LABEL[item.category]}
             </span>
             {item.isLimitedEdition && (
               <>
-                <span style={{ color: 'rgba(255,255,255,0.4)' }}>·</span>
+                <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
                 <span style={{ color: '#f59e0b', textShadow: '0 0 8px #f59e0b' }}>
-                  ★ Limited Edition
+                  ★ Limited
                 </span>
               </>
             )}
           </div>
           <div style={{
-            fontSize: 26,
-            fontWeight: 700,
-            marginTop: 8,
+            fontSize: 32,
+            fontWeight: 800,
+            marginTop: 10,
+            lineHeight: 1.1,
             fontFamily: 'var(--font-space, system-ui)',
           }}>
             {item.name}
@@ -275,18 +413,18 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
           <div style={{
             fontSize: 16,
             color: 'rgba(255,255,255,0.8)',
-            marginTop: 10,
+            marginTop: 14,
             lineHeight: 1.55,
           }}>
             {item.description}
           </div>
           {isCardPack && packContents.length > 0 && (
             <div style={{
-              marginTop: 16,
-              padding: '12px 14px',
+              marginTop: 18,
+              padding: '14px 16px',
               background: 'rgba(0,212,255,0.06)',
               border: '1px solid rgba(0,212,255,0.25)',
-              borderRadius: 8,
+              borderRadius: 10,
             }}>
               <div style={{
                 fontSize: 12,
@@ -294,16 +432,16 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
                 textTransform: 'uppercase',
                 color: '#6fe6ff',
                 fontFamily: 'var(--font-space, monospace)',
-                marginBottom: 6,
+                marginBottom: 8,
               }}>
                 Pack Contents
               </div>
               <ul style={{
                 margin: 0,
                 paddingLeft: 20,
-                fontSize: 14,
+                fontSize: 15,
                 color: 'rgba(255,255,255,0.8)',
-                lineHeight: 1.6,
+                lineHeight: 1.7,
               }}>
                 {packContents.map((c, i) => <li key={i}>{c}</li>)}
               </ul>
@@ -311,67 +449,52 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
           )}
           {isShipSkin && (
             <div style={{
-              marginTop: 12,
+              marginTop: 14,
               fontSize: 13,
               color: 'rgba(0,212,255,0.75)',
-              letterSpacing: '0.04em',
               fontStyle: 'italic',
             }}>
               Preview in Free Flight after purchase.
             </div>
           )}
+
+          <div style={{ flex: 1 }} />
+
           <div style={{
+            marginTop: 26,
+            padding: '20px 0 0',
+            borderTop: '1px solid rgba(255,255,255,0.08)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 12,
-            marginTop: 20,
+            gap: 14,
           }}>
             <span style={{
-              fontSize: 28,
-              fontWeight: 700,
+              fontSize: 34,
+              fontWeight: 800,
               color: '#fff',
-              textShadow: '0 0 14px #00d4ff77',
+              textShadow: '0 0 14px #00d4ff88',
               fontFamily: 'var(--font-space, system-ui)',
             }}>
               {formatPrice(item.price)}
             </span>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button
-                onClick={onClose}
-                style={{
-                  padding: '10px 18px',
-                  background: 'transparent',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  borderRadius: 999,
-                  color: 'rgba(255,255,255,0.8)',
-                  fontFamily: 'var(--font-space, monospace)',
-                  fontSize: 13,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                }}
-              >
-                Close
-              </button>
-              <button
-                disabled
-                style={{
-                  padding: '10px 22px',
-                  background: `linear-gradient(135deg, ${color}33, ${color}22)`,
-                  border: `1px solid ${color}66`,
-                  borderRadius: 999,
-                  color: 'rgba(255,255,255,0.6)',
-                  fontFamily: 'var(--font-space, monospace)',
-                  fontSize: 13,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  cursor: 'not-allowed',
-                }}
-              >
-                Coming Soon · Stripe
-              </button>
-            </div>
+            <button
+              disabled
+              style={{
+                padding: '12px 26px',
+                background: `linear-gradient(135deg, ${color}33, ${color}22)`,
+                border: `1px solid ${color}77`,
+                borderRadius: 999,
+                color: 'rgba(255,255,255,0.7)',
+                fontFamily: 'var(--font-space, monospace)',
+                fontSize: 13,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                cursor: 'not-allowed',
+              }}
+            >
+              Coming Soon · Stripe
+            </button>
           </div>
         </div>
       </div>
@@ -381,6 +504,8 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
 
 export default function ShopPage() {
   const [selected, setSelected] = useState<ShopItem | null>(null)
+  const [activeTab, setActiveTab] = useState<TabKey>('all')
+  const [showAll, setShowAll] = useState(false)
   const countdown = useCountdownToUtcMidnight()
 
   const today = useMemo(() => new Date(), [])
@@ -388,16 +513,33 @@ export default function ShopPage() {
   const weekly = useMemo(() => getWeeklyFeatured(today), [today])
   const limited = useMemo(() => getActiveLimitedEditions(today), [today])
 
+  // Prefer an item that has a real 3D preview for the huge banner
+  const featured: ShopItem[] = useMemo(() => {
+    const withModel = daily.filter(i => ITEM_MODEL[i.id])
+    const primary = withModel[0] ?? daily[0]
+    const secondary = daily.find(i => i.id !== primary?.id) ?? weekly[0]
+    return [primary, secondary].filter((x): x is ShopItem => Boolean(x))
+  }, [daily, weekly])
+
+  useEffect(() => { setShowAll(false) }, [activeTab])
+
+  const filtered = useMemo(() => {
+    if (activeTab === 'all') return STARTER_SHOP_ITEMS
+    return STARTER_SHOP_ITEMS.filter(i => i.category === activeTab)
+  }, [activeTab])
+
+  const visible = showAll ? filtered : filtered.slice(0, 8)
+
   return (
     <div style={{
       minHeight: '100vh',
       background: 'radial-gradient(ellipse at top, #0a1124 0%, #050813 60%, #02030a 100%)',
       color: '#fff',
       fontFamily: 'var(--font-inter, system-ui)',
-      padding: '96px 32px 80px',
+      padding: '96px 24px 80px',
     }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <header style={{ marginBottom: 36 }}>
+        <header style={{ marginBottom: 28 }}>
           <div style={{
             fontSize: 14,
             letterSpacing: '0.22em',
@@ -408,10 +550,10 @@ export default function ShopPage() {
             voidexa · Storefront
           </div>
           <h1 style={{
-            fontSize: 44,
+            fontSize: 48,
             fontWeight: 800,
             letterSpacing: '-0.02em',
-            margin: '6px 0 10px',
+            margin: '8px 0 10px',
             fontFamily: 'var(--font-space, system-ui)',
             background: 'linear-gradient(135deg, #fff 0%, #00d4ff 100%)',
             WebkitBackgroundClip: 'text',
@@ -425,135 +567,364 @@ export default function ShopPage() {
             maxWidth: 680,
             lineHeight: 1.6,
           }}>
-            Cosmetic skins, trails, cockpit themes and card packs. No pay-to-win —
+            Cosmetic ship skins, trails, cockpit themes and card packs. No pay-to-win —
             gameplay earns stats, the shop only sells looks.
           </p>
         </header>
 
+        {/* Starter pack banner */}
+        <div style={{
+          marginBottom: 28,
+          padding: '22px 28px',
+          background: 'linear-gradient(135deg, rgba(0,212,255,0.18), rgba(139,92,246,0.18))',
+          border: '1px solid rgba(0,212,255,0.5)',
+          borderRadius: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 20,
+          flexWrap: 'wrap',
+          boxShadow: '0 0 32px rgba(0,212,255,0.2)',
+        }}>
+          <div>
+            <div style={{
+              fontSize: 12,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: '#66e6ff',
+              fontFamily: 'var(--font-space, monospace)',
+              textShadow: '0 0 8px #00d4ff',
+            }}>
+              New Pilot Bundle
+            </div>
+            <div style={{
+              fontSize: 28,
+              fontWeight: 800,
+              letterSpacing: '-0.01em',
+              marginTop: 6,
+              fontFamily: 'var(--font-space, system-ui)',
+            }}>
+              Starter Pack
+            </div>
+            <div style={{
+              fontSize: 15,
+              color: 'rgba(255,255,255,0.75)',
+              marginTop: 6,
+              lineHeight: 1.5,
+            }}>
+              1 Uncommon ship skin · 5 card packs — a 70%+ savings vs buying piecemeal.
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{
+              fontSize: 34,
+              fontWeight: 800,
+              color: '#fff',
+              textShadow: '0 0 14px #00d4ff',
+              fontFamily: 'var(--font-space, system-ui)',
+            }}>
+              $1.99
+            </div>
+            <button
+              disabled
+              style={{
+                padding: '12px 26px',
+                background: 'linear-gradient(135deg, rgba(0,212,255,0.4), rgba(139,92,246,0.35))',
+                border: '1px solid rgba(0,212,255,0.7)',
+                borderRadius: 999,
+                color: 'rgba(255,255,255,0.85)',
+                fontFamily: 'var(--font-space, monospace)',
+                fontSize: 13,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                cursor: 'not-allowed',
+                textShadow: '0 0 8px #00d4ff',
+              }}
+            >
+              Coming Soon · Stripe
+            </button>
+          </div>
+        </div>
+
+        {/* Daily Featured banner */}
+        {featured.length > 0 && (
+          <section style={{ marginBottom: 36 }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: 12,
+              marginBottom: 14,
+              flexWrap: 'wrap',
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+              }}>
+                <h2 style={{
+                  margin: 0,
+                  fontSize: 22,
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  fontFamily: 'var(--font-space, system-ui)',
+                  color: '#fff',
+                  borderLeft: '3px solid #00d4ff',
+                  paddingLeft: 12,
+                  textShadow: '0 0 12px rgba(0,212,255,0.6)',
+                }}>
+                  Daily Featured
+                </h2>
+              </div>
+              <div style={{
+                fontSize: 14,
+                color: 'rgba(255,255,255,0.6)',
+                fontFamily: 'var(--font-space, monospace)',
+              }}>
+                Resets in{' '}
+                <span style={{
+                  color: '#00ffff',
+                  textShadow: '0 0 8px #00d4ff',
+                }}>
+                  {countdown}
+                </span>
+              </div>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: featured.length > 1 ? 'repeat(auto-fit, minmax(360px, 1fr))' : '1fr',
+              gap: 20,
+            }}>
+              {featured.map(item => {
+                const color = RARITY_COLOR[item.rarity]
+                const modelSpec = ITEM_MODEL[item.id]
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setSelected(item)}
+                    style={{
+                      position: 'relative',
+                      textAlign: 'left',
+                      padding: 0,
+                      background: 'linear-gradient(180deg, rgba(10,14,24,0.85), rgba(6,10,18,0.95))',
+                      border: `1.5px solid ${color}`,
+                      borderRadius: 18,
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      boxShadow: `0 0 40px ${color}44`,
+                      color: '#fff',
+                      fontFamily: 'var(--font-inter, system-ui)',
+                      transition: 'transform 0.2s, box-shadow 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-4px)'
+                      ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 60px ${color}88`
+                    }}
+                    onMouseLeave={(e) => {
+                      ;(e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'
+                      ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 40px ${color}44`
+                    }}
+                  >
+                    <div style={{
+                      position: 'relative',
+                      aspectRatio: '16 / 9',
+                      background: `radial-gradient(circle at 50% 55%, ${color}44 0%, rgba(5,8,16,0.97) 75%)`,
+                    }}>
+                      {modelSpec ? (
+                        <div style={{ position: 'absolute', inset: 0 }}>
+                          <ShopItemPreviewCanvas
+                            url={modelSpec.url}
+                            scale={modelSpec.scale}
+                            accent={color}
+                            rotateSpeed={0.4}
+                          />
+                        </div>
+                      ) : (
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <CategoryShape category={item.category} color={color} size={200} />
+                        </div>
+                      )}
+                      <div style={{
+                        position: 'absolute',
+                        top: 16, left: 16,
+                        fontSize: 12,
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color,
+                        background: 'rgba(6,8,18,0.5)',
+                        border: `1px solid ${color}77`,
+                        padding: '4px 12px',
+                        borderRadius: 999,
+                        fontFamily: 'var(--font-space, monospace)',
+                        textShadow: `0 0 8px ${color}`,
+                        backdropFilter: 'blur(8px)',
+                      }}>
+                        {RARITY_LABEL[item.rarity]}
+                      </div>
+                    </div>
+                    <div style={{ padding: '22px 26px' }}>
+                      <div style={{
+                        fontSize: 13,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(255,255,255,0.55)',
+                      }}>
+                        {CATEGORY_LABEL[item.category]}
+                      </div>
+                      <div style={{
+                        fontSize: 26,
+                        fontWeight: 800,
+                        letterSpacing: '-0.01em',
+                        marginTop: 4,
+                        fontFamily: 'var(--font-space, system-ui)',
+                      }}>
+                        {item.name}
+                      </div>
+                      <div style={{
+                        fontSize: 15,
+                        color: 'rgba(255,255,255,0.7)',
+                        marginTop: 8,
+                        lineHeight: 1.5,
+                      }}>
+                        {item.description}
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginTop: 16,
+                      }}>
+                        <span style={{
+                          fontSize: 28,
+                          fontWeight: 800,
+                          textShadow: '0 0 12px #00d4ff66',
+                          fontFamily: 'var(--font-space, system-ui)',
+                        }}>
+                          {formatPrice(item.price)}
+                        </span>
+                        <span style={{
+                          fontSize: 13,
+                          letterSpacing: '0.14em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(255,255,255,0.5)',
+                          fontFamily: 'var(--font-space, monospace)',
+                        }}>
+                          View Details →
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
         {/* Limited Edition strip */}
         {limited.length > 0 && (
-          <Section
-            title="Last Chance · Limited Edition"
-            accent="#f59e0b"
-            meta="Never returning. Once they leave, they're gone."
-          >
-            <Grid>
+          <section style={{ marginBottom: 36 }}>
+            <h2 style={{
+              margin: '0 0 14px',
+              fontSize: 22,
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-space, system-ui)',
+              color: '#fff',
+              borderLeft: '3px solid #f59e0b',
+              paddingLeft: 12,
+              textShadow: '0 0 12px rgba(245,158,11,0.55)',
+            }}>
+              Last Chance · Limited Edition
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: 18,
+            }}>
               {limited.map(item => (
                 <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
               ))}
-            </Grid>
-          </Section>
+            </div>
+          </section>
         )}
 
-        {/* Daily rotation */}
-        <Section
-          title="Daily Rotation"
-          accent="#00d4ff"
-          meta={
-            <span>
-              Resets in{' '}
-              <span style={{
-                fontFamily: 'var(--font-space, monospace)',
-                color: '#00ffff',
-                textShadow: '0 0 8px #00d4ff',
-              }}>
-                {countdown}
-              </span>
-            </span>
-          }
-        >
-          <Grid>
-            {daily.map(item => (
-              <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
-            ))}
-          </Grid>
-        </Section>
-
-        {/* Weekly featured */}
-        <Section
-          title="Weekly Featured"
-          accent="#a855f7"
-          meta="Premium picks, rotating every Monday."
-        >
-          <Grid>
-            {weekly.map(item => (
-              <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
-            ))}
-          </Grid>
-        </Section>
-
-        {/* Full catalog (collapsed-style) */}
-        <Section
-          title="Full Catalog"
-          accent="#64748b"
-          meta={`${STARTER_SHOP_ITEMS.length} items`}
-        >
-          <Grid>
-            {STARTER_SHOP_ITEMS.map(item => (
-              <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
-            ))}
-          </Grid>
-        </Section>
-      </div>
-
-      {selected && <ItemModal item={selected} onClose={() => setSelected(null)} />}
-    </div>
-  )
-}
-
-function Section({ title, meta, accent, children }: {
-  title: string
-  meta?: React.ReactNode
-  accent: string
-  children: React.ReactNode
-}) {
-  return (
-    <section style={{ marginBottom: 44 }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'baseline',
-        justifyContent: 'space-between',
-        gap: 12,
-        marginBottom: 16,
-        flexWrap: 'wrap',
-      }}>
-        <h2 style={{
-          margin: 0,
-          fontSize: 22,
-          fontWeight: 700,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          fontFamily: 'var(--font-space, system-ui)',
-          color: '#fff',
-          borderLeft: `3px solid ${accent}`,
-          paddingLeft: 12,
-          textShadow: `0 0 10px ${accent}55`,
+        {/* Tabs */}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 8,
+          marginBottom: 20,
+          paddingBottom: 6,
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
         }}>
-          {title}
-        </h2>
-        {meta && (
-          <div style={{
-            fontSize: 14,
-            color: 'rgba(255,255,255,0.6)',
-            letterSpacing: '0.04em',
-          }}>
-            {meta}
+          {TABS.map(t => {
+            const active = activeTab === t.key
+            return (
+              <button
+                key={t.key}
+                onClick={() => setActiveTab(t.key)}
+                style={{
+                  padding: '10px 18px',
+                  background: active ? 'rgba(0,212,255,0.12)' : 'transparent',
+                  border: `1px solid ${active ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.1)'}`,
+                  borderRadius: 999,
+                  color: active ? '#fff' : 'rgba(255,255,255,0.65)',
+                  fontSize: 14,
+                  fontFamily: 'var(--font-space, monospace)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  textShadow: active ? '0 0 8px #00d4ff' : 'none',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {t.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: 18,
+        }}>
+          {visible.map(item => (
+            <ItemCard key={item.id} item={item} onClick={() => setSelected(item)} />
+          ))}
+        </div>
+
+        {filtered.length > 8 && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28 }}>
+            <button
+              onClick={() => setShowAll(v => !v)}
+              style={{
+                padding: '12px 26px',
+                background: 'rgba(0,212,255,0.08)',
+                border: '1px solid rgba(0,212,255,0.4)',
+                borderRadius: 999,
+                color: '#fff',
+                fontFamily: 'var(--font-space, monospace)',
+                fontSize: 14,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                textShadow: '0 0 10px #00d4ff77',
+              }}
+            >
+              {showAll ? 'Show Less' : `Show All · ${filtered.length} items`}
+            </button>
           </div>
         )}
       </div>
-      {children}
-    </section>
-  )
-}
 
-function Grid({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-      gap: 16,
-    }}>
-      {children}
+      {selected && <ItemModal item={selected} onClose={() => setSelected(null)} />}
     </div>
   )
 }
