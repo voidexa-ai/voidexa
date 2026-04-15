@@ -7,7 +7,10 @@ export const MODEL_URLS = {
   usc_voidwhale01:       `${SUPABASE_MODELS}/usc_voidwhale01.glb`,
   uscx_galacticokamoto1: `${SUPABASE_MODELS}/uscx_galacticokamoto1.glb`,
   uscx_starforce01:      `${SUPABASE_MODELS}/uscx_starforce01.glb`,
-  hirez_cockpit01:       `${SUPABASE_MODELS}/hirez_cockpit01.glb`,
+  hirez_cockpit01:          `${SUPABASE_MODELS}/hirez_cockpit01.glb`,
+  hirez_cockpit01_interior: `${SUPABASE_MODELS}/hirez_cockpit01_interior.glb`,
+  hirez_equipments:         `${SUPABASE_MODELS}/hirez_equipments.glb`,
+  hirez_screens:            `${SUPABASE_MODELS}/hirez_screens.glb`,
   qs_challenger:         `${SUPABASE_MODELS}/qs_challenger.glb`,
   qs_executioner:        `${SUPABASE_MODELS}/qs_executioner.glb`,
 } as const

@@ -37,8 +37,9 @@ const categoryLabel = (t: Dict, c: ShopCategory): string => {
 const itemName = (t: Dict, item: ShopItem): string => t.shop.items[item.id]?.name ?? item.name
 const itemDesc = (t: Dict, item: ShopItem): string => t.shop.items[item.id]?.description ?? item.description
 
-// Map shop-item IDs to actual .glb paths for 3D preview. Only ship skins and
-// cockpit themes get a real model — everything else renders a geometric shape.
+// Map shop-item IDs to actual .glb paths for 3D preview in the detail modal.
+// Grid cards now use static render PNGs (see ITEM_IMAGE) to avoid WebGL context
+// exhaustion when multiple canvases mount at once.
 const ITEM_MODEL: Record<string, { url: string; scale?: number }> = {
   'skin-crimson-fighter': { url: MODEL_URLS.qs_bob,            scale: 1.0 },
   'skin-chrome-cruiser':  { url: MODEL_URLS.usc_astroeagle01,  scale: 0.6 },
@@ -46,6 +47,20 @@ const ITEM_MODEL: Record<string, { url: string; scale?: number }> = {
   'skin-void-legend':     { url: MODEL_URLS.usc_voidwhale01,   scale: 0.25 },
   'cockpit-carbon':       { url: MODEL_URLS.hirez_cockpit01,   scale: 1.0 },
   // 'cockpit-gilded' — awaiting hirez_cockpit02.glb upload to Supabase
+}
+
+// Static rendered preview images per shop item. Preferred over live WebGL
+// canvases in the grid to keep context count low and thumbnails crisp.
+const ITEM_IMAGE: Record<string, string> = {
+  'skin-crimson-fighter':   '/images/renders/uncommon/usc_forcebadger01.png',
+  'skin-chrome-cruiser':    '/images/renders/rare/uscx_starship.png',
+  'skin-obsidian-stealth':  '/images/renders/epic/hirez_ship02_full.png',
+  'skin-void-legend':       '/images/renders/legendary/hirez_ship01_full.png',
+  'attach-swept-wings':     '/images/renders/weapons/hirez_weapon_blaster.png',
+  'attach-sensor-array':    '/images/renders/weapons/hirez_weapon_smallmachinegun.png',
+  'attach-vanity-guns':     '/images/renders/weapons/hirez_weapon_bigmachinegun.png',
+  'cockpit-carbon':         '/images/renders/cockpits/hirez_cockpit01.png',
+  'cockpit-gilded':         '/images/renders/cockpits/hirez_cockpit02.png',
 }
 
 type TabKey = 'all' | ShopCategory
@@ -155,7 +170,7 @@ function CategoryShape({ category, color, size = 120 }: { category: ShopCategory
 function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: () => void; large?: boolean }) {
   const t = useT()
   const color = RARITY_COLOR[item.rarity]
-  const hasModel = !!ITEM_MODEL[item.id]
+  const renderSrc = ITEM_IMAGE[item.id]
   return (
     <button
       onClick={onClick}
@@ -185,7 +200,8 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
       }}
     >
       <div style={{
-        aspectRatio: large ? '5 / 4' : '4 / 3',
+        aspectRatio: large ? '5 / 4' : '1 / 1',
+        minHeight: 220,
         background: `radial-gradient(circle at 50% 55%, ${color}33 0%, rgba(5,8,16,0.95) 70%)`,
         display: 'flex',
         alignItems: 'center',
@@ -193,17 +209,20 @@ function ItemCard({ item, onClick, large = false }: { item: ShopItem; onClick: (
         borderBottom: `1px solid ${color}33`,
         position: 'relative',
       }}>
-        {hasModel ? (
-          <div style={{ position: 'absolute', inset: 0 }}>
-            <ShopItemPreviewCanvas
-              url={ITEM_MODEL[item.id].url}
-              scale={ITEM_MODEL[item.id].scale}
-              accent={color}
-              rotateSpeed={0.5}
-            />
-          </div>
+        {renderSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={renderSrc}
+            alt={item.name}
+            style={{
+              width: '92%',
+              height: '92%',
+              objectFit: 'contain',
+              filter: `drop-shadow(0 0 24px ${color}88)`,
+            }}
+          />
         ) : (
-          <CategoryShape category={item.category} color={color} size={large ? 160 : 110} />
+          <CategoryShape category={item.category} color={color} size={large ? 200 : 200} />
         )}
         {item.isLimitedEdition && (
           <span style={{
@@ -515,10 +534,10 @@ export default function ShopPage() {
   const weekly = useMemo(() => getWeeklyFeatured(today), [today])
   const limited = useMemo(() => getActiveLimitedEditions(today), [today])
 
-  // Prefer an item that has a real 3D preview for the huge banner
+  // Prefer an item that has a rendered hero image for the huge banner
   const featured: ShopItem[] = useMemo(() => {
-    const withModel = daily.filter(i => ITEM_MODEL[i.id])
-    const primary = withModel[0] ?? daily[0]
+    const withImage = daily.filter(i => ITEM_IMAGE[i.id])
+    const primary = withImage[0] ?? daily[0]
     const secondary = daily.find(i => i.id !== primary?.id) ?? weekly[0]
     return [primary, secondary].filter((x): x is ShopItem => Boolean(x))
   }, [daily, weekly])
@@ -699,7 +718,7 @@ export default function ShopPage() {
             }}>
               {featured.map(item => {
                 const color = RARITY_COLOR[item.rarity]
-                const modelSpec = ITEM_MODEL[item.id]
+                const heroImg = ITEM_IMAGE[item.id]
                 return (
                   <button
                     key={item.id}
@@ -732,13 +751,21 @@ export default function ShopPage() {
                       aspectRatio: '16 / 9',
                       background: `radial-gradient(circle at 50% 55%, ${color}44 0%, rgba(5,8,16,0.97) 75%)`,
                     }}>
-                      {modelSpec ? (
-                        <div style={{ position: 'absolute', inset: 0 }}>
-                          <ShopItemPreviewCanvas
-                            url={modelSpec.url}
-                            scale={modelSpec.scale}
-                            accent={color}
-                            rotateSpeed={0.4}
+                      {heroImg ? (
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={heroImg}
+                            alt={item.name}
+                            style={{
+                              maxWidth: '85%',
+                              maxHeight: '85%',
+                              objectFit: 'contain',
+                              filter: `drop-shadow(0 0 36px ${color}aa)`,
+                            }}
                           />
                         </div>
                       ) : (
@@ -746,7 +773,7 @@ export default function ShopPage() {
                           position: 'absolute', inset: 0,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
-                          <CategoryShape category={item.category} color={color} size={200} />
+                          <CategoryShape category={item.category} color={color} size={240} />
                         </div>
                       )}
                       <div style={{
