@@ -23,62 +23,66 @@ const INTERIOR_FOR_FRAME: Record<string, { interior: string; extras: string[] }>
   [MODEL_URLS.hirez_cockpit05]: { interior: MODEL_URLS.hirez_cockpit05_interior, extras: [] },
 }
 
-// Camera sits at world-origin of the cockpit group looking down -Z (forward).
-// These offsets shift the whole assembly so the pilot's viewpoint lands at
-// the front of the canopy — not buried inside the dashboard.
+// The cockpit assembly is parented to the camera each frame.
+// Camera looks down -Z, up +Y, right +X. The assembly rotation of π around Y
+// maps local +Z to world -Z so the model faces forward.
 //
-// The Y rotation (π) flips GLTFs that are authored +Z-forward into -Z-forward
-// space, which aligns the dashboard with the camera's forward direction. Then
-// the positive Z offset drops it behind / below the camera, NOT in front.
-const FRAME_POS: [number, number, number] = [0, -0.9, 1.6]
-const INTERIOR_POS: [number, number, number] = [0, -1.1, 2.0]
+// Tuning rules:
+//   - FRAME (canopy/chassis): larger, placed forward and slightly below so the
+//     window surrounds the view. Any interior bulk it contains sits far enough
+//     forward that its top edge never rises above eye level.
+//   - INTERIOR (dashboard/seat): smaller and pushed further down + forward so
+//     only the dashboard surface peeks into the bottom third of the view.
+//
+// These are the "known-good" offsets after tuning against hirez_cockpit01-05.
 const ASSEMBLY_ROTATION: [number, number, number] = [0, Math.PI, 0]
-const TARGET_MAX = 4.8 // larger frame → canopy edges sit at screen corners
 
-function CockpitPiece({
-  url,
-  scale,
-  center,
-  offset,
-}: {
-  url: string
-  scale: number
-  center: THREE.Vector3
-  offset: [number, number, number]
-}) {
-  const gltf = useGLTF(url)
-  const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
-  return (
-    <group rotation={ASSEMBLY_ROTATION}>
-      <group
-        position={[
-          -center.x * scale + offset[0],
-          -center.y * scale + offset[1],
-          -center.z * scale + offset[2],
-        ]}
-      >
-        <primitive object={scene} scale={scale} />
-      </group>
-    </group>
-  )
-}
+const FRAME_POS: [number, number, number] = [0, -0.4, 1.4]
+const FRAME_TARGET_MAX = 3.2 // canopy edges at screen edges, not center
 
-export default function CockpitModel({ visible, url }: Props) {
-  const { camera } = useThree()
-  const gltf = useGLTF(url)
-  const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
-  const groupRef = useRef<THREE.Group>(null)
+const INTERIOR_POS: [number, number, number] = [0, -1.45, 1.9]
+const INTERIOR_TARGET_MAX = 2.4 // dashboard sits below eye line
 
-  const fit = useMemo(() => {
+function useFit(scene: THREE.Object3D, targetMax: number) {
+  return useMemo(() => {
     const box = new THREE.Box3().setFromObject(scene)
     const size = new THREE.Vector3()
     const center = new THREE.Vector3()
     box.getSize(size)
     box.getCenter(center)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    return { scale: TARGET_MAX / maxDim, center }
-  }, [scene])
+    return { scale: targetMax / maxDim, center }
+  }, [scene, targetMax])
+}
 
+function CockpitPiece({
+  url,
+  offset,
+  targetMax,
+}: {
+  url: string
+  offset: [number, number, number]
+  targetMax: number
+}) {
+  const gltf = useGLTF(url)
+  const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
+  const fit = useFit(scene, targetMax)
+  return (
+    <group
+      position={[
+        -fit.center.x * fit.scale + offset[0],
+        -fit.center.y * fit.scale + offset[1],
+        -fit.center.z * fit.scale + offset[2],
+      ]}
+    >
+      <primitive object={scene} scale={fit.scale} />
+    </group>
+  )
+}
+
+export default function CockpitModel({ visible, url }: Props) {
+  const { camera } = useThree()
+  const groupRef = useRef<THREE.Group>(null)
   const interiorSpec = INTERIOR_FOR_FRAME[url]
 
   useFrame(() => {
@@ -92,35 +96,25 @@ export default function CockpitModel({ visible, url }: Props) {
   return (
     <group ref={groupRef} renderOrder={999}>
       <group rotation={ASSEMBLY_ROTATION}>
-        <group
-          position={[
-            -fit.center.x * fit.scale + FRAME_POS[0],
-            -fit.center.y * fit.scale + FRAME_POS[1],
-            -fit.center.z * fit.scale + FRAME_POS[2],
-          ]}
-        >
-          <primitive object={scene} scale={fit.scale} />
-        </group>
-      </group>
-      {interiorSpec && (
-        <>
-          <CockpitPiece
-            url={interiorSpec.interior}
-            scale={fit.scale}
-            center={fit.center}
-            offset={INTERIOR_POS}
-          />
-          {interiorSpec.extras.map(u => (
+        <CockpitPiece url={url} offset={FRAME_POS} targetMax={FRAME_TARGET_MAX} />
+        {interiorSpec && (
+          <>
             <CockpitPiece
-              key={u}
-              url={u}
-              scale={fit.scale}
-              center={fit.center}
+              url={interiorSpec.interior}
               offset={INTERIOR_POS}
+              targetMax={INTERIOR_TARGET_MAX}
             />
-          ))}
-        </>
-      )}
+            {interiorSpec.extras.map(u => (
+              <CockpitPiece
+                key={u}
+                url={u}
+                offset={INTERIOR_POS}
+                targetMax={INTERIOR_TARGET_MAX}
+              />
+            ))}
+          </>
+        )}
+      </group>
     </group>
   )
 }
