@@ -1,4 +1,4 @@
-﻿# 3D model binaries (6.8 GB - too large for Vercel)
+# 3D model binaries (6.8 GB - too large for Vercel)
 public/models/ships/
 public/models/cockpits/
 public/models/stations/
@@ -15,3 +15,14 @@ node_modules/
 *.fbx
 *.obj
 *.blend
+
+# Runtime models used by Free Flight + Shop — MUST be deployed
+!public/models/glb-ready/qs_bob.glb
+!public/models/glb-ready/usc_astroeagle01.glb
+!public/models/glb-ready/usc_cosmicshark01.glb
+!public/models/glb-ready/usc_voidwhale01.glb
+!public/models/glb-ready/uscx_galacticokamoto1.glb
+!public/models/glb-ready/uscx_starforce01.glb
+!public/models/glb-ready/hirez_cockpit01.glb
+!public/models/glb-ready/qs_challenger.glb
+!public/models/glb-ready/qs_executioner.glb
