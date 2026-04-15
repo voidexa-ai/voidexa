@@ -2,7 +2,7 @@
 
 Draco-compressed `.glb` files ready to load with `useGLTF` in the voidexa Phase 1-3 build. This is a **test set**, not the final asset library — pick representative models from each pack before committing to full conversion.
 
-Last updated: 2026-04-15 (textures bound on all paid models; full Hi-Rez cockpit set added). Total: 24 files, 160 MB on disk.
+Last updated: 2026-04-15 (full Hi-Rez expansion: cockpit interiors, 24 complete ships, 7 weapons). Total: 62 files, 450 MB on disk.
 
 ## Texture status
 
@@ -68,18 +68,59 @@ Base color set to **Grey**. Each ship's Textures/ folder contains many color var
 | `uscx_galacticokamoto1.glb` | `ships/paid/usc-expansion/GalacticOkamoto/GalacticOkamoto1.fbx` | 20 MB | BaseColor (Grey), Metallic, Normal, Emission |
 | `uscx_starforce01.glb`      | `ships/paid/usc-expansion/StarForce/StarForce01.fbx`            | 3.6 MB | BaseColor (Grey), Metallic, Normal, Emission |
 
-### Paid — HiRez Spaceships Creator (5 cockpits + 1 spaceship)
+### Paid — HiRez Spaceships Creator
 
-Full cockpit set converted 2026-04-15. All cockpits use Grey base color with the same PBR texture set (BaseColor / Normal / Roughness / Emission) sourced from `Textures/Cockpits/Cockpit<N>/`.
+Full pack converted 2026-04-15. All Hi-Rez models default to **Grey** base color via the MTL-patch + Draco-compress pipeline (see `../TEXTURE_FIX_GUIDE.md`).
+
+#### Cockpits — exterior only (5)
 
 | Output | Source | Size | Textures |
 |---|---|---|---|
-| `hirez_cockpit01.glb`   | `ships/paid/hirez/Cockpits/Cockpit01.obj`     | 5.5 MB | 4 (Grey) |
-| `hirez_cockpit02.glb`   | `ships/paid/hirez/Cockpits/Cockpit02.obj`     | 6.1 MB | 4 (Grey) |
-| `hirez_cockpit03.glb`   | `ships/paid/hirez/Cockpits/Cockpit03.obj`     | 6.6 MB | 4 (Grey) |
-| `hirez_cockpit04.glb`   | `ships/paid/hirez/Cockpits/Cockpit04.obj`     | 6.1 MB | 4 (Grey) |
-| `hirez_cockpit05.glb`   | `ships/paid/hirez/Cockpits/Cockpit05.obj`     | 4.5 MB | 4 (Grey) |
-| `hirez_spaceship01.glb` | `ships/paid/hirez/Spaceships/Spaceship01.obj` | 8.4 MB | 3 (Grey, no Emission) |
+| `hirez_cockpit01.glb` | `Cockpits/Cockpit01.obj` | 5.5 MB | 4 |
+| `hirez_cockpit02.glb` | `Cockpits/Cockpit02.obj` | 6.1 MB | 4 |
+| `hirez_cockpit03.glb` | `Cockpits/Cockpit03.obj` | 6.6 MB | 4 |
+| `hirez_cockpit04.glb` | `Cockpits/Cockpit04.obj` | 6.1 MB | 4 |
+| `hirez_cockpit05.glb` | `Cockpits/Cockpit05.obj` | 4.5 MB | 4 |
+
+#### Cockpits — with interior detail (5 + dressing)
+
+Use these inside the FPV cockpit camera. Material name in source OBJs is `None` (interiors) and `(null)` (Equipments / Screens).
+
+| Output | Source | Size | Textures |
+|---|---|---|---|
+| `hirez_cockpit01_interior.glb` | `Cockpits/WithInterior/Cockpit01Interior.obj` | 6.6 MB | 3 |
+| `hirez_cockpit02_interior.glb` | `Cockpits/WithInterior/Cockpit02Interior.obj` | 7.3 MB | 3 |
+| `hirez_cockpit03_interior.glb` | `Cockpits/WithInterior/Cockpit03Interior.obj` | 7.1 MB | 3 |
+| `hirez_cockpit04_interior.glb` | `Cockpits/WithInterior/Cockpit04Interior.obj` | 7.7 MB | 3 |
+| `hirez_cockpit05_interior.glb` | `Cockpits/WithInterior/Cockpit05Interior.obj` | 7.0 MB | 3 |
+| `hirez_equipments.glb`         | `Cockpits/WithInterior/Equipments.obj`        | 7.6 MB | 3 |
+| `hirez_screens.glb`            | `Cockpits/WithInterior/Screens.obj`           | 3.5 MB | 2 (BaseColor + Emission combined) |
+
+#### Complete ships with interior (24)
+
+Each ship uses a single material slot; the pipeline rotates through `MainBody1`–`MainBody16` Grey/Normal/Roughness/Metallic textures so consecutive ships look visually distinct (`Spaceship01 → MainBody1`, `Spaceship02 → MainBody2`, …, wrap on 17). Sub-meshes (cockpit / engines / wings) inherit the hull skin — Blender pass needed if you want per-mesh PBR sets.
+
+| Output | Source | Size | Textures |
+|---|---|---|---|
+| `hirez_ship01_full.glb` … `hirez_ship24_full.glb` | `Spaceships/WithInterior/Spaceship01.obj` … `Spaceship24.obj` | 6.5–8.7 MB each | 3 each (avg 7.9 MB) |
+
+#### Weapons (7)
+
+| Output | Source | Size | Textures |
+|---|---|---|---|
+| `hirez_weapon_biglauncher.glb`     | `Weapons/BigLauncher.obj`     | 6.9 MB | 3 |
+| `hirez_weapon_bigmachinegun.glb`   | `Weapons/BigMachineGun.obj`   | 9.9 MB | 3 |
+| `hirez_weapon_blaster.glb`         | `Weapons/Blaster.obj`         | 7.5 MB | 3 |
+| `hirez_weapon_missile.glb`         | `Weapons/Missile.obj`         | 6.8 MB | 3 |
+| `hirez_weapon_smalllauncher.glb`   | `Weapons/SmallLauncher.obj`   | 7.8 MB | 3 |
+| `hirez_weapon_smallmachinegun.glb` | `Weapons/SmallMachineGun.obj` | 6.9 MB | 3 |
+| `hirez_weapon_trilauncher.glb`     | `Weapons/TriLauncher.obj`     | 7.3 MB | 3 |
+
+#### Spaceships — exterior only (1)
+
+| Output | Source | Size | Textures |
+|---|---|---|---|
+| `hirez_spaceship01.glb` | `Spaceships/Spaceship01.obj` | 8.4 MB | 3 (Grey, no Emission) |
 
 ### Cockpit (free, Sketchfab pack)
 
