@@ -6,6 +6,7 @@ import EarlyAccessBanner from '@/components/layout/EarlyAccessBanner'
 import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import GlobalStarfield from '@/components/layout/GlobalStarfield'
 import JarvisAssistant from '@/components/ui/JarvisAssistant'
+import UniverseChat from '@/components/chat/UniverseChat'
 import { AuthProvider } from '@/components/AuthProvider'
 import { GetInTouchProvider } from '@/components/GetInTouchModal'
 
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="relative">{children}</main>
             <ConditionalFooter />
             <JarvisAssistant />
+            <UniverseChat />
           </GetInTouchProvider>
         </AuthProvider>
       </body>
