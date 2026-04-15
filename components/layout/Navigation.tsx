@@ -58,6 +58,7 @@ export default function Navigation() {
         { href: '/shop',         label: tLink('/shop', 'Shop'),                 description: tDesc('/shop') },
         { href: '/cards',        label: tLink('/cards', 'Cards'),               description: tDesc('/cards') },
         { href: '/achievements', label: tLink('/achievements', 'Achievements'), description: tDesc('/achievements') },
+        { href: '/assembly-editor', label: tLink('/assembly-editor', 'Assembly Editor'), description: tDesc('/assembly-editor') },
       ],
     },
     {
