@@ -19,7 +19,18 @@ function WireframeBox() {
 
 function GLTFModel({ url }: { url: string }) {
   const { scene } = useGLTF(url)
-  const cloned = useMemo(() => scene.clone(true), [scene])
+  const cloned = useMemo(() => {
+    const c = scene.clone(true)
+    // Recenter geometry so visual center sits at [0,0,0].
+    // Source GLTFs often have baked-in offsets — without this, all placed
+    // models at position [0,0,0] would spread apart.
+    const box = new THREE.Box3().setFromObject(c)
+    if (!box.isEmpty()) {
+      const center = box.getCenter(new THREE.Vector3())
+      c.position.sub(center)
+    }
+    return c
+  }, [scene])
   return <primitive object={cloned} />
 }
 
