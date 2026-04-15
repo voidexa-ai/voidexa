@@ -37,6 +37,7 @@ export default function AssemblyEditorPage() {
   const selectModel = useEditorStore(s => s.selectModel)
   const setCameraPreset = useEditorStore(s => s.setCameraPreset)
   const addModel = useEditorStore(s => s.addModel)
+  const updateTransform = useEditorStore(s => s.updateTransform)
   const catalog = useEditorStore(s => s.modelCatalog)
 
   const quickCockpit = useCallback(() => {
@@ -44,9 +45,21 @@ export default function AssemblyEditorPage() {
     const interior = catalog.find(e => e.name === 'hirez_cockpit01_interior')
     const equipments = catalog.find(e => /equipment/i.test(e.name))
     const screens = catalog.find(e => /screen/i.test(e.name))
+    // Add the 4-piece matched set all at identical baseline so they overlap
+    // correctly. User fine-tunes from there.
     ;[frame, interior, equipments, screens].forEach(e => { if (e) addModel(e) })
+    // Reset the four we just added (last 4 in the scene) to identical transforms
+    const state = useEditorStore.getState()
+    const recent = state.placedModels.slice(-4)
+    recent.forEach(m => {
+      updateTransform(m.id, {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1],
+      })
+    })
     setCameraPreset('pilot')
-  }, [catalog, addModel, setCameraPreset])
+  }, [catalog, addModel, updateTransform, setCameraPreset])
 
   // Keyboard shortcuts
   useEffect(() => {

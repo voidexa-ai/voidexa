@@ -67,7 +67,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   selectedId: null,
   transformMode: 'translate',
   snapEnabled: true,
-  snapValue: 0.1,
+  snapValue: 0.05,
   history: [],
   future: [],
   modelCatalog: [],
