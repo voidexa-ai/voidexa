@@ -2,7 +2,7 @@
 
 Draco-compressed `.glb` files ready to load with `useGLTF` in the voidexa Phase 1-3 build. This is a **test set**, not the final asset library — pick representative models from each pack before committing to full conversion.
 
-Last updated: 2026-04-15 (textures bound on all paid models). Total: 20 files, 137 MB on disk.
+Last updated: 2026-04-15 (textures bound on all paid models; full Hi-Rez cockpit set added). Total: 24 files, 160 MB on disk.
 
 ## Texture status
 
@@ -11,7 +11,11 @@ Last updated: 2026-04-15 (textures bound on all paid models). Total: 20 files, 1
 | qs_bob.glb … qs_zenith.glb (11 files) | 1 each | ✅ Baked atlas from source gltf |
 | cockpit_free_seat.glb | 30 | ✅ Sketchfab pack (full PBR) |
 | station_modular_interior.glb | 40 | ✅ Sketchfab pack (full PBR) |
-| hirez_cockpit01.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/MetallicRoughness/Emission) |
+| hirez_cockpit01.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
+| hirez_cockpit02.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
+| hirez_cockpit03.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
+| hirez_cockpit04.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
+| hirez_cockpit05.glb | 4 | ✅ Rebound via MTL patch (BaseColor/Normal/Roughness/Emission) |
 | hirez_spaceship01.glb | 3 | ✅ Rebound via MTL patch |
 | usc_astroeagle01.glb | 3 | ✅ Rebound via gltf-transform post-process |
 | usc_cosmicshark01.glb | 4 | ✅ Rebound via gltf-transform post-process |
@@ -64,12 +68,18 @@ Base color set to **Grey**. Each ship's Textures/ folder contains many color var
 | `uscx_galacticokamoto1.glb` | `ships/paid/usc-expansion/GalacticOkamoto/GalacticOkamoto1.fbx` | 20 MB | BaseColor (Grey), Metallic, Normal, Emission |
 | `uscx_starforce01.glb`      | `ships/paid/usc-expansion/StarForce/StarForce01.fbx`            | 3.6 MB | BaseColor (Grey), Metallic, Normal, Emission |
 
-### Paid — HiRez Spaceships Creator (2 OBJ, one cockpit)
+### Paid — HiRez Spaceships Creator (5 cockpits + 1 spaceship)
+
+Full cockpit set converted 2026-04-15. All cockpits use Grey base color with the same PBR texture set (BaseColor / Normal / Roughness / Emission) sourced from `Textures/Cockpits/Cockpit<N>/`.
 
 | Output | Source | Size | Textures |
 |---|---|---|---|
-| `hirez_cockpit01.glb`   | `ships/paid/hirez/Cockpits/Cockpit01.obj`     | 5.5 MB | BaseColor (Grey), Normal, Roughness, Emission (from `Textures/Cockpits/Cockpit1/`) |
-| `hirez_spaceship01.glb` | `ships/paid/hirez/Spaceships/Spaceship01.obj` | 8.4 MB | BaseColor (Grey), Normal, Roughness (from `Textures/MainBodies/MainBody1/`) |
+| `hirez_cockpit01.glb`   | `ships/paid/hirez/Cockpits/Cockpit01.obj`     | 5.5 MB | 4 (Grey) |
+| `hirez_cockpit02.glb`   | `ships/paid/hirez/Cockpits/Cockpit02.obj`     | 6.1 MB | 4 (Grey) |
+| `hirez_cockpit03.glb`   | `ships/paid/hirez/Cockpits/Cockpit03.obj`     | 6.6 MB | 4 (Grey) |
+| `hirez_cockpit04.glb`   | `ships/paid/hirez/Cockpits/Cockpit04.obj`     | 6.1 MB | 4 (Grey) |
+| `hirez_cockpit05.glb`   | `ships/paid/hirez/Cockpits/Cockpit05.obj`     | 4.5 MB | 4 (Grey) |
+| `hirez_spaceship01.glb` | `ships/paid/hirez/Spaceships/Spaceship01.obj` | 8.4 MB | 3 (Grey, no Emission) |
 
 ### Cockpit (free, Sketchfab pack)
 
