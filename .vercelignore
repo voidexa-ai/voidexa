@@ -1,0 +1,17 @@
+﻿# 3D model binaries (6.8 GB - too large for Vercel)
+public/models/ships/
+public/models/cockpits/
+public/models/stations/
+public/models/glb-ready/*.glb
+
+# Node modules handled by Vercel
+node_modules/
+
+# Build output
+.next/
+
+# Large temp files
+*.glb
+*.fbx
+*.obj
+*.blend
