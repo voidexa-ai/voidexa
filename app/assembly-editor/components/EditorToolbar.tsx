@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEditorStore } from '../hooks/useEditorStore'
 
 export function EditorToolbar({ onQuickCockpit }: { onQuickCockpit: () => void }) {
@@ -49,6 +50,23 @@ export function EditorToolbar({ onQuickCockpit }: { onQuickCockpit: () => void }
       gap: 8,
       flexWrap: 'wrap',
     }}>
+      <Link
+        href="/"
+        style={{
+          color: '#00d4ff',
+          fontSize: 13,
+          textDecoration: 'none',
+          padding: '6px 10px',
+          borderRadius: 5,
+          border: '1px solid rgba(0, 212, 255, 0.25)',
+          background: 'rgba(0, 212, 255, 0.06)',
+          letterSpacing: 0.4,
+        }}
+        title="Back to voidexa"
+      >← voidexa</Link>
+
+      <Divider />
+
       <div style={group}>
         {modeBtn('translate', 'Move', 'G')}
         {modeBtn('rotate', 'Rotate', 'R')}

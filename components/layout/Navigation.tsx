@@ -107,7 +107,7 @@ export default function Navigation() {
       .catch(() => setIsAdmin(false))
   }, [user?.id])
 
-  if (pathname === '/freeflight') return null
+  if (pathname === '/freeflight' || pathname === '/assembly-editor') return null
 
   const handleGroupEnter = (label: string) => {
     if (hoverTimeout.current) clearTimeout(hoverTimeout.current)

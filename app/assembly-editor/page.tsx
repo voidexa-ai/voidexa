@@ -92,12 +92,12 @@ export default function AssemblyEditorPage() {
     <div style={{
       position: 'fixed',
       inset: 0,
+      zIndex: 50,
       display: 'flex',
       flexDirection: 'column',
       background: '#060412',
       color: '#e5e5f0',
       fontFamily: 'Inter, system-ui, sans-serif',
-      paddingTop: 64, // leave room for global nav
     }}>
       <div className="md:hidden" style={{
         background: 'rgba(168, 85, 247, 0.2)',

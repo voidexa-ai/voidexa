@@ -1,11 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 import { useEditorStore } from './useEditorStore'
-import { deriveCategory, type ModelEntry } from '../lib/editorTypes'
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
+import type { ModelEntry } from '../lib/editorTypes'
 
 export function useModelCatalog() {
   const setCatalog = useEditorStore(s => s.setCatalog)
@@ -21,22 +18,13 @@ export function useModelCatalog() {
       setLoading(true)
       setError(null)
       try {
-        const { data, error: err } = await supabase.storage
-          .from('models')
-          .list('', { limit: 500, sortBy: { column: 'name', order: 'asc' } })
-        if (err) throw err
-        if (!data) {
-          if (!cancelled) setCatalog([])
-          return
+        const res = await fetch('/api/assembly/models', { cache: 'no-store' })
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}))
+          throw new Error(j.error || `HTTP ${res.status}`)
         }
-        const entries: ModelEntry[] = data
-          .filter(f => f.name.toLowerCase().endsWith('.glb'))
-          .map(f => ({
-            name: f.name.replace(/\.glb$/i, ''),
-            url: `${SUPABASE_URL}/storage/v1/object/public/models/${f.name}`,
-            category: deriveCategory(f.name),
-            size: (f.metadata as { size?: number } | null)?.size || 0,
-          }))
+        const json = await res.json()
+        const entries: ModelEntry[] = Array.isArray(json.entries) ? json.entries : []
         if (!cancelled) setCatalog(entries)
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load catalog')

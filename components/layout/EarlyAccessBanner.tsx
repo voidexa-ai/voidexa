@@ -49,7 +49,7 @@ export default function EarlyAccessBanner() {
   }, [])
 
   if (!visible) return null
-  if (pathname === '/freeflight') return null
+  if (pathname === '/freeflight' || pathname === '/assembly-editor') return null
 
   return (
     <div

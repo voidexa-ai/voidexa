@@ -56,8 +56,8 @@ export default function JarvisAssistant() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Hide on star map homepage only
-  if (pathname === '/') return null
+  // Hide on star map homepage and fullscreen editor routes
+  if (pathname === '/' || pathname === '/freeflight' || pathname === '/assembly-editor') return null
 
   function send() {
     const text = input.trim()

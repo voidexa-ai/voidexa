@@ -138,6 +138,7 @@ const SELF = {
 export default function UniverseChat() {
   const pathname = usePathname()
   const inFreeFlight = pathname?.startsWith('/freeflight') ?? false
+  const hidden = pathname === '/assembly-editor'
 
   const [open, setOpen] = useState(false)
   const [activeChannel, setActiveChannel] = useState<ChatChannel>(ChatChannel.Universe)
@@ -222,6 +223,9 @@ export default function UniverseChat() {
     sendMessage(draft)
     setDraft('')
   }
+
+  // Hide entirely on assembly editor
+  if (hidden) return null
 
   // ─── compact Free-Flight overlay ─────────────────────────────────────────
   if (inFreeFlight && !open) {
