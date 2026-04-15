@@ -15,6 +15,7 @@ interface Props {
   onFirstPersonChange?: (fp: boolean) => void
   shipUrl: string
   shipScale: number
+  cockpitUrl: string
 }
 
 export default function FreeFlightCanvas(props: Props) {

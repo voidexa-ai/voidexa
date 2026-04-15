@@ -25,6 +25,7 @@ interface Props {
   onFirstPersonChange?: (fp: boolean) => void
   shipUrl: string
   shipScale: number
+  cockpitUrl: string
 }
 
 export default function FreeFlightScene({
@@ -36,6 +37,7 @@ export default function FreeFlightScene({
   onFirstPersonChange,
   shipUrl,
   shipScale,
+  cockpitUrl,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -87,7 +89,7 @@ export default function FreeFlightScene({
         onModeChange={(fp) => { setFirstPerson(fp); onFirstPersonChange?.(fp) }}
       />
 
-      <CockpitModel visible={firstPerson} />
+      <CockpitModel visible={firstPerson} url={cockpitUrl} />
 
       <PlanetCollision ship={shipRef} />
       <AsteroidField ship={shipRef} />

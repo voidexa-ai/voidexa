@@ -4,11 +4,13 @@ import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CockpitHUD from './cockpit/CockpitHUD'
+import CockpitPicker from './cockpit/CockpitPicker'
 import ShipPicker from './ships/ShipPicker'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
 import { findShip, getStoredShipId, type ShipCatalogEntry } from './ships/catalog'
+import { findCockpit, getStoredCockpitId, type CockpitCatalogEntry, COCKPIT_CATALOG } from './cockpit/catalog'
 
 const FreeFlightCanvas = dynamic(() => import('./FreeFlightCanvas'), {
   ssr: false,
@@ -35,6 +37,8 @@ export default function FreeFlightPage() {
   const toastIdRef = useRef(0)
   const [selectedShip, setSelectedShip] = useState<ShipCatalogEntry | null>(null)
   const [pickerOpen, setPickerOpen] = useState(true)
+  const [selectedCockpit, setSelectedCockpit] = useState<CockpitCatalogEntry>(() => findCockpit(null))
+  const [cockpitPickerOpen, setCockpitPickerOpen] = useState(false)
 
   useEffect(() => {
     const storedId = getStoredShipId()
@@ -43,6 +47,8 @@ export default function FreeFlightPage() {
       setSelectedShip(ship)
       setPickerOpen(false)
     }
+    const cid = getStoredCockpitId()
+    if (cid) setSelectedCockpit(findCockpit(cid))
   }, [])
 
   const pushToast = (text: string, color = '#66ff99') => {
@@ -141,6 +147,7 @@ export default function FreeFlightPage() {
           onFirstPersonChange={setFirstPerson}
           shipUrl={selectedShip.url}
           shipScale={selectedShip.ingameScale}
+          cockpitUrl={selectedCockpit.url}
         />
       )}
 
@@ -153,6 +160,18 @@ export default function FreeFlightPage() {
             pushToast(`LAUNCHED · ${ship.name.toUpperCase()}`, '#00d4ff')
           }}
           onCancel={selectedShip ? () => setPickerOpen(false) : undefined}
+        />
+      )}
+
+      {cockpitPickerOpen && (
+        <CockpitPicker
+          currentId={selectedCockpit.id}
+          onPick={(cockpit) => {
+            setSelectedCockpit(cockpit)
+            setCockpitPickerOpen(false)
+            pushToast(`COCKPIT · ${cockpit.name.toUpperCase()}`, '#a866ff')
+          }}
+          onCancel={() => setCockpitPickerOpen(false)}
         />
       )}
 
@@ -358,6 +377,7 @@ export default function FreeFlightPage() {
 
           <button onClick={() => { setMenuOpen(false); setDockedAt(null) }} style={btnStyle('#00d4ff')}>Resume</button>
           <button onClick={() => { setMenuOpen(false); setDockedAt(null); setPickerOpen(true) }} style={btnStyle('#a866ff')}>Change Ship</button>
+          <button onClick={() => { setMenuOpen(false); setDockedAt(null); setCockpitPickerOpen(true) }} style={btnStyle('#66e6ff')}>Change Cockpit</button>
           <button onClick={exitToGalaxy} style={btnStyle('#ff6699')}>Return to Galaxy</button>
           <div style={{ marginTop: 20, fontSize: 14, opacity: 0.6, letterSpacing: '0.06em' }}>
             Click the canvas to re-lock mouse after resuming

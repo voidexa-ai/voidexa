@@ -7,12 +7,10 @@ import * as THREE from 'three'
 
 interface Props {
   visible: boolean
-  url?: string
+  url: string
 }
 
-const DEFAULT_URL = '/models/glb-ready/hirez_cockpit01.glb'
-
-export default function CockpitModel({ visible, url = DEFAULT_URL }: Props) {
+export default function CockpitModel({ visible, url }: Props) {
   const { camera } = useThree()
   const gltf = useGLTF(url)
   const scene = useMemo(() => gltf.scene.clone(), [gltf.scene])
@@ -54,4 +52,3 @@ export default function CockpitModel({ visible, url = DEFAULT_URL }: Props) {
   )
 }
 
-useGLTF.preload(DEFAULT_URL)
