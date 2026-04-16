@@ -9,10 +9,9 @@ interface GhaiStat {
 }
 
 const GHAI_STATS: GhaiStat[] = [
-  { value: '700,000,000', label: 'Total Supply' },
-  { value: '200M',        label: 'Minted + Distributed' },
-  { value: '300M',        label: 'Burned Permanently' },
-  { value: 'Utility',     label: 'Token Type — Platform Currency' },
+  { value: '$1 = 100 GHAI',   label: 'Fixed exchange rate' },
+  { value: 'Platform credit', label: 'Not an investment vehicle' },
+  { value: 'In-ecosystem only', label: 'Used for voidexa services' },
 ]
 
 interface PlaceholderSection {
@@ -24,8 +23,8 @@ interface PlaceholderSection {
 
 const PLACEHOLDER_SECTIONS: PlaceholderSection[] = [
   {
-    title: 'Tokenomics',
-    description: 'Distribution, vesting, sinks, and burn mechanics. Full breakdown once legal review is complete.',
+    title: 'Platform economy',
+    description: 'How GHAI moves through voidexa products — earning, spending, and seasonal cycles. Details finalized post legal review.',
   },
   {
     title: 'Roadmap',
@@ -92,9 +91,6 @@ function GhaiOrb({ size = 220 }: { size?: number }) {
 function SubscribeForm() {
   const [email, setEmail] = useState('')
 
-  // Routes through the user's mail client straight to contact@voidexa.com.
-  // Deferring the Supabase waitlist_signups table until after legal review;
-  // no point collecting emails when the deliverable's ship date is uncertain.
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
     const addr = email.trim()
@@ -201,7 +197,7 @@ export default function WhitePaperPageClient() {
           }}>
             voidexa builds sovereign AI infrastructure — trading systems, encrypted communication,
             custom decision platforms — and a gameplay layer that fuels it all. This document
-            outlines the stack, the mechanics, and the utility model behind GHAI.
+            outlines the stack, the mechanics, and the platform currency that powers the ecosystem.
           </p>
         </section>
 
@@ -234,7 +230,7 @@ export default function WhitePaperPageClient() {
                 textShadow: '0 0 10px rgba(0,212,255,0.6)',
                 marginBottom: 8,
               }}>
-                Utility Token · GHAI
+                Platform Currency · GHAI
               </div>
               <h2 style={{
                 margin: '0 0 14px',
@@ -252,10 +248,10 @@ export default function WhitePaperPageClient() {
                 color: 'rgba(255,255,255,0.75)',
                 margin: '0 0 20px',
               }}>
-                GHAI is the platform utility credit that unlocks premium AI compute,
-                priority queue access, and seasonal in-game content across voidexa.
-                It is not a security, not an investment vehicle, and not listed on
-                any public exchange. Exact mechanics will be finalized post legal review.
+                GHAI is the platform currency of the voidexa ecosystem — similar in
+                concept to in-game currencies you may have used elsewhere. GHAI is
+                earned or purchased in fixed increments and spent inside voidexa to
+                unlock AI compute, priority access, and seasonal content.
               </p>
               <div style={{
                 display: 'grid',
@@ -271,7 +267,7 @@ export default function WhitePaperPageClient() {
                     borderRadius: 10,
                   }}>
                     <div style={{
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: 800,
                       color: '#00d4ff',
                       fontFamily: 'var(--font-space, system-ui)',
@@ -302,13 +298,14 @@ export default function WhitePaperPageClient() {
                 color: '#ffd99a',
               }}>
                 <strong style={{ letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: 12, color: '#f59e0b' }}>
-                  Pending legal review
+                  Blockchain integration under review
                 </strong>
                 <div style={{ marginTop: 4, color: 'rgba(255,235,200,0.85)' }}>
-                  GHAI token mechanics are undergoing legal review by <strong>ADVORA</strong>.
-                  Token launch, utility scope, and distribution details will be disclosed
-                  once review is complete. No contract address has been or will be shared
-                  before launch.
+                  voidexa is exploring blockchain integration for GHAI with legal
+                  advisors in Denmark. Mechanics, technical infrastructure, and
+                  distribution details will be disclosed only after regulatory
+                  review is complete. Until then, GHAI functions exclusively as
+                  a platform credit within voidexa products.
                 </div>
               </div>
             </div>

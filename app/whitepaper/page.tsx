@@ -20,8 +20,8 @@ export default function WhitepaperPage() {
           White Paper — Coming Soon
         </h1>
         <p style={{ color: '#94a3b8', fontSize: '1.125rem', lineHeight: 1.7 }}>
-          We are preparing the GHAI white paper for MiCA compliance.
-          It will cover architecture, tokenomics, and the full voidexa roadmap.
+          We are preparing the GHAI white paper ahead of regulatory review.
+          It will cover architecture, the platform economy, and the full voidexa roadmap.
           Check back soon.
         </p>
       </div>

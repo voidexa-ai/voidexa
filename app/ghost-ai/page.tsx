@@ -153,7 +153,7 @@ export default function GhostAIPage() {
             </span>
             <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#ccaa44', background: 'rgba(204,170,68,0.1)', border: '1px solid rgba(204,170,68,0.3)' }}>
-              Powered by GHAI Token
+              Powered by GHAI
             </span>
           </motion.div>
 
@@ -365,7 +365,7 @@ export default function GhostAIPage() {
             Pioneer Rewards
           </h2>
           <p className="mt-2 text-sm" style={{ color: '#64748b' }}>
-            Token rewards structure pending legal review. GHAI integration coming soon — subject to regulatory approval.
+            Reward structure pending legal review. GHAI integration coming soon — subject to regulatory approval.
           </p>
         </motion.div>
 
