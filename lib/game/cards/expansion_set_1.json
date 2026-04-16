@@ -26,10 +26,13 @@
       "damage": 4,
       "conditional": "hits_3_random_targets"
     },
-    "abilityText": "Deal 4 damage to each of 3 random targets.",
+    "abilityText": "Tracking Lock. Deal 4 damage to each of 3 random targets.",
     "flavor": "Spray and pray is a valid doctrine when you have enough barrels.",
     "faction": "neutral",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "tracking_lock"
+    ]
   },
   {
     "id": "finisher_torpedo",
@@ -395,10 +398,13 @@
       "exhaust": true,
       "draw": 1
     },
-    "abilityText": "If you would take lethal damage this turn, survive with 1 hull instead. Gain 10 Block. Exhaust.",
+    "abilityText": "Gain Auto-Repair Protocol this turn. Survive with 1 hull. Gain 10 Block. Exhaust.",
     "flavor": "ERROR: DEATH.EXE — ACCESS DENIED.",
     "faction": "void",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "auto_repair_protocol"
+    ]
   },
   {
     "id": "afterburn",
@@ -456,10 +462,13 @@
     "stats": {
       "conditional": "next_weapon_hits_twice_minus_3"
     },
-    "abilityText": "Next weapon hits twice at −3 damage per hit.",
+    "abilityText": "Your next Weapon gains Twin Barrels this turn. -3 damage per hit.",
     "flavor": "Slide sideways. Fire twice. Straighten up.",
     "faction": "neutral",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "twin_barrels"
+    ]
   },
   {
     "id": "tractor_pulse",
@@ -503,10 +512,13 @@
       "untargetable": true,
       "discard": 1
     },
-    "abilityText": "Become untargetable until your next turn. Discard 1.",
+    "abilityText": "Gain Stealth Coating until your next turn. Discard 1.",
     "flavor": "Vanish. Recalculate. Return on your terms.",
     "faction": "void",
-    "shipClassRestriction": "explorer"
+    "shipClassRestriction": "explorer",
+    "keywords": [
+      "stealth_coating"
+    ]
   },
   {
     "id": "phantom_strike",
@@ -518,10 +530,13 @@
       "untargetable": true,
       "conditional": "next_weapon_double_damage"
     },
-    "abilityText": "Become untargetable. Next weapon deals double damage.",
+    "abilityText": "Gain Stealth Coating. Your next Weapon deals double damage.",
     "flavor": "A ghost with a gun. The worst kind.",
     "faction": "void",
-    "shipClassRestriction": "fighter"
+    "shipClassRestriction": "fighter",
+    "keywords": [
+      "stealth_coating"
+    ]
   },
   {
     "id": "decoy_drone",
@@ -616,10 +631,13 @@
       "duration_turns": 3,
       "conditional": "deploy_2_fighters_2_damage_each"
     },
-    "abilityText": "Deploy 2 micro-fighters: each deals 2 damage per turn for 3 turns.",
+    "abilityText": "Deploy 2 micro-fighters with Hot Deploy: 2 damage/turn for 3 turns.",
     "flavor": "Two wingmen that never complain and never miss.",
     "faction": "neutral",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
   },
   {
     "id": "kamikaze_drone",
@@ -719,10 +737,13 @@
       "damage": 10,
       "draw": 2
     },
-    "abilityText": "Summon 2 temporary Gun Drones. Each deals 4 damage per turn for 2 turns.",
+    "abilityText": "Summon 2 temporary Gun Drones with Hot Deploy. 4 damage/turn for 2 turns.",
     "flavor": "One order. Sixteen barrels. Coordinated annihilation.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
   },
   {
     "id": "leviathan_presence",
@@ -832,10 +853,13 @@
       "exhaust": true,
       "conditional": "summon_1_turn_gun_drone"
     },
-    "abilityText": "Summon a 1-turn Gun Drone that deals 4 damage. Exhaust.",
+    "abilityText": "Summon a 1-turn Gun Drone with Hot Deploy. 4 damage. Exhaust.",
     "flavor": "Emergency firepower in a box. Assembly not required.",
     "faction": "neutral",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
   },
   {
     "id": "field_patch",

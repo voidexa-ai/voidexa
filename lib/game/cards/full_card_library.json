@@ -40,10 +40,13 @@
       "damage": 6,
       "conditional": "bonus_10_vs_drones"
     },
-    "abilityText": "Deal 6 damage. +10 bonus vs drones.",
+    "abilityText": "Tracking Lock. Deal 6 damage. +10 bonus vs drones.",
     "flavor": "Not designed for ships. Designed for what ships deploy.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "tracking_lock"
+    ]
   },
   {
     "id": "guided_missile",
@@ -333,10 +336,13 @@
       "exhaust": true,
       "self_damage": 6
     },
-    "abilityText": "Destroy all enemy Block and drones. Deal 40 damage. Once per game. Exhaust.",
+    "abilityText": "Critical Breach — Destroy all enemy drones and Block. Deal 40 damage. Once per game. Exhaust.",
     "flavor": "It doesn't fire projectiles. It fires the absence of everything.",
     "faction": "void",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "critical_breach"
+    ]
   },
   {
     "id": "blink_strike",
@@ -552,10 +558,13 @@
     "stats": {
       "conditional": "hacks_fail_50_percent_2_turns"
     },
-    "abilityText": "For 2 turns, enemy hack/ECM effects have 50% chance to fail.",
+    "abilityText": "Gain Stealth Coating for 2 turns against enemy hack/ECM effects.",
     "flavor": "Ghost protocol engaged. Good luck finding what isn't there.",
     "faction": "void",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "stealth_coating"
+    ]
   },
   {
     "id": "harmonic_barrier",
@@ -645,10 +654,13 @@
     "stats": {
       "conditional": "swap_initiative"
     },
-    "abilityText": "Swap initiative. You act first next turn.",
+    "abilityText": "Gain Priority Fire next turn.",
     "flavor": "Rewrite the queue. Move when they don't expect it.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "priority_fire"
+    ]
   },
   {
     "id": "warp_blink",
@@ -829,10 +841,13 @@
       "duration_turns": 4,
       "conditional": "5_drones_grow_1_damage_per_turn"
     },
-    "abilityText": "Deploy 5 micro-drones: 1 damage each per turn for 4 turns. Each grows +1 damage per turn.",
+    "abilityText": "Deploy 5 micro-drones with Hot Deploy: 1 damage each/turn for 4 turns. +1/turn growth.",
     "flavor": "A cloud of teeth that learns.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
   },
   {
     "id": "detonate_drone",
@@ -875,10 +890,14 @@
       "duration_turns": 3,
       "draw": 1
     },
-    "abilityText": "This turn, all newly deployed drones act twice on their first turn.",
+    "abilityText": "This turn, all newly deployed drones gain Hot Deploy and Twin Barrels on first turn.",
     "flavor": "Double the output. Same deployment cost.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy",
+      "twin_barrels"
+    ]
   },
   {
     "id": "hangar_pod",
@@ -891,10 +910,13 @@
       "duration_turns": 3,
       "per_turn": 5
     },
-    "abilityText": "Every 2 turns, automatically spawn a Gun Drone (4 damage/turn, 2 turns). Lasts 6 turns.",
+    "abilityText": "Every 2 turns, spawn a Gun Drone with Hot Deploy (4 damage/turn, 2 turns). Lasts 6 turns.",
     "flavor": "An endless supply of problems for your enemy.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
   },
   {
     "id": "fleet_sync",
@@ -938,10 +960,13 @@
       "per_turn": 4,
       "duration_turns": 3
     },
-    "abilityText": "Deploy a drone facedown. It reveals and activates next turn as a Gun Drone (4 damage, 3 turns).",
+    "abilityText": "Cold Boot. Deploy facedown. Reveals next turn as Gun Drone (4 damage, 3 turns).",
     "flavor": "It waits. It listens. It wakes up angry.",
     "faction": "neutral",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "cold_boot"
+    ]
   },
   {
     "id": "emergency_swarm",
@@ -1000,10 +1025,13 @@
     "stats": {
       "conditional": "destroy_1_enemy_drone"
     },
-    "abilityText": "Destroy 1 enemy drone.",
+    "abilityText": "Critical Breach — Destroy 1 enemy drone.",
     "flavor": "One pulse. One less problem.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "critical_breach"
+    ]
   },
   {
     "id": "cycle_systems",
@@ -1405,10 +1433,13 @@
       "block": 8,
       "draw": 1
     },
-    "abilityText": "PvP: Both players reveal cards simultaneously. Higher initiative resolves first.",
+    "abilityText": "PvP: Both reveal simultaneously. Higher initiative gains Priority Fire.",
     "flavor": "In the Dome, timing is everything.",
     "faction": "neutral",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "priority_fire"
+    ]
   },
   {
     "id": "load_rack",
@@ -1875,10 +1906,13 @@
       "damage": 7,
       "draw": 2
     },
-    "abilityText": "All missile/torpedo Weapons apply Lock and ignore Evade.",
+    "abilityText": "All missile/torpedo Weapons gain Tracking Lock, apply Lock, ignore Evade.",
     "flavor": "Once locked, there is no escape.",
     "faction": "core",
-    "shipClassRestriction": null
+    "shipClassRestriction": null,
+    "keywords": [
+      "tracking_lock"
+    ]
   },
   {
     "id": "rail_capacitor",
@@ -2237,5 +2271,627 @@
     "flavor": "Beyond the horizon, time stops. And so do they.",
     "faction": "void",
     "shipClassRestriction": null
+  },
+  {
+    "id": "scrapline_reclaimer",
+    "name": "Scrapline Reclaimer",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 3
+    },
+    "abilityText": "System Reboot — When destroyed, return to bay with Cold Boot.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "system_reboot",
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "lazarus_swarm_node",
+    "name": "Lazarus Swarm Node",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 3,
+      "draw": 1
+    },
+    "abilityText": "System Reboot — When friendly drone destroyed, pay 1 to return with Cold Boot.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "system_reboot"
+    ]
+  },
+  {
+    "id": "dockborn_interceptor",
+    "name": "Dockborn Interceptor",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "absorb": 4,
+      "block": 3
+    },
+    "abilityText": "Cold Boot. On enter, gain 1 shield.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "assembly_line_siege_pod",
+    "name": "Assembly-Line Siege Pod",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 3
+    },
+    "abilityText": "Cold Boot. After boot, +1 attack this turn.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "redline_breacher",
+    "name": "Redline Breacher",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 2,
+      "damage": 3
+    },
+    "abilityText": "Hot Deploy. May attack immediately.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "burnwake_assault_rack",
+    "name": "Burnwake Assault Rack",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "draw": 1,
+      "damage": 4
+    },
+    "abilityText": "Drones deployed this turn have Hot Deploy.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "vector_duelist",
+    "name": "Vector Duelist",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 2,
+      "damage": 2
+    },
+    "abilityText": "Priority Fire. Deals damage before opponent.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "priority_fire"
+    ]
+  },
+  {
+    "id": "sentinel_mark_iv",
+    "name": "Sentinel Mark-IV",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 3,
+      "block": 3
+    },
+    "abilityText": "Priority Fire. If destroys before return fire, prevent return damage.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "priority_fire"
+    ]
+  },
+  {
+    "id": "mass_driver_colossus",
+    "name": "Mass Driver Colossus",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 5,
+    "stats": {
+      "per_turn": 6,
+      "duration_turns": 3,
+      "splash": 4
+    },
+    "abilityText": "Cascade. Excess drone damage hits hull.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "cascade"
+    ]
+  },
+  {
+    "id": "breachline_torpedo_bus",
+    "name": "Breachline Torpedo Bus",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 4,
+    "stats": {
+      "per_turn": 5,
+      "duration_turns": 2,
+      "splash": 3
+    },
+    "abilityText": "Cascade. Excess damage to damaged drone hits hull.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "cascade"
+    ]
+  },
+  {
+    "id": "stratos_relay_kite",
+    "name": "Stratos Relay Kite",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 2,
+      "duration_turns": 3,
+      "draw": 1
+    },
+    "abilityText": "High Orbit. Draw 1 on hull damage.",
+    "faction": "neutral",
+    "shipClassRestriction": null,
+    "keywords": [
+      "high_orbit"
+    ]
+  },
+  {
+    "id": "orbital_lance_platform",
+    "name": "Orbital Lance Platform",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 5,
+    "stats": {
+      "per_turn": 5,
+      "duration_turns": 3,
+      "damage": 3
+    },
+    "abilityText": "High Orbit. Long-range +1 hull damage.",
+    "faction": "neutral",
+    "shipClassRestriction": null,
+    "keywords": [
+      "high_orbit"
+    ]
+  },
+  {
+    "id": "skyhook_flak_drone",
+    "name": "Skyhook Flak Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 2
+    },
+    "abilityText": "Tracking Lock. +1 vs High Orbit.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "predictive_aegis_grid",
+    "name": "Predictive Aegis Grid",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "draw": 1,
+      "block": 5
+    },
+    "abilityText": "All friendlies gain Tracking Lock. Draw 1 if enemy has High Orbit.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "needlefang_hunter",
+    "name": "Needlefang Hunter",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 3,
+      "damage": 2
+    },
+    "abilityText": "Critical Breach. Any damage destroys drones.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "blacksite_sever_pod",
+    "name": "Blacksite Sever Pod",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 3,
+      "apply": [
+        "jam"
+      ]
+    },
+    "abilityText": "Critical Breach. On hull damage, disable 1 enemy module.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "patchwork_bastion",
+    "name": "Patchwork Bastion",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 3,
+    "stats": {
+      "absorb": 8,
+      "block": 4
+    },
+    "abilityText": "Auto-Repair Protocol. First destruction prevented, engage instead.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "auto_repair_protocol"
+    ]
+  },
+  {
+    "id": "self_mending_bulwark",
+    "name": "Self-Mending Bulwark",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 5,
+    "stats": {
+      "absorb": 12,
+      "heal": 4
+    },
+    "abilityText": "Auto-Repair Protocol. On survival, repair 2 hull.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "auto_repair_protocol"
+    ]
+  },
+  {
+    "id": "leechray_skimmer",
+    "name": "Leechray Skimmer",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 3,
+      "heal": 2
+    },
+    "abilityText": "Hull Siphon. Damage dealt repairs your hull.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hull_siphon"
+    ]
+  },
+  {
+    "id": "reclamation_harvester",
+    "name": "Reclamation Harvester",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 3,
+      "energy": 1
+    },
+    "abilityText": "Hull Siphon. On drone damage, gain 1 energy next turn.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hull_siphon"
+    ]
+  },
+  {
+    "id": "watchline_custodian",
+    "name": "Watchline Custodian",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 2,
+      "duration_turns": 4
+    },
+    "abilityText": "Persistent Systems. No engage on attack.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "persistent_systems"
+    ]
+  },
+  {
+    "id": "everwake_patrol_spine",
+    "name": "Everwake Patrol Spine",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 4,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 3,
+      "block": 3
+    },
+    "abilityText": "Persistent Systems. Unengaged adjacent drones +1 defense.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "persistent_systems"
+    ]
+  },
+  {
+    "id": "ghostglass_scout",
+    "name": "Ghostglass Scout",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "per_turn": 2,
+      "duration_turns": 3,
+      "evade": true
+    },
+    "abilityText": "Stealth Coating. Cannot be targeted by ECM.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "phantom_mesh_array",
+    "name": "Phantom Mesh Array",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "draw": 1,
+      "block": 6
+    },
+    "abilityText": "Drones deployed this turn gain Stealth Coating.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "adamant_siege_engine",
+    "name": "Adamant Siege Engine",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 6,
+    "stats": {
+      "per_turn": 5,
+      "duration_turns": 4,
+      "absorb": 10
+    },
+    "abilityText": "Hardened Core. Cannot be destroyed by damage.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hardened_core"
+    ]
+  },
+  {
+    "id": "corevault_guardian",
+    "name": "Corevault Guardian",
+    "type": "drone",
+    "rarity": "legendary",
+    "cost": 7,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 4,
+      "absorb": 15,
+      "block": 5
+    },
+    "abilityText": "Hardened Core. Enemy modules cost +1 targeting your board.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hardened_core"
+    ]
+  },
+  {
+    "id": "rapid_bay_interceptor",
+    "name": "Rapid Bay Interceptor",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "absorb": 6,
+      "damage": 2
+    },
+    "abilityText": "Emergency Launch. Deploy during opponent's attack.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "emergency_launch"
+    ]
+  },
+  {
+    "id": "ambush_deployment_net",
+    "name": "Ambush Deployment Net",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "draw": 1,
+      "absorb": 5
+    },
+    "abilityText": "Emergency Launch. On enemy attack, deploy drone cost 2 or less.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "emergency_launch"
+    ]
+  },
+  {
+    "id": "dualcoil_pursuer",
+    "name": "Dualcoil Pursuer",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 3,
+      "damage": 3
+    },
+    "abilityText": "Twin Barrels. Deals damage twice.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "barrage_widow",
+    "name": "Barrage Widow",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 5,
+    "stats": {
+      "per_turn": 5,
+      "duration_turns": 3,
+      "splash": 3
+    },
+    "abilityText": "Twin Barrels. Both hits apply separately to hull.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "graveyard_sync_core",
+    "name": "Graveyard Sync Core",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 6,
+    "stats": {
+      "draw": 2,
+      "damage": 6,
+      "block": 6
+    },
+    "abilityText": "Once per turn, first friendly drone destroyed gains System Reboot.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "system_reboot"
+    ]
+  },
+  {
+    "id": "burngate_commander",
+    "name": "Burngate Commander",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "draw": 2,
+      "damage": 8
+    },
+    "abilityText": "Drones cost 3 or less have Hot Deploy.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "surgical_kill_mesh",
+    "name": "Surgical Kill Mesh",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "draw": 1,
+      "damage": 5,
+      "apply": [
+        "expose"
+      ]
+    },
+    "abilityText": "Drones with attack 1 gain Critical Breach.",
+    "faction": "void",
+    "shipClassRestriction": null,
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "overclocked_gunbrain",
+    "name": "Overclocked Gunbrain",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "draw": 1,
+      "damage": 5
+    },
+    "abilityText": "Next drone deployed gains Twin Barrels this turn.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "crisis_hangar_ai",
+    "name": "Crisis Hangar AI",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 5,
+    "stats": {
+      "draw": 1,
+      "damage": 4,
+      "block": 4
+    },
+    "abilityText": "Each opponent turn, first drone deployed gains Emergency Launch, costs 1 less.",
+    "faction": "core",
+    "shipClassRestriction": null,
+    "keywords": [
+      "emergency_launch"
+    ]
   }
 ]

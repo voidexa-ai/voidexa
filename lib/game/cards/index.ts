@@ -69,6 +69,23 @@ export interface CardStats {
   scaling?: string
 }
 
+export type CardKeyword =
+  | 'system_reboot'
+  | 'cold_boot'
+  | 'hot_deploy'
+  | 'priority_fire'
+  | 'cascade'
+  | 'high_orbit'
+  | 'tracking_lock'
+  | 'critical_breach'
+  | 'auto_repair_protocol'
+  | 'hull_siphon'
+  | 'persistent_systems'
+  | 'stealth_coating'
+  | 'hardened_core'
+  | 'emergency_launch'
+  | 'twin_barrels'
+
 export interface CardTemplate {
   id: string
   name: string
@@ -80,6 +97,7 @@ export interface CardTemplate {
   flavor?: string
   faction: CardFaction
   shipClassRestriction: ShipClassRestriction
+  keywords?: CardKeyword[]
 }
 
 export const CARD_TEMPLATES: readonly CardTemplate[] = [
@@ -227,9 +245,10 @@ export const CARD_TEMPLATES: readonly CardTemplate[] = [
     rarity: 'uncommon',
     cost: 2,
     stats: { conditional: 'move_first_next_turn', damage: 4 },
-    abilityText: 'Move first next turn. Next attack +4.',
+    abilityText: 'Gain Priority Fire next turn. Next attack +4 damage.',
     faction: 'core',
     shipClassRestriction: null,
+    keywords: ['priority_fire'],
   },
   {
     id: 'ghost_drift',
@@ -238,9 +257,10 @@ export const CARD_TEMPLATES: readonly CardTemplate[] = [
     rarity: 'rare',
     cost: 3,
     stats: { untargetable: true, energy: -1 },
-    abilityText: 'Untargetable until next action. Lose 1 energy next turn.',
+    abilityText: 'Gain Stealth Coating until your next action. Lose 1 energy next turn.',
     faction: 'core',
     shipClassRestriction: null,
+    keywords: ['stealth_coating'],
   },
 
   // ===== Drone (4) =====

@@ -1,9 +1,9 @@
-# VOIDEXA COMPLETE CARD SET — Cards 81–222
+# VOIDEXA COMPLETE CARD SET — Cards 81–257
 
-> **142 new cards** covering all remaining patterns from the 223-pattern library.
-> Cards 1–26: baseline (index.ts) | Cards 27–80: expansion set 1 | Cards 81–222: this set.
-> All cards follow PART 5 cost-power curve. Only 8 approved statuses used.
-> Grand total across all sets: **222 cards**.
+> **177 cards** in this file (142 original + 35 keyword expansion).
+> Cards 1–26: baseline (index.ts) | Cards 27–80: expansion set 1 | Cards 81–222: original full library | Cards 223–257: keyword expansion.
+> All cards follow PART 5 cost-power curve. 15 new keywords added (see GPT_CARD_KEYWORD_RETROFIT.md).
+> Grand total across all sets: **257 cards**.
 
 ## Distribution
 
@@ -273,3 +273,118 @@ All cards use only: **Expose**, **Burn**, **Jam**, **Lock**, **Shielded**, **Ove
 | 5 | 24–30 dmg or summon/board-control |
 | 6 | 30–36 dmg or encounter-defining |
 | 7 | Rare/legendary finisher only |
+
+---
+
+## KEYWORD EXPANSION — Cards 223–257 (35 new cards)
+
+> Added in the keyword patch (April 2026). All 35 cards introduce the 15 new sci-fi keywords.
+> These cards are drone-heavy by design — keywords model advanced drone mechanics (deploy timing, resilience, targeting).
+
+### New Keywords Reference
+
+| Keyword | Effect |
+|---|---|
+| System Reboot | When destroyed, return to bay (with Cold Boot delay) |
+| Cold Boot | Deploys facedown/delayed — activates next turn |
+| Hot Deploy | Drone acts immediately on deployment turn |
+| Priority Fire | Deals damage before opponent resolves |
+| Cascade | Excess drone damage overflows to hull |
+| High Orbit | Only targetable by long-range; bonus on hull damage |
+| Tracking Lock | Targets precisely; bonus vs High Orbit |
+| Critical Breach | Any damage destroys target drone/module |
+| Auto-Repair Protocol | Survives first destruction with 1 hull |
+| Hull Siphon | Damage dealt heals your hull |
+| Persistent Systems | Does not engage (exhaust) on attack |
+| Stealth Coating | Cannot be targeted by ECM/hack |
+| Hardened Core | Cannot be destroyed by damage |
+| Emergency Launch | Deploy during opponent's turn/attack |
+| Twin Barrels | Deals damage twice (separately) |
+
+### Distribution
+
+| Rarity | Count |
+|---|---:|
+| common | 12 |
+| uncommon | 10 |
+| rare | 11 |
+| legendary | 2 |
+| **Total** | **35** |
+
+| Type | Count |
+|---|---:|
+| drone | 26 |
+| ai | 9 |
+| **Total** | **35** |
+
+| Faction | Count |
+|---|---:|
+| core | 15 |
+| void | 14 |
+| neutral | 6 |
+
+### Full Card Table
+
+| # | ID | Name | Type | Rarity | Cost | Faction | Keywords | Ability Text |
+|---:|---|---|---|---|---:|---|---|---|
+| 223 | `scrapline_reclaimer` | **Scrapline Reclaimer** | drone | common | 2 | void | system_reboot, cold_boot | System Reboot — When destroyed, return to bay with Cold Boot. |
+| 224 | `lazarus_swarm_node` | **Lazarus Swarm Node** | drone | rare | 4 | core | system_reboot | System Reboot — When friendly drone destroyed, pay 1 to return with Cold Boot. |
+| 225 | `dockborn_interceptor` | **Dockborn Interceptor** | drone | common | 1 | core | cold_boot | Cold Boot. On enter, gain 1 shield. |
+| 226 | `assembly_line_siege_pod` | **Assembly-Line Siege Pod** | drone | uncommon | 3 | void | cold_boot | Cold Boot. After boot, +1 attack this turn. |
+| 227 | `redline_breacher` | **Redline Breacher** | drone | common | 2 | void | hot_deploy | Hot Deploy. May attack immediately. |
+| 228 | `burnwake_assault_rack` | **Burnwake Assault Rack** | ai | rare | 4 | void | hot_deploy | Drones deployed this turn have Hot Deploy. |
+| 229 | `vector_duelist` | **Vector Duelist** | drone | common | 2 | core | priority_fire | Priority Fire. Deals damage before opponent. |
+| 230 | `sentinel_mark_iv` | **Sentinel Mark-IV** | drone | uncommon | 3 | core | priority_fire | Priority Fire. If destroys before return fire, prevent return damage. |
+| 231 | `mass_driver_colossus` | **Mass Driver Colossus** | drone | rare | 5 | core | cascade | Cascade. Excess drone damage hits hull. |
+| 232 | `breachline_torpedo_bus` | **Breachline Torpedo Bus** | drone | uncommon | 4 | void | cascade | Cascade. Excess damage to damaged drone hits hull. |
+| 233 | `stratos_relay_kite` | **Stratos Relay Kite** | drone | common | 2 | neutral | high_orbit | High Orbit. Draw 1 on hull damage. |
+| 234 | `orbital_lance_platform` | **Orbital Lance Platform** | drone | rare | 5 | neutral | high_orbit | High Orbit. Long-range +1 hull damage. |
+| 235 | `skyhook_flak_drone` | **Skyhook Flak Drone** | drone | common | 2 | core | tracking_lock | Tracking Lock. +1 vs High Orbit. |
+| 236 | `predictive_aegis_grid` | **Predictive Aegis Grid** | ai | uncommon | 3 | core | tracking_lock | All friendlies gain Tracking Lock. Draw 1 if enemy has High Orbit. |
+| 237 | `needlefang_hunter` | **Needlefang Hunter** | drone | uncommon | 3 | void | critical_breach | Critical Breach. Any damage destroys drones. |
+| 238 | `blacksite_sever_pod` | **Blacksite Sever Pod** | drone | rare | 4 | void | critical_breach | Critical Breach. On hull damage, disable 1 enemy module. |
+| 239 | `patchwork_bastion` | **Patchwork Bastion** | drone | common | 3 | core | auto_repair_protocol | Auto-Repair Protocol. First destruction prevented, engage instead. |
+| 240 | `self_mending_bulwark` | **Self-Mending Bulwark** | drone | rare | 5 | core | auto_repair_protocol | Auto-Repair Protocol. On survival, repair 2 hull. |
+| 241 | `leechray_skimmer` | **Leechray Skimmer** | drone | uncommon | 2 | void | hull_siphon | Hull Siphon. Damage dealt repairs your hull. |
+| 242 | `reclamation_harvester` | **Reclamation Harvester** | drone | rare | 4 | void | hull_siphon | Hull Siphon. On drone damage, gain 1 energy next turn. |
+| 243 | `watchline_custodian` | **Watchline Custodian** | drone | common | 2 | core | persistent_systems | Persistent Systems. No engage on attack. |
+| 244 | `everwake_patrol_spine` | **Everwake Patrol Spine** | drone | uncommon | 4 | core | persistent_systems | Persistent Systems. Unengaged adjacent drones +1 defense. |
+| 245 | `ghostglass_scout` | **Ghostglass Scout** | drone | common | 2 | void | stealth_coating | Stealth Coating. Cannot be targeted by ECM. |
+| 246 | `phantom_mesh_array` | **Phantom Mesh Array** | ai | rare | 4 | void | stealth_coating | Drones deployed this turn gain Stealth Coating. |
+| 247 | `adamant_siege_engine` | **Adamant Siege Engine** | drone | rare | 6 | core | hardened_core | Hardened Core. Cannot be destroyed by damage. |
+| 248 | `corevault_guardian` | **Corevault Guardian** | drone | legendary | 7 | core | hardened_core | Hardened Core. Enemy modules cost +1 targeting your board. |
+| 249 | `rapid_bay_interceptor` | **Rapid Bay Interceptor** | drone | common | 2 | void | emergency_launch | Emergency Launch. Deploy during opponent's attack. |
+| 250 | `ambush_deployment_net` | **Ambush Deployment Net** | ai | uncommon | 3 | void | emergency_launch | Emergency Launch. On enemy attack, deploy drone cost 2 or less. |
+| 251 | `dualcoil_pursuer` | **Dualcoil Pursuer** | drone | uncommon | 3 | core | twin_barrels | Twin Barrels. Deals damage twice. |
+| 252 | `barrage_widow` | **Barrage Widow** | drone | rare | 5 | void | twin_barrels | Twin Barrels. Both hits apply separately to hull. |
+| 253 | `graveyard_sync_core` | **Graveyard Sync Core** | ai | legendary | 6 | void | system_reboot | Once per turn, first friendly drone destroyed gains System Reboot. |
+| 254 | `burngate_commander` | **Burngate Commander** | ai | legendary | 5 | void | hot_deploy | Drones cost 3 or less have Hot Deploy. |
+| 255 | `surgical_kill_mesh` | **Surgical Kill Mesh** | ai | rare | 4 | void | critical_breach | Drones with attack 1 gain Critical Breach. |
+| 256 | `overclocked_gunbrain` | **Overclocked Gunbrain** | ai | rare | 4 | core | twin_barrels | Next drone deployed gains Twin Barrels this turn. |
+| 257 | `crisis_hangar_ai` | **Crisis Hangar AI** | ai | rare | 5 | core | emergency_launch | Each opponent turn, first drone deployed gains Emergency Launch, costs 1 less. |
+
+### 21 Retrofitted Cards (keywords added to existing cards)
+
+| ID | Card | Added Keyword(s) | Source File |
+|---|---|---|---|
+| ghost_drift | Ghost Drift | stealth_coating | index.ts |
+| cloak_burst | Cloak Burst | stealth_coating | expansion_set_1.json |
+| phantom_strike | Phantom Strike | stealth_coating | expansion_set_1.json |
+| stealth_mask | Stealth Mask | stealth_coating | full_card_library.json |
+| drift_turn | Drift Turn | twin_barrels | expansion_set_1.json |
+| drone_controller | Drone Controller | hot_deploy, twin_barrels | full_card_library.json |
+| fleet_commander | Fleet Commander | hot_deploy | expansion_set_1.json |
+| spare_drone_kit | Spare Drone Kit | hot_deploy | expansion_set_1.json |
+| escort_wing | Escort Wing | hot_deploy | expansion_set_1.json |
+| micro_swarm | Micro-Swarm | hot_deploy | full_card_library.json |
+| hangar_pod | Hangar Pod | hot_deploy | full_card_library.json |
+| sleeper_drone | Sleeper Drone | cold_boot | full_card_library.json |
+| flak_burst | Flak Burst | tracking_lock | expansion_set_1.json |
+| flak_warhead | Flak Warhead | tracking_lock | full_card_library.json |
+| missile_guidance | Missile Guidance | tracking_lock | full_card_library.json |
+| emp_net | EMP Net | critical_breach | full_card_library.json |
+| singularity_cannon | Singularity Cannon | critical_breach | full_card_library.json |
+| vector_cut | Vector Cut | priority_fire | index.ts |
+| timing_override | Timing Override | priority_fire | full_card_library.json |
+| dome_protocol | Dome Protocol | priority_fire | full_card_library.json |
+| crash_override | Crash Override | auto_repair_protocol | expansion_set_1.json |
