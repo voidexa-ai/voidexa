@@ -4,7 +4,7 @@ import { deriveCategory } from '@/app/assembly-editor/lib/editorTypes'
 
 export const dynamic = 'force-dynamic'
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').trim()
 
 export async function GET() {
   try {
@@ -33,10 +33,11 @@ export async function GET() {
       .map(f => {
         const slug = f.name.replace(/\.glb$/i, '')
         const dbRow = activeBySlug.get(slug)
+        const url = `${SUPABASE_URL}/storage/v1/object/public/models/${f.name}`.replace(/\s+/g, '')
         return {
           name: slug,
           displayName: dbRow?.display_name ?? slug,
-          url: `${SUPABASE_URL}/storage/v1/object/public/models/${f.name}`,
+          url,
           category: deriveCategory(f.name),
           size: (f.metadata as { size?: number } | null)?.size || 0,
           // If the slug isn't in DB yet, keep it visible (default true) — only
