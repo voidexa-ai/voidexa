@@ -16,6 +16,17 @@ import {
 } from '../engine'
 import { selectAction } from '../ai'
 import { buildEnemyDeck, buildKestrelDeck, KESTREL_UNIQUE_CARDS, PVE_TIERS, kestrelPhaseForHull } from '../encounters'
+import {
+  BOSS_DEFS,
+  CHOIR_SIGHT_CARDS,
+  LANTERN_AUDITOR_CARDS,
+  PATIENT_WRECK_CARDS,
+  VARKA_CARDS,
+  makeChoirSightEncounter,
+  makeLanternAuditorEncounter,
+  makePatientWreckEncounter,
+  makeVarkaEncounter,
+} from '../bosses'
 
 // --- helpers ---------------------------------------------------------------
 
@@ -365,5 +376,58 @@ describe('encounters', () => {
     expect(kestrelPhaseForHull(140).phase).toBe(1)
     expect(kestrelPhaseForHull(80).phase).toBe(2)
     expect(kestrelPhaseForHull(20).phase).toBe(3)
+  })
+})
+
+describe('Sprint 1 bosses', () => {
+  it('Lantern Auditor encounter has correct hull + deck size + unique cards', () => {
+    const enc = makeLanternAuditorEncounter()
+    expect(enc.hull).toBe(BOSS_DEFS.lantern_auditor.hull)
+    expect(enc.deck.length).toBe(BOSS_DEFS.lantern_auditor.deckSize)
+    expect(enc.bossId).toBe('lantern_auditor')
+    expect(enc.isBoss).toBe(true)
+    for (const uniq of LANTERN_AUDITOR_CARDS) {
+      expect(enc.deck.some(c => c.id === uniq.id)).toBe(true)
+    }
+  })
+
+  it('Varka encounter carries +1 bonus energy and contains her unique cards', () => {
+    const enc = makeVarkaEncounter()
+    expect(enc.bonusEnergyPerTurn).toBeGreaterThanOrEqual(1)
+    expect(enc.bossId).toBe('varka')
+    for (const uniq of VARKA_CARDS) {
+      expect(enc.deck.some(c => c.id === uniq.id)).toBe(true)
+    }
+  })
+
+  it('Choir-Sight encounter uses rare+legendary staples', () => {
+    const enc = makeChoirSightEncounter()
+    expect(enc.bossId).toBe('choir_sight')
+    for (const uniq of CHOIR_SIGHT_CARDS) {
+      expect(enc.deck.some(c => c.id === uniq.id)).toBe(true)
+    }
+    // No unique card exists outside the expected rarity frame.
+    expect(CHOIR_SIGHT_CARDS.every(c => ['rare', 'legendary', 'uncommon'].includes(c.rarity))).toBe(true)
+  })
+
+  it('Patient Wreck is the toughest fight (highest hull, largest deck)', () => {
+    const enc = makePatientWreckEncounter()
+    expect(enc.hull).toBe(220)
+    expect(enc.deck.length).toBe(24)
+    expect(enc.bonusEnergyPerTurn).toBeGreaterThanOrEqual(2)
+    for (const uniq of PATIENT_WRECK_CARDS) {
+      expect(enc.deck.some(c => c.id === uniq.id)).toBe(true)
+    }
+  })
+
+  it('boss unique cards are NOT in the shared player card pool', () => {
+    const allBossCardIds = [
+      ...LANTERN_AUDITOR_CARDS, ...VARKA_CARDS, ...CHOIR_SIGHT_CARDS, ...PATIENT_WRECK_CARDS,
+    ].map(c => c.id)
+    // CARD_TEMPLATES in cards/index.ts must not include any boss-unique id
+    // — we assert by pulling CARDS_BY_ID and checking for absence.
+    for (const id of allBossCardIds) {
+      expect(CARDS_BY_ID[id]).toBeUndefined()
+    }
   })
 })

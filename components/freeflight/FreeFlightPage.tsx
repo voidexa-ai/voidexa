@@ -7,6 +7,8 @@ import CockpitHUD from './cockpit/CockpitHUD'
 import CockpitPicker from './cockpit/CockpitPicker'
 import ShipPicker from './ships/ShipPicker'
 import AchievementPanel from '@/components/achievements/AchievementPanel'
+import MissionOverlay from './MissionOverlay'
+import { useActiveMission } from './useActiveMission'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
@@ -59,6 +61,16 @@ export default function FreeFlightPage() {
     setToasts(ts => [...ts, { id, text, color }])
     setTimeout(() => setToasts(ts => ts.filter(t => t.id !== id)), 2800)
   }
+
+  const {
+    mission: activeMission,
+    waypoints: missionWaypoints,
+    currentIndex: missionWaypointIndex,
+    total: missionWaypointTotal,
+    handleWaypointCleared,
+  } = useActiveMission((ghai, name) => {
+    pushToast(`+${ghai} GHAI · ${name.toUpperCase()} DELIVERED`, '#ffd166')
+  })
 
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -168,6 +180,18 @@ export default function FreeFlightPage() {
           shipScale={selectedShip.ingameScale}
           cockpitUrl={cockpitUrl}
           cockpitSpec={cockpitSpec}
+          missionWaypoints={missionWaypoints}
+          missionWaypointIndex={missionWaypointIndex}
+          onMissionWaypointCleared={handleWaypointCleared}
+        />
+      )}
+
+      {activeMission && (
+        <MissionOverlay
+          mission={activeMission}
+          cleared={missionWaypointIndex}
+          total={missionWaypointTotal}
+          visible={!menuOpen && !lorePopup && !pickerOpen && !cockpitPickerOpen && !achievementsOpen}
         />
       )}
 

@@ -182,6 +182,8 @@ export interface EncounterConfig {
   isBoss: boolean
   /** Extra energy added each turn start. Kestrel gets +1. */
   bonusEnergyPerTurn: number
+  /** Set when the encounter is a named boss. Written to battle_sessions.boss_template. */
+  bossId?: string
 }
 
 export function makeTierEncounter(tierId: PveTierId, seed = 0): EncounterConfig {
@@ -195,6 +197,18 @@ export function makeTierEncounter(tierId: PveTierId, seed = 0): EncounterConfig 
   }
 }
 
+// Re-export the 4 Sprint 1 bosses for convenient one-import consumption.
+export {
+  BOSS_DEFS,
+  makeBossEncounter,
+  makeLanternAuditorEncounter,
+  makeVarkaEncounter,
+  makeChoirSightEncounter,
+  makePatientWreckEncounter,
+  type BossId,
+  type BossDef,
+} from './bosses'
+
 export function makeKestrelEncounter(): EncounterConfig {
   return {
     hull: KESTREL_HULL,
@@ -202,6 +216,7 @@ export function makeKestrelEncounter(): EncounterConfig {
     tier: null,
     isBoss: true,
     bonusEnergyPerTurn: 1,
+    bossId: 'kestrel',
   }
 }
 

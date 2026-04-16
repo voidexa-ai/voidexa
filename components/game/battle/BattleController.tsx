@@ -5,8 +5,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CardTemplate } from '@/lib/game/cards/index'
 import { initBattle, playCard, endTurn } from '@/lib/game/battle/engine'
 import { selectAction } from '@/lib/game/battle/ai'
-import { makeTierEncounter, type PveTierId } from '@/lib/game/battle/encounters'
+import { makeTierEncounter, makeBossEncounter, type PveTierId, type BossId } from '@/lib/game/battle/encounters'
 import type { BattleEffect, BattleState } from '@/lib/game/battle/types'
+
+export type BattleConfig =
+  | { kind: 'tier'; tier: PveTierId }
+  | { kind: 'boss'; bossId: Exclude<BossId, 'kestrel'> }
 import BattleHUD from './BattleHUD'
 import CardHand from './CardHand'
 import BattleResults from './BattleResults'
@@ -33,14 +37,18 @@ const EFFECT_DURATION_MS: Record<BattleEffect['kind'], number> = {
 }
 
 interface Props {
-  tierId: PveTierId
+  config: BattleConfig
   playerDeck: CardTemplate[]
   onExit: () => void
   onRestart: () => void
 }
 
-export default function BattleController({ tierId, playerDeck, onExit, onRestart }: Props) {
-  const [encounter] = useState(() => makeTierEncounter(tierId))
+export default function BattleController({ config, playerDeck, onExit, onRestart }: Props) {
+  const [encounter] = useState(() => (
+    config.kind === 'boss'
+      ? makeBossEncounter(config.bossId)
+      : makeTierEncounter(config.tier)
+  ))
   const [state, setState] = useState<BattleState>(() => initBattle(playerDeck, encounter.deck, 100, encounter.hull))
   const stateRef = useRef(state)
   useEffect(() => { stateRef.current = state }, [state])
@@ -199,7 +207,7 @@ export default function BattleController({ tierId, playerDeck, onExit, onRestart
       {showResults && (
         <BattleResults
           outcome={state.winner === 'player' ? 'victory' : 'defeat'}
-          tierId={tierId}
+          config={config}
           turnsPlayed={state.turn}
           onRetry={onRestart}
           onExit={onExit}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { creditGhai } from '@/lib/credits/credit'
 import { formatHaulingTime, type HaulingContract } from '@/lib/game/hauling/contracts'
 
 export type DeliveryOutcome = 'delivered' | 'failed'
@@ -82,8 +83,11 @@ export default function DeliveryResults({
           reward_ghai: total,
         })
         .eq('id', row.id)
-      if (error) setErr(error.message)
-      else setSubmitted(true)
+      if (error) { setErr(error.message); return }
+      if (outcome === 'delivered' && total > 0) {
+        await creditGhai(userData.user.id, total, { source: 'hauling', sourceId: row.id as string })
+      }
+      setSubmitted(true)
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Finalize failed')
     } finally {

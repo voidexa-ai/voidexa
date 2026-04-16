@@ -3,13 +3,15 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { CARD_TEMPLATES, type CardTemplate } from '@/lib/game/cards/index'
-import type { PveTierId } from '@/lib/game/battle/encounters'
+import { BOSS_DEFS, type BossId, type PveTierId } from '@/lib/game/battle/encounters'
+import { creditGhai } from '@/lib/credits/credit'
+import type { BattleConfig } from './BattleController'
 
 export type BattleOutcome = 'victory' | 'defeat'
 
 interface Props {
   outcome: BattleOutcome
-  tierId: PveTierId
+  config: BattleConfig
   turnsPlayed: number
   onRetry: () => void
   onExit: () => void
@@ -23,7 +25,19 @@ const TIER_REWARDS: Record<PveTierId, { ghai: number; xp: number }> = {
   5: { ghai: 280, xp: 240 },
 }
 
-function pickLootCard(tierId: PveTierId): CardTemplate {
+function rewardFor(config: BattleConfig): { ghai: number; xp: number } {
+  if (config.kind === 'boss') {
+    const def = BOSS_DEFS[config.bossId]
+    return { ghai: def.reward.ghai, xp: Math.round(def.reward.ghai * 0.8) }
+  }
+  return TIER_REWARDS[config.tier]
+}
+
+function bossTemplate(config: BattleConfig): string {
+  return config.kind === 'boss' ? config.bossId : `tier_${config.tier}`
+}
+
+function pickLootCard(config: BattleConfig): CardTemplate {
   const rarityByTier: Record<PveTierId, string[]> = {
     1: ['common'],
     2: ['common', 'uncommon'],
@@ -31,18 +45,27 @@ function pickLootCard(tierId: PveTierId): CardTemplate {
     4: ['rare', 'legendary'],
     5: ['rare', 'legendary'],
   }
-  const allowed = rarityByTier[tierId]
+  const rarityByBoss: Record<Exclude<BossId, 'kestrel'>, string[]> = {
+    lantern_auditor: ['common', 'uncommon'],
+    varka:           ['rare', 'legendary'],
+    choir_sight:     ['rare', 'legendary'],
+    patient_wreck:   ['legendary', 'mythic'],
+  }
+  const allowed = config.kind === 'boss'
+    ? rarityByBoss[config.bossId]
+    : rarityByTier[config.tier]
   const pool = CARD_TEMPLATES.filter(c => allowed.includes(c.rarity))
   const source = pool.length > 0 ? pool : CARD_TEMPLATES
   return source[Math.floor(Math.random() * source.length)]
 }
 
-export default function BattleResults({ outcome, tierId, turnsPlayed, onRetry, onExit }: Props) {
+export default function BattleResults({ outcome, config, turnsPlayed, onRetry, onExit }: Props) {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [err, setErr] = useState<string | null>(null)
-  const reward = outcome === 'victory' ? TIER_REWARDS[tierId] : { ghai: 0, xp: 0 }
-  const [loot] = useState<CardTemplate | null>(outcome === 'victory' ? pickLootCard(tierId) : null)
+  const reward = outcome === 'victory' ? rewardFor(config) : { ghai: 0, xp: 0 }
+  const [loot] = useState<CardTemplate | null>(outcome === 'victory' ? pickLootCard(config) : null)
+  const template = bossTemplate(config)
 
   useEffect(() => { void finalizeBattle() /* eslint-disable-line react-hooks/exhaustive-deps */ }, [])
 
@@ -55,10 +78,10 @@ export default function BattleResults({ outcome, tierId, turnsPlayed, onRetry, o
         setSaving(false)
         return
       }
-      const { error } = await supabase.from('battle_sessions').insert({
+      const { data: session, error } = await supabase.from('battle_sessions').insert({
         user_id: userData.user.id,
         mode: 'pve',
-        boss_template: `tier_${tierId}`,
+        boss_template: template,
         ship_id: 'qs_bob',
         status: outcome === 'victory' ? 'won' : 'lost',
         seed: String(Date.now()),
@@ -66,21 +89,29 @@ export default function BattleResults({ outcome, tierId, turnsPlayed, onRetry, o
         reward_ghai: reward.ghai,
         started_at: new Date(Date.now() - turnsPlayed * 3000).toISOString(),
         ended_at: new Date().toISOString(),
-      })
+      }).select('id').single()
       if (error) {
         setErr(error.message)
-      } else if (loot && outcome === 'victory') {
-        await supabase.from('user_cards').upsert(
-          {
-            user_id: userData.user.id,
-            template_id: loot.id,
-            quantity: 1,
-            acquired_from: 'mission',
-          },
-          { onConflict: 'user_id,template_id' },
-        )
-        setSaved(true)
       } else {
+        if (outcome === 'victory') {
+          if (reward.ghai > 0 && session?.id) {
+            await creditGhai(userData.user.id, reward.ghai, {
+              source: 'battle',
+              sourceId: session.id as string,
+            })
+          }
+          if (loot) {
+            await supabase.from('user_cards').upsert(
+              {
+                user_id: userData.user.id,
+                template_id: loot.id,
+                quantity: 1,
+                acquired_from: 'mission',
+              },
+              { onConflict: 'user_id,template_id' },
+            )
+          }
+        }
         setSaved(true)
       }
     } catch (e) {

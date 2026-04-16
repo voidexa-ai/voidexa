@@ -16,8 +16,10 @@ import DerelictShips from './environment/DerelictShips'
 import WarpGates from './environment/WarpGates'
 import CockpitModel from './cockpit/CockpitModel'
 import ModelErrorBoundary from './ModelErrorBoundary'
+import MissionRunner from './MissionRunner'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
+import type { MissionWaypoint } from '@/lib/game/missions/waypoints'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ReturnType<typeof createShipState>>) => void
@@ -30,6 +32,9 @@ interface Props {
   shipScale: number
   cockpitUrl: string
   cockpitSpec?: CockpitModelSpec
+  missionWaypoints?: readonly MissionWaypoint[]
+  missionWaypointIndex?: number
+  onMissionWaypointCleared?: (index: number) => void
 }
 
 export default function FreeFlightScene({
@@ -43,6 +48,9 @@ export default function FreeFlightScene({
   shipScale,
   cockpitUrl,
   cockpitSpec,
+  missionWaypoints,
+  missionWaypointIndex = 0,
+  onMissionWaypointCleared,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -114,6 +122,15 @@ export default function FreeFlightScene({
       <ModelErrorBoundary>
         <NPCManager />
       </ModelErrorBoundary>
+
+      {missionWaypoints && missionWaypoints.length > 0 && onMissionWaypointCleared && (
+        <MissionRunner
+          ship={shipRef}
+          waypoints={missionWaypoints}
+          currentIndex={missionWaypointIndex}
+          onCleared={onMissionWaypointCleared}
+        />
+      )}
     </>
   )
 }

@@ -2,20 +2,19 @@
 
 import { useCallback, useState } from 'react'
 import type { CardTemplate } from '@/lib/game/cards/index'
-import type { PveTierId } from '@/lib/game/battle/encounters'
 import BattleEntry from './BattleEntry'
-import BattleController from './BattleController'
+import BattleController, { type BattleConfig } from './BattleController'
 
 type Stage = 'entry' | 'battle'
 
 export default function BattleClient() {
   const [stage, setStage] = useState<Stage>('entry')
-  const [tierId, setTierId] = useState<PveTierId>(1)
+  const [config, setConfig] = useState<BattleConfig>({ kind: 'tier', tier: 1 })
   const [playerDeck, setPlayerDeck] = useState<CardTemplate[]>([])
   const [battleKey, setBattleKey] = useState(0)
 
-  const handleStart = useCallback((tier: PveTierId, deck: CardTemplate[]) => {
-    setTierId(tier)
+  const handleStart = useCallback((cfg: BattleConfig, deck: CardTemplate[]) => {
+    setConfig(cfg)
     setPlayerDeck(deck)
     setStage('battle')
   }, [])
@@ -32,7 +31,7 @@ export default function BattleClient() {
   return (
     <BattleController
       key={battleKey}
-      tierId={tierId}
+      config={config}
       playerDeck={playerDeck}
       onExit={handleExit}
       onRestart={handleRestart}

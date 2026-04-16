@@ -6,6 +6,7 @@ import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import FreeFlightScene from './FreeFlightScene'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
+import type { MissionWaypoint } from '@/lib/game/missions/waypoints'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ShipState>) => void
@@ -18,6 +19,9 @@ interface Props {
   shipScale: number
   cockpitUrl: string
   cockpitSpec?: CockpitModelSpec
+  missionWaypoints?: readonly MissionWaypoint[]
+  missionWaypointIndex?: number
+  onMissionWaypointCleared?: (index: number) => void
 }
 
 export default function FreeFlightCanvas(props: Props) {
@@ -28,7 +32,12 @@ export default function FreeFlightCanvas(props: Props) {
       style={{ width: '100vw', height: '100vh', background: '#02030a' }}
     >
       <Suspense fallback={null}>
-        <FreeFlightScene {...props} />
+        <FreeFlightScene
+          {...props}
+          missionWaypoints={props.missionWaypoints}
+          missionWaypointIndex={props.missionWaypointIndex}
+          onMissionWaypointCleared={props.onMissionWaypointCleared}
+        />
       </Suspense>
       <EffectComposer multisampling={0}>
         <Bloom luminanceThreshold={0.25} luminanceSmoothing={0.9} intensity={1.2} mipmapBlur radius={0.7} />

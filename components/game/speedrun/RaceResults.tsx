@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { creditGhai } from '@/lib/credits/credit'
 import {
   GRADE_REWARDS,
   POWERUPS,
@@ -71,17 +72,24 @@ export default function RaceResults({
     }
     setSaving(true)
     setErr(null)
-    const { error } = await supabase.from('speedrun_times').insert({
+    const { data: row, error } = await supabase.from('speedrun_times').insert({
       user_id: userId,
       track_id: track.id,
       ship_id: shipId,
       duration_ms: Math.round(timeMs),
       checkpoints: { powerups: powerUpsUsed, cleared: clearedGates, missed: missedGates },
       validated: false,
-    })
+    }).select('id').single()
+    if (error) {
+      setSaving(false)
+      setErr(error.message)
+      return
+    }
+    if (reward > 0 && row?.id) {
+      await creditGhai(userId, reward, { source: 'speedrun', sourceId: row.id as string })
+    }
     setSaving(false)
-    if (error) setErr(error.message)
-    else setSaved(true)
+    setSaved(true)
   }
 
   return (

@@ -4,10 +4,21 @@ import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { CARDS_BY_ID, type CardTemplate } from '@/lib/game/cards/index'
-import { PVE_TIERS, type PveTierId } from '@/lib/game/battle/encounters'
+import { BOSS_DEFS, PVE_TIERS, type BossId, type PveTierId } from '@/lib/game/battle/encounters'
+import type { BattleConfig } from './BattleController'
 
 interface Props {
-  onStart: (tierId: PveTierId, playerDeck: CardTemplate[]) => void
+  onStart: (config: BattleConfig, playerDeck: CardTemplate[]) => void
+}
+
+const BOSS_ORDER: readonly Exclude<BossId, 'kestrel'>[] = [
+  'lantern_auditor', 'varka', 'choir_sight', 'patient_wreck',
+]
+const BOSS_COLORS: Record<Exclude<BossId, 'kestrel'>, string> = {
+  lantern_auditor: '#ffd166',
+  varka:           '#ff6b6b',
+  choir_sight:     '#af52de',
+  patient_wreck:   '#7fd8ff',
 }
 
 const TIER_COLORS: Record<PveTierId, string> = {
@@ -68,8 +79,24 @@ export default function BattleEntry({ onStart }: Props) {
     })()
   }, [])
 
+  const [selectedBoss, setSelectedBoss] = useState<Exclude<BossId, 'kestrel'> | null>(null)
   const tier = useMemo(() => PVE_TIERS[selectedTier], [selectedTier])
-  const color = TIER_COLORS[selectedTier]
+  const color = selectedBoss ? BOSS_COLORS[selectedBoss] : TIER_COLORS[selectedTier]
+  const boss = selectedBoss ? BOSS_DEFS[selectedBoss] : null
+
+  function chooseTier(id: PveTierId) {
+    setSelectedTier(id)
+    setSelectedBoss(null)
+  }
+  function chooseBoss(id: Exclude<BossId, 'kestrel'>) {
+    setSelectedBoss(id)
+  }
+  function handleFight() {
+    const config: BattleConfig = selectedBoss
+      ? { kind: 'boss', bossId: selectedBoss }
+      : { kind: 'tier', tier: selectedTier }
+    onStart(config, playerDeck)
+  }
 
   return (
     <div style={S.page}>
@@ -90,12 +117,12 @@ export default function BattleEntry({ onStart }: Props) {
           <div style={S.tierRow}>
             {([1, 2, 3, 4, 5] as PveTierId[]).map(id => {
               const t = PVE_TIERS[id]
-              const active = selectedTier === id
+              const active = !selectedBoss && selectedTier === id
               const c = TIER_COLORS[id]
               return (
                 <button
                   key={id}
-                  onClick={() => setSelectedTier(id)}
+                  onClick={() => chooseTier(id)}
                   style={{
                     ...S.tierCard,
                     borderColor: active ? c : 'rgba(127,119,221,0.25)',
@@ -117,25 +144,76 @@ export default function BattleEntry({ onStart }: Props) {
           </div>
         </section>
 
+        <section style={S.tierSection}>
+          <h2 style={S.sectionTitle}>Boss Fights</h2>
+          <div style={S.tierRow}>
+            {BOSS_ORDER.map(id => {
+              const def = BOSS_DEFS[id]
+              const active = selectedBoss === id
+              const c = BOSS_COLORS[id]
+              return (
+                <button
+                  key={id}
+                  onClick={() => chooseBoss(id)}
+                  style={{
+                    ...S.tierCard,
+                    borderColor: active ? c : 'rgba(127,119,221,0.25)',
+                    background: active ? `linear-gradient(145deg, ${c}15, rgba(12,14,30,0.9))` : 'rgba(12,14,30,0.6)',
+                    boxShadow: active ? `0 0 24px ${c}40` : 'none',
+                  }}
+                >
+                  <div style={{ ...S.tierNumber, color: c }}>{def.tierLabel}</div>
+                  <div style={S.tierName}>{def.name}</div>
+                  <div style={S.tierZone}>{def.zone}</div>
+                  <div style={S.tierStats}>
+                    <span>{def.hull} HP</span>
+                    <span>·</span>
+                    <span>{def.reward.ghai} GHAI</span>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        </section>
+
         <section style={S.enemySection}>
           <div style={S.enemyCard}>
-            <div style={S.enemyHeader}>
-              <span style={{ ...S.tierBadge, background: `${color}20`, color, borderColor: `${color}80` }}>
-                Tier {tier.id}
-              </span>
-              <h3 style={S.enemyName}>{tier.name}</h3>
-            </div>
-            <p style={S.enemyDesc}>
-              A {tier.zone.toLowerCase()} opponent wielding {tier.allowedRarities.join(' / ')} cards.
-              {tier.maxDrones > 0 && ` Up to ${tier.maxDrones} drone${tier.maxDrones > 1 ? 's' : ''}.`}
-              {tier.usesStatuses && ' Uses status effects.'}
-              {tier.aggressive && ' Plays aggressively.'}
-            </p>
-            <div style={S.enemyStats}>
-              <Stat label="Hull" value={`${tier.hull}`} accent={color} />
-              <Stat label="Deck" value={`${tier.deckSize}`} />
-              <Stat label="Drones" value={`${tier.maxDrones}`} />
-            </div>
+            {boss ? (
+              <>
+                <div style={S.enemyHeader}>
+                  <span style={{ ...S.tierBadge, background: `${color}20`, color, borderColor: `${color}80` }}>
+                    {boss.tierLabel} Boss
+                  </span>
+                  <h3 style={S.enemyName}>{boss.name}</h3>
+                </div>
+                <p style={S.enemyDesc}>{boss.summary}</p>
+                <div style={S.enemyStats}>
+                  <Stat label="Hull" value={`${boss.hull}`} accent={color} />
+                  <Stat label="Deck" value={`${boss.deckSize}`} />
+                  <Stat label="Reward" value={`${boss.reward.ghai} GHAI`} accent="#ffd166" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={S.enemyHeader}>
+                  <span style={{ ...S.tierBadge, background: `${color}20`, color, borderColor: `${color}80` }}>
+                    Tier {tier.id}
+                  </span>
+                  <h3 style={S.enemyName}>{tier.name}</h3>
+                </div>
+                <p style={S.enemyDesc}>
+                  A {tier.zone.toLowerCase()} opponent wielding {tier.allowedRarities.join(' / ')} cards.
+                  {tier.maxDrones > 0 && ` Up to ${tier.maxDrones} drone${tier.maxDrones > 1 ? 's' : ''}.`}
+                  {tier.usesStatuses && ' Uses status effects.'}
+                  {tier.aggressive && ' Plays aggressively.'}
+                </p>
+                <div style={S.enemyStats}>
+                  <Stat label="Hull" value={`${tier.hull}`} accent={color} />
+                  <Stat label="Deck" value={`${tier.deckSize}`} />
+                  <Stat label="Drones" value={`${tier.maxDrones}`} />
+                </div>
+              </>
+            )}
           </div>
 
           <div style={S.deckInfo}>
@@ -161,7 +239,7 @@ export default function BattleEntry({ onStart }: Props) {
         </section>
 
         <button
-          onClick={() => onStart(selectedTier, playerDeck)}
+          onClick={handleFight}
           disabled={loading || playerDeck.length < 5}
           style={{
             ...S.fightBtn,
