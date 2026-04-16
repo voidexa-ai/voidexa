@@ -2218,3 +2218,105 @@ Hvis du vil, kan jeg i næste svar samle det hele i én renskrevet master markdo
 
 
 
+
+---
+
+# EXPANDED SECTION 4: FULL QUEST CHAIN BREAKDOWNS
+(Added from second GPT session — 20 chains, 85+ individual missions)
+
+
+## 1) First Day, Real Sky
+Starting trigger: First undock from Break Room Halo | Issuer: Jix | Supporting: GPT, Gemini
+
+**Mission 1 — Loop Once, Breathe Once** (Rush, 4-6 min, 180 GHAI)
+Objective: Complete Bob's First Loop under tutorial par time.
+Jix: "Don't overthink the ship. Fly it." / "Breathe once. Then move."
+
+**Mission 2 — Coffee to Dock Nine** (Courier, 5-7 min, 240 GHAI)
+Objective: Deliver drink canisters to Dock Nine-Lark without jostling.
+Jix: "Congratulations. You can now be trusted with coffee."
+
+**Mission 3 — Three Clean Pings** (Signal, 6-8 min, 300 GHAI)
+Objective: Scan 3 nav nodes, upload to Saffron Relay, no corruption.
+GPT: "Scanning is not passive. It is awareness."
+
+**Mission 4 — Loose Drone, Short Work** (Hunt, 7-10 min, 420 GHAI)
+Objective: Neutralize 6 rogue maintenance drones near Echo Gymnasium.
+GPT: "Simple targets. Don't decorate the engagement."
+
+Final reward: Title "Licensed Breather", Halo Starter Stripe cosmetic, 600 GHAI bonus.
+
+## 2) The Shape of Safe
+Starting trigger: Complete "First Day, Real Sky" | Issuer: Claude | Supporting: Perplexity
+
+**Mission 1 — Paint Through Copper** (Courier, 6-8 min, 260 GHAI)
+Claude: "The cargo is boring, which is wonderful."
+
+**Mission 2 — Lane Validity Check** (Signal, 7-9 min, 340 GHAI)
+Perplexity: "The lane is mostly correct. 'Mostly' is not good enough."
+
+**Mission 3 — Safe Is Still Fast** (Rush, 7-9 min, 480 GHAI)
+Claude: "Speed with discipline is elegance."
+
+Final reward: Trimline Overlay Mk I module, 750 GHAI bonus.
+
+## 3) A Small Rescue Matters
+Starting trigger: Random distress ping near Hearth Span | Issuer: Gemini | Supporting: GPT
+
+**Mission 1 — Find the Tug** (Recovery, 7-10 min, 320 GHAI)
+**Mission 2 — Track the Bleed** (Signal, 6-8 min, 380 GHAI)
+**Mission 3 — Coolant for Two** (Courier, 7-9 min, 460 GHAI)
+**Mission 4 — Bring Them Through** (Hunt/Escort, 10-13 min, 700 GHAI)
+
+Final reward: Title "Soft Hands", Rescue Beacon Charm cockpit item.
+
+## 4) The Lantern Grave Rebuild
+5 missions. Recovery → Courier → Signal → Hunt → Rush. Final reward: Relit Wake Beacon Trail cosmetic + Beaconheart Relay card.
+
+## 5) Bent Quorum, Unfinished Meeting
+5 missions. Signal → Recovery → Hunt → Courier → Signal. Final reward: Title "Closer of Motions", Quorum White Hull Inlay, The Last Vote lore.
+
+## 6) The Orchard Ribbon Season
+4 missions (seasonal). Courier → Rush → Recovery → Hunt. Final reward: Ribbon Harvest Skin + Harvest Corridor card.
+
+## 7) The Cleft Harbor Arrangement
+4 missions. Courier → Signal → Hunt → Recovery. Player choice: spare or destroy collectors. Final reward: Title "Harbor Regular", Cleft Patchwork Hull.
+
+## 8) Graywake Lights
+6 missions. Signal → Recovery → Hunt → Courier → Signal → Rush. Player choice: lawful or gray-market. Final reward: Title "Wakebringer", Graywake Emergency Glow, Dark Dock Sweep card.
+
+## 9) The Pirate Who Called for Help
+3 missions. Recovery → Signal → Choice. 3-way branch: turn in / release / trade for intel. Final reward varies by choice.
+
+## 10) The Far Lantern Seeds
+5 missions. Recovery → Courier → Signal → Hunt → Choice. 3-way branch: plant / archive / trade. Final reward varies.
+
+## 11) Claude's Terrible Perfect Route
+4 missions. Signal → Courier → Rush → Recovery. Final reward: Ideal Curve Flight Ribbon, Title "Friend of Elegant Mistakes".
+
+## 12) GPT's Outer Discipline
+5 missions. Hunt → Rush → Recovery/Escort → Hunt → Signal. Final reward: Outer Discipline Stripe, Hold the Center card, Title "Steady Under Pressure".
+
+## 13) Gemini and the Listening Cloud
+4 missions. Signal → Courier → Recovery → Signal. Final reward: Choir Wake Engine Chime audio cosmetic, Resonant Pocket card, Title "Cloud Listener".
+
+## 14) Perplexity's Twelve Missing Packets
+5 missions. Signal → Courier → Recovery → Hunt → Signal. Player choice: publish or sell. Final reward: Encrypted Signal Scanner module, Packet Reconstruction card, Title "Reader of Headers".
+
+## 15) Llama's Totally Serious Soup Cup
+3 missions. Signal → Recovery → Courier. Final reward: Legendary Soup Cup cockpit item, Title "Keeper of Lunch Myth".
+
+## 16) Race to the Ceiling
+4 missions. Rush → Signal → Rush → Rush. Final reward: Title "Ceiling Ghost", Hive Racer Scuff Pack, Ghost Line card.
+
+## 17) The Pocket Atlas
+7 missions spanning Deep Void. Signal → Recovery → Courier → Signal → Rush → Hunt → Signal/Finale. Player choice: donate to archive or sanctuary. Final reward: Handdrawn Horizon Nav Skin, Title "Atlas Bearer", Founder's Margin Note card.
+
+## 18) The Unlit Choir
+6 missions. Deep Void endgame. Signal → Courier → Recovery → Hunt → Signal → Signal/Finale. Player choice: standard or sanctuary beacon. Final reward: Title "Choir Witness", Listening Beacon card, Choir Rim Halo cosmetic.
+
+## 19) The Still Mile Problem
+5 missions. Signal → Rush → Recovery → Hunt → Signal. Final reward: Temporal Route Calibrator module, Title "Boundary Marker", Clock Discipline card.
+
+## 20) The Long Soup Delivery
+3 missions. Deep Void community chain. Courier → Rush/Courier → Community Finale. Player choice: serving order. Final reward: Soup Run Decal Pack, Title "Bearer of Warm Things", Shared Meal card.
