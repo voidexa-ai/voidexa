@@ -16,6 +16,7 @@ interface NavLink {
   href: string
   label: string
   description?: string
+  badge?: string
 }
 
 interface NavGroup {
@@ -42,9 +43,9 @@ export default function Navigation() {
       label: t.nav.products,
       children: [
         { href: '/trading',  label: tLink('/trading', 'AI Trading (LIVE)'),            description: tDesc('/trading') },
-        { href: '/apps',     label: tLink('/apps', 'Custom Apps (BETA)'),              description: tDesc('/apps') },
+        { href: '/services', label: tLink('/services', 'Custom Apps (BETA)'),          description: tDesc('/services') },
+        { href: '/apps',     label: tLink('/apps', 'Apps'),                            description: tDesc('/apps') ?? 'All voidexa apps and products', badge: 'BETA' },
         { href: '/ai-tools', label: tLink('/ai-tools', 'AI Tools (IN DEV)'),           description: tDesc('/ai-tools') },
-        { href: '/services', label: tLink('/services', 'Services'),                    description: tDesc('/services') },
       ],
     },
     {
@@ -63,7 +64,6 @@ export default function Navigation() {
       children: [
         { href: '/team',       label: tLink('/team', 'Team'),              description: tDesc('/team') },
         { href: '/station',    label: tLink('/station', 'Station'),        description: tDesc('/station') },
-        { href: '/apps',       label: tLink('/apps', 'Apps'),              description: tDesc('/apps') },
         { href: '/whitepaper', label: tLink('/whitepaper', 'White Paper'), description: tDesc('/whitepaper') },
         { href: '/contact',    label: tLink('/contact', 'Contact'),        description: tDesc('/contact') },
       ],
@@ -265,9 +265,30 @@ export default function Navigation() {
                                     color: linkActive ? '#00d4ff' : '#e2e8f0',
                                     letterSpacing: '-0.005em',
                                     fontFamily: 'var(--font-space)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 8,
                                   }}
                                 >
-                                  {link.label}
+                                  <span>{link.label}</span>
+                                  {link.badge && (
+                                    <span
+                                      style={{
+                                        fontSize: 10,
+                                        fontWeight: 700,
+                                        letterSpacing: '0.08em',
+                                        padding: '2px 6px',
+                                        borderRadius: 4,
+                                        background: 'rgba(0,212,255,0.18)',
+                                        color: '#00d4ff',
+                                        border: '1px solid rgba(0,212,255,0.45)',
+                                        lineHeight: 1,
+                                        fontFamily: 'var(--font-space)',
+                                      }}
+                                    >
+                                      {link.badge}
+                                    </span>
+                                  )}
                                 </div>
                                 {link.description && (
                                   <div
@@ -426,7 +447,9 @@ export default function Navigation() {
                                   key={`${link.href}-${link.label}`}
                                   href={localizeHref(link.href)}
                                   style={{
-                                    display: 'block',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 8,
                                     padding: '10px 16px',
                                     borderRadius: 10,
                                     fontSize: 15,
@@ -437,7 +460,25 @@ export default function Navigation() {
                                     textDecoration: 'none',
                                   }}
                                 >
-                                  {link.label}
+                                  <span>{link.label}</span>
+                                  {link.badge && (
+                                    <span
+                                      style={{
+                                        fontSize: 10,
+                                        fontWeight: 700,
+                                        letterSpacing: '0.08em',
+                                        padding: '2px 6px',
+                                        borderRadius: 4,
+                                        background: 'rgba(0,212,255,0.18)',
+                                        color: '#00d4ff',
+                                        border: '1px solid rgba(0,212,255,0.45)',
+                                        lineHeight: 1,
+                                        fontFamily: 'var(--font-space)',
+                                      }}
+                                    >
+                                      {link.badge}
+                                    </span>
+                                  )}
                                 </Link>
                               )
                             })}

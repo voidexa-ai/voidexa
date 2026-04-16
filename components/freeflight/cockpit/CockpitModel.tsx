@@ -17,7 +17,19 @@ interface Props {
 // rendered at the same transform.
 const SHARED_EXTRAS = [MODEL_URLS.hirez_equipments, MODEL_URLS.hirez_screens]
 
-const INTERIOR_FOR_FRAME: Record<string, { interior: string; extras: string[] }> = {
+interface InteriorSpec {
+  interior: string
+  extras: string[]
+  // Optional per-cockpit overrides for when the shared defaults don't land the
+  // pilot viewpoint at the headrest. If unset, fall back to the shared
+  // INTERIOR_PARENT_POS / INTERIOR_TARGET_MAX constants below.
+  interiorPos?: [number, number, number]
+  interiorTargetMax?: number
+  framePos?: [number, number, number]
+  frameTargetMax?: number
+}
+
+const INTERIOR_FOR_FRAME: Record<string, InteriorSpec> = {
   [MODEL_URLS.hirez_cockpit01]: { interior: MODEL_URLS.hirez_cockpit01_interior, extras: SHARED_EXTRAS },
   [MODEL_URLS.hirez_cockpit02]: { interior: MODEL_URLS.hirez_cockpit02_interior, extras: SHARED_EXTRAS },
   [MODEL_URLS.hirez_cockpit03]: { interior: MODEL_URLS.hirez_cockpit03_interior, extras: SHARED_EXTRAS },
@@ -80,7 +92,7 @@ function SceneClone({ url, opacity }: { url: string; opacity?: number }) {
   return <primitive object={scene} />
 }
 
-function FramePiece({ url }: { url: string }) {
+function FramePiece({ url, pos, targetMax }: { url: string; pos: [number, number, number]; targetMax: number }) {
   const gltf = useGLTF(url)
   const fit = useMemo(() => {
     const box = new THREE.Box3().setFromObject(gltf.scene)
@@ -89,14 +101,14 @@ function FramePiece({ url }: { url: string }) {
     box.getSize(size)
     box.getCenter(center)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    return { scale: FRAME_TARGET_MAX / maxDim, center }
-  }, [gltf.scene])
+    return { scale: targetMax / maxDim, center }
+  }, [gltf.scene, targetMax])
   return (
     <group
       position={[
-        -fit.center.x * fit.scale + FRAME_POS[0],
-        -fit.center.y * fit.scale + FRAME_POS[1],
-        -fit.center.z * fit.scale + FRAME_POS[2],
+        -fit.center.x * fit.scale + pos[0],
+        -fit.center.y * fit.scale + pos[1],
+        -fit.center.z * fit.scale + pos[2],
       ]}
     >
       <group scale={fit.scale}>
@@ -106,18 +118,28 @@ function FramePiece({ url }: { url: string }) {
   )
 }
 
-function InteriorBundle({ interiorUrl, extras }: { interiorUrl: string; extras: string[] }) {
+function InteriorBundle({
+  interiorUrl,
+  extras,
+  pos,
+  targetMax,
+}: {
+  interiorUrl: string
+  extras: string[]
+  pos: [number, number, number]
+  targetMax: number
+}) {
   const gltf = useGLTF(interiorUrl)
   const scale = useMemo(() => {
     const box = new THREE.Box3().setFromObject(gltf.scene)
     const size = new THREE.Vector3()
     box.getSize(size)
     const maxDim = Math.max(size.x, size.y, size.z) || 1
-    return INTERIOR_TARGET_MAX / maxDim
-  }, [gltf.scene])
+    return targetMax / maxDim
+  }, [gltf.scene, targetMax])
 
   return (
-    <group position={INTERIOR_PARENT_POS} scale={scale}>
+    <group position={pos} scale={scale}>
       <SceneClone url={interiorUrl} />
       {extras.map(u => (
         <SceneClone key={u} url={u} />
@@ -139,12 +161,22 @@ export default function CockpitModel({ visible, url }: Props) {
     groupRef.current.quaternion.copy(camera.quaternion)
   })
 
+  const framePos = interiorSpec?.framePos ?? FRAME_POS
+  const frameTargetMax = interiorSpec?.frameTargetMax ?? FRAME_TARGET_MAX
+  const interiorPos = interiorSpec?.interiorPos ?? INTERIOR_PARENT_POS
+  const interiorTargetMax = interiorSpec?.interiorTargetMax ?? INTERIOR_TARGET_MAX
+
   return (
     <group ref={groupRef} renderOrder={999}>
       <group rotation={ASSEMBLY_ROTATION}>
-        <FramePiece url={url} />
+        <FramePiece url={url} pos={framePos} targetMax={frameTargetMax} />
         {interiorSpec && (
-          <InteriorBundle interiorUrl={interiorSpec.interior} extras={interiorSpec.extras} />
+          <InteriorBundle
+            interiorUrl={interiorSpec.interior}
+            extras={interiorSpec.extras}
+            pos={interiorPos}
+            targetMax={interiorTargetMax}
+          />
         )}
       </group>
     </group>
