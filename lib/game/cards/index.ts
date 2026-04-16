@@ -25,6 +25,7 @@ export type GameCardRarity =
   | 'uncommon'
   | 'rare'
   | 'legendary'
+  | 'mythic'
   | 'pioneer'
 
 export type CardFaction = 'core' | 'pioneer' | 'void' | 'neutral'

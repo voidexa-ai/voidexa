@@ -1,0 +1,2108 @@
+[
+  {
+    "id": "heavy_torpedo",
+    "name": "Heavy Torpedo",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "damage": 22,
+      "conditional": "consume_1_ammo"
+    },
+    "abilityText": "Consume 1 Ammo. Deal 22 damage.",
+    "flavor": "One shot. One kill. If you're lucky.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "unstable_warhead",
+    "name": "Unstable Warhead",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "damage": 28,
+      "self_damage": 6,
+      "conditional": "20_percent_self_hit"
+    },
+    "abilityText": "Deal 28 damage. 20% chance to take 6 self-damage.",
+    "flavor": "Loaded with something that shouldn't exist. Fire and pray.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "flak_warhead",
+    "name": "Flak Warhead",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "damage": 6,
+      "conditional": "bonus_10_vs_drones"
+    },
+    "abilityText": "Deal 6 damage. +10 bonus vs drones.",
+    "flavor": "Not designed for ships. Designed for what ships deploy.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "guided_missile",
+    "name": "Guided Missile",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 12,
+      "apply": [
+        "lock"
+      ],
+      "conditional": "consume_1_ammo"
+    },
+    "abilityText": "Consume 1 Ammo. Deal 12 damage. Apply Lock.",
+    "flavor": "Fire. Forget. It remembers.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "thermal_breach",
+    "name": "Thermal Breach",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "damage": 4,
+      "apply": [
+        "burn"
+      ]
+    },
+    "abilityText": "Deal 4 damage. Apply Burn (4 damage for 2 turns).",
+    "flavor": "Melt through the outer layer. Let the heat do the rest.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "emp_spike",
+    "name": "EMP Spike",
+    "type": "weapon",
+    "rarity": "legendary",
+    "cost": 4,
+    "stats": {
+      "damage": 10,
+      "conditional": "enemy_loses_next_action"
+    },
+    "abilityText": "Deal 10 damage. Enemy loses next action.",
+    "flavor": "A surge so violent it stops thoughts.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "signal_jam",
+    "name": "Signal Jam",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 3,
+      "apply": [
+        "jam"
+      ]
+    },
+    "abilityText": "Deal 3 damage. Apply Jam.",
+    "flavor": "Static drowns everything. Including your plans.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "grapple_lock",
+    "name": "Grapple Lock",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 4,
+      "apply": [
+        "lock"
+      ]
+    },
+    "abilityText": "Deal 4 damage. Apply Lock.",
+    "flavor": "Mag-clamps engage. You're going nowhere.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "null_field",
+    "name": "Null Field",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "damage": 6,
+      "conditional": "disable_1_module_2_turns"
+    },
+    "abilityText": "Deal 6 damage. Disable 1 enemy module for 2 turns.",
+    "flavor": "A dead zone where technology forgets how to work.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "system_ping",
+    "name": "System Ping",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "damage": 2,
+      "conditional": "reveal_enemy_intent"
+    },
+    "abilityText": "Deal 2 damage. Reveal enemy's next action.",
+    "flavor": "Tap the hull. Listen to what echoes back.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "cascade_overload",
+    "name": "Cascade Overload",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "damage": 14,
+      "conditional": "if_2_statuses_stun"
+    },
+    "abilityText": "Deal 14 damage. If target has 2+ statuses, enemy loses next action.",
+    "flavor": "System after system cascading into silence.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "elite_hunter",
+    "name": "Elite Hunter",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "damage": 14,
+      "conditional": "bonus_6_vs_elite"
+    },
+    "abilityText": "Deal 14 damage. +6 vs Elite/Boss enemies.",
+    "flavor": "Specialized rounds for specialized targets.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "dual_lock_salvo",
+    "name": "Dual Lock Salvo",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "damage": 8,
+      "apply": [
+        "lock"
+      ],
+      "conditional": "hits_2_targets"
+    },
+    "abilityText": "Deal 8 damage to 2 targets. Apply Lock to both.",
+    "flavor": "Two locks. Two kills. One trigger pull.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "proximity_mine",
+    "name": "Proximity Mine",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 12,
+      "conditional": "triggers_on_enemy_attack"
+    },
+    "abilityText": "Place a mine. When enemy attacks, deal 12 damage.",
+    "flavor": "Patience. Proximity. Punishment.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "heat_injector",
+    "name": "Heat Injector",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 6,
+      "conditional": "enemy_takes_2_per_weapon_played"
+    },
+    "abilityText": "Deal 6 damage. Enemy takes 2 self-damage each time they play a Weapon this turn.",
+    "flavor": "Cook them from the inside out.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "paint_target",
+    "name": "Paint Target",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 3,
+      "apply": [
+        "drone_mark",
+        "expose"
+      ]
+    },
+    "abilityText": "Deal 3 damage. Apply Drone Mark and Expose.",
+    "flavor": "Lit up like a bonfire. Every drone in range knows.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "polarity_flip",
+    "name": "Polarity Flip",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "transfer_8_block_from_enemy"
+    },
+    "abilityText": "Transfer 8 Block from enemy to yourself.",
+    "flavor": "Their shield is now your shield. Physics doesn't care about ownership.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "energy_siphon",
+    "name": "Energy Siphon",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 6,
+      "energy": 1,
+      "conditional": "enemy_minus_1_energy_next_turn"
+    },
+    "abilityText": "Deal 6 damage. Enemy -1 energy next turn. You +1 energy next turn.",
+    "flavor": "Steal the spark. Leave them cold.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "hazard_pulse",
+    "name": "Hazard Pulse",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "damage": 6,
+      "conditional": "aoe_hits_all"
+    },
+    "abilityText": "Deal 6 damage to all enemies.",
+    "flavor": "A broadcast of pain on all frequencies.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "catastrophic_strike",
+    "name": "Catastrophic Strike",
+    "type": "weapon",
+    "rarity": "legendary",
+    "cost": 6,
+    "stats": {
+      "damage": 32,
+      "apply": [
+        "burn",
+        "expose"
+      ],
+      "exhaust": true
+    },
+    "abilityText": "Deal 32 damage. Apply Burn and Expose. Exhaust.",
+    "flavor": "The kind of hit that turns warships into debris fields.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "singularity_cannon",
+    "name": "Singularity Cannon",
+    "type": "weapon",
+    "rarity": "mythic",
+    "cost": 7,
+    "stats": {
+      "damage": 40,
+      "conditional": "destroy_all_enemy_block_and_drones",
+      "exhaust": true
+    },
+    "abilityText": "Destroy all enemy Block and drones. Deal 40 damage. Once per game. Exhaust.",
+    "flavor": "It doesn't fire projectiles. It fires the absence of everything.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "blink_strike",
+    "name": "Blink Strike",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 10,
+      "evade": true,
+      "exhaust": true
+    },
+    "abilityText": "Deal 10 damage. Evade next attack. Exhaust.",
+    "flavor": "There. Gone. Damage dealt. Deal with it.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "chaff_torpedo",
+    "name": "Chaff Torpedo",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 8,
+      "conditional": "add_2_noise_to_enemy_deck"
+    },
+    "abilityText": "Deal 8 damage. Add 2 Noise cards to enemy deck.",
+    "flavor": "Debris on the hull. Debris in the databanks.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "iff_scrambler",
+    "name": "IFF Scrambler",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "damage": 8,
+      "conditional": "enemy_attacks_random_target_next_turn"
+    },
+    "abilityText": "Deal 8 damage. Enemy's next attack hits a random target (may hit self).",
+    "flavor": "Friend? Foe? Does it matter when nothing can tell?",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "berserker_round",
+    "name": "Berserker Round",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 5,
+      "scaling": "plus_2_per_turn_elapsed"
+    },
+    "abilityText": "Deal 5 damage. +2 damage for each turn elapsed this combat.",
+    "flavor": "It gets angrier the longer you wait.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "purge_protocol",
+    "name": "Purge Protocol",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "block": 8,
+      "conditional": "gain_8_block_per_status_removed",
+      "remove": [
+        "burn",
+        "jam",
+        "lock",
+        "expose"
+      ]
+    },
+    "abilityText": "Remove all statuses from self. Gain 8 Block per status removed.",
+    "flavor": "Cleanse the system. Convert the infection into armor.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "shield_recharge",
+    "name": "Shield Recharge",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "block": 10,
+      "conditional": "only_if_not_hit_last_turn"
+    },
+    "abilityText": "If you were not hit last turn, gain 10 Block.",
+    "flavor": "Undisturbed shields rebuild stronger than before.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "shield_drone",
+    "name": "Shield Drone",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "block": 4,
+      "duration_turns": 3,
+      "per_turn": 4
+    },
+    "abilityText": "Deploy drone: +4 Block each turn for 3 turns.",
+    "flavor": "A tiny guardian in permanent orbit around your cockpit.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "point_defense",
+    "name": "Point Defense",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "negate_next_missile_or_projectile"
+    },
+    "abilityText": "Negate the next missile or projectile attack.",
+    "flavor": "Click. Track. Intercept. Click.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "signal_denial",
+    "name": "Signal Denial",
+    "type": "defense",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "conditional": "cancel_next_enemy_weapon"
+    },
+    "abilityText": "Cancel the next enemy Weapon card.",
+    "flavor": "Their trigger pull echoes into nothing.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "spoof_flare",
+    "name": "Spoof Flare",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "redirect_next_hit_to_drone"
+    },
+    "abilityText": "Redirect the next hit to one of your drones.",
+    "flavor": "The flare burns bright. The missile follows.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "escort_screen",
+    "name": "Escort Screen",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "block": 5,
+      "conditional": "redirect_next_hit_to_self"
+    },
+    "abilityText": "Gain 5 Block. Redirect the next hit targeting an ally to self.",
+    "flavor": "Get behind me. I've got plating to spare.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "threat_spoof",
+    "name": "Threat Spoof",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "enemy_retargets_drone"
+    },
+    "abilityText": "Force enemy to target one of your drones instead of your ship.",
+    "flavor": "Make the drone look important. Make yourself look invisible.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "digital_firewall",
+    "name": "Digital Firewall",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "apply": [
+        "shielded"
+      ],
+      "draw": 1,
+      "conditional": "negate_next_jam"
+    },
+    "abilityText": "Negate the next Jam applied to you. Gain Shielded. Draw 1.",
+    "flavor": "Hardened code. No exceptions. No exploits.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "stealth_mask",
+    "name": "Stealth Mask",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "hacks_fail_50_percent_2_turns"
+    },
+    "abilityText": "For 2 turns, enemy hack/ECM effects have 50% chance to fail.",
+    "flavor": "Ghost protocol engaged. Good luck finding what isn't there.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "harmonic_barrier",
+    "name": "Harmonic Barrier",
+    "type": "defense",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "block": 12,
+      "conditional": "on_gain_block_cleanse_1_status"
+    },
+    "abilityText": "Gain 12 Block. While this Block remains, gaining more Block cleanses 1 status.",
+    "flavor": "The shield sings. The corruption retreats.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "shield_breaker_protocol",
+    "name": "Shield Breaker Protocol",
+    "type": "defense",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "block": 8,
+      "conditional": "remove_shielded_from_enemy"
+    },
+    "abilityText": "Gain 8 Block. Remove Shielded from enemy.",
+    "flavor": "Their invulnerability has a frequency. This card found it.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "capacitor_hold",
+    "name": "Capacitor Hold",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "retain_1_energy_cap_2",
+      "exhaust": true
+    },
+    "abilityText": "Retain 1 unused energy this turn (max 2 stored). Exhaust.",
+    "flavor": "Bank it. Save it. Spend it when it matters.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "temporal_loop",
+    "name": "Temporal Loop",
+    "type": "defense",
+    "rarity": "mythic",
+    "cost": 6,
+    "stats": {
+      "conditional": "undo_last_turn_damage_restore_hull",
+      "exhaust": true
+    },
+    "abilityText": "Undo all damage taken last turn. Restore hull to last turn's value. Once per game. Exhaust.",
+    "flavor": "Time bends. The wound unravels. You were never hit.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "reinforced_plating",
+    "name": "Reinforced Plating",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "block": 4,
+      "conditional": "plus_30_percent_block_this_turn"
+    },
+    "abilityText": "Gain 4 Block. All Block gained this turn is increased by 30%.",
+    "flavor": "Thicker plating for when you know what's coming.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "timing_override",
+    "name": "Timing Override",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "swap_initiative"
+    },
+    "abilityText": "Swap initiative. You act first next turn.",
+    "flavor": "Rewrite the queue. Move when they don't expect it.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "warp_blink",
+    "name": "Warp Blink",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "negate_next_hit",
+      "exhaust": true
+    },
+    "abilityText": "Negate the next hit this turn. Exhaust.",
+    "flavor": "One microsecond in another dimension. One hit avoided.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "boost_thrusters",
+    "name": "Boost Thrusters",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "next_maneuver_costs_0"
+    },
+    "abilityText": "Next Maneuver card costs 0 this turn.",
+    "flavor": "All power to engines. Questions later.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "true_aim",
+    "name": "True Aim",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "next_attack_cannot_miss"
+    },
+    "abilityText": "Next attack cannot miss or be evaded.",
+    "flavor": "The targeting computer doesn't know what 'miss' means.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "combat_mode_swap",
+    "name": "Combat Mode Swap",
+    "type": "maneuver",
+    "rarity": "rare",
+    "cost": 2,
+    "stats": {
+      "conditional": "toggle_assault_guard_mode"
+    },
+    "abilityText": "Toggle ship mode: Assault (+3 weapon damage, -3 Block) or Guard (+5 Block, -2 weapon damage). Persists.",
+    "flavor": "Pick your poison. Offense or defense. Never both.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "burst_window",
+    "name": "Burst Window",
+    "type": "maneuver",
+    "rarity": "legendary",
+    "cost": 4,
+    "stats": {
+      "conditional": "play_1_extra_card_this_turn"
+    },
+    "abilityText": "Play 1 additional card this turn.",
+    "flavor": "Time dilates. You move twice. They blink once.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "lag_injection",
+    "name": "Lag Injection",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "enemy_acts_last_next_turn"
+    },
+    "abilityText": "Enemy acts last next turn.",
+    "flavor": "Inject 200ms of latency into their command chain. An eternity in combat.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "echo_shot",
+    "name": "Echo Shot",
+    "type": "maneuver",
+    "rarity": "rare",
+    "cost": 2,
+    "stats": {
+      "conditional": "repeat_last_weapon_at_minus_2"
+    },
+    "abilityText": "Replay your last Weapon card at -2 damage.",
+    "flavor": "The echo hits almost as hard as the original.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "queued_command",
+    "name": "Queued Command",
+    "type": "maneuver",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "conditional": "store_card_auto_play_next_turn"
+    },
+    "abilityText": "Store 1 card from hand. It auto-plays free next turn.",
+    "flavor": "Set it. Forget it. Let the autopilot deliver.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "rate_limiter",
+    "name": "Rate Limiter",
+    "type": "maneuver",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "enemy_max_1_weapon_next_turn"
+    },
+    "abilityText": "Enemy can only play 1 Weapon next turn.",
+    "flavor": "Throttle their fire rate. Watch them choke.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "signal_scramble",
+    "name": "Signal Scramble",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "enemy_draws_minus_1_next_turn"
+    },
+    "abilityText": "Enemy draws 1 fewer card next turn.",
+    "flavor": "Less intel. Less options. Less hope.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "wide_spectrum_jam",
+    "name": "Wide Spectrum Jam",
+    "type": "maneuver",
+    "rarity": "legendary",
+    "cost": 4,
+    "stats": {
+      "conditional": "all_enemy_cards_plus_1_cost_next_turn"
+    },
+    "abilityText": "All enemy cards cost +1 next turn.",
+    "flavor": "Every system stutters. Every command costs more.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "micro_swarm",
+    "name": "Micro-Swarm",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "per_turn": 1,
+      "duration_turns": 4,
+      "conditional": "5_drones_grow_1_damage_per_turn"
+    },
+    "abilityText": "Deploy 5 micro-drones: 1 damage each per turn for 4 turns. Each grows +1 damage per turn.",
+    "flavor": "A cloud of teeth that learns.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "detonate_drone",
+    "name": "Detonate Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 12,
+      "conditional": "consume_1_active_drone"
+    },
+    "abilityText": "Consume 1 active drone. Deal 12 damage to all enemies.",
+    "flavor": "It lived to serve. It died to destroy.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "firmware_patch",
+    "name": "Firmware Patch",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "drone_plus_3_damage_plus_1_turn"
+    },
+    "abilityText": "Target active drone gains +3 damage per tick and +1 turn duration.",
+    "flavor": "Version 2.0. Now with teeth.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "drone_controller",
+    "name": "Drone Controller",
+    "type": "drone",
+    "rarity": "legendary",
+    "cost": 3,
+    "stats": {
+      "conditional": "drones_double_fire_on_deploy"
+    },
+    "abilityText": "This turn, all newly deployed drones act twice on their first turn.",
+    "flavor": "Double the output. Same deployment cost.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "hangar_pod",
+    "name": "Hangar Pod",
+    "type": "drone",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "conditional": "spawn_gun_drone_every_2_turns",
+      "duration_turns": 6
+    },
+    "abilityText": "Every 2 turns, automatically spawn a Gun Drone (4 damage/turn, 2 turns). Lasts 6 turns.",
+    "flavor": "An endless supply of problems for your enemy.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "fleet_sync",
+    "name": "Fleet Sync",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "all_drones_plus_1_damage"
+    },
+    "abilityText": "All active drones gain +1 damage per tick this combat.",
+    "flavor": "Synchronized firing solutions. Every drone hits harder.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "swarm_intelligence",
+    "name": "Swarm Intelligence",
+    "type": "drone",
+    "rarity": "legendary",
+    "cost": 3,
+    "stats": {
+      "conditional": "plus_1_damage_per_active_drone_to_weapons"
+    },
+    "abilityText": "Your Weapons deal +1 damage for each active drone.",
+    "flavor": "The swarm sees. The swarm shares. The swarm aims.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "sleeper_drone",
+    "name": "Sleeper Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "deploy_facedown_flips_next_turn"
+    },
+    "abilityText": "Deploy a drone facedown. It reveals and activates next turn as a Gun Drone (4 damage, 3 turns).",
+    "flavor": "It waits. It listens. It wakes up angry.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "emergency_swarm",
+    "name": "Emergency Swarm",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "summon_3_decoy_drones_1hp_each"
+    },
+    "abilityText": "Summon 3 Decoy Drones (1 HP each, absorb 1 hit each).",
+    "flavor": "Quantity has a quality all its own.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "decoy_flare_token",
+    "name": "Decoy Flare Token",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "place_bluff_token_might_redirect"
+    },
+    "abilityText": "Place a bluff token on the field. Enemy must guess: real drone or decoy. If they attack it, waste their action.",
+    "flavor": "Is it a drone? Is it a decoy? Only one way to find out.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "the_hive_mind",
+    "name": "The Hive Mind",
+    "type": "drone",
+    "rarity": "mythic",
+    "cost": 6,
+    "stats": {
+      "conditional": "summon_3_drones_that_copy_each_weapon_played",
+      "exhaust": true
+    },
+    "abilityText": "Summon 3 Echo Drones. Each copies every Weapon you play at half damage for 3 turns. Once per game. Exhaust.",
+    "flavor": "They don't just follow orders. They echo them. Endlessly.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "emp_net",
+    "name": "EMP Net",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "destroy_1_enemy_drone"
+    },
+    "abilityText": "Destroy 1 enemy drone.",
+    "flavor": "One pulse. One less problem.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "cycle_systems",
+    "name": "Cycle Systems",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "discard": 1,
+      "draw": 2
+    },
+    "abilityText": "Discard 1. Draw 2.",
+    "flavor": "Flush the cache. Load fresh data.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "telemetry_leak",
+    "name": "Telemetry Leak",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "reveal_enemy_next_2_actions"
+    },
+    "abilityText": "Reveal enemy's next 2 actions.",
+    "flavor": "Their comms are leaking. Everything they plan, you see.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "power_drain",
+    "name": "Power Drain",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "enemy_minus_1_energy_next_turn"
+    },
+    "abilityText": "Enemy loses 1 energy next turn.",
+    "flavor": "Somewhere in their reactor, a valve just closed.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "system_shutdown",
+    "name": "System Shutdown",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 4,
+    "stats": {
+      "conditional": "disable_1_enemy_weapon_next_turn"
+    },
+    "abilityText": "Disable 1 enemy Weapon card next turn. They cannot play Weapons.",
+    "flavor": "Hard kill on their weapons bus. Total blackout.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "signal_spoof",
+    "name": "Signal Spoof",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "enemy_attacks_own_drone"
+    },
+    "abilityText": "Enemy's next attack targets their own drone instead.",
+    "flavor": "Friendly fire isn't. But they don't know that yet.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "trace_protocol",
+    "name": "Trace Protocol",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "spend_2_energy_if_more_than_enemy_apply_jam_lock"
+    },
+    "abilityText": "Spend 2 energy. If you have more remaining energy than enemy, apply Jam and Lock.",
+    "flavor": "Outspend them on the digital battlefield. Winner takes all.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "weapons_hot",
+    "name": "Weapons Hot",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 3,
+    "stats": {
+      "apply": [
+        "overcharge"
+      ],
+      "conditional": "after_3_weapons_gain_overcharge"
+    },
+    "abilityText": "Passive: After playing 3 Weapon cards this combat, gain Overcharge.",
+    "flavor": "Heat builds. Power builds. Everything builds to the kill shot.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "fortress_logic",
+    "name": "Fortress Logic",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 3,
+    "stats": {
+      "conditional": "if_block_over_20_deal_6_to_attacker"
+    },
+    "abilityText": "If your Block is over 20, deal 6 damage to attacker when hit.",
+    "flavor": "The best walls hit back.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "intel_cascade",
+    "name": "Intel Cascade",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "after_scan_next_weapon_plus_4"
+    },
+    "abilityText": "After drawing/scanning this turn, next Weapon gets +4 damage.",
+    "flavor": "Knowledge is power. In this case, literally.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "scrap_synergy",
+    "name": "Scrap Synergy",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "when_spending_scrap_draw_1"
+    },
+    "abilityText": "Whenever you spend Scrap this combat, draw 1.",
+    "flavor": "Every piece of salvage has a lesson inside.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "ecm_feedback",
+    "name": "ECM Feedback",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "after_applying_status_gain_2_block"
+    },
+    "abilityText": "Whenever you apply a status effect this combat, gain 2 Block.",
+    "flavor": "Control isn't just offense. It's armor.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "rapid_fire_logic",
+    "name": "Rapid Fire Logic",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "each_0_or_1_cost_card_adds_1_damage"
+    },
+    "abilityText": "Each 0-1 cost card played this turn adds +1 damage to your next Weapon.",
+    "flavor": "Speed over power. Volume over precision.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "power_surge_protocol",
+    "name": "Power Surge Protocol",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "if_overcharge_3_next_5_cost_costs_3"
+    },
+    "abilityText": "If you have 3+ Overcharge, your next 5+ cost card costs 3 instead.",
+    "flavor": "Maximum charge reached. Deploy the big guns.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "targeting_core",
+    "name": "Targeting Core",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "all_weapons_plus_2_damage_this_combat"
+    },
+    "abilityText": "All Weapon cards deal +2 damage this combat.",
+    "flavor": "Permanent targeting upgrade. Every shot counts more.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "weapon_router",
+    "name": "Weapon Router",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "after_weapon_gain_2_block"
+    },
+    "abilityText": "Whenever you play a Weapon card this combat, gain 2 Block.",
+    "flavor": "Fire a shot, raise a shield. Rhythm of combat.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "heat_sink_protocol",
+    "name": "Heat Sink Protocol",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "after_3_weapons_gain_overcharge"
+    },
+    "abilityText": "After playing 3 Weapons in a combat, gain Overcharge automatically.",
+    "flavor": "Let the heat build. Then weaponize it.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "ecm_suite",
+    "name": "ECM Suite",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 3,
+    "stats": {
+      "conditional": "when_apply_jam_lock_gain_1_energy_next_turn"
+    },
+    "abilityText": "When you apply Jam or Lock this combat, gain 1 energy next turn.",
+    "flavor": "Every disruption pays dividends.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "system_restore",
+    "name": "System Restore",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "return_last_played_card_to_hand"
+    },
+    "abilityText": "Return the last card you played to your hand.",
+    "flavor": "Ctrl+Z. The most powerful command in any system.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "archive_recall",
+    "name": "Archive Recall",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "return_1_card_from_discard"
+    },
+    "abilityText": "Return 1 card from your discard pile to your hand.",
+    "flavor": "The archive remembers. The archive delivers.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "preload_sequence",
+    "name": "Preload Sequence",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "place_chosen_card_on_top_of_deck"
+    },
+    "abilityText": "Choose a card from your discard. Place it on top of your deck.",
+    "flavor": "Next draw. Guaranteed.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "recycle_protocol",
+    "name": "Recycle Protocol",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "shuffle_1_from_discard_into_deck"
+    },
+    "abilityText": "Shuffle 1 card from your discard pile into your deck.",
+    "flavor": "Nothing is truly gone. Just waiting for its next cycle.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "hard_burn",
+    "name": "Hard Burn",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "energy": 2,
+      "conditional": "exhaust_1_card_from_hand"
+    },
+    "abilityText": "Exhaust 1 card from your hand permanently. Gain 2 energy.",
+    "flavor": "Sacrifice a tool. Gain the power to use what remains.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "archive_echo",
+    "name": "Archive Echo",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "conditional": "play_copy_from_discard_then_exhaust"
+    },
+    "abilityText": "Play a copy of any card from your discard pile. Then exhaust that card permanently.",
+    "flavor": "One more time. Just one more time. Then it's gone.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "the_founders_key",
+    "name": "The Founder's Key",
+    "type": "ai",
+    "rarity": "mythic",
+    "cost": 0,
+    "stats": {
+      "draw": 5,
+      "energy": 3,
+      "heal": 10,
+      "exhaust": true
+    },
+    "abilityText": "Draw 5. Gain 3 energy. Heal 10. Once per game. Exhaust.",
+    "flavor": "A key to everything voidexa was built upon. It opens all doors. Once.",
+    "faction": "pioneer",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "dome_protocol",
+    "name": "Dome Protocol",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "both_reveal_then_resolve_by_initiative"
+    },
+    "abilityText": "PvP: Both players reveal cards simultaneously. Higher initiative resolves first.",
+    "flavor": "In the Dome, timing is everything.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "load_rack",
+    "name": "Load Rack",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "gain_2_ammo",
+      "exhaust": true
+    },
+    "abilityText": "Gain 2 Ammo tokens. Exhaust.",
+    "flavor": "Rack 'em up. You'll need every round.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "emergency_reload",
+    "name": "Emergency Reload",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "energy": -2,
+      "conditional": "spend_2_energy_gain_3_ammo",
+      "exhaust": true
+    },
+    "abilityText": "Spend 2 energy. Gain 3 Ammo tokens. Exhaust.",
+    "flavor": "Divert power to munitions. Everything else can wait.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "tow_beacon",
+    "name": "Tow Beacon",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "plus_30_percent_tow_speed",
+      "exhaust": true
+    },
+    "abilityText": "Tow speed +30% this mission. Exhaust.",
+    "flavor": "Help is closer than you think. If you can afford it.",
+    "faction": "neutral",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "legal_lock",
+    "name": "Legal Lock",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "extend_wreck_protection_5_min",
+      "exhaust": true
+    },
+    "abilityText": "Extend wreck protected timer by 5 minutes. Exhaust.",
+    "flavor": "Filed. Stamped. Legally yours for five more minutes.",
+    "faction": "neutral",
+    "shipClassRestriction": "salvager"
+  },
+  {
+    "id": "defrag_routine",
+    "name": "Defrag Routine",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "remove_2_noise_from_deck",
+      "exhaust": true
+    },
+    "abilityText": "Remove 2 Noise cards from your deck. Exhaust.",
+    "flavor": "Clean the signal. Remove the garbage.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "jettison",
+    "name": "Jettison",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 0,
+    "stats": {
+      "conditional": "remove_1_card_from_deck_after_encounter",
+      "exhaust": true
+    },
+    "abilityText": "After this encounter, permanently remove 1 card from your deck. Exhaust.",
+    "flavor": "Eject the dead weight. Travel lighter.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "refit_module",
+    "name": "Refit Module",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "conditional": "upgrade_1_weapon_plus_3_damage",
+      "exhaust": true
+    },
+    "abilityText": "Choose 1 Weapon in your deck. It permanently gains +3 damage. Exhaust.",
+    "flavor": "Better parts. Better performance. Permanent.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "recode_chip",
+    "name": "Recode Chip",
+    "type": "consumable",
+    "rarity": "rare",
+    "cost": 2,
+    "stats": {
+      "conditional": "transform_1_card_into_random_higher_rarity",
+      "exhaust": true
+    },
+    "abilityText": "Transform 1 card in your deck into a random card of higher rarity. Exhaust.",
+    "flavor": "What was common becomes uncommon. What was good becomes great.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "print_routine",
+    "name": "Print Routine",
+    "type": "consumable",
+    "rarity": "rare",
+    "cost": 2,
+    "stats": {
+      "conditional": "add_copy_of_chosen_1_cost_to_deck",
+      "exhaust": true
+    },
+    "abilityText": "Add a copy of a chosen 1-cost card to your deck. Exhaust.",
+    "flavor": "Good code deserves to be duplicated.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "flash_routine",
+    "name": "Flash Routine",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "evade": true,
+      "exhaust": true,
+      "conditional": "temporary_this_combat_only"
+    },
+    "abilityText": "Add a temporary 0-cost Evade card to your hand (this combat only). Exhaust.",
+    "flavor": "Emergency protocol. Temporary. Disposable. Life-saving.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "buffer_burst",
+    "name": "Buffer Burst",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "conditional": "plus_2_hand_limit_this_combat",
+      "exhaust": true
+    },
+    "abilityText": "+2 hand limit this combat. Exhaust.",
+    "flavor": "More memory. More options. More power.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "chaff_packet",
+    "name": "Chaff Packet",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "conditional": "add_2_noise_to_enemy_deck",
+      "exhaust": true
+    },
+    "abilityText": "Add 2 Noise cards to enemy deck. Exhaust.",
+    "flavor": "Garbage data, special delivery.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "emergency_reroute",
+    "name": "Emergency Reroute",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "conditional": "discard_hand_draw_same_number",
+      "exhaust": true
+    },
+    "abilityText": "Discard your hand. Draw the same number of cards. Exhaust.",
+    "flavor": "Bad hand? New hand. Don't question it.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "amplifier_cell",
+    "name": "Amplifier Cell",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "plus_3_weapon_damage_this_turn",
+      "exhaust": true
+    },
+    "abilityText": "All Weapons deal +3 damage this turn. Exhaust.",
+    "flavor": "One cell. Three extra damage on everything. Worth it.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "servo_disruptor",
+    "name": "Servo Disruptor",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "enemy_weapons_minus_2_this_turn",
+      "exhaust": true
+    },
+    "abilityText": "Enemy Weapons deal -2 damage this turn. Exhaust.",
+    "flavor": "Slow their servos. Dull their edge.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "armor_strip_charge",
+    "name": "Armor Strip Charge",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "enemy_block_minus_3_each_gain",
+      "exhaust": true
+    },
+    "abilityText": "Enemy gains 3 less Block from each source this turn. Exhaust.",
+    "flavor": "Erode the armor. Deny the protection.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "critical_lock_cell",
+    "name": "Critical Lock Cell",
+    "type": "consumable",
+    "rarity": "rare",
+    "cost": 2,
+    "stats": {
+      "conditional": "next_weapon_deals_double",
+      "exhaust": true
+    },
+    "abilityText": "Next Weapon card deals double damage. Exhaust.",
+    "flavor": "Window open. Take the shot.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "quantum_splice",
+    "name": "Quantum Splice",
+    "type": "consumable",
+    "rarity": "mythic",
+    "cost": 3,
+    "stats": {
+      "conditional": "copy_any_card_from_opponents_hand_play_free",
+      "exhaust": true
+    },
+    "abilityText": "Copy any card from opponent's hand and play it for free. Once per game. Exhaust.",
+    "flavor": "Their best card. In your hands. Their worst nightmare.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "docking_window",
+    "name": "Docking Window",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "heal": 10,
+      "exhaust": true,
+      "conditional": "between_fights_only"
+    },
+    "abilityText": "Heal 10 hull between fights. Exhaust.",
+    "flavor": "Five minutes in dock. A lifetime of extra hull.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "rescue_beacon",
+    "name": "Rescue Beacon",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "tow_offers_plus_2",
+      "exhaust": true
+    },
+    "abilityText": "Increase tow availability by 2 for this run. Exhaust.",
+    "flavor": "Someone will come. Eventually. Probably.",
+    "faction": "neutral",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "nebula_fog",
+    "name": "Nebula Fog",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "weapons_minus_20_percent_unless_locked_3_turns"
+    },
+    "abilityText": "All Weapons deal -20% damage unless target is Locked. Lasts 3 turns.",
+    "flavor": "The fog rolls in. Only precision cuts through.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "asteroid_field",
+    "name": "Asteroid Field",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "no_evade_take_3_end_of_turn_2_turns"
+    },
+    "abilityText": "For 2 turns, ships without Evade take 3 damage at end of turn.",
+    "flavor": "Rocks don't care about your shields. Only your reflexes.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "ion_storm",
+    "name": "Ion Storm",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 3,
+    "stats": {
+      "conditional": "plus_1_status_duration_minus_1_energy_gain_3_turns"
+    },
+    "abilityText": "For 3 turns: all statuses last +1 turn, energy gain -1.",
+    "flavor": "The storm amplifies everything wrong and diminishes everything right.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "gravity_well",
+    "name": "Gravity Well",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "maneuvers_plus_1_cost_2_turns"
+    },
+    "abilityText": "For 2 turns, all Maneuver cards cost +1.",
+    "flavor": "The gravity here drags at everything. Even thought.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "derelict_debris_field",
+    "name": "Derelict Debris Field",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "on_kill_gain_plus_1_scrap_3_turns"
+    },
+    "abilityText": "For 3 turns, gain +1 extra Scrap on each kill.",
+    "flavor": "A graveyard of ships. A goldmine of salvage.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "signal_blackout",
+    "name": "Signal Blackout",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "draw_minus_1_scan_plus_1_3_turns"
+    },
+    "abilityText": "For 3 turns: draw effects -1, but Scan/reveal effects doubled.",
+    "flavor": "The noise dies. The signal sharpens.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "solar_flare",
+    "name": "Solar Flare",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "lose_3_block_end_of_turn_2_turns"
+    },
+    "abilityText": "For 2 turns, all ships lose 3 Block at end of turn.",
+    "flavor": "The star screams. Shields melt.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "quantum_rift",
+    "name": "Quantum Rift",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 4,
+    "stats": {
+      "conditional": "first_card_each_turn_duplicated_3_turns"
+    },
+    "abilityText": "For 3 turns, the first card played each turn is duplicated.",
+    "flavor": "Reality stutters. Everything happens twice.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "ammo_rack",
+    "name": "Ammo Rack",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "gain_1_ammo_every_2_turns"
+    },
+    "abilityText": "Gain 1 Ammo token every 2 turns this combat.",
+    "flavor": "Steady supply. Steady fire.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "missile_guidance",
+    "name": "Missile Guidance",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "missiles_apply_lock_ignore_evade"
+    },
+    "abilityText": "All missile/torpedo Weapons apply Lock and ignore Evade.",
+    "flavor": "Once locked, there is no escape.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "rail_capacitor",
+    "name": "Rail Capacitor",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "conditional": "first_weapon_each_turn_plus_4"
+    },
+    "abilityText": "First Weapon card each turn deals +4 damage.",
+    "flavor": "The first shot is always free. And devastating.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "heat_sink_module",
+    "name": "Heat Sink Module",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "after_3_weapons_remove_overheat"
+    },
+    "abilityText": "After playing 3 Weapons, remove any Overheat effects.",
+    "flavor": "Vent heat. Keep firing.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "repair_bay",
+    "name": "Repair Bay",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "heal": 5,
+      "conditional": "heal_5_after_combat"
+    },
+    "abilityText": "Heal 5 hull after this combat ends.",
+    "flavor": "Walk in broken. Walk out patched.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "salvage_rig",
+    "name": "Salvage Rig",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "post_combat_gain_scrap_equal_damage_div_20"
+    },
+    "abilityText": "After combat, gain Scrap equal to total damage dealt / 20.",
+    "flavor": "Everything destroyed has value. If you know where to look.",
+    "faction": "neutral",
+    "shipClassRestriction": "salvager"
+  },
+  {
+    "id": "quantum_relay",
+    "name": "Quantum Relay",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "conditional": "first_card_each_combat_duplicated"
+    },
+    "abilityText": "The first card you play each combat is duplicated (played twice).",
+    "flavor": "The relay echoes your opening move. Make it count.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "memory_pin",
+    "name": "Memory Pin",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "retain_1_card_in_hand_each_turn"
+    },
+    "abilityText": "Choose 1 card in your hand. It is retained (not discarded) at end of turn.",
+    "flavor": "Pin it to memory. Keep it for when you need it most.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "risk_rider",
+    "name": "Risk Rider",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 0,
+    "stats": {
+      "conditional": "plus_30_payout_but_start_with_burn",
+      "exhaust": true
+    },
+    "abilityText": "Mission payout +30%. Start combat with Burn. Exhaust.",
+    "flavor": "High risk, high reward. The void respects boldness.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "insurance_clause",
+    "name": "Insurance Clause",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "minus_20_claim_fee_minus_10_payout",
+      "exhaust": true
+    },
+    "abilityText": "Wreck claim fee -20%. Mission payout -10%. Exhaust.",
+    "flavor": "Play it safe. The paperwork pays for itself.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "tow_voucher",
+    "name": "Tow Voucher",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "free_tow_token",
+      "exhaust": true
+    },
+    "abilityText": "Gain 1 free tow token. Exhaust.",
+    "flavor": "Good for one rescue. No questions asked.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "cargo_stabilizer",
+    "name": "Cargo Stabilizer",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "collision_damage_minus_50_percent",
+      "exhaust": true
+    },
+    "abilityText": "Hauling missions: collision penalties reduced 50%. Exhaust.",
+    "flavor": "Bumps happen. This makes them cheaper.",
+    "faction": "neutral",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "race_sponsor",
+    "name": "Race Sponsor",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 0,
+    "stats": {
+      "conditional": "plus_50_ghai_if_top_10",
+      "exhaust": true
+    },
+    "abilityText": "Speed run bonus: +50 GHAI if you finish in top 10%. Exhaust.",
+    "flavor": "Someone's betting on you. Don't disappoint.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "reputation_first",
+    "name": "Reputation First",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "minus_30_ghai_plus_2_reputation",
+      "exhaust": true
+    },
+    "abilityText": "Mission: -30 GHAI payout, +2 reputation gain. Exhaust.",
+    "flavor": "Money comes and goes. Reputation compounds.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "black_market_deal",
+    "name": "Black Market Deal",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 0,
+    "stats": {
+      "conditional": "plus_80_ghai_add_2_noise_to_deck",
+      "exhaust": true
+    },
+    "abilityText": "Mission: +80 GHAI payout. Add 2 Noise cards to your deck. Exhaust.",
+    "flavor": "The payout is great. The side effects... less so.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "power_contest",
+    "name": "Power Contest",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "compare_power_totals_winner_draws_2"
+    },
+    "abilityText": "PvP: Compare total card power played this turn. Winner draws 2.",
+    "flavor": "Stronger hand wins. Simple as gravity.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "arena_modifier",
+    "name": "Arena Modifier",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "arena_location_plus_1_energy_2_turns"
+    },
+    "abilityText": "Set arena location: +1 energy gain for 2 turns.",
+    "flavor": "Home field advantage. Choose your ground wisely.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "data_cache",
+    "name": "Data Cache",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "conditional": "store_1_card_outside_deck_for_run",
+      "exhaust": true
+    },
+    "abilityText": "Store 1 card outside your deck for this run. Retrieve it at any shop. Exhaust.",
+    "flavor": "Banked. Backed up. Safe.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "long_range_scan",
+    "name": "Long-Range Scan",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "reveal_next_2_nodes_in_pve_path",
+      "exhaust": true
+    },
+    "abilityText": "Reveal the next 2 nodes on your PvE path. Exhaust.",
+    "flavor": "Know what's ahead. Choose the better route.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "supply_credit",
+    "name": "Supply Credit",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "conditional": "shop_prices_minus_20_percent_this_run",
+      "exhaust": true
+    },
+    "abilityText": "Shop prices -20% for this run. Exhaust.",
+    "flavor": "A voucher from a grateful merchant. Spend wisely.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "silent_running",
+    "name": "Silent Running",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "minus_30_intercept_chance",
+      "exhaust": true
+    },
+    "abilityText": "Random encounter chance -30% while hauling. Exhaust.",
+    "flavor": "Engines low. Signatures hidden. Ghosts don't get stopped.",
+    "faction": "neutral",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "null_ray",
+    "name": "Null Ray",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 6,
+      "conditional": "disable_1_module_1_turn"
+    },
+    "abilityText": "Deal 6 damage. Disable 1 enemy module for 1 turn.",
+    "flavor": "A targeted pulse that makes hardware forget what it does.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "intent_scanner",
+    "name": "Intent Scanner",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "reveal_hidden_boss_intent"
+    },
+    "abilityText": "Reveal boss hidden intent for this turn.",
+    "flavor": "Decrypt. Decode. Don't die.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "counter_clamp",
+    "name": "Counter Clamp",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "prevent_card_steal_gain_5_block"
+    },
+    "abilityText": "Prevent the next card-steal effect. Gain 5 Block.",
+    "flavor": "They reach for your cards. You slap their hand.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "event_horizon",
+    "name": "Event Horizon",
+    "type": "maneuver",
+    "rarity": "mythic",
+    "cost": 5,
+    "stats": {
+      "conditional": "all_enemies_cannot_act_next_turn",
+      "exhaust": true
+    },
+    "abilityText": "All enemies skip their next turn. Once per game. Exhaust.",
+    "flavor": "Beyond the horizon, time stops. And so do they.",
+    "faction": "void",
+    "shipClassRestriction": null
+  }
+]
