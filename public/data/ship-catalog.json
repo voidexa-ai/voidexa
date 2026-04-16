@@ -1,0 +1,622 @@
+[
+  {
+    "name": "hirez_ship01",
+    "displayName": "Hi-Rez Ship 01",
+    "filename": "hirez_ship01_full.glb",
+    "path": "/models/glb-ready/hirez_ship01_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship02",
+    "displayName": "Hi-Rez Ship 02",
+    "filename": "hirez_ship02_full.glb",
+    "path": "/models/glb-ready/hirez_ship02_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 6.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship03",
+    "displayName": "Hi-Rez Ship 03",
+    "filename": "hirez_ship03_full.glb",
+    "path": "/models/glb-ready/hirez_ship03_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship04",
+    "displayName": "Hi-Rez Ship 04",
+    "filename": "hirez_ship04_full.glb",
+    "path": "/models/glb-ready/hirez_ship04_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship05",
+    "displayName": "Hi-Rez Ship 05",
+    "filename": "hirez_ship05_full.glb",
+    "path": "/models/glb-ready/hirez_ship05_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship06",
+    "displayName": "Hi-Rez Ship 06",
+    "filename": "hirez_ship06_full.glb",
+    "path": "/models/glb-ready/hirez_ship06_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship07",
+    "displayName": "Hi-Rez Ship 07",
+    "filename": "hirez_ship07_full.glb",
+    "path": "/models/glb-ready/hirez_ship07_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship08",
+    "displayName": "Hi-Rez Ship 08",
+    "filename": "hirez_ship08_full.glb",
+    "path": "/models/glb-ready/hirez_ship08_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship09",
+    "displayName": "Hi-Rez Ship 09",
+    "filename": "hirez_ship09_full.glb",
+    "path": "/models/glb-ready/hirez_ship09_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.7,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship10",
+    "displayName": "Hi-Rez Ship 10",
+    "filename": "hirez_ship10_full.glb",
+    "path": "/models/glb-ready/hirez_ship10_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship11",
+    "displayName": "Hi-Rez Ship 11",
+    "filename": "hirez_ship11_full.glb",
+    "path": "/models/glb-ready/hirez_ship11_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship12",
+    "displayName": "Hi-Rez Ship 12",
+    "filename": "hirez_ship12_full.glb",
+    "path": "/models/glb-ready/hirez_ship12_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.9,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship13",
+    "displayName": "Hi-Rez Ship 13",
+    "filename": "hirez_ship13_full.glb",
+    "path": "/models/glb-ready/hirez_ship13_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.4,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship14",
+    "displayName": "Hi-Rez Ship 14",
+    "filename": "hirez_ship14_full.glb",
+    "path": "/models/glb-ready/hirez_ship14_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.9,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship15",
+    "displayName": "Hi-Rez Ship 15",
+    "filename": "hirez_ship15_full.glb",
+    "path": "/models/glb-ready/hirez_ship15_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship16",
+    "displayName": "Hi-Rez Ship 16",
+    "filename": "hirez_ship16_full.glb",
+    "path": "/models/glb-ready/hirez_ship16_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship17",
+    "displayName": "Hi-Rez Ship 17",
+    "filename": "hirez_ship17_full.glb",
+    "path": "/models/glb-ready/hirez_ship17_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship18",
+    "displayName": "Hi-Rez Ship 18",
+    "filename": "hirez_ship18_full.glb",
+    "path": "/models/glb-ready/hirez_ship18_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 6.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship19",
+    "displayName": "Hi-Rez Ship 19",
+    "filename": "hirez_ship19_full.glb",
+    "path": "/models/glb-ready/hirez_ship19_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship20",
+    "displayName": "Hi-Rez Ship 20",
+    "filename": "hirez_ship20_full.glb",
+    "path": "/models/glb-ready/hirez_ship20_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship21",
+    "displayName": "Hi-Rez Ship 21",
+    "filename": "hirez_ship21_full.glb",
+    "path": "/models/glb-ready/hirez_ship21_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship22",
+    "displayName": "Hi-Rez Ship 22",
+    "filename": "hirez_ship22_full.glb",
+    "path": "/models/glb-ready/hirez_ship22_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship23",
+    "displayName": "Hi-Rez Ship 23",
+    "filename": "hirez_ship23_full.glb",
+    "path": "/models/glb-ready/hirez_ship23_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_ship24",
+    "displayName": "Hi-Rez Ship 24",
+    "filename": "hirez_ship24_full.glb",
+    "path": "/models/glb-ready/hirez_ship24_full.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 7.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "hirez_spaceship",
+    "displayName": "Hi-Rez Spaceship",
+    "filename": "hirez_spaceship01.glb",
+    "path": "/models/glb-ready/hirez_spaceship01.glb",
+    "category": "hirez",
+    "skinsCount": 1,
+    "fileSizeMb": 8.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_astroeagle",
+    "displayName": "Astro Eagle",
+    "filename": "usc_astroeagle01.glb",
+    "path": "/models/glb-ready/usc_astroeagle01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 15,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_cosmicshark",
+    "displayName": "Cosmic Shark",
+    "filename": "usc_cosmicshark01.glb",
+    "path": "/models/glb-ready/usc_cosmicshark01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 11.9,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_craizanstar",
+    "displayName": "Craizan Star",
+    "filename": "usc_craizanstar01.glb",
+    "path": "/models/glb-ready/usc_craizanstar01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 29.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_flyinginsect",
+    "displayName": "Flying Insect",
+    "filename": "usc_flyinginsect01.glb",
+    "path": "/models/glb-ready/usc_flyinginsect01.glb",
+    "category": "usc",
+    "skinsCount": 5,
+    "fileSizeMb": 4.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_forcebadger",
+    "displayName": "Force Badger",
+    "filename": "usc_forcebadger01.glb",
+    "path": "/models/glb-ready/usc_forcebadger01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 23.8,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_galacticleopard",
+    "displayName": "Galactic Leopard",
+    "filename": "usc_galacticleopard1.glb",
+    "path": "/models/glb-ready/usc_galacticleopard1.glb",
+    "category": "usc",
+    "skinsCount": 42,
+    "fileSizeMb": 20,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_galaxyraptor",
+    "displayName": "Galaxy Raptor",
+    "filename": "usc_galaxyraptor01.glb",
+    "path": "/models/glb-ready/usc_galaxyraptor01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 16.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_genericspaceship",
+    "displayName": "Generic Spaceship",
+    "filename": "usc_genericspaceship01.glb",
+    "path": "/models/glb-ready/usc_genericspaceship01.glb",
+    "category": "usc",
+    "skinsCount": 8,
+    "fileSizeMb": 6.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_hyperfalcon",
+    "displayName": "Hyper Falcon",
+    "filename": "usc_hyperfalcon01.glb",
+    "path": "/models/glb-ready/usc_hyperfalcon01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 13.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_lightfox",
+    "displayName": "Light Fox",
+    "filename": "usc_lightfox01.glb",
+    "path": "/models/glb-ready/usc_lightfox01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 15.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_meteormantis",
+    "displayName": "Meteor Mantis",
+    "filename": "usc_meteormantis01.glb",
+    "path": "/models/glb-ready/usc_meteormantis01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 13.7,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_nightaye",
+    "displayName": "Night Aye",
+    "filename": "usc_nightaye01.glb",
+    "path": "/models/glb-ready/usc_nightaye01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 18.9,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_protonlegacy",
+    "displayName": "Proton Legacy",
+    "filename": "usc_protonlegacy01.glb",
+    "path": "/models/glb-ready/usc_protonlegacy01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 9,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_spaceexcalibur",
+    "displayName": "Space Excalibur",
+    "filename": "usc_spaceexcalibur01.glb",
+    "path": "/models/glb-ready/usc_spaceexcalibur01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 9.4,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_spacesphinx",
+    "displayName": "Space Sphinx",
+    "filename": "usc_spacesphinx01.glb",
+    "path": "/models/glb-ready/usc_spacesphinx01.glb",
+    "category": "usc",
+    "skinsCount": 8,
+    "fileSizeMb": 8.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_starsparrow",
+    "displayName": "Star Sparrow",
+    "filename": "usc_starsparrow01.glb",
+    "path": "/models/glb-ready/usc_starsparrow01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 10.7,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_striderox",
+    "displayName": "Strider Ox",
+    "filename": "usc_striderox01.glb",
+    "path": "/models/glb-ready/usc_striderox01.glb",
+    "category": "usc",
+    "skinsCount": 20,
+    "fileSizeMb": 19.8,
+    "thumbnailPath": null
+  },
+  {
+    "name": "usc_voidwhale",
+    "displayName": "Void Whale",
+    "filename": "usc_voidwhale01.glb",
+    "path": "/models/glb-ready/usc_voidwhale01.glb",
+    "category": "usc",
+    "skinsCount": 9,
+    "fileSizeMb": 17,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_arrowship",
+    "displayName": "Arrow Ship",
+    "filename": "uscx_arrowship.glb",
+    "path": "/models/glb-ready/uscx_arrowship.glb",
+    "category": "uscx",
+    "skinsCount": 1,
+    "fileSizeMb": 0.4,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_galacticokamoto",
+    "displayName": "Galactic Okamoto",
+    "filename": "uscx_galacticokamoto1.glb",
+    "path": "/models/glb-ready/uscx_galacticokamoto1.glb",
+    "category": "uscx",
+    "skinsCount": 31,
+    "fileSizeMb": 19.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_nova",
+    "displayName": "Nova",
+    "filename": "uscx_nova.glb",
+    "path": "/models/glb-ready/uscx_nova.glb",
+    "category": "uscx",
+    "skinsCount": 1,
+    "fileSizeMb": 0.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_pullora",
+    "displayName": "Pullora",
+    "filename": "uscx_pullora.glb",
+    "path": "/models/glb-ready/uscx_pullora.glb",
+    "category": "uscx",
+    "skinsCount": 1,
+    "fileSizeMb": 0.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_scorpionship",
+    "displayName": "Scorpion Ship",
+    "filename": "uscx_scorpionship.glb",
+    "path": "/models/glb-ready/uscx_scorpionship.glb",
+    "category": "uscx",
+    "skinsCount": 1,
+    "fileSizeMb": 0.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_spidership",
+    "displayName": "Spider Ship",
+    "filename": "uscx_spidership.glb",
+    "path": "/models/glb-ready/uscx_spidership.glb",
+    "category": "uscx",
+    "skinsCount": 1,
+    "fileSizeMb": 0.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_starforce",
+    "displayName": "Star Force",
+    "filename": "uscx_starforce01.glb",
+    "path": "/models/glb-ready/uscx_starforce01.glb",
+    "category": "uscx",
+    "skinsCount": 20,
+    "fileSizeMb": 3.5,
+    "thumbnailPath": null
+  },
+  {
+    "name": "uscx_starship",
+    "displayName": "Star Ship",
+    "filename": "uscx_starship.glb",
+    "path": "/models/glb-ready/uscx_starship.glb",
+    "category": "uscx",
+    "skinsCount": 1,
+    "fileSizeMb": 0.7,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_bob",
+    "displayName": "Bob",
+    "filename": "qs_bob.glb",
+    "path": "/models/glb-ready/qs_bob.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 2.6,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_challenger",
+    "displayName": "Challenger",
+    "filename": "qs_challenger.glb",
+    "path": "/models/glb-ready/qs_challenger.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3.3,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_dispatcher",
+    "displayName": "Dispatcher",
+    "filename": "qs_dispatcher.glb",
+    "path": "/models/glb-ready/qs_dispatcher.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 2.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_executioner",
+    "displayName": "Executioner",
+    "filename": "qs_executioner.glb",
+    "path": "/models/glb-ready/qs_executioner.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_imperial",
+    "displayName": "Imperial",
+    "filename": "qs_imperial.glb",
+    "path": "/models/glb-ready/qs_imperial.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_insurgent",
+    "displayName": "Insurgent",
+    "filename": "qs_insurgent.glb",
+    "path": "/models/glb-ready/qs_insurgent.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 2.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_omen",
+    "displayName": "Omen",
+    "filename": "qs_omen.glb",
+    "path": "/models/glb-ready/qs_omen.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3.1,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_pancake",
+    "displayName": "Pancake",
+    "filename": "qs_pancake.glb",
+    "path": "/models/glb-ready/qs_pancake.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_spitfire",
+    "displayName": "Spitfire",
+    "filename": "qs_spitfire.glb",
+    "path": "/models/glb-ready/qs_spitfire.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3.2,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_striker",
+    "displayName": "Striker",
+    "filename": "qs_striker.glb",
+    "path": "/models/glb-ready/qs_striker.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 1.8,
+    "thumbnailPath": null
+  },
+  {
+    "name": "qs_zenith",
+    "displayName": "Zenith",
+    "filename": "qs_zenith.glb",
+    "path": "/models/glb-ready/qs_zenith.glb",
+    "category": "qs",
+    "skinsCount": 1,
+    "fileSizeMb": 3.2,
+    "thumbnailPath": null
+  }
+]
