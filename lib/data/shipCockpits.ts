@@ -38,7 +38,11 @@ export const COCKPIT_MODELS: Record<CockpitType, CockpitModelSpec> = {
     url: MODEL_URLS.vattalus_fighter_cockpit,
     withSeatUrl: MODEL_URLS.vattalus_fighter_cockpit_with_seat,
     scale: 1.0,
-    offset: [0, -0.5, -0.3],
+    // Drop the cockpit lower under the camera so the pilot sits at canopy
+    // eye level instead of below the dashboard. The model's origin is at
+    // the seat base; -1.4 ≈ 0.9 units below the previous mount, roughly the
+    // seat-to-eye distance for a human pilot in game units.
+    offset: [0, -1.4, -0.3],
     // Vattalus model was authored with +Z forward (Blender convention). The
     // cockpit group is parented to the camera, which looks down -Z. Without
     // this 180° Y rotation the pilot sees the back of the seat instead of
