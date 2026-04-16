@@ -25,6 +25,8 @@ export const MODEL_URLS = {
   qs_imperial:           `${SUPABASE_MODELS}/qs_imperial.glb`,
   qs_omen:               `${SUPABASE_MODELS}/qs_omen.glb`,
   qs_spitfire:           `${SUPABASE_MODELS}/qs_spitfire.glb`,
+  vattalus_fighter_cockpit:           `${SUPABASE_MODELS}/cockpits/vattalus_fighter_cockpit.glb`,
+  vattalus_fighter_cockpit_with_seat: `${SUPABASE_MODELS}/cockpits/vattalus_fighter_cockpit_with_seat.glb`,
 } as const
 
 export type ModelKey = keyof typeof MODEL_URLS

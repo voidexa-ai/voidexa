@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CockpitHUD from './cockpit/CockpitHUD'
 import CockpitPicker from './cockpit/CockpitPicker'
@@ -12,6 +12,7 @@ import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
 import { findShip, getStoredShipId, type ShipCatalogEntry } from './ships/catalog'
 import { findCockpit, getStoredCockpitId, type CockpitCatalogEntry, COCKPIT_CATALOG } from './cockpit/catalog'
+import { getCockpitForShip, getCockpitSpec } from '@/lib/data/shipCockpits'
 
 const FreeFlightCanvas = dynamic(() => import('./FreeFlightCanvas'), {
   ssr: false,
@@ -135,6 +136,21 @@ export default function FreeFlightPage() {
 
   const exitToGalaxy = () => router.push('/starmap')
 
+  // Ship drives cockpit. Small fighters (qs_*, small USC) map to the Vattalus
+  // standalone cockpit; everything else keeps the Hi-Rez frame+interior bundle
+  // and honors the user's manual cockpit pick from CockpitPicker.
+  const { cockpitUrl, cockpitSpec } = useMemo(() => {
+    if (!selectedShip) {
+      return { cockpitUrl: selectedCockpit.url, cockpitSpec: undefined }
+    }
+    const type = getCockpitForShip(selectedShip.id)
+    if (type === 'fighter_light' || type === 'fighter_medium') {
+      const spec = getCockpitSpec(selectedShip.id)
+      return { cockpitUrl: spec.url, cockpitSpec: spec }
+    }
+    return { cockpitUrl: selectedCockpit.url, cockpitSpec: undefined }
+  }, [selectedShip, selectedCockpit])
+
   return (
     <div style={{
       position: 'fixed', inset: 0, width: '100vw', height: '100vh',
@@ -150,7 +166,8 @@ export default function FreeFlightPage() {
           onFirstPersonChange={setFirstPerson}
           shipUrl={selectedShip.url}
           shipScale={selectedShip.ingameScale}
-          cockpitUrl={selectedCockpit.url}
+          cockpitUrl={cockpitUrl}
+          cockpitSpec={cockpitSpec}
         />
       )}
 

@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber'
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing'
 import FreeFlightScene from './FreeFlightScene'
 import type { ShipState, StationDef, DerelictDef } from './types'
+import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ShipState>) => void
@@ -16,6 +17,7 @@ interface Props {
   shipUrl: string
   shipScale: number
   cockpitUrl: string
+  cockpitSpec?: CockpitModelSpec
 }
 
 export default function FreeFlightCanvas(props: Props) {

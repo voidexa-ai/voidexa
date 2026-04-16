@@ -17,6 +17,7 @@ import WarpGates from './environment/WarpGates'
 import CockpitModel from './cockpit/CockpitModel'
 import ModelErrorBoundary from './ModelErrorBoundary'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
+import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ReturnType<typeof createShipState>>) => void
@@ -28,6 +29,7 @@ interface Props {
   shipUrl: string
   shipScale: number
   cockpitUrl: string
+  cockpitSpec?: CockpitModelSpec
 }
 
 export default function FreeFlightScene({
@@ -40,6 +42,7 @@ export default function FreeFlightScene({
   shipUrl,
   shipScale,
   cockpitUrl,
+  cockpitSpec,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -97,7 +100,7 @@ export default function FreeFlightScene({
       />
 
       <ModelErrorBoundary>
-        <CockpitModel visible={firstPerson} url={cockpitUrl} />
+        <CockpitModel visible={firstPerson} url={cockpitUrl} spec={cockpitSpec} />
       </ModelErrorBoundary>
 
       <PlanetCollision ship={shipRef} />

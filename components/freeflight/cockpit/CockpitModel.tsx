@@ -5,10 +5,15 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { MODEL_URLS } from '@/lib/config/modelUrls'
+import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 
 interface Props {
   visible: boolean
   url: string
+  // Optional standalone cockpit spec (e.g. Vattalus). When provided and
+  // `spec.standalone` is true, we render `spec.url` directly with the given
+  // offset/scale/rotation and skip the Hi-Rez frame+interior bundle entirely.
+  spec?: CockpitModelSpec
 }
 
 // All 5 Hi-Rez cockpits share the same equipments + screens meshes — only the
@@ -148,10 +153,21 @@ function InteriorBundle({
   )
 }
 
-export default function CockpitModel({ visible, url }: Props) {
+function StandaloneCockpit({ spec }: { spec: CockpitModelSpec }) {
+  const gltf = useGLTF(spec.url)
+  const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene])
+  return (
+    <group position={spec.offset} rotation={spec.rotation} scale={spec.scale}>
+      <primitive object={scene} />
+    </group>
+  )
+}
+
+export default function CockpitModel({ visible, url, spec }: Props) {
   const { camera } = useThree()
   const groupRef = useRef<THREE.Group>(null)
-  const interiorSpec = INTERIOR_FOR_FRAME[url]
+  const standalone = spec?.standalone === true
+  const interiorSpec = standalone ? undefined : INTERIOR_FOR_FRAME[url]
 
   useFrame(() => {
     if (!groupRef.current) return
@@ -160,6 +176,14 @@ export default function CockpitModel({ visible, url }: Props) {
     groupRef.current.position.copy(camera.position)
     groupRef.current.quaternion.copy(camera.quaternion)
   })
+
+  if (standalone && spec) {
+    return (
+      <group ref={groupRef} renderOrder={999}>
+        <StandaloneCockpit spec={spec} />
+      </group>
+    )
+  }
 
   const framePos = interiorSpec?.framePos ?? FRAME_POS
   const frameTargetMax = interiorSpec?.frameTargetMax ?? FRAME_TARGET_MAX
