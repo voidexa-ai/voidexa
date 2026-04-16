@@ -10,6 +10,11 @@ export interface PlacedModel {
   scale: [number, number, number]
   visible: boolean
   opacity: number
+  // VoidForge-generated instances carry role + lineage so the editor can show
+  // which slot they fill and which generation they came from.
+  generated?: boolean
+  roleKey?: string
+  voidforgeInstanceId?: string
 }
 
 export interface ModelEntry {

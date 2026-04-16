@@ -1,13 +1,16 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ModelBrowser } from './components/ModelBrowser'
 import { SceneHierarchy } from './components/SceneHierarchy'
 import { TransformPanel } from './components/TransformPanel'
 import { EditorToolbar } from './components/EditorToolbar'
 import { ExportPanel } from './components/ExportPanel'
 import { SaveLoadPanel } from './components/SaveLoadPanel'
+import { VoidForgePanel, type VoidForgeGenerationResult, type VoidForgeVariant } from './components/VoidForgePanel'
+import { VoidForgeVariantPicker } from './components/VoidForgeVariantPicker'
+import { ValidationIssuesPanel } from './components/ValidationIssuesPanel'
 import { useEditorStore } from './hooks/useEditorStore'
 
 const EditorCanvas = dynamic(
@@ -39,6 +42,28 @@ export default function AssemblyEditorPage() {
   const addModel = useEditorStore(s => s.addModel)
   const updateTransform = useEditorStore(s => s.updateTransform)
   const catalog = useEditorStore(s => s.modelCatalog)
+  const loadGeneratedAssembly = useEditorStore(s => s.loadGeneratedAssembly)
+  const setValidationIssues = useEditorStore(s => s.setValidationIssues)
+  const voidForgeIssues = useEditorStore(s => s.voidForgeIssues)
+
+  const [variantResult, setVariantResult] = useState<VoidForgeGenerationResult | null>(null)
+
+  const handleVariantsReady = useCallback((result: VoidForgeGenerationResult) => {
+    setVariantResult(result)
+  }, [])
+
+  const handleLoadVariant = useCallback(
+    (variant: VoidForgeVariant, result: VoidForgeGenerationResult) => {
+      loadGeneratedAssembly(variant.assembly, {
+        generationId: result.generationId,
+        templateSlug: result.templateSlug,
+        styleSummary: result.styleSummary,
+      })
+      setValidationIssues(variant.validation.issues)
+      setVariantResult(null)
+    },
+    [loadGeneratedAssembly, setValidationIssues]
+  )
 
   const quickCockpit = useCallback(() => {
     const frame = catalog.find(e => e.name === 'hirez_cockpit01')
@@ -126,7 +151,23 @@ export default function AssemblyEditorPage() {
       <EditorToolbar onQuickCockpit={quickCockpit} />
 
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
-        <ModelBrowser />
+        <div
+          style={{
+            width: 260,
+            minWidth: 260,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            borderRight: '1px solid rgba(168, 85, 247, 0.2)',
+          }}
+        >
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            <ModelBrowser />
+          </div>
+          <div style={{ flexShrink: 0, overflow: 'auto', maxHeight: '50%' }}>
+            <VoidForgePanel onVariantsReady={handleVariantsReady} />
+          </div>
+        </div>
 
         <div style={{ flex: 1, position: 'relative', minWidth: 0 }}>
           <EditorCanvas />
@@ -143,11 +184,20 @@ export default function AssemblyEditorPage() {
         }}>
           <SceneHierarchy />
           <TransformPanel />
+          {voidForgeIssues.length > 0 && <ValidationIssuesPanel />}
           <SaveLoadPanel />
         </aside>
       </div>
 
       <ExportPanel />
+
+      {variantResult && (
+        <VoidForgeVariantPicker
+          result={variantResult}
+          onLoad={handleLoadVariant}
+          onDismiss={() => setVariantResult(null)}
+        />
+      )}
     </div>
   )
 }

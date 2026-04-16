@@ -2,6 +2,7 @@
 
 import { create } from 'zustand'
 import type { ModelEntry, PlacedModel, TransformMode, AssemblyConfig } from '../lib/editorTypes'
+import type { AssemblyJson, ValidationIssue } from '@/lib/voidforge/types'
 
 const HISTORY_LIMIT = 50
 
@@ -37,6 +38,12 @@ interface EditorState {
   cameraPreset: 'top' | 'front' | 'side' | 'pilot' | null
   presetTick: number
 
+  // VoidForge integration
+  voidForgeGenerationId: string | null
+  voidForgeTemplateSlug: string | null
+  voidForgeIssues: ValidationIssue[]
+  voidForgeStyleSummary: string | null
+
   addModel: (entry: ModelEntry) => void
   removeModel: (id: string) => void
   selectModel: (id: string | null) => void
@@ -60,6 +67,13 @@ interface EditorState {
   setCameraPreset: (p: 'top' | 'front' | 'side' | 'pilot') => void
 
   importConfig: (config: AssemblyConfig) => void
+
+  loadGeneratedAssembly: (
+    assembly: AssemblyJson,
+    meta?: { generationId?: string; templateSlug?: string; styleSummary?: string }
+  ) => void
+  setValidationIssues: (issues: ValidationIssue[]) => void
+  clearVoidForgeState: () => void
 }
 
 export const useEditorStore = create<EditorState>((set, get) => ({
@@ -75,6 +89,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   catalogError: null,
   cameraPreset: null,
   presetTick: 0,
+
+  voidForgeGenerationId: null,
+  voidForgeTemplateSlug: null,
+  voidForgeIssues: [],
+  voidForgeStyleSummary: null,
 
   addModel: (entry) => {
     const prev = get().placedModels
@@ -208,6 +227,55 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       selectedId: null,
       history: [...get().history.slice(-HISTORY_LIMIT + 1), clone(prev)],
       future: [],
+    })
+  },
+
+  loadGeneratedAssembly: (assembly, meta) => {
+    const prev = get().placedModels
+    const catalog = get().modelCatalog
+    const nextPlaced: PlacedModel[] = []
+    for (const inst of assembly.instances) {
+      const catEntry = catalog.find((c) => c.name === inst.modelSlug)
+      nextPlaced.push({
+        id: uuid(),
+        modelUrl: catEntry?.url ?? '',
+        modelName: inst.modelSlug,
+        category: catEntry?.category ?? 'Other',
+        position: [inst.position.x, inst.position.y, inst.position.z],
+        rotation: [inst.rotationEuler.x, inst.rotationEuler.y, inst.rotationEuler.z],
+        scale: [inst.scale.x, inst.scale.y, inst.scale.z],
+        visible: true,
+        opacity: 1,
+        generated: true,
+        roleKey: inst.roleKey,
+        voidforgeInstanceId: inst.instanceId,
+      })
+    }
+    set({
+      placedModels: nextPlaced,
+      selectedId: null,
+      history: [...get().history.slice(-HISTORY_LIMIT + 1), clone(prev)],
+      future: [],
+      voidForgeGenerationId: meta?.generationId ?? get().voidForgeGenerationId,
+      voidForgeTemplateSlug: meta?.templateSlug ?? assembly.templateSlug ?? null,
+      voidForgeStyleSummary: meta?.styleSummary ?? get().voidForgeStyleSummary,
+    })
+  },
+
+  setValidationIssues: (issues) => set({ voidForgeIssues: issues }),
+
+  clearVoidForgeState: () => {
+    set({
+      placedModels: get().placedModels.map((m) => ({
+        ...m,
+        generated: false,
+        roleKey: undefined,
+        voidforgeInstanceId: undefined,
+      })),
+      voidForgeGenerationId: null,
+      voidForgeTemplateSlug: null,
+      voidForgeIssues: [],
+      voidForgeStyleSummary: null,
     })
   },
 }))
