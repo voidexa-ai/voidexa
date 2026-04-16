@@ -3,90 +3,29 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
-interface GhaiStat {
-  value: string
-  label: string
-}
-
-const GHAI_STATS: GhaiStat[] = [
-  { value: '$1 = 100 GHAI',   label: 'Fixed exchange rate' },
-  { value: 'Platform credit', label: 'Not an investment vehicle' },
-  { value: 'In-ecosystem only', label: 'Used for voidexa services' },
-]
-
-interface PlaceholderSection {
+interface StackItem {
   title: string
   description: string
-  href?: string
-  cta?: string
 }
 
-const PLACEHOLDER_SECTIONS: PlaceholderSection[] = [
+const TECH_STACK: StackItem[] = [
   {
-    title: 'Platform economy',
-    description: 'How GHAI moves through voidexa products — earning, spending, and seasonal cycles. Details finalized post legal review.',
+    title: 'Quantum debate engine',
+    description: 'Multi-model deliberation across Claude, GPT, Gemini, and Perplexity with role-based rounds and a compiled synthesis layer.',
   },
   {
-    title: 'Roadmap',
-    description: 'Product launches, platform milestones, and seasonal content drops.',
-    href: '/station',
-    cta: 'See Station →',
+    title: 'KCP-90 compression protocol',
+    description: 'In-house context compression that reduces token spend on long-form deliberation while preserving semantic fidelity.',
   },
   {
-    title: 'Partners',
-    description: 'Integrations, data providers, and channel partners. Announcements coming soon.',
+    title: 'voidexa.com surface',
+    description: 'A unified web client — Void Chat, Star System, Free Flight, Trading Hub, and the Break Room — sitting on the same auth and wallet.',
   },
   {
-    title: 'Technology Stack',
-    description: 'Quantum debate engine, KCP-90 compression protocol, voidexa.com surface. All sovereign, all in-house.',
+    title: 'All sovereign, all in-house',
+    description: 'No third-party orchestration layer. Backend on Railway, frontend on Vercel, data on Supabase, payments through Stripe.',
   },
 ]
-
-function GhaiOrb({ size = 220 }: { size?: number }) {
-  return (
-    <div style={{
-      width: size,
-      height: size,
-      borderRadius: '50%',
-      position: 'relative',
-      background: 'radial-gradient(circle at 38% 34%, #c8e8ff 0%, #00d4ff 18%, #6a5cff 48%, #140a33 82%)',
-      boxShadow: '0 0 60px rgba(0,212,255,0.55), 0 0 120px rgba(139,92,246,0.35), inset 0 0 40px rgba(5,8,20,0.6)',
-      animation: 'ghai-pulse 4s ease-in-out infinite',
-    }}>
-      {/* Inner swirl */}
-      <div aria-hidden style={{
-        position: 'absolute',
-        inset: '18%',
-        borderRadius: '50%',
-        border: '1px solid rgba(255,255,255,0.35)',
-        boxShadow: '0 0 20px rgba(0,212,255,0.6) inset',
-        opacity: 0.7,
-      }} />
-      {/* Wordmark */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: 'var(--font-space, system-ui)',
-        fontSize: size * 0.22,
-        fontWeight: 800,
-        letterSpacing: '0.05em',
-        color: '#fff',
-        textShadow: '0 0 18px rgba(0,212,255,0.85), 0 2px 6px rgba(0,0,0,0.7)',
-      }}>
-        GHAI
-      </div>
-      <style>{`
-        @keyframes ghai-pulse {
-          0%, 100% { transform: scale(1); filter: brightness(1); }
-          50%      { transform: scale(1.03); filter: brightness(1.08); }
-        }
-      `}</style>
-    </div>
-  )
-}
 
 function SubscribeForm() {
   const [email, setEmail] = useState('')
@@ -152,6 +91,33 @@ function SubscribeForm() {
   )
 }
 
+const sectionHeading: React.CSSProperties = {
+  margin: '0 0 14px',
+  fontSize: 22,
+  fontWeight: 700,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  fontFamily: 'var(--font-space, system-ui)',
+  color: '#fff',
+  borderLeft: '3px solid #00d4ff',
+  paddingLeft: 12,
+  textShadow: '0 0 10px rgba(0,212,255,0.4)',
+}
+
+const proseText: React.CSSProperties = {
+  fontSize: 16,
+  lineHeight: 1.7,
+  color: 'rgba(255,255,255,0.75)',
+  margin: '0 0 14px',
+}
+
+const inlineLink: React.CSSProperties = {
+  color: '#00d4ff',
+  textDecoration: 'none',
+  borderBottom: '1px solid rgba(0,212,255,0.4)',
+  paddingBottom: 1,
+}
+
 export default function WhitePaperPageClient() {
   return (
     <div style={{
@@ -161,262 +127,170 @@ export default function WhitePaperPageClient() {
       fontFamily: 'var(--font-inter, system-ui)',
       padding: '96px 24px 80px',
     }}>
-      <div style={{ maxWidth: 960, margin: '0 auto' }}>
+      <div style={{ maxWidth: 760, margin: '0 auto' }}>
 
-        {/* Hero */}
-        <section style={{ textAlign: 'center', marginBottom: 60 }}>
+        {/* Header */}
+        <header style={{ marginBottom: 48 }}>
           <div style={{
-            fontSize: 13,
+            fontSize: 14,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
             color: 'rgba(0,212,255,0.75)',
             fontFamily: 'var(--font-space, monospace)',
-            marginBottom: 10,
+            marginBottom: 12,
           }}>
             voidexa · White Paper
           </div>
           <h1 style={{
-            margin: '0 0 14px',
-            fontSize: 52,
+            margin: '0 0 18px',
+            fontSize: 42,
             fontWeight: 800,
             letterSpacing: '-0.02em',
             fontFamily: 'var(--font-space, system-ui)',
             background: 'linear-gradient(135deg, #fff 0%, #00d4ff 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            lineHeight: 1.1,
+            lineHeight: 1.15,
           }}>
             The infrastructure behind the universe
           </h1>
           <p style={{
             fontSize: 17,
             lineHeight: 1.7,
-            color: 'rgba(255,255,255,0.7)',
-            maxWidth: 640,
-            margin: '0 auto',
+            color: 'rgba(255,255,255,0.72)',
+            margin: 0,
           }}>
             voidexa builds sovereign AI infrastructure — trading systems, encrypted communication,
             custom decision platforms — and a gameplay layer that fuels it all. This document
             outlines the stack, the mechanics, and the platform currency that powers the ecosystem.
           </p>
+        </header>
+
+        {/* Platform Currency Overview — brief, link to /ghost-ai */}
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={sectionHeading}>Platform currency</h2>
+          <p style={proseText}>
+            GHAI is the platform currency of the voidexa ecosystem — a fixed-rate platform credit
+            (<span style={{ color: '#fff', fontWeight: 600 }}>$1 = 100 GHAI</span>) earned or
+            purchased and spent inside voidexa for AI compute, priority access, and seasonal
+            content. It is not an investment vehicle and circulates only inside voidexa products.
+          </p>
+          <p style={{ ...proseText, margin: 0 }}>
+            <Link href="/ghost-ai" style={inlineLink}>
+              Full GHAI overview →
+            </Link>
+          </p>
         </section>
 
-        {/* GHAI Section */}
-        <section style={{
-          marginBottom: 60,
-          padding: '44px 32px',
-          background: 'linear-gradient(160deg, rgba(14,18,30,0.88), rgba(6,10,18,0.95))',
-          border: '1px solid rgba(0,212,255,0.3)',
-          borderRadius: 20,
-          boxShadow: '0 0 40px rgba(0,212,255,0.15)',
-        }}>
-          <div style={{
-            display: 'flex',
-            gap: 40,
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <div style={{ flex: '0 0 auto' }}>
-              <GhaiOrb size={220} />
-            </div>
-            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-              <div style={{
-                fontSize: 13,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#00d4ff',
-                fontFamily: 'var(--font-space, monospace)',
-                textShadow: '0 0 10px rgba(0,212,255,0.6)',
-                marginBottom: 8,
-              }}>
-                Platform Currency · GHAI
-              </div>
-              <h2 style={{
-                margin: '0 0 14px',
-                fontSize: 36,
-                fontWeight: 800,
-                letterSpacing: '-0.015em',
-                fontFamily: 'var(--font-space, system-ui)',
-                color: '#fff',
-              }}>
-                Ghost AI (GHAI)
-              </h2>
-              <p style={{
-                fontSize: 16,
-                lineHeight: 1.6,
-                color: 'rgba(255,255,255,0.75)',
-                margin: '0 0 20px',
-              }}>
-                GHAI is the platform currency of the voidexa ecosystem — similar in
-                concept to in-game currencies you may have used elsewhere. GHAI is
-                earned or purchased in fixed increments and spent inside voidexa to
-                unlock AI compute, priority access, and seasonal content.
-              </p>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                gap: 12,
-                marginBottom: 20,
-              }}>
-                {GHAI_STATS.map(s => (
-                  <div key={s.label} style={{
-                    padding: '14px 16px',
-                    background: 'rgba(0,212,255,0.06)',
-                    border: '1px solid rgba(0,212,255,0.25)',
-                    borderRadius: 10,
-                  }}>
-                    <div style={{
-                      fontSize: 20,
-                      fontWeight: 800,
-                      color: '#00d4ff',
-                      fontFamily: 'var(--font-space, system-ui)',
-                      textShadow: '0 0 10px rgba(0,212,255,0.5)',
-                    }}>
-                      {s.value}
-                    </div>
-                    <div style={{
-                      fontSize: 12,
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.6)',
-                      fontFamily: 'var(--font-space, monospace)',
-                      marginTop: 4,
-                    }}>
-                      {s.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div style={{
-                padding: '14px 18px',
-                background: 'rgba(245, 158, 11, 0.08)',
-                border: '1px solid rgba(245, 158, 11, 0.55)',
-                borderRadius: 10,
-                fontSize: 14,
-                lineHeight: 1.6,
-                color: '#ffd99a',
-              }}>
-                <strong style={{ letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: 12, color: '#f59e0b' }}>
-                  Blockchain integration under review
-                </strong>
-                <div style={{ marginTop: 4, color: 'rgba(255,235,200,0.85)' }}>
-                  voidexa is exploring blockchain integration for GHAI with legal
-                  advisors in Denmark. Mechanics, technical infrastructure, and
-                  distribution details will be disclosed only after regulatory
-                  review is complete. Until then, GHAI functions exclusively as
-                  a platform credit within voidexa products.
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Placeholder sections */}
-        <section style={{ marginBottom: 60 }}>
-          <h2 style={{
-            margin: '0 0 18px',
-            fontSize: 26,
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            fontFamily: 'var(--font-space, system-ui)',
-            color: '#fff',
-            borderLeft: '3px solid #00d4ff',
-            paddingLeft: 14,
-            textShadow: '0 0 10px rgba(0,212,255,0.5)',
-          }}>
-            In the full paper
-          </h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: 16,
-          }}>
-            {PLACEHOLDER_SECTIONS.map(s => {
-              const body = (
-                <div style={{
-                  padding: '22px 22px',
-                  background: 'linear-gradient(160deg, rgba(14,18,30,0.75), rgba(6,10,18,0.9))',
+        {/* Technology Stack */}
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={sectionHeading}>Technology stack</h2>
+          <div style={{ display: 'grid', gap: 14 }}>
+            {TECH_STACK.map(item => (
+              <div
+                key={item.title}
+                style={{
+                  padding: '18px 20px',
+                  background: 'linear-gradient(160deg, rgba(14,18,30,0.7), rgba(6,10,18,0.85))',
                   border: '1px solid rgba(0,212,255,0.18)',
                   borderRadius: 12,
-                  height: '100%',
-                  boxSizing: 'border-box',
+                }}
+              >
+                <div style={{
+                  fontSize: 17,
+                  fontWeight: 700,
+                  color: '#fff',
+                  fontFamily: 'var(--font-space, system-ui)',
+                  marginBottom: 6,
                 }}>
-                  <div style={{
-                    fontSize: 18,
-                    fontWeight: 700,
-                    letterSpacing: '-0.005em',
-                    color: '#fff',
-                    fontFamily: 'var(--font-space, system-ui)',
-                  }}>
-                    {s.title}
-                  </div>
-                  <div style={{
-                    fontSize: 14,
-                    color: 'rgba(255,255,255,0.65)',
-                    marginTop: 8,
-                    lineHeight: 1.55,
-                  }}>
-                    {s.description}
-                  </div>
-                  {s.href && s.cta && (
-                    <div style={{
-                      marginTop: 12,
-                      fontSize: 13,
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      color: '#00d4ff',
-                      fontFamily: 'var(--font-space, monospace)',
-                      textShadow: '0 0 8px rgba(0,212,255,0.5)',
-                    }}>
-                      {s.cta}
-                    </div>
-                  )}
+                  {item.title}
                 </div>
-              )
-              return s.href ? (
-                <Link key={s.title} href={s.href} style={{ textDecoration: 'none' }}>
-                  {body}
-                </Link>
-              ) : (
-                <div key={s.title}>{body}</div>
-              )
-            })}
+                <div style={{
+                  fontSize: 15,
+                  color: 'rgba(255,255,255,0.68)',
+                  lineHeight: 1.6,
+                }}>
+                  {item.description}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* CTA */}
+        {/* Roadmap */}
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={sectionHeading}>Roadmap</h2>
+          <p style={proseText}>
+            Product launches, platform milestones, and seasonal content drops are tracked on the
+            Station — voidexa&apos;s public build log and release cadence.
+          </p>
+          <p style={{ ...proseText, margin: 0 }}>
+            <Link href="/station" style={inlineLink}>
+              See Station →
+            </Link>
+          </p>
+        </section>
+
+        {/* Under consideration with legal advisors */}
         <section style={{
-          textAlign: 'center',
-          padding: '40px 24px',
-          background: 'linear-gradient(135deg, rgba(0,212,255,0.1), rgba(139,92,246,0.08))',
-          border: '1px solid rgba(0,212,255,0.25)',
-          borderRadius: 16,
+          marginBottom: 48,
+          padding: '24px 26px',
+          background: 'rgba(245, 158, 11, 0.07)',
+          border: '1px solid rgba(245, 158, 11, 0.45)',
+          borderRadius: 14,
+        }}>
+          <div style={{
+            fontSize: 14,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontWeight: 700,
+            color: '#f59e0b',
+            fontFamily: 'var(--font-space, monospace)',
+            marginBottom: 10,
+          }}>
+            Under consideration with legal advisors
+          </div>
+          <p style={{
+            fontSize: 15,
+            lineHeight: 1.65,
+            color: 'rgba(255, 235, 200, 0.88)',
+            margin: 0,
+          }}>
+            voidexa is working with ADVORA (Danish regulatory specialists) on the framework that
+            would allow GHAI to extend beyond platform credit into a broader utility token.
+            Timeline, scope, and technical details will be finalized only after legal clearance.
+            No contract addresses, technical infrastructure, or distribution mechanics will be
+            disclosed until that review is complete.
+          </p>
+        </section>
+
+        {/* Subscribe */}
+        <section style={{
+          padding: '32px 26px',
+          background: 'linear-gradient(135deg, rgba(0,212,255,0.08), rgba(139,92,246,0.06))',
+          border: '1px solid rgba(0,212,255,0.22)',
+          borderRadius: 14,
         }}>
           <h3 style={{
             margin: '0 0 10px',
-            fontSize: 26,
-            fontWeight: 800,
-            letterSpacing: '-0.01em',
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: '-0.005em',
             fontFamily: 'var(--font-space, system-ui)',
             color: '#fff',
           }}>
-            Learn more when we launch
+            Subscribe for updates
           </h3>
           <p style={{
             fontSize: 15,
-            color: 'rgba(255,255,255,0.68)',
-            margin: '0 auto 22px',
-            maxWidth: 520,
+            color: 'rgba(255,255,255,0.7)',
+            margin: '0 0 18px',
             lineHeight: 1.6,
           }}>
-            The full white paper publishes after legal review. Subscribe and we&apos;ll send
-            you the PDF the moment it ships — no marketing drip, just the document.
+            Subscribe and we&apos;ll send you the full paper when it publishes — no marketing drip,
+            just the document.
           </p>
-          <div style={{ maxWidth: 480, margin: '0 auto' }}>
-            <SubscribeForm />
-          </div>
+          <SubscribeForm />
         </section>
       </div>
     </div>

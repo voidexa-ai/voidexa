@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -156,8 +156,28 @@ function InteriorBundle({
 function StandaloneCockpit({ spec }: { spec: CockpitModelSpec }) {
   const gltf = useGLTF(spec.url)
   const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene])
+  const innerRef = useRef<THREE.Group>(null)
+
+  // Dev-only live-tuning hook. The parent group is rewritten every frame to
+  // track the camera, so exposing this inner group (which carries the
+  // offset/rotation/scale) lets console edits actually stick.
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') return
+    if (!innerRef.current) return
+    ;(window as unknown as { __cockpit?: THREE.Group }).__cockpit = innerRef.current
+    // eslint-disable-next-line no-console
+    console.log('[voidexa] Cockpit ref exposed as window.__cockpit')
+    // eslint-disable-next-line no-console
+    console.log('[voidexa] Try: window.__cockpit.rotation.set(0, Math.PI, 0)')
+    // eslint-disable-next-line no-console
+    console.log('[voidexa] Try: window.__cockpit.position.set(0, -1.5, -0.8)')
+    return () => {
+      delete (window as unknown as { __cockpit?: THREE.Group }).__cockpit
+    }
+  }, [])
+
   return (
-    <group position={spec.offset} rotation={spec.rotation} scale={spec.scale}>
+    <group ref={innerRef} position={spec.offset} rotation={spec.rotation} scale={spec.scale}>
       <primitive object={scene} />
     </group>
   )

@@ -8,10 +8,23 @@ import { supabase } from '@/lib/supabase'
 
 const EARN_REWARDS = [
   { action: 'Create account',          reward: 'Reward TBA',   desc: 'Welcome bonus for new members' },
-  { action: 'Connect wallet',          reward: 'Reward TBA',   desc: 'Verify your Solana wallet' },
+  { action: 'Link your voidexa account', reward: 'Reward TBA', desc: 'Verify your identity for extra perks' },
   { action: 'Refer a friend',          reward: 'Reward TBA',   desc: 'Both you and your friend earn' },
   { action: 'Upload a trading bot',    reward: 'Reward TBA',   desc: 'Share your strategy on Trading Hub' },
   { action: 'Win monthly competition', reward: 'Reward TBA',   desc: 'Top ranked bot of the month' },
+]
+
+const GHAI_VALUE_CARDS = [
+  { value: '$1 = 100 GHAI',     label: 'Fixed exchange rate' },
+  { value: 'Platform credit',   label: 'Not an investment vehicle' },
+  { value: 'In-ecosystem only', label: 'Used for voidexa services' },
+]
+
+const GHAI_USES = [
+  'Pay per AI session — Void Chat, Quantum debate, VoidForge generation',
+  'Unlock premium ships, cosmetics, and card packs in the voidexa universe',
+  'Priority queue access during peak hours',
+  'Seasonal content drops and pioneer-only perks',
 ]
 
 // Ghost AI SVG watermark — ghost silhouette with embedded circuit lines
@@ -148,12 +161,8 @@ export default function GhostAIPage() {
             className="inline-flex items-center gap-2 mb-8 flex-wrap justify-center"
           >
             <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
-              style={{ color: '#888', background: 'rgba(136,136,136,0.1)', border: '1px solid rgba(136,136,136,0.25)' }}>
-              Coming Soon
-            </span>
-            <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
-              style={{ color: '#ccaa44', background: 'rgba(204,170,68,0.1)', border: '1px solid rgba(204,170,68,0.3)' }}>
-              Powered by GHAI
+              style={{ color: '#00d4ff', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.3)' }}>
+              Platform Currency · GHAI
             </span>
           </motion.div>
 
@@ -237,7 +246,7 @@ export default function GhostAIPage() {
             className="text-base font-medium mb-3 uppercase tracking-widest"
             style={{ color: 'rgba(148,163,184,0.7)', letterSpacing: '0.18em' }}
           >
-            AI-Powered Token · Zero Friction · Instant Access
+            Earn it · Spend it · Upgrade your experience
           </motion.p>
 
           <motion.p
@@ -245,9 +254,9 @@ export default function GhostAIPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.26 }}
             className="text-lg mb-12 max-w-xl mx-auto"
-            style={{ color: '#475569' }}
+            style={{ color: '#94a3b8' }}
           >
-            The ecosystem token of voidexa — something big is coming
+            The platform currency of the voidexa ecosystem. Something bigger is being finalized with our legal advisors.
           </motion.p>
 
           {/* CTA buttons */}
@@ -272,7 +281,7 @@ export default function GhostAIPage() {
             </a>
 
             <Link
-              href="/whitepaper"
+              href="/white-paper"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-80"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}
             >
@@ -344,9 +353,73 @@ export default function GhostAIPage() {
       </section>
 
       {/* ══════════════════════════════════════════
+          PLATFORM CURRENCY EXPLAINER
+      ══════════════════════════════════════════ */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-16 pt-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <p className="text-sm font-bold uppercase tracking-[0.2em] mb-2" style={{ color: 'rgba(0,212,255,0.6)' }}>
+            Platform Currency
+          </p>
+          <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+            What GHAI is — and isn&apos;t
+          </h2>
+          <p className="text-base max-w-2xl" style={{ color: '#94a3b8', lineHeight: 1.7 }}>
+            GHAI is the platform currency of the voidexa ecosystem — similar in concept to in-game
+            currencies you may have used elsewhere. GHAI is earned or purchased in fixed increments
+            and spent inside voidexa to unlock AI compute, priority access, and seasonal content.
+          </p>
+        </motion.div>
+
+        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+          {GHAI_VALUE_CARDS.map((card, i) => (
+            <motion.div
+              key={card.label}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
+              className="rounded-xl"
+              style={{
+                padding: '20px 22px',
+                background: 'rgba(0,212,255,0.06)',
+                border: '1px solid rgba(0,212,255,0.25)',
+                boxShadow: '0 0 24px rgba(0,212,255,0.08)',
+              }}
+            >
+              <div style={{
+                fontSize: 22,
+                fontWeight: 800,
+                color: '#00d4ff',
+                fontFamily: 'var(--font-space, system-ui)',
+                textShadow: '0 0 10px rgba(0,212,255,0.5)',
+              }}>
+                {card.value}
+              </div>
+              <div style={{
+                fontSize: 14,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.6)',
+                fontFamily: 'var(--font-space, monospace)',
+                marginTop: 6,
+              }}>
+                {card.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           EARN GHAI
       ══════════════════════════════════════════ */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-24 pt-12">
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-16 pt-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -395,9 +468,101 @@ export default function GhostAIPage() {
       </section>
 
       {/* ══════════════════════════════════════════
+          HOW YOU'LL USE GHAI
+      ══════════════════════════════════════════ */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-16 pt-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-6"
+        >
+          <p className="text-sm font-bold uppercase tracking-[0.2em] mb-2" style={{ color: 'rgba(139,92,246,0.6)' }}>
+            Utility
+          </p>
+          <h2 className="text-3xl font-bold" style={{ fontFamily: 'var(--font-space)', color: '#e2e8f0' }}>
+            How you&apos;ll use GHAI
+          </h2>
+        </motion.div>
+
+        <div className="space-y-3">
+          {GHAI_USES.map((use, i) => (
+            <motion.div
+              key={use}
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.07 }}
+              className="flex items-start gap-3 px-5 py-3.5 rounded-xl"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                backdropFilter: 'blur(4px)',
+              }}
+            >
+              <span style={{
+                color: '#06b6d4',
+                fontSize: 18,
+                lineHeight: 1.4,
+                marginTop: 1,
+                textShadow: '0 0 8px rgba(6,182,212,0.6)',
+              }}>
+                ◆
+              </span>
+              <p className="text-base" style={{ color: '#cbd5e1', lineHeight: 1.55 }}>
+                {use}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          BLOCKCHAIN INTEGRATION UNDER REVIEW
+      ══════════════════════════════════════════ */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-16 pt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            padding: '24px 26px',
+            background: 'rgba(245, 158, 11, 0.07)',
+            border: '1px solid rgba(245, 158, 11, 0.45)',
+            borderRadius: 14,
+          }}
+        >
+          <div style={{
+            fontSize: 14,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontWeight: 700,
+            color: '#f59e0b',
+            fontFamily: 'var(--font-space, monospace)',
+            marginBottom: 8,
+          }}>
+            Blockchain integration under review
+          </div>
+          <p style={{
+            fontSize: 15,
+            lineHeight: 1.65,
+            color: 'rgba(255, 235, 200, 0.88)',
+            margin: 0,
+          }}>
+            voidexa is exploring blockchain integration for GHAI with legal advisors in Denmark.
+            Mechanics, technical infrastructure, and distribution details will be disclosed only
+            after regulatory review is complete. Until then, GHAI functions exclusively as a
+            platform credit within voidexa products.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           VOID CHAT CTA
       ══════════════════════════════════════════ */}
-      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-32">
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -439,6 +604,22 @@ export default function GhostAIPage() {
             Open Void Chat — Multi-AI Chat <ArrowRight size={15} />
           </a>
         </motion.div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          FINE-PRINT FOOTER LINK
+      ══════════════════════════════════════════ */}
+      <section className="relative z-10 max-w-4xl mx-auto px-6 pb-20 text-center">
+        <Link
+          href="/white-paper"
+          className="inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-100"
+          style={{
+            color: 'rgba(148,163,184,0.55)',
+            letterSpacing: '0.06em',
+          }}
+        >
+          Want the technical overview? Read the fine print →
+        </Link>
       </section>
 
       {/* Bottom glow edge */}
