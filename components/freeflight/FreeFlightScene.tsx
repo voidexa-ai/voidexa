@@ -19,11 +19,13 @@ import ModelErrorBoundary from './ModelErrorBoundary'
 import MissionRunner from './MissionRunner'
 import Landmarks from './environment/Landmarks'
 import NamedNPCs from './environment/NamedNPCs'
+import ExplorationEncounters from './environment/ExplorationEncounters'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 import type { MissionWaypoint } from '@/lib/game/missions/waypoints'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
+import type { ExplorationEncounter } from '@/lib/game/freeflight/explorationEncounters'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ReturnType<typeof createShipState>>) => void
@@ -34,6 +36,8 @@ interface Props {
   onFirstPersonChange?: (fp: boolean) => void
   onNearLandmarkChange?: (landmark: LandmarkDef | null) => void
   onNearNPCChange?: (npc: NPCDef | null, hostile: boolean) => void
+  onEncounterTrigger?: (enc: ExplorationEncounter) => void
+  resolvedEncounterIds?: ReadonlySet<string>
   shipUrl: string
   shipScale: number
   cockpitUrl: string
@@ -59,6 +63,8 @@ export default function FreeFlightScene({
   onMissionWaypointCleared,
   onNearLandmarkChange,
   onNearNPCChange,
+  onEncounterTrigger,
+  resolvedEncounterIds,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -142,6 +148,11 @@ export default function FreeFlightScene({
 
       <Landmarks ship={shipRef} onNearChange={onNearLandmarkChange} />
       <NamedNPCs ship={shipRef} onNearChange={onNearNPCChange} />
+      <ExplorationEncounters
+        ship={shipRef}
+        resolvedIds={resolvedEncounterIds ?? new Set()}
+        onTrigger={onEncounterTrigger}
+      />
     </>
   )
 }

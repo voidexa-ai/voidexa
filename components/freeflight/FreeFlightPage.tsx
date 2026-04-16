@@ -9,9 +9,12 @@ import ShipPicker from './ships/ShipPicker'
 import AchievementPanel from '@/components/achievements/AchievementPanel'
 import MissionOverlay from './MissionOverlay'
 import NPCDialogueBubble from './NPCDialogueBubble'
+import ExplorationChoiceModal from './ExplorationChoiceModal'
 import { useActiveMission } from './useActiveMission'
+import { useExplorationResolved } from './useExplorationResolved'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
+import type { ExplorationEncounter } from '@/lib/game/freeflight/explorationEncounters'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
@@ -40,6 +43,17 @@ export default function FreeFlightPage() {
   const [nearNPC, setNearNPC] = useState<NPCDef | null>(null)
   const [npcHostile, setNPCHostile] = useState(false)
   const [activeDialogue, setActiveDialogue] = useState<{ npc: NPCDef; line: string } | null>(null)
+  const [activeEncounter, setActiveEncounter] = useState<ExplorationEncounter | null>(null)
+
+  const { resolved: resolvedEncounterIds, resolve: resolveEncounter } = useExplorationResolved(
+    (ghai, name) => pushToast(`+${ghai} GHAI · ${name.toUpperCase()}`, '#ffd166'),
+  )
+
+  const handleEncounterTrigger = (enc: ExplorationEncounter) => {
+    if (resolvedEncounterIds.has(enc.id)) return
+    if (document.pointerLockElement) document.exitPointerLock()
+    setActiveEncounter(enc)
+  }
 
   const handleNearNPCChange = (npc: NPCDef | null, hostile: boolean) => {
     setNearNPC(npc)
@@ -217,6 +231,8 @@ export default function FreeFlightPage() {
           onMissionWaypointCleared={handleWaypointCleared}
           onNearLandmarkChange={setNearLandmark}
           onNearNPCChange={handleNearNPCChange}
+          onEncounterTrigger={handleEncounterTrigger}
+          resolvedEncounterIds={resolvedEncounterIds}
         />
       )}
 
@@ -334,6 +350,15 @@ export default function FreeFlightPage() {
           npc={activeDialogue.npc}
           line={activeDialogue.line}
           onDismiss={() => setActiveDialogue(null)}
+        />
+      )}
+
+      {/* Exploration encounter choice modal */}
+      {activeEncounter && (
+        <ExplorationChoiceModal
+          encounter={activeEncounter}
+          onChoose={choice => { void resolveEncounter(activeEncounter, choice) }}
+          onDismiss={() => setActiveEncounter(null)}
         />
       )}
 

@@ -9,6 +9,7 @@ import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 import type { MissionWaypoint } from '@/lib/game/missions/waypoints'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
+import type { ExplorationEncounter } from '@/lib/game/freeflight/explorationEncounters'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ShipState>) => void
@@ -19,6 +20,8 @@ interface Props {
   onFirstPersonChange?: (fp: boolean) => void
   onNearLandmarkChange?: (landmark: LandmarkDef | null) => void
   onNearNPCChange?: (npc: NPCDef | null, hostile: boolean) => void
+  onEncounterTrigger?: (enc: ExplorationEncounter) => void
+  resolvedEncounterIds?: ReadonlySet<string>
   shipUrl: string
   shipScale: number
   cockpitUrl: string
@@ -43,6 +46,8 @@ export default function FreeFlightCanvas(props: Props) {
           onMissionWaypointCleared={props.onMissionWaypointCleared}
           onNearLandmarkChange={props.onNearLandmarkChange}
           onNearNPCChange={props.onNearNPCChange}
+          onEncounterTrigger={props.onEncounterTrigger}
+          resolvedEncounterIds={props.resolvedEncounterIds}
         />
       </Suspense>
       <EffectComposer multisampling={0}>
