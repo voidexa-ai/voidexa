@@ -203,6 +203,10 @@ export function ModelBrowser() {
                       key={entry.name}
                       onClick={() => {
                         if (preset) loadPreset(preset)
+                        // Split equipment/screen parts have world-space positions
+                        // baked into their vertex data. preserveOrigin keeps them
+                        // at their cockpit-relative position instead of recentering.
+                        else if (cat === 'Individual Parts') addModel(entry, { preserveOrigin: true })
                         else addModel(entry)
                       }}
                       onMouseEnter={(e) => {
