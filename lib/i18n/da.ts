@@ -30,6 +30,7 @@ export const da: Dict = {
       '/freeflight':   { label: 'Fri Flyvning', description: 'Styr dit eget skib' },
       '/game/mission-board':        { label: 'Missioner', description: 'Tag kontrakter fra Casten' },
       '/game/cards/deck-builder':   { label: 'Dæk',       description: 'Byg dit 20-kort dæk' },
+      '/game/speed-run':            { label: 'Speed Run', description: 'Tidskørsel over tre baner' },
       '/shop':         { label: 'Butik',        description: 'Skins & kortpakker' },
       '/achievements': { label: 'Bedrifter',    description: 'Mindehallen' },
       '/team':        { label: 'Hold',          description: 'Mød besætningen' },

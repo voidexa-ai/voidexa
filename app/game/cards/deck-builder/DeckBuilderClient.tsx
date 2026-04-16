@@ -22,7 +22,7 @@ const TYPE_OPTIONS: readonly (CardType | 'all')[] = [
 ] as const
 
 const RARITY_OPTIONS: readonly (GameCardRarity | 'all')[] = [
-  'all', 'common', 'uncommon', 'rare', 'legendary', 'pioneer',
+  'all', 'common', 'uncommon', 'rare', 'legendary', 'mythic', 'pioneer',
 ] as const
 
 const TYPE_ICON: Record<CardType, string> = {
@@ -34,6 +34,7 @@ const RARITY_BORDER: Record<GameCardRarity, string> = {
   uncommon: 'rgba(90,200,250,0.55)',
   rare: 'rgba(90,160,250,0.75)',
   legendary: 'rgba(255,186,60,0.7)',
+  mythic: 'rgba(200,50,255,0.8)',
   pioneer: 'rgba(175,82,222,0.75)',
 }
 
@@ -42,6 +43,7 @@ const RARITY_GLOW: Record<GameCardRarity, string> = {
   uncommon: 'rgba(90,200,250,0.16)',
   rare: 'rgba(90,160,250,0.2)',
   legendary: 'rgba(255,186,60,0.22)',
+  mythic: 'rgba(200,50,255,0.3)',
   pioneer: 'rgba(175,82,222,0.25)',
 }
 
@@ -120,6 +122,7 @@ export default function DeckBuilderClient() {
       if (!tpl) return
       if (tpl.rarity === 'rare') stats.rare += e.count
       if (tpl.rarity === 'legendary') stats.legendary += e.count
+      if (tpl.rarity === 'mythic') stats.mythic += e.count
       if (tpl.rarity === 'pioneer') stats.pioneer += e.count
     })
     return stats
@@ -149,7 +152,8 @@ export default function DeckBuilderClient() {
 
     if (tpl.rarity === 'rare' && deckStats.rare + 1 > MAX_RARE) return { ok: false, reason: 'Max 3 rare per deck' }
     if (tpl.rarity === 'legendary' && deckStats.legendary + 1 > MAX_LEGENDARY) return { ok: false, reason: 'Max 1 legendary per deck' }
-    if (tpl.rarity === 'pioneer' && deckStats.pioneer + 1 > MAX_MYTHIC) return { ok: false, reason: 'Max 1 pioneer/mythic per deck' }
+    if (tpl.rarity === 'mythic' && deckStats.mythic + 1 > MAX_MYTHIC) return { ok: false, reason: 'Max 1 mythic per deck' }
+    if (tpl.rarity === 'pioneer' && deckStats.pioneer + 1 > MAX_MYTHIC) return { ok: false, reason: 'Max 1 pioneer per deck' }
 
     const ownedQty = owned[tpl.id] ?? 0
     if (!dreamMode && nextCount > ownedQty) return { ok: false, reason: "You don't own enough copies" }
@@ -400,6 +404,7 @@ export default function DeckBuilderClient() {
             <div style={S.statsRow}>
               <StatPill label="Rare" value={deckStats.rare} max={MAX_RARE} />
               <StatPill label="Legend." value={deckStats.legendary} max={MAX_LEGENDARY} />
+              <StatPill label="Mythic" value={deckStats.mythic} max={MAX_MYTHIC} />
               <StatPill label="Pioneer" value={deckStats.pioneer} max={MAX_MYTHIC} />
             </div>
 

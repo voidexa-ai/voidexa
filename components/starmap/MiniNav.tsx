@@ -7,11 +7,12 @@ import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 import { useI18n } from '@/lib/i18n/context'
 import { stripLocale } from '@/lib/i18n/locale'
 
-const LINK_HREFS = ['/starmap', '/game/mission-board', '/game/cards/deck-builder', '/trading', '/apps', '/ai-tools', '/services', '/about', '/contact']
+const LINK_HREFS = ['/starmap', '/game/mission-board', '/game/cards/deck-builder', '/game/speed-run', '/trading', '/apps', '/ai-tools', '/services', '/about', '/contact']
 const FALLBACK: Record<string, string> = {
   '/starmap': 'Galaxy',
   '/game/mission-board': 'Missions',
   '/game/cards/deck-builder': 'Deck',
+  '/game/speed-run': 'Speed Run',
   '/trading': 'Trading', '/apps': 'Apps', '/ai-tools': 'AI Tools',
   '/services': 'Services', '/about': 'About', '/contact': 'Contact',
 }

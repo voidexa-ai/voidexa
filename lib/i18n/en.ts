@@ -30,6 +30,7 @@ export const en: Dict = {
       '/freeflight':   { label: 'Free Flight',  description: 'Pilot your ship' },
       '/game/mission-board':        { label: 'Missions', description: 'Accept Cast contracts' },
       '/game/cards/deck-builder':   { label: 'Deck',     description: 'Build your 20-card deck' },
+      '/game/speed-run':            { label: 'Speed Run', description: 'Three-track time trials' },
       '/shop':         { label: 'Shop',         description: 'Skins & card packs' },
       '/achievements': { label: 'Achievements', description: 'Hall of records' },
       '/team':        { label: 'Team',        description: 'Meet the crew' },
