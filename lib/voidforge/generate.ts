@@ -87,14 +87,19 @@ export async function generate(req: GenerateRequest): Promise<GenerateResult> {
   const pool = buildCandidatePool(template, catalog)
 
   const variants: GeneratedVariant[] = []
+  const variantErrors: Array<{ index: number; stage: string; message: string }> = []
   const temperatures = VARIANT_TEMPERATURES.slice(0, input.variantCount)
 
   for (let i = 0; i < temperatures.length; i++) {
     const temperature = temperatures[i]
+    let stage: 'planning' | 'placing' | 'validating' | 'repairing' = 'planning'
     try {
       const plannerResult = await planAssembly(input, template, pool, { temperature })
+      stage = 'placing'
       const draft = placeAssembly(plannerResult.plan, template, catalog)
+      stage = 'validating'
       const draftReport = validateAssembly(draft, template, catalog)
+      stage = 'repairing'
       const repaired = repairAssembly(plannerResult.plan, draft, template, catalog)
 
       variants.push({
@@ -110,21 +115,21 @@ export async function generate(req: GenerateRequest): Promise<GenerateResult> {
         temperature,
       })
     } catch (e) {
-      // Skip this variant but let siblings continue — a single planner failure
-      // shouldn't fail the whole generation.
       const msg = e instanceof Error ? e.message : String(e)
-      console.warn(`[voidforge] variant ${i} failed: ${msg}`)
+      console.warn(`[voidforge] variant ${i} failed at ${stage}: ${msg}`)
+      variantErrors.push({ index: i, stage, message: msg })
     }
   }
 
   if (variants.length === 0) {
+    const detail = variantErrors.map((v) => `#${v.index} ${v.stage}: ${v.message}`).join(' | ')
     return {
       input,
       template,
       pool,
       variants: [],
       status: 'failed',
-      errorMessage: 'All variants failed during planning or placement',
+      errorMessage: detail || 'All variants failed during planning or placement',
     }
   }
 

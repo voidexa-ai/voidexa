@@ -14,12 +14,18 @@ import type {
 } from './types'
 import { buildPlannerPayload, buildUserMessage, VOIDFORGE_SYSTEM_PROMPT } from './prompts'
 
-const OPUS_MODEL = 'claude-opus-4-6-20250205'
+// Opus 4.6 model ID. Override with VOIDFORGE_OPUS_MODEL env var if Anthropic
+// ships a new snapshot and the alias lags.
+const OPUS_MODEL = (process.env.VOIDFORGE_OPUS_MODEL || 'claude-opus-4-6').trim()
 
 let _client: Anthropic | null = null
 function client(): Anthropic {
   if (_client) return _client
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  // Defensive trim — Vercel env values often carry paste-artifact trailing
+  // "\r\n" that round-trips through the dashboard as literal text. Anthropic
+  // then rejects the x-api-key header with 401. Seen before in this repo on
+  // Stripe keys (session 2026-04-13).
+  const apiKey = process.env.ANTHROPIC_API_KEY?.trim().replace(/\\r?\\n$/g, '')
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY missing')
   _client = new Anthropic({ apiKey })
   return _client
