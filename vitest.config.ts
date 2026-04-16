@@ -8,6 +8,8 @@ export default defineConfig({
   test: {
     include: [
       "lib/game/__tests__/**/*.test.ts",
+      "lib/game/cards/__tests__/**/*.test.ts",
+      "lib/credits/__tests__/**/*.test.ts",
       "lib/shop/__tests__/**/*.test.ts",
       "lib/cards/__tests__/**/*.test.ts",
       "lib/chat/__tests__/**/*.test.ts",

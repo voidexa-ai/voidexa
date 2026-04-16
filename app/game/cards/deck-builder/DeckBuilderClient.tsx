@@ -4,12 +4,11 @@ import { useCallback, useEffect, useMemo, useState, type DragEvent } from 'react
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import {
-  CARD_TEMPLATES,
-  CARDS_BY_ID,
   type CardTemplate,
   type CardType,
   type GameCardRarity,
 } from '@/lib/game/cards/index'
+import { ALL_CARDS as CARD_TEMPLATES, ALL_CARDS_BY_ID as CARDS_BY_ID } from '@/lib/game/cards/library'
 
 const DECK_SIZE = 20
 const MAX_COPIES = 2
