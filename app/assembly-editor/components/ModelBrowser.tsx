@@ -1,9 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useModelCatalog } from '../hooks/useModelCatalog'
 import { useEditorStore } from '../hooks/useEditorStore'
-import { CATEGORY_ORDER } from '../lib/editorTypes'
+import { CATEGORY_ORDER, type ModelEntry } from '../lib/editorTypes'
+import { ModelPreview } from './ModelPreview'
 
 export function ModelBrowser() {
   const { catalog, loading, error } = useModelCatalog()
@@ -13,6 +14,26 @@ export function ModelBrowser() {
     'Cockpit Frames': true,
     'Cockpit Interiors': true,
   })
+
+  // Hover-preview state. We wait ~260ms before showing so moving the mouse
+  // across the list doesn't flicker through every item.
+  const [hover, setHover] = useState<{ entry: ModelEntry; x: number; y: number } | null>(null)
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const onEnter = (entry: ModelEntry, e: React.MouseEvent<HTMLElement>) => {
+    const x = e.clientX
+    const y = e.clientY
+    if (hoverTimer.current) clearTimeout(hoverTimer.current)
+    hoverTimer.current = setTimeout(() => setHover({ entry, x, y }), 260)
+  }
+  const onMove = (e: React.MouseEvent<HTMLElement>) => {
+    setHover((prev) => (prev ? { ...prev, x: e.clientX, y: e.clientY } : prev))
+  }
+  const onLeave = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current)
+    hoverTimer.current = null
+    setHover(null)
+  }
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof catalog> = {}
@@ -97,6 +118,15 @@ export function ModelBrowser() {
                 <button
                   key={entry.name}
                   onClick={() => addModel(entry)}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(0, 212, 255, 0.12)'
+                    onEnter(entry, e)
+                  }}
+                  onMouseMove={onMove}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(30, 24, 60, 0.55)'
+                    onLeave()
+                  }}
                   style={{
                     width: 'calc(100% - 8px)',
                     margin: '2px 4px',
@@ -112,8 +142,6 @@ export function ModelBrowser() {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0, 212, 255, 0.12)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'rgba(30, 24, 60, 0.55)')}
                   title={`Add ${entry.name}`}
                 >
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -126,6 +154,10 @@ export function ModelBrowser() {
           )
         })}
       </div>
+
+      {hover && (
+        <ModelPreview url={hover.entry.url} name={hover.entry.name} x={hover.x} y={hover.y} />
+      )}
     </aside>
   )
 }

@@ -2,10 +2,11 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
-import { Environment, Grid, OrbitControls, useGLTF, Outlines } from '@react-three/drei'
+import { Environment, Grid, useGLTF, Outlines } from '@react-three/drei'
 import * as THREE from 'three'
 import { useEditorStore } from '../hooks/useEditorStore'
 import { GizmoWrapper } from './GizmoWrapper'
+import { FlyControls, type FlyControlsHandle } from './FlyControls'
 import type { PlacedModel } from '../lib/editorTypes'
 
 function WireframeBox() {
@@ -41,7 +42,7 @@ function ModelInScene({
 }: {
   model: PlacedModel
   isSelected: boolean
-  orbitRef: React.MutableRefObject<any>
+  orbitRef: React.MutableRefObject<FlyControlsHandle | null>
 }) {
   const selectModel = useEditorStore(s => s.selectModel)
   const groupRef = useRef<THREE.Group>(null)
@@ -106,7 +107,7 @@ function ClickSelector() {
     }
 
     const onUp = (e: PointerEvent) => {
-      // Ignore if it was a drag (orbit/pan)
+      // Ignore if it was a drag (fly-look or gizmo drag).
       const dx = Math.abs(e.clientX - down.x)
       const dy = Math.abs(e.clientY - down.y)
       if (dx > 4 || dy > 4) return
@@ -145,7 +146,7 @@ function ClickSelector() {
   return null
 }
 
-function CameraController({ orbitRef }: { orbitRef: React.MutableRefObject<any> }) {
+function CameraController({ orbitRef }: { orbitRef: React.MutableRefObject<FlyControlsHandle | null> }) {
   const preset = useEditorStore(s => s.cameraPreset)
   const tick = useEditorStore(s => s.presetTick)
   const { camera } = useThree()
@@ -153,11 +154,12 @@ function CameraController({ orbitRef }: { orbitRef: React.MutableRefObject<any> 
     if (!preset) return
     const p = PRESETS[preset]
     camera.position.set(...p.position)
+    const target = new THREE.Vector3(...p.target)
+    camera.lookAt(target)
     if (orbitRef.current) {
-      orbitRef.current.target.set(...p.target)
+      orbitRef.current.target.copy(target)
       orbitRef.current.update()
     }
-    camera.lookAt(new THREE.Vector3(...p.target))
   }, [preset, tick, camera, orbitRef])
   return null
 }
@@ -166,48 +168,71 @@ export function EditorCanvas() {
   const placedModels = useEditorStore(s => s.placedModels)
   const selectedId = useEditorStore(s => s.selectedId)
   const selectModel = useEditorStore(s => s.selectModel)
-  const orbitRef = useRef<any>(null)
+  const orbitRef = useRef<FlyControlsHandle | null>(null)
 
   return (
-    <Canvas
-      dpr={[1, 1.5]}
-      camera={{ position: [5, 4, 7], fov: 50, near: 0.1, far: 1000 }}
-      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
-      style={{ background: 'linear-gradient(180deg, #0d0a1f 0%, #060412 100%)' }}
-      onPointerMissed={() => selectModel(null)}
-    >
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 10, 5]} intensity={0.8} />
-      <directionalLight position={[-5, 4, -3]} intensity={0.3} color="#a855f7" />
+    <>
+      <Canvas
+        dpr={[1, 1.5]}
+        camera={{ position: [5, 4, 7], fov: 50, near: 0.1, far: 1000 }}
+        gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
+        style={{ background: 'linear-gradient(180deg, #0d0a1f 0%, #060412 100%)' }}
+        onPointerMissed={() => selectModel(null)}
+      >
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[5, 10, 5]} intensity={0.8} />
+        <directionalLight position={[-5, 4, -3]} intensity={0.3} color="#a855f7" />
 
-      <Grid
-        infiniteGrid
-        cellSize={0.5}
-        sectionSize={5}
-        cellColor="#2a2147"
-        sectionColor="#4a3f7a"
-        fadeDistance={40}
-        fadeStrength={1.2}
-        followCamera={false}
-      />
-
-      <Suspense fallback={null}>
-        <Environment preset="night" />
-      </Suspense>
-
-      {placedModels.map(m => (
-        <ModelInScene
-          key={m.id}
-          model={m}
-          isSelected={m.id === selectedId}
-          orbitRef={orbitRef}
+        <Grid
+          infiniteGrid
+          cellSize={0.5}
+          sectionSize={5}
+          cellColor="#2a2147"
+          sectionColor="#4a3f7a"
+          fadeDistance={40}
+          fadeStrength={1.2}
+          followCamera={false}
         />
-      ))}
 
-      <OrbitControls ref={orbitRef} makeDefault enableDamping dampingFactor={0.08} />
+        <Suspense fallback={null}>
+          <Environment preset="night" />
+        </Suspense>
 
-      <ClickSelector />
-      <CameraController orbitRef={orbitRef} />
-    </Canvas>
+        {placedModels.map(m => (
+          <ModelInScene
+            key={m.id}
+            model={m}
+            isSelected={m.id === selectedId}
+            orbitRef={orbitRef}
+          />
+        ))}
+
+        <FlyControls controlRef={orbitRef} />
+
+        <ClickSelector />
+        <CameraController orbitRef={orbitRef} />
+      </Canvas>
+
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 12,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          pointerEvents: 'none',
+          fontSize: 13,
+          color: '#a9b4d0',
+          background: 'rgba(6, 4, 18, 0.78)',
+          border: '1px solid rgba(0, 212, 255, 0.25)',
+          padding: '6px 12px',
+          borderRadius: 6,
+          letterSpacing: 0.4,
+          fontFamily: 'Inter, system-ui, sans-serif',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        WASD to move · Q/E up·down · Right-click + drag to look · Scroll = speed
+      </div>
+    </>
   )
 }

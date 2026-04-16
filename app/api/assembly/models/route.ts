@@ -8,22 +8,45 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 
 export async function GET() {
   try {
-    const { data, error } = await supabaseAdmin.storage
-      .from('models')
-      .list('', { limit: 500, sortBy: { column: 'name', order: 'asc' } })
+    // Pull the Storage listing and the canonical active-model list in parallel.
+    // Storage is the source of binaries; the DB carries is_active flags used
+    // to hide multi-part originals once they've been split into individual
+    // pieces (see scripts/split-glb-models.ts).
+    const [listRes, activeRes] = await Promise.all([
+      supabaseAdmin.storage
+        .from('models')
+        .list('', { limit: 1000, sortBy: { column: 'name', order: 'asc' } }),
+      supabaseAdmin.from('models').select('slug, is_active, display_name'),
+    ])
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (listRes.error) {
+      return NextResponse.json({ error: listRes.error.message }, { status: 500 })
     }
 
-    const entries = (data || [])
+    const activeBySlug = new Map<string, { is_active: boolean; display_name: string | null }>()
+    for (const row of activeRes.data ?? []) {
+      activeBySlug.set(row.slug, { is_active: row.is_active, display_name: row.display_name })
+    }
+
+    const entries = (listRes.data || [])
       .filter(f => f.name.toLowerCase().endsWith('.glb'))
-      .map(f => ({
-        name: f.name.replace(/\.glb$/i, ''),
-        url: `${SUPABASE_URL}/storage/v1/object/public/models/${f.name}`,
-        category: deriveCategory(f.name),
-        size: (f.metadata as { size?: number } | null)?.size || 0,
-      }))
+      .map(f => {
+        const slug = f.name.replace(/\.glb$/i, '')
+        const dbRow = activeBySlug.get(slug)
+        return {
+          slug,
+          name: slug,
+          displayName: dbRow?.display_name ?? slug,
+          url: `${SUPABASE_URL}/storage/v1/object/public/models/${f.name}`,
+          category: deriveCategory(f.name),
+          size: (f.metadata as { size?: number } | null)?.size || 0,
+          // If the slug isn't in DB yet, keep it visible (default true) — only
+          // rows explicitly marked is_active=false get filtered.
+          isActive: dbRow ? dbRow.is_active : true,
+        }
+      })
+      .filter(e => e.isActive)
+      .map(({ isActive: _, slug: __, displayName: ___, ...rest }) => rest)
 
     return NextResponse.json({ entries })
   } catch (e) {
