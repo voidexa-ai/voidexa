@@ -52,7 +52,9 @@ export const CATEGORY_META: Readonly<Record<MissionCategory, { color: string; ic
   Signal: { color: '#af52de', icon: '⎔' },
 }
 
-export const MISSION_TEMPLATES: readonly MissionTemplate[] = [
+// The 8 starter missions from Phase 1b. Kept as their own export so they
+// stay flavour-authored and can win on id collisions in the merge below.
+export const STARTER_MISSION_TEMPLATES: readonly MissionTemplate[] = [
   {
     id: 'local_parcel_run',
     name: 'Local Parcel Run',
@@ -169,6 +171,23 @@ export const MISSION_TEMPLATES: readonly MissionTemplate[] = [
     encounterChance: 'Outer ring — 2–4 encounter rolls plus boss fight. High wreck risk.',
   },
 ] as const
+
+// Sprint 2 Task 4 — the 8 hardcoded templates above were the Phase 1b starter
+// set; they're kept importable by id for any caller still hardcoding one.
+// The full 90-mission library lives in ./catalog and is merged below.
+// The merged export (MISSION_TEMPLATES) is what the Mission Board renders.
+import { MISSION_CATALOG } from './catalog'
+
+const hardcodedIds = new Set(STARTER_MISSION_TEMPLATES.map(m => m.id))
+// Any catalog mission whose id collides with a starter mission is dropped so
+// the starter flavour wins. 98 → 90 after dedupe in the typical case; this
+// supports hot-swapping individual missions via the starter array.
+const mergedList: MissionTemplate[] = [
+  ...STARTER_MISSION_TEMPLATES,
+  ...MISSION_CATALOG.filter(m => !hardcodedIds.has(m.id)),
+]
+
+export const MISSION_TEMPLATES: readonly MissionTemplate[] = Object.freeze(mergedList)
 
 export function getMissionById(id: string): MissionTemplate | undefined {
   return MISSION_TEMPLATES.find(m => m.id === id)
