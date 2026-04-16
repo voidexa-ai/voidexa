@@ -1,0 +1,832 @@
+[
+  {
+    "id": "thermal_lance",
+    "name": "Thermal Lance",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 5,
+      "apply": ["burn"]
+    },
+    "abilityText": "Deal 5 damage. Apply Burn.",
+    "flavor": "Cuts through plating like a hot wire through wax.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "flak_burst",
+    "name": "Flak Burst",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "damage": 4,
+      "conditional": "hits_3_random_targets"
+    },
+    "abilityText": "Deal 4 damage to each of 3 random targets.",
+    "flavor": "Spray and pray is a valid doctrine when you have enough barrels.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "finisher_torpedo",
+    "name": "Finisher Torpedo",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "damage": 9,
+      "conditional": "bonus_12_if_target_below_30_hull"
+    },
+    "abilityText": "Deal 9 damage. If target below 30% hull, deal 12 extra.",
+    "flavor": "Locked on the dying embers of a failing reactor.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "breach_mark",
+    "name": "Breach Mark",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "damage": 5,
+      "apply": ["expose"]
+    },
+    "abilityText": "Deal 5 damage. Apply Expose.",
+    "flavor": "Tag the weak spot. Let the pack finish the job.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "salvo_barrage",
+    "name": "Salvo Barrage",
+    "type": "weapon",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "damage": 10,
+      "apply": ["scrap"],
+      "conditional": "gain_scrap_on_hit"
+    },
+    "abilityText": "Deal 10 damage. Gain 1 Scrap.",
+    "flavor": "Every hit leaves debris. Every piece has value.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "piercing_beam",
+    "name": "Piercing Beam",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "damage": 14,
+      "conditional": "ignore_half_block"
+    },
+    "abilityText": "Deal 14 damage. Ignore 50% of target's Block.",
+    "flavor": "Phase-shifted photons pass through matter like it isn't there.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "arc_coil",
+    "name": "Arc Coil",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "damage": 6,
+      "splash": 4,
+      "conditional": "chain_6_4_2"
+    },
+    "abilityText": "Deal 6 damage, then 4, then 2 to successive targets.",
+    "flavor": "Lightning has no loyalty. It simply finds the next conductor.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "reactor_spike",
+    "name": "Reactor Spike",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 18,
+      "self_damage": 5
+    },
+    "abilityText": "Take 5 self-damage. Deal 18 damage.",
+    "flavor": "Overload the reactor. Ask questions later.",
+    "faction": "void",
+    "shipClassRestriction": "fighter"
+  },
+  {
+    "id": "rail_line",
+    "name": "Rail Line",
+    "type": "weapon",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "damage": 15,
+      "splash": 7
+    },
+    "abilityText": "Deal 15 to primary target. Deal 7 to secondary target.",
+    "flavor": "One slug. Two holes. Zero pity.",
+    "faction": "core",
+    "shipClassRestriction": "fighter"
+  },
+  {
+    "id": "emp_nova",
+    "name": "EMP Nova",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "damage": 8,
+      "apply": ["jam"],
+      "conditional": "hits_all_enemies"
+    },
+    "abilityText": "Deal 8 damage to all enemies. Apply Jam to all.",
+    "flavor": "The pulse doesn't discriminate. Everything stops.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "shatter_beam",
+    "name": "Shatter Beam",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "damage": 18,
+      "conditional": "bonus_8_vs_block"
+    },
+    "abilityText": "Deal 18 damage. If target has Block, deal 8 bonus damage.",
+    "flavor": "Designed for one purpose: breaking things that think they're safe.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "void_lance",
+    "name": "Void Lance",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 5,
+    "stats": {
+      "damage": 28,
+      "apply": ["lock"]
+    },
+    "abilityText": "Deal 28 damage. Apply Lock.",
+    "flavor": "A weapon from beyond the mapped sectors. It does not miss.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "charged_shot",
+    "name": "Charged Shot",
+    "type": "weapon",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "damage": 14,
+      "scaling": "plus_4_per_turn_held"
+    },
+    "abilityText": "Deal 14 damage. +4 damage for each turn held in hand.",
+    "flavor": "Patience is a virtue. Patience with a capacitor is a death sentence.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "stellar_annihilator",
+    "name": "Stellar Annihilator",
+    "type": "weapon",
+    "rarity": "legendary",
+    "cost": 7,
+    "stats": {
+      "damage": 36,
+      "conditional": "bonus_12_if_2_statuses",
+      "exhaust": true
+    },
+    "abilityText": "Deal 36 damage. If target has 2+ statuses, deal 12 extra. Exhaust.",
+    "flavor": "The last thing a capital ship sees before its bridge goes dark.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "void_echo",
+    "name": "Void Echo",
+    "type": "weapon",
+    "rarity": "mythic",
+    "cost": 6,
+    "stats": {
+      "conditional": "damage_equals_total_combat_damage",
+      "exhaust": true
+    },
+    "abilityText": "Deal damage equal to total damage dealt this combat. Once per game. Exhaust.",
+    "flavor": "The void remembers every wound you've inflicted. And returns them all at once.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "ablative_plating",
+    "name": "Ablative Plating",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "block": 5,
+      "conditional": "if_hit_gain_shielded"
+    },
+    "abilityText": "Gain 5 Block. If hit this turn, gain Shielded.",
+    "flavor": "Each layer burns away to protect the one beneath it.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "firewall_bubble",
+    "name": "Firewall Bubble",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "apply": ["shielded"],
+      "draw": 1
+    },
+    "abilityText": "Gain Shielded. Draw 1.",
+    "flavor": "A thin digital membrane between you and catastrophe.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "drain_beam",
+    "name": "Drain Beam",
+    "type": "defense",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "block": 8,
+      "conditional": "steal_from_enemy"
+    },
+    "abilityText": "Steal 8 Block from enemy.",
+    "flavor": "Why generate your own shield when you can borrow theirs?",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "shield_lattice",
+    "name": "Shield Lattice",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "block": 12,
+      "conditional": "retain_50_percent_block"
+    },
+    "abilityText": "Gain 12 Block. Retain 50% of remaining Block next turn.",
+    "flavor": "Interlocking energy fields that rebuild as fast as they break.",
+    "faction": "core",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "bulkhead_lock",
+    "name": "Bulkhead Lock",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "block": 12,
+      "energy": -1
+    },
+    "abilityText": "Gain 12 Block. Lose 1 energy next turn.",
+    "flavor": "Seal the section. Deal with the power drain later.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "auto_repair_module",
+    "name": "Auto-Repair Module",
+    "type": "defense",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "heal": 2,
+      "duration_turns": 3,
+      "per_turn": 2
+    },
+    "abilityText": "Heal 2 hull each turn for 3 turns.",
+    "flavor": "Nanobots work slow. But they never stop.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "phase_shell",
+    "name": "Phase Shell",
+    "type": "defense",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "conditional": "negate_next_attack",
+      "draw": 1
+    },
+    "abilityText": "Ignore the next attack completely. Draw 1.",
+    "flavor": "For one heartbeat, you exist slightly outside reality.",
+    "faction": "void",
+    "shipClassRestriction": "explorer"
+  },
+  {
+    "id": "leech_shield",
+    "name": "Leech Shield",
+    "type": "defense",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "conditional": "block_equals_half_weapon_damage"
+    },
+    "abilityText": "This turn, gain Block equal to half the damage your weapons deal.",
+    "flavor": "The best defense is a good offense. Literally.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "persistent_barrier",
+    "name": "Persistent Barrier",
+    "type": "defense",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "block": 16,
+      "conditional": "retain_up_to_10_block"
+    },
+    "abilityText": "Gain 16 Block. Retain up to 10 Block at end of turn.",
+    "flavor": "Military-grade shielding that doesn't know when to quit.",
+    "faction": "core",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "crash_override",
+    "name": "Crash Override",
+    "type": "defense",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "block": 10,
+      "conditional": "prevent_lethal_set_hull_1",
+      "exhaust": true
+    },
+    "abilityText": "If you would take lethal damage this turn, survive with 1 hull instead. Gain 10 Block. Exhaust.",
+    "flavor": "ERROR: DEATH.EXE — ACCESS DENIED.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "afterburn",
+    "name": "Afterburn",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "evade": true,
+      "energy": 1,
+      "conditional": "energy_next_turn"
+    },
+    "abilityText": "Evade next attack. Gain 1 energy next turn.",
+    "flavor": "Full thrust, no brakes, no regrets.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "barrel_roll",
+    "name": "Barrel Roll",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "block": 3,
+      "conditional": "reduce_next_2_hits_by_3"
+    },
+    "abilityText": "Reduce damage from next 2 hits by 3 each.",
+    "flavor": "Aileron roll. Works in atmosphere. Works in void. Works everywhere.",
+    "faction": "core",
+    "shipClassRestriction": "fighter"
+  },
+  {
+    "id": "vector_feint",
+    "name": "Vector Feint",
+    "type": "maneuver",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "block": 6,
+      "draw": 1,
+      "conditional": "if_attacked_this_turn"
+    },
+    "abilityText": "If attacked this turn, gain 6 Block and draw 1.",
+    "flavor": "Bait the shot. Read the angle. Punish.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "drift_turn",
+    "name": "Drift Turn",
+    "type": "maneuver",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "next_weapon_hits_twice_minus_3"
+    },
+    "abilityText": "Next weapon hits twice at −3 damage per hit.",
+    "flavor": "Slide sideways. Fire twice. Straighten up.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "tractor_pulse",
+    "name": "Tractor Pulse",
+    "type": "maneuver",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "damage": 4,
+      "apply": ["lock"]
+    },
+    "abilityText": "Apply Lock. Deal 4 damage.",
+    "flavor": "Grab them. Hold them. Hit them.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "anchor_protocol",
+    "name": "Anchor Protocol",
+    "type": "maneuver",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "block": 10,
+      "conditional": "cannot_evade_this_turn"
+    },
+    "abilityText": "Gain 10 Block. Cannot Evade this turn.",
+    "flavor": "Plant yourself. Let the armor do the talking.",
+    "faction": "core",
+    "shipClassRestriction": "hauler"
+  },
+  {
+    "id": "cloak_burst",
+    "name": "Cloak Burst",
+    "type": "maneuver",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "untargetable": true,
+      "discard": 1
+    },
+    "abilityText": "Become untargetable until your next turn. Discard 1.",
+    "flavor": "Vanish. Recalculate. Return on your terms.",
+    "faction": "void",
+    "shipClassRestriction": "explorer"
+  },
+  {
+    "id": "phantom_strike",
+    "name": "Phantom Strike",
+    "type": "maneuver",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "untargetable": true,
+      "conditional": "next_weapon_double_damage"
+    },
+    "abilityText": "Become untargetable. Next weapon deals double damage.",
+    "flavor": "A ghost with a gun. The worst kind.",
+    "faction": "void",
+    "shipClassRestriction": "fighter"
+  },
+  {
+    "id": "decoy_drone",
+    "name": "Decoy Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "absorb": 5
+    },
+    "abilityText": "Deploy drone: Absorbs next 5 damage.",
+    "flavor": "Looks real enough to take a bullet for you.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "oracle_drone",
+    "name": "Oracle Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "reveal_enemy_intent",
+      "duration_turns": 2
+    },
+    "abilityText": "Deploy drone: Reveals enemy intent each turn for 2 turns.",
+    "flavor": "It sees what's coming. Whether you act on it is your problem.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "snare_drone",
+    "name": "Snare Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "apply": ["lock"],
+      "duration_turns": 2
+    },
+    "abilityText": "Deploy drone: Applies Lock each turn for 2 turns.",
+    "flavor": "Once it latches on, running is no longer an option.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "salvage_drone",
+    "name": "Salvage Drone",
+    "type": "drone",
+    "rarity": "common",
+    "cost": 2,
+    "stats": {
+      "apply": ["scrap"],
+      "duration_turns": 3,
+      "per_turn": 1
+    },
+    "abilityText": "Deploy drone: Generates 1 Scrap each turn for 3 turns.",
+    "flavor": "It doesn't fight. It picks up what's left after fighting.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "emp_drone",
+    "name": "EMP Drone",
+    "type": "drone",
+    "rarity": "uncommon",
+    "cost": 3,
+    "stats": {
+      "apply": ["jam"],
+      "duration_turns": 4,
+      "conditional": "applies_every_other_turn"
+    },
+    "abilityText": "Deploy drone: Applies Jam every other turn for 4 turns.",
+    "flavor": "A persistent migraine for enemy systems.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "escort_wing",
+    "name": "Escort Wing",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "per_turn": 2,
+      "duration_turns": 3,
+      "conditional": "deploy_2_fighters_2_damage_each"
+    },
+    "abilityText": "Deploy 2 micro-fighters: each deals 2 damage per turn for 3 turns.",
+    "flavor": "Two wingmen that never complain and never miss.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "kamikaze_drone",
+    "name": "Kamikaze Drone",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 3,
+    "stats": {
+      "per_turn": 3,
+      "duration_turns": 2,
+      "damage": 10,
+      "conditional": "on_death_deal_10"
+    },
+    "abilityText": "Deploy drone: 3 damage per turn for 2 turns. On death, deal 10 damage.",
+    "flavor": "It was always going to end this way. Might as well make it count.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "carrier_deploy",
+    "name": "Carrier Deploy",
+    "type": "drone",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "conditional": "deploy_scout_and_repair_drone",
+      "duration_turns": 3
+    },
+    "abilityText": "Deploy Scout Drone and Repair Drone. Each lasts 3 turns.",
+    "flavor": "Open the bay. Launch everything. Sort it out later.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "efficiency_protocol",
+    "name": "Efficiency Protocol",
+    "type": "ai",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "conditional": "next_2_cards_cost_1_less"
+    },
+    "abilityText": "Next 2 cards cost 1 less this turn.",
+    "flavor": "Optimize. Compress. Execute.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "system_query",
+    "name": "System Query",
+    "type": "ai",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "conditional": "search_deck_for_drone"
+    },
+    "abilityText": "Search your deck for a Drone card. Add it to your hand.",
+    "flavor": "Query: DRONE_TYPE=ANY. Status: LOADED. Deploy when ready.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "predator_lock",
+    "name": "Predator Lock",
+    "type": "ai",
+    "rarity": "rare",
+    "cost": 4,
+    "stats": {
+      "apply": ["expose", "lock", "drone_mark"]
+    },
+    "abilityText": "Apply Expose, Lock, and Drone Mark to target.",
+    "flavor": "Three targeting systems. Zero escape routes.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "fleet_commander",
+    "name": "Fleet Commander",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 2,
+      "conditional": "summon_2_gun_drones"
+    },
+    "abilityText": "Summon 2 temporary Gun Drones. Each deals 4 damage per turn for 2 turns.",
+    "flavor": "One order. Sixteen barrels. Coordinated annihilation.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "leviathan_presence",
+    "name": "Leviathan Presence",
+    "type": "ai",
+    "rarity": "legendary",
+    "cost": 5,
+    "stats": {
+      "block": 2,
+      "duration_turns": 3,
+      "draw": 2,
+      "conditional": "all_allies_gain_2_block_per_turn"
+    },
+    "abilityText": "All allies gain 2 Block each turn for 3 turns. Draw 2.",
+    "flavor": "When a Leviathan enters the sector, even pirates hold their fire.",
+    "faction": "pioneer",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "quantum_convergence",
+    "name": "Quantum Convergence",
+    "type": "ai",
+    "rarity": "mythic",
+    "cost": 7,
+    "stats": {
+      "conditional": "duplicate_all_cards_played_this_turn",
+      "exhaust": true
+    },
+    "abilityText": "Duplicate every card you play this turn. Once per game. Exhaust.",
+    "flavor": "Every timeline collapses into one. And in that one, you played everything twice.",
+    "faction": "void",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "battery_swap",
+    "name": "Battery Swap",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 0,
+    "stats": {
+      "energy": 2,
+      "exhaust": true
+    },
+    "abilityText": "Gain 2 energy. Exhaust.",
+    "flavor": "Hot swap. No downtime. Keep moving.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "nanite_pack",
+    "name": "Nanite Pack",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "heal": 5,
+      "remove": ["burn", "jam", "lock", "expose"],
+      "exhaust": true,
+      "conditional": "remove_1_status"
+    },
+    "abilityText": "Heal 5. Remove 1 status. Exhaust.",
+    "flavor": "Crack the seal. Let the nanites work.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "smoke_chaff",
+    "name": "Smoke Chaff",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "evade": true,
+      "remove": ["lock"],
+      "exhaust": true
+    },
+    "abilityText": "Gain Evade. Remove Lock from self. Exhaust.",
+    "flavor": "Silver confetti for a one-ship parade.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "spare_drone_kit",
+    "name": "Spare Drone Kit",
+    "type": "consumable",
+    "rarity": "common",
+    "cost": 1,
+    "stats": {
+      "per_turn": 4,
+      "duration_turns": 1,
+      "exhaust": true,
+      "conditional": "summon_1_turn_gun_drone"
+    },
+    "abilityText": "Summon a 1-turn Gun Drone that deals 4 damage. Exhaust.",
+    "flavor": "Emergency firepower in a box. Assembly not required.",
+    "faction": "neutral",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "field_patch",
+    "name": "Field Patch",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "heal": 6,
+      "self_damage": 2,
+      "exhaust": true,
+      "conditional": "take_2_damage_next_turn"
+    },
+    "abilityText": "Heal 6. Take 2 damage next turn (Repair Debt). Exhaust.",
+    "flavor": "Quick fix now. The bill comes later.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "hard_reboot",
+    "name": "Hard Reboot",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 2,
+    "stats": {
+      "remove": ["burn", "jam", "lock", "expose", "drone_mark"],
+      "exhaust": true,
+      "conditional": "remove_all_statuses_skip_next_draw"
+    },
+    "abilityText": "Remove all statuses from self. Skip next draw phase. Exhaust.",
+    "flavor": "Turn it off. Turn it on. Pray.",
+    "faction": "core",
+    "shipClassRestriction": null
+  },
+  {
+    "id": "thermal_vent",
+    "name": "Thermal Vent",
+    "type": "consumable",
+    "rarity": "uncommon",
+    "cost": 1,
+    "stats": {
+      "remove": ["overcharge"],
+      "damage": 3,
+      "exhaust": true,
+      "conditional": "damage_all_enemies"
+    },
+    "abilityText": "Remove Overcharge from self. Deal 3 damage to all enemies. Exhaust.",
+    "flavor": "Vent the heat. Let everyone feel it.",
+    "faction": "core",
+    "shipClassRestriction": null
+  }
+]
