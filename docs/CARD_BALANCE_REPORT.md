@@ -7,13 +7,13 @@
 
 **Card pool:** 257 unique cards
 
-**Random matches:** 10,000 (P0 wins: 5,055, P1 wins: 4,857, draws: 88)
+**Random matches:** 10,000 (P0 wins: 5,107, P1 wins: 4,795, draws: 98)
 
-**P0 vs P1 balance:** 50.5% vs 48.6% (first-mover advantage)
+**P0 vs P1 balance:** 51.1% vs 47.9% (first-mover advantage)
 
-**Average game length:** 22.89 turns (median: 23)
+**Average game length:** 23.03 turns (median: 23)
 
-**Hill-climb matches:** 100 (optimized deck wins: 86, random opponent wins: 13)
+**Hill-climb matches:** 100 (optimized deck wins: 82, random opponent wins: 17)
 
 
 **Card pool distribution:**
@@ -44,16 +44,16 @@ Cards with the highest win rate when included in a deck (minimum 50 appearances)
 
 | Rank | Card | Type | Rarity | Cost | Win Rate | Inclusion Rate | Appearances |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Adamant Siege Engine | drone | rare | 6 | 65.5% | 5.6% | 1132 |
-| 2 | Rail Line | weapon | uncommon | 4 | 65.4% | 8.9% | 1805 |
-| 3 | Void Lance | weapon | rare | 5 | 64.5% | 5.5% | 1113 |
-| 4 | Unstable Warhead | weapon | rare | 4 | 63.3% | 5.3% | 1064 |
-| 5 | Catastrophic Strike | weapon | legendary | 6 | 62.9% | 4.0% | 801 |
-| 6 | Heavy Torpedo | weapon | uncommon | 4 | 62.5% | 8.9% | 1789 |
-| 7 | Shatter Beam | weapon | rare | 4 | 61.9% | 5.6% | 1138 |
-| 8 | Burst Window | maneuver | legendary | 3 | 61.3% | 4.3% | 870 |
-| 9 | Plasma Arc | weapon | uncommon | 4 | 61.1% | 9.0% | 1814 |
-| 10 | Void Echo | weapon | mythic | 6 | 61.1% | 6.5% | 1320 |
+| 1 | Void Lance | weapon | rare | 5 | 67.2% | 5.5% | 1111 |
+| 2 | Unstable Warhead | weapon | rare | 4 | 65.7% | 5.3% | 1074 |
+| 3 | Rail Line | weapon | uncommon | 4 | 65.4% | 8.9% | 1791 |
+| 4 | Void Echo | weapon | mythic | 6 | 62.7% | 6.5% | 1318 |
+| 5 | Heavy Torpedo | weapon | uncommon | 4 | 62.0% | 8.9% | 1802 |
+| 6 | Shatter Beam | weapon | rare | 4 | 61.7% | 5.7% | 1146 |
+| 7 | Catastrophic Strike | weapon | legendary | 6 | 61.5% | 4.0% | 803 |
+| 8 | Piercing Beam | weapon | uncommon | 3 | 61.2% | 9.4% | 1897 |
+| 9 | Thermal Lance | weapon | common | 1 | 60.9% | 9.3% | 1872 |
+| 10 | Plasma Arc | weapon | uncommon | 4 | 60.9% | 9.0% | 1825 |
 
 ## 3. Top 10 Weakest Cards (Buff Candidates)
 
@@ -62,16 +62,16 @@ Cards with the lowest win rate when included (minimum 50 appearances).
 
 | Rank | Card | Type | Rarity | Cost | Win Rate | Inclusion Rate | Appearances |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Overclock Core | ai | rare | 0 | 35.6% | 5.3% | 1070 |
-| 2 | Signal Blackout | ai | rare | 1 | 38.2% | 5.6% | 1136 |
-| 3 | Weapons Hot | ai | legendary | 1 | 39.7% | 3.8% | 773 |
-| 4 | Trace Protocol | ai | rare | 2 | 39.9% | 5.4% | 1084 |
-| 5 | Weapon Router | ai | rare | 2 | 40.2% | 5.4% | 1095 |
-| 6 | Ion Storm | ai | legendary | 2 | 40.3% | 3.9% | 792 |
-| 7 | Fleet Commander | ai | legendary | 2 | 40.6% | 4.0% | 807 |
-| 8 | Quantum Rift | ai | legendary | 2 | 40.7% | 3.8% | 762 |
-| 9 | Battlefield Read | ai | rare | 2 | 41.1% | 5.6% | 1139 |
-| 10 | Overclocked Gunbrain | ai | rare | 4 | 41.2% | 5.1% | 1041 |
+| 1 | Overclock Core | ai | rare | 0 | 33.5% | 5.3% | 1081 |
+| 2 | Weapon Router | ai | rare | 2 | 39.3% | 5.4% | 1085 |
+| 3 | Trace Protocol | ai | rare | 2 | 39.6% | 5.3% | 1079 |
+| 4 | Signal Blackout | ai | rare | 1 | 40.1% | 5.6% | 1139 |
+| 5 | Ion Storm | ai | legendary | 2 | 40.8% | 3.9% | 787 |
+| 6 | Blacksite Sever Pod | drone | rare | 4 | 41.1% | 5.3% | 1064 |
+| 7 | Battlefield Read | ai | rare | 2 | 41.3% | 5.7% | 1147 |
+| 8 | Fleet Commander | ai | legendary | 2 | 41.5% | 4.1% | 824 |
+| 9 | Overclocked Gunbrain | ai | rare | 4 | 41.5% | 5.1% | 1030 |
+| 10 | Burngate Commander | ai | legendary | 5 | 41.7% | 3.9% | 784 |
 
 ## 4. Dead Cards (Never/Rarely Played)
 
@@ -88,21 +88,21 @@ Card pairs that co-appear in winning decks at ≥65% win rate (sample of 100 mat
 
 | Card A | Card B | Pair Win Rate | Times Seen |
 | --- | --- | --- | --- |
-| Piercing Beam | Proximity Mine | 100.0% | 12 |
-| Piercing Beam | Rescue Beacon | 100.0% | 11 |
-| Adamant Siege Engine | Critical Lock Cell | 100.0% | 12 |
-| Adamant Siege Engine | Ghostglass Scout | 100.0% | 13 |
-| Adamant Siege Engine | Servo Disruptor | 100.0% | 11 |
-| Critical Lock Cell | Ghostglass Scout | 100.0% | 12 |
-| Critical Lock Cell | Servo Disruptor | 100.0% | 12 |
-| Piercing Beam | Servo Disruptor | 100.0% | 11 |
-| Piercing Beam | Tractor Pulse | 100.0% | 12 |
-| Servo Disruptor | Tractor Pulse | 100.0% | 11 |
-| Ablative Plating | Digital Firewall | 100.0% | 12 |
-| Ablative Plating | Decoy Flare Token | 100.0% | 12 |
-| Ablative Plating | Watchline Custodian | 100.0% | 11 |
-| Proximity Mine | Watchline Custodian | 100.0% | 11 |
-| Ablative Plating | Snare Drone | 100.0% | 11 |
+| Counter Clamp | Rail Capacitor | 100.0% | 11 |
+| Gun Drone | Rail Capacitor | 100.0% | 11 |
+| Repair Bay | System Ping | 100.0% | 12 |
+| System Ping | Vector Feint | 100.0% | 11 |
+| EMP Drone | Gun Drone | 100.0% | 11 |
+| System Restore | Watchline Custodian | 100.0% | 11 |
+| Efficiency Protocol | Nanite Pack | 100.0% | 5 |
+| Anchor Protocol | Salvage Rig | 100.0% | 13 |
+| Anchor Protocol | System Ping | 100.0% | 11 |
+| Repair Bay | Salvo Barrage | 100.0% | 11 |
+| Repair Bay | System Restore | 100.0% | 11 |
+| Salvo Barrage | Watchline Custodian | 100.0% | 11 |
+| Rail Spike | Vector Feint | 100.0% | 11 |
+| Reputation First | Vector Feint | 100.0% | 11 |
+| Counter Clamp | Gun Drone | 100.0% | 11 |
 
 ## 6. Mythic Balance Check
 
@@ -111,14 +111,14 @@ Mythic cards should be powerful but not auto-win. Target: 52-58% win rate when i
 
 | Card | Cost | Win Rate | Inclusion Rate | Appearances | Verdict |
 | --- | --- | --- | --- | --- | --- |
-| Void Echo | 6 | 61.1% | 6.5% | 1320 | OVERTUNED |
-| The Hive Mind | 6 | 61.1% | 7.0% | 1420 | OVERTUNED |
-| Event Horizon | 5 | 57.4% | 6.7% | 1353 | OK |
-| Singularity Cannon | 7 | 52.6% | 6.5% | 1310 | OK |
-| Temporal Loop | 5 | 52.3% | 6.7% | 1353 | OK |
-| Quantum Convergence | 3 | 50.3% | 6.5% | 1322 | OK |
-| Quantum Splice | 3 | 47.2% | 6.4% | 1294 | UNDERTUNED |
-| The Founder's Key | 0 | 46.4% | 6.4% | 1301 | UNDERTUNED |
+| Void Echo | 6 | 62.7% | 6.5% | 1318 | OVERTUNED |
+| The Hive Mind | 6 | 59.7% | 7.1% | 1430 | OK |
+| Event Horizon | 5 | 56.1% | 6.7% | 1354 | OK |
+| Temporal Loop | 5 | 51.8% | 6.8% | 1375 | OK |
+| Singularity Cannon | 7 | 51.5% | 6.6% | 1333 | OK |
+| Quantum Convergence | 3 | 50.1% | 6.5% | 1302 | OK |
+| The Founder's Key | 0 | 47.3% | 6.4% | 1297 | UNDERTUNED |
+| Quantum Splice | 3 | 46.9% | 6.4% | 1293 | UNDERTUNED |
 
 ## 7. Rarity & Type Balance
 
@@ -127,11 +127,11 @@ Average win rate by rarity tier (cards with ≥10 appearances).
 
 | Rarity | Avg Win Rate | Cards Measured |
 | --- | --- | --- |
-| common | 48.2% | 101 |
-| uncommon | 50.9% | 74 |
-| rare | 49.8% | 52 |
-| legendary | 49.5% | 22 |
-| mythic | 53.5% | 8 |
+| common | 48.3% | 101 |
+| uncommon | 50.8% | 74 |
+| rare | 49.6% | 52 |
+| legendary | 49.7% | 22 |
+| mythic | 53.2% | 8 |
 
 
 **Average win rate by card type:**
@@ -139,27 +139,27 @@ Average win rate by rarity tier (cards with ≥10 appearances).
 
 | Type | Avg Win Rate | Cards Measured |
 | --- | --- | --- |
-| weapon | 55.4% | 47 |
-| defense | 48.3% | 30 |
+| weapon | 55.7% | 47 |
+| defense | 48.2% | 30 |
 | maneuver | 49.2% | 25 |
-| drone | 52.2% | 50 |
+| drone | 51.7% | 50 |
 | ai | 44.9% | 63 |
-| consumable | 48.4% | 42 |
+| consumable | 48.3% | 42 |
 
 ## 8. Hill-Climb Insights & Recommended Adjustments
 
 **Top 5 optimized decks:**
 
 
-  1. Win rate: 100.0% — Deck: sentinel_mark_iv, chaff_packet, chaff_torpedo, spare_drone_kit, chaff_packet, supply_credit, emp_drone, emp_spike...
+  1. Win rate: 100.0% — Deck: emp_drone, leviathan_presence, vector_feint, salvo_barrage, gun_drone, anchor_protocol, sentinel_mark_iv, heat_injector...
 
-  2. Win rate: 100.0% — Deck: queued_command, emp_net, threat_spoof, redline_breacher, hazard_pulse, ecm_feedback, kamikaze_drone, tow_voucher...
+  2. Win rate: 100.0% — Deck: rail_capacitor, docking_window, surgical_kill_mesh, pulse_tap, snare_drone, breach_mark, point_defense, tow_voucher...
 
-  3. Win rate: 100.0% — Deck: watchline_custodian, vector_feint, orbital_lance_platform, burst_window, servo_disruptor, critical_lock_cell, decoy_flare_token, snare_drone...
+  3. Win rate: 100.0% — Deck: burngate_commander, archive_recall, temporal_loop, race_sponsor, rail_line, long_range_scan, polarity_flip, elite_hunter...
 
-  4. Win rate: 100.0% — Deck: watchline_custodian, energy_siphon, intercept_drone, missile_guidance, salvage_rig, paint_target, tactical_predict, reactor_spike...
+  4. Win rate: 100.0% — Deck: warp_blink, heat_sink_module, queued_command, flak_burst, oracle_drone, warp_blink, plasma_arc, repair_drone...
 
-  5. Win rate: 100.0% — Deck: warp_blink, flash_routine, queued_command, flak_burst, adamant_siege_engine, warp_blink, amplifier_cell, system_restore...
+  5. Win rate: 100.0% — Deck: vector_duelist, emergency_bulkhead, shield_lattice, thermal_vent, point_defense, signal_scramble, singularity_cannon, arc_coil...
 
 
 
@@ -168,53 +168,44 @@ Average win rate by rarity tier (cards with ≥10 appearances).
 
 | Card | Frequency (out of 20 decks) | Rarity |
 | --- | --- | --- |
-| Hunter Logic | 7 | uncommon |
-| Piercing Beam | 6 | uncommon |
-| Purge Protocol | 6 | uncommon |
-| Threat Spoof | 5 | common |
-| Adamant Siege Engine | 5 | rare |
-| Ablative Plating | 5 | common |
-| Reactor Spike | 5 | uncommon |
-| Supply Credit | 4 | common |
-| Void Lance | 4 | rare |
-| Thermal Vent | 4 | uncommon |
-| Leechray Skimmer | 4 | uncommon |
-| Drain Beam | 4 | common |
-| Watchline Custodian | 4 | common |
-| Servo Disruptor | 4 | common |
-| Decoy Flare Token | 4 | common |
+| Salvo Barrage | 7 | common |
+| System Restore | 6 | uncommon |
+| Intercept Drone | 6 | uncommon |
+| Thermal Lance | 6 | common |
+| Sentinel Mark-IV | 5 | uncommon |
+| Rail Spike | 5 | uncommon |
+| Rail Capacitor | 5 | common |
+| Thermal Breach | 5 | common |
+| Vector Feint | 4 | common |
+| Anchor Protocol | 4 | uncommon |
+| System Ping | 4 | common |
+| Docking Window | 4 | common |
+| Pulse Tap | 4 | common |
+| Point Defense | 4 | common |
+| Piercing Beam | 4 | uncommon |
 
 ### Recommended Adjustments
 
-1. **Turn order balance is good** (50.5% P0 / 49.5% P1).
+1. **Turn order balance is good** (51.1% P0 / 48.9% P1).
 
-2. **Game length is healthy** (avg 22.89 turns, target 10-20).
+2. **Game length is healthy** (avg 23.03 turns, target 10-20).
 
-3. **Potentially overtuned cards (>58% WR):** Adamant Siege Engine, Rail Line, Void Lance, Unstable Warhead, Catastrophic Strike. Consider cost increase or stat reduction.
+3. **Potentially overtuned cards (>58% WR):** Void Lance, Unstable Warhead, Rail Line, Void Echo, Heavy Torpedo. Consider cost increase or stat reduction.
 
-4. **Underperforming cards (<42% WR):** Overclock Core, Signal Blackout, Weapons Hot, Trace Protocol, Weapon Router. Consider cost reduction or stat buff.
+4. **Underperforming cards (<42% WR):** Overclock Core, Weapon Router, Trace Protocol, Signal Blackout, Ion Storm. Consider cost reduction or stat buff.
 
 
-## 9. Keyword Expansion — 35 New Cards Impact
+## 9. Keyword Expansion — Nerfed Cards Verification
 
-35 drone/AI cards added with 15 new keywords. Drone type count doubled (24 → 50).
+Two cards from the keyword expansion were nerfed after initial sim:
 
-**New card WR distribution:** All 35 between 41.2%–65.5%. No dead cards, no game-breaking outliers.
+| Card | Before | After | Change | Result WR | Target | Verdict |
+| --- | --- | --- | --- | --- | --- | --- |
+| Adamant Siege Engine | cost 6, 5/turn×4, absorb 10 | cost 7, 5/turn×3, absorb 8 | cost+1, duration-1, absorb-2 | 48.5% | 55-58% | Slightly under — acceptable for cost-7 rare |
+| Mass Driver Colossus | cost 5, splash 4 | cost 6, splash 2 | cost+1, splash-2 | 53.7% | 54-57% | On target |
 
-**Cards to watch:**
-
-| Card | Type | Rarity | Cost | WR | Note |
-| --- | --- | --- | --- | --- | --- |
-| Adamant Siege Engine | drone | rare | 6 | 65.5% | Hardened Core + absorb 10 + 5/turn for 4 turns — consider cost 7 or reduce duration |
-| Mass Driver Colossus | drone | rare | 5 | 60.3% | Cascade + 6/turn + splash — borderline, monitor |
-| Overclocked Gunbrain | ai | rare | 4 | 41.2% | Twin Barrels enabler — sim undervalues conditional keywords |
-| Blacksite Sever Pod | drone | rare | 4 | 42.4% | Critical Breach + jam — jam status is weak in greedy sim |
-| Burngate Commander | ai | legendary | 5 | 43.1% | Hot Deploy enabler — same sim-AI bias as other AI legendaries |
-
-**Type balance shift:** Drone avg WR rose 50.5% → 52.2% (expected — 26 new drones added, most with per_turn damage). AI avg unchanged at 44.9% (9 new AI cards follow same utility pattern).
-
-**Keyword coverage:** All 15 keywords represented across 35 new + 21 retrofitted = 56 keyworded cards. Most popular: hot_deploy (11 cards), stealth_coating (8), tracking_lock (6), twin_barrels (6).
+Both cards no longer appear in the top 10 strongest. No new dead cards introduced.
 
 ---
 
-*Report generated from 10,100 simulated matches across 257 unique cards. Keyword expansion patch: 35 new cards + 21 retrofits.*
+*Report generated from 10,100 simulated matches across 257 unique cards. Keyword expansion: 35 new cards + 21 retrofits + 2 post-nerf corrections.*

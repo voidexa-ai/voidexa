@@ -2418,11 +2418,11 @@
     "name": "Mass Driver Colossus",
     "type": "drone",
     "rarity": "rare",
-    "cost": 5,
+    "cost": 6,
     "stats": {
       "per_turn": 6,
       "duration_turns": 3,
-      "splash": 4
+      "splash": 2
     },
     "abilityText": "Cascade. Excess drone damage hits hull.",
     "faction": "core",
@@ -2702,11 +2702,11 @@
     "name": "Adamant Siege Engine",
     "type": "drone",
     "rarity": "rare",
-    "cost": 6,
+    "cost": 7,
     "stats": {
       "per_turn": 5,
-      "duration_turns": 4,
-      "absorb": 10
+      "duration_turns": 3,
+      "absorb": 8
     },
     "abilityText": "Hardened Core. Cannot be destroyed by damage.",
     "faction": "core",
