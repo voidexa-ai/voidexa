@@ -136,6 +136,44 @@ function ModelErrorFallback() {
   )
 }
 
+// Verifies the CDN URL is reachable before mounting a heavy R3F Canvas.
+// HEAD check avoids the crash path where useGLTF throws an unrecoverable
+// promise rejection inside Suspense that error boundaries can't always catch.
+function SafePreview({ url }: { url: string }) {
+  const [status, setStatus] = useState<'checking' | 'ok' | 'fail'>('checking')
+  useEffect(() => {
+    let cancelled = false
+    fetch(url, { method: 'HEAD' })
+      .then((r) => { if (!cancelled) setStatus(r.ok ? 'ok' : 'fail') })
+      .catch(() => { if (!cancelled) setStatus('fail') })
+    return () => { cancelled = true }
+  }, [url])
+
+  if (status === 'checking') {
+    return (
+      <div style={{ width: '100%', height: 200, background: 'linear-gradient(180deg, #0d0a1f 0%, #060412 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontSize: 12, color: '#4a3f7a' }}>Checking CDN…</span>
+      </div>
+    )
+  }
+  if (status === 'fail') return <PreviewUnavailable />
+
+  return (
+    <CanvasErrorBoundary fallback={<ModelErrorFallback />}>
+      <div style={{ width: '100%', height: 200, background: 'linear-gradient(180deg, #0d0a1f 0%, #060412 100%)' }}>
+        <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 3], fov: 40 }} gl={{ antialias: true }}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[3, 4, 5]} intensity={0.8} />
+          <directionalLight position={[-3, 2, -4]} intensity={0.3} color="#a855f7" />
+          <Suspense fallback={null}>
+            <AutoRotateModel url={url} />
+          </Suspense>
+        </Canvas>
+      </div>
+    </CanvasErrorBoundary>
+  )
+}
+
 // ---- Ship card ----
 
 function ShipCard({ ship }: { ship: ShipEntry }) {
@@ -153,22 +191,7 @@ function ShipCard({ ship }: { ship: ShipEntry }) {
         flexDirection: 'column',
       }}
     >
-      {hasPreview ? (
-        <CanvasErrorBoundary fallback={<ModelErrorFallback />}>
-          <div style={{ width: '100%', height: 200, background: 'linear-gradient(180deg, #0d0a1f 0%, #060412 100%)' }}>
-            <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 3], fov: 40 }} gl={{ antialias: true }}>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[3, 4, 5]} intensity={0.8} />
-              <directionalLight position={[-3, 2, -4]} intensity={0.3} color="#a855f7" />
-              <Suspense fallback={null}>
-                <AutoRotateModel url={ship.cdnUrl!} />
-              </Suspense>
-            </Canvas>
-          </div>
-        </CanvasErrorBoundary>
-      ) : (
-        <PreviewUnavailable />
-      )}
+      {hasPreview ? <SafePreview url={ship.cdnUrl!} /> : <PreviewUnavailable />}
       <div style={{ padding: '10px 14px' }}>
         <div style={{ fontSize: 15, fontWeight: 600, color: '#e5e5f0', marginBottom: 4 }}>{ship.displayName}</div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', fontSize: 13, color: '#a9b4d0' }}>

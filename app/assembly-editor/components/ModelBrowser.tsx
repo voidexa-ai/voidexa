@@ -6,23 +6,39 @@ import { useEditorStore } from '../hooks/useEditorStore'
 import { CATEGORY_ORDER, type ModelEntry } from '../lib/editorTypes'
 import { ModelPreview } from './ModelPreview'
 
-// 5 synthetic "Complete Cockpit" presets. Clicking one loads the 4 matched
-// pieces (frame + interior + equipments + screens) at origin with
-// preserveOrigin=true so they nest as the artist intended.
+// Individual equipment parts that have cockpit-relative positions baked into
+// their vertex data. Loaded with preserveOrigin=true so each sits at its
+// authored offset. Replaces the single hirez_equipments combined piece
+// (which spreads parts in a line along Z instead of nesting them in the cockpit).
+const EQUIPMENT_PARTS = [
+  'equipment_cockpitequipments_seat_mesh_650',
+  'equipment_cockpitequipments_joystick1_base_mesh_652',
+  'equipment_cockpitequipments_joystick1_handle_mesh_653',
+  'equipment_cockpitequipments_joystick2_base_mesh_643',
+  'equipment_cockpitequipments_joystick2_handle_mesh_644',
+  'equipment_cockpitequipments_screen1_mesh_632',
+  'equipment_cockpitequipments_screen2_mesh_633',
+  'equipment_cockpitequipments_hud_mesh_628',
+  'equipment_cockpitequipments_throttlecontro1_base_mesh_645',
+  'equipment_cockpitequipments_throttlecontrol2_base_mesh_648',
+]
+
+// 5 synthetic "Complete Cockpit" presets. Clicking one loads the frame +
+// interior + screens (combined) + individual equipment parts, all at origin
+// with preserveOrigin=true so they nest as the artist intended.
 const COMPLETE_COCKPIT_PRESETS: Array<{
   label: string
-  frame: string
-  interior: string
-  equipments: string
-  screens: string
+  slugs: string[]
 }> = [1, 2, 3, 4, 5].map((n) => {
   const id = String(n).padStart(2, '0')
   return {
     label: `Cockpit ${id} (complete)`,
-    frame: `hirez_cockpit${id}`,
-    interior: `hirez_cockpit${id}_interior`,
-    equipments: 'hirez_equipments',
-    screens: 'hirez_screens',
+    slugs: [
+      `hirez_cockpit${id}`,
+      `hirez_cockpit${id}_interior`,
+      'hirez_screens',
+      ...EQUIPMENT_PARTS,
+    ],
   }
 })
 
@@ -65,11 +81,11 @@ export function ModelBrowser() {
   }, [catalog])
 
   // Synthetic Complete Cockpit entries — surfaced at the top of the library
-  // using a preset's frame slug for the preview. Clicking fires addMatchedSet.
+  // using the frame slug for the hover preview. Clicking loads all slugs.
   const completeCockpitEntries = useMemo<ModelEntry[]>(() => {
     const out: ModelEntry[] = []
     for (const preset of COMPLETE_COCKPIT_PRESETS) {
-      const frame = catalogBySlug.get(preset.frame)
+      const frame = catalogBySlug.get(preset.slugs[0])
       if (!frame) continue
       out.push({
         name: preset.label,
@@ -83,13 +99,11 @@ export function ModelBrowser() {
   }, [catalogBySlug])
 
   const loadPreset = (preset: (typeof COMPLETE_COCKPIT_PRESETS)[number]) => {
-    const pieces = [preset.frame, preset.interior, preset.equipments, preset.screens]
+    const pieces = preset.slugs
       .map((slug) => catalogBySlug.get(slug))
       .filter((e): e is ModelEntry => !!e)
     if (pieces.length === 0) return
     addMatchedSet(pieces)
-    // Switch to pilot POV so the user sees inside the cockpit — from outside
-    // the opaque frame shell hides the interior, equipment, and screens.
     setCameraPreset('pilot')
   }
 

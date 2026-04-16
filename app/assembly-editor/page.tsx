@@ -66,7 +66,19 @@ export default function AssemblyEditorPage() {
     // no regex — otherwise the split equipment/screen parts uploaded by
     // scripts/split-glb-models.ts would match first. preserveOrigin=true
     // (via addMatchedSet) keeps their shared world origin intact.
-    const wanted = ['hirez_cockpit01', 'hirez_cockpit01_interior', 'hirez_equipments', 'hirez_screens']
+    const wanted = [
+      'hirez_cockpit01', 'hirez_cockpit01_interior', 'hirez_screens',
+      'equipment_cockpitequipments_seat_mesh_650',
+      'equipment_cockpitequipments_joystick1_base_mesh_652',
+      'equipment_cockpitequipments_joystick1_handle_mesh_653',
+      'equipment_cockpitequipments_joystick2_base_mesh_643',
+      'equipment_cockpitequipments_joystick2_handle_mesh_644',
+      'equipment_cockpitequipments_screen1_mesh_632',
+      'equipment_cockpitequipments_screen2_mesh_633',
+      'equipment_cockpitequipments_hud_mesh_628',
+      'equipment_cockpitequipments_throttlecontro1_base_mesh_645',
+      'equipment_cockpitequipments_throttlecontrol2_base_mesh_648',
+    ]
     const pieces = wanted.map((slug) => catalog.find((e) => e.name === slug)).filter((e): e is NonNullable<typeof e> => !!e)
     if (pieces.length > 0) addMatchedSet(pieces)
     setCameraPreset('pilot')
