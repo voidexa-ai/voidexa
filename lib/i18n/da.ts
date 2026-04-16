@@ -28,6 +28,8 @@ export const da: Dict = {
       '/services':    { label: 'Tjenester',   description: 'AI-udvikling & rådgivning' },
       '/starmap':      { label: 'Stjernekort',  description: 'Galaksevisning' },
       '/freeflight':   { label: 'Fri Flyvning', description: 'Styr dit eget skib' },
+      '/game/mission-board':        { label: 'Missioner', description: 'Tag kontrakter fra Casten' },
+      '/game/cards/deck-builder':   { label: 'Dæk',       description: 'Byg dit 20-kort dæk' },
       '/shop':         { label: 'Butik',        description: 'Skins & kortpakker' },
       '/achievements': { label: 'Bedrifter',    description: 'Mindehallen' },
       '/team':        { label: 'Hold',          description: 'Mød besætningen' },
