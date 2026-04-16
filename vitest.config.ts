@@ -14,6 +14,7 @@ export default defineConfig({
       "lib/achievements/__tests__/**/*.test.ts",
       "lib/race/__tests__/**/*.test.ts",
       "lib/missions/__tests__/**/*.test.ts",
+      "lib/game/battle/__tests__/**/*.test.ts",
       "components/combat/__tests__/**/*.test.ts",
     ],
     alias: {
