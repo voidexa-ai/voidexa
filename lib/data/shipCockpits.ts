@@ -39,7 +39,11 @@ export const COCKPIT_MODELS: Record<CockpitType, CockpitModelSpec> = {
     withSeatUrl: MODEL_URLS.vattalus_fighter_cockpit_with_seat,
     scale: 1.0,
     offset: [0, -0.5, -0.3],
-    rotation: [0, 0, 0],
+    // Vattalus model was authored with +Z forward (Blender convention). The
+    // cockpit group is parented to the camera, which looks down -Z. Without
+    // this 180° Y rotation the pilot sees the back of the seat instead of
+    // the canopy.
+    rotation: [0, Math.PI, 0],
     standalone: true,
   },
   fighter_medium: {
@@ -47,7 +51,7 @@ export const COCKPIT_MODELS: Record<CockpitType, CockpitModelSpec> = {
     withSeatUrl: MODEL_URLS.vattalus_fighter_cockpit_with_seat,
     scale: 1.3,
     offset: [0, -0.6, -0.4],
-    rotation: [0, 0, 0],
+    rotation: [0, Math.PI, 0],
     standalone: true,
   },
   bridge_command: {
