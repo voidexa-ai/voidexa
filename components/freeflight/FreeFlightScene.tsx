@@ -18,10 +18,12 @@ import CockpitModel from './cockpit/CockpitModel'
 import ModelErrorBoundary from './ModelErrorBoundary'
 import MissionRunner from './MissionRunner'
 import Landmarks from './environment/Landmarks'
+import NamedNPCs from './environment/NamedNPCs'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 import type { MissionWaypoint } from '@/lib/game/missions/waypoints'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
+import type { NPCDef } from '@/lib/game/freeflight/npcs'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ReturnType<typeof createShipState>>) => void
@@ -31,6 +33,7 @@ interface Props {
   onWarpJump?: (fromId: string, toId: string) => void
   onFirstPersonChange?: (fp: boolean) => void
   onNearLandmarkChange?: (landmark: LandmarkDef | null) => void
+  onNearNPCChange?: (npc: NPCDef | null, hostile: boolean) => void
   shipUrl: string
   shipScale: number
   cockpitUrl: string
@@ -55,6 +58,7 @@ export default function FreeFlightScene({
   missionWaypointIndex = 0,
   onMissionWaypointCleared,
   onNearLandmarkChange,
+  onNearNPCChange,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -137,6 +141,7 @@ export default function FreeFlightScene({
       )}
 
       <Landmarks ship={shipRef} onNearChange={onNearLandmarkChange} />
+      <NamedNPCs ship={shipRef} onNearChange={onNearNPCChange} />
     </>
   )
 }

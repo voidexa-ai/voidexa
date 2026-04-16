@@ -8,8 +8,10 @@ import CockpitPicker from './cockpit/CockpitPicker'
 import ShipPicker from './ships/ShipPicker'
 import AchievementPanel from '@/components/achievements/AchievementPanel'
 import MissionOverlay from './MissionOverlay'
+import NPCDialogueBubble from './NPCDialogueBubble'
 import { useActiveMission } from './useActiveMission'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
+import type { NPCDef } from '@/lib/game/freeflight/npcs'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
@@ -35,6 +37,19 @@ export default function FreeFlightPage() {
   const [dockStation, setDockStation] = useState<StationDef | null>(null)
   const [nearDerelict, setNearDerelict] = useState<DerelictDef | null>(null)
   const [nearLandmark, setNearLandmark] = useState<LandmarkDef | null>(null)
+  const [nearNPC, setNearNPC] = useState<NPCDef | null>(null)
+  const [npcHostile, setNPCHostile] = useState(false)
+  const [activeDialogue, setActiveDialogue] = useState<{ npc: NPCDef; line: string } | null>(null)
+
+  const handleNearNPCChange = (npc: NPCDef | null, hostile: boolean) => {
+    setNearNPC(npc)
+    setNPCHostile(hostile)
+  }
+
+  const handleGreet = () => {
+    if (!nearNPC || npcHostile) return
+    setActiveDialogue({ npc: nearNPC, line: nearNPC.dialogue.greeting })
+  }
   const [nebulaColor, setNebulaColor] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dockedAt, setDockedAt] = useState<StationDef | null>(null)
@@ -147,10 +162,13 @@ export default function FreeFlightPage() {
       if (e.code === 'KeyF' && nearLandmark && !nearDerelict && !menuOpen && !lorePopup) {
         handleScanLandmark()
       }
+      if (e.code === 'KeyG' && nearNPC && !npcHostile && !menuOpen && !lorePopup) {
+        handleGreet()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [dockStation, nearDerelict, nearLandmark, menuOpen, lorePopup, achievementsOpen])
+  }, [dockStation, nearDerelict, nearLandmark, nearNPC, npcHostile, menuOpen, lorePopup, achievementsOpen])
 
   const onShipState = (ref: React.MutableRefObject<ShipState>) => {
     shipRef.current = ref.current
@@ -198,6 +216,7 @@ export default function FreeFlightPage() {
           missionWaypointIndex={missionWaypointIndex}
           onMissionWaypointCleared={handleWaypointCleared}
           onNearLandmarkChange={setNearLandmark}
+          onNearNPCChange={handleNearNPCChange}
         />
       )}
 
@@ -298,6 +317,24 @@ export default function FreeFlightPage() {
       {/* Landmark scan prompt */}
       {nearLandmark && !nearDerelict && !menuOpen && !lorePopup && !dockStation && (
         <PromptBanner text={`Press F to scan · ${nearLandmark.name}`} color={nearLandmark.color} offset={60} />
+      )}
+
+      {/* NPC greet / hostile prompt */}
+      {nearNPC && !menuOpen && !lorePopup && !activeDialogue && (
+        <PromptBanner
+          text={npcHostile ? `⚠ HOSTILE · ${nearNPC.name}` : `Press G to greet · ${nearNPC.name}`}
+          color={nearNPC.color}
+          offset={120}
+        />
+      )}
+
+      {/* NPC dialogue bubble */}
+      {activeDialogue && (
+        <NPCDialogueBubble
+          npc={activeDialogue.npc}
+          line={activeDialogue.line}
+          onDismiss={() => setActiveDialogue(null)}
+        />
       )}
 
       {/* Toasts */}
