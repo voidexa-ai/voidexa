@@ -69,15 +69,80 @@ Not six products. **One city.** Each part has a role.
 
 ### Scale and universe size
 
-**1 hour travel time in all directions from voidexa Core.** Universe diameter is ~2 hours flight. Big enough to get lost in, small enough that everything is reachable in one session.
+**1 hour travel time in all directions from voidexa Core.** The universe is a **3D sphere**, not a flat plane. 360 degrees in every axis — horizontal, vertical, diagonal. Up, down, left, right, forward, back. Every corner of the sphere is 1 hour from Core.
 
-### Universe zones
+**This is not a 2D map with a pretty skybox.** It is a genuine 3D volume. Planets can be "above" Core. Derelicts can be "below" the hauling lanes. You can fly in any direction and find things. Most space games are secretly 2D. voidexa is not.
 
-Five concentric zones radiating from Core. Risk and reward increase with distance.
+### 3D coordinate system
+
+- Core = `(0, 0, 0)`
+- 1 minute travel time = 1 unit
+- Universe radius = 60 units
+- All positions are `{x, y, z}` within a sphere of radius 60
+- Objects are distributed across all octants (up-right-forward, down-left-back, etc.) so every direction has content
+
+### Universe zones (spherical shells)
+
+Five concentric **spherical shells** radiating from Core, like layers of an onion. Risk and reward increase with distance.
+
+```
+              ╭─── The Edge (sphere surface, r=60) ───╮
+             │    DEEP VOID (r=45-60)                   │
+            │    OUTER RING (r=30-45)                    │
+           │    MID RING (r=15-30)                        │
+          │    INNER RING (r=5-15)                         │
+         │         CORE ZONE (r=0-5)                        │
+         │              ★ voidexa Core                      │
+          │                                                │
+              ╰────────────────────────────────────────╯
+```
 
 | Zone | Distance (travel time) | Content | Risk level |
 |---|---|---|---|
 | **Core Zone** | 0-5 min | voidexa Core, stations, tutorial area, safe hauling routes, Break Room station | Safe |
+| **Inner Ring** | 5-15 min | Claimed planets, trade routes, moderate mission board contracts | Low |
+| **Mid Ring** | 15-30 min | Unclaimed planets, derelict ships, PvE tier 1-3, exploration signals | Medium |
+| **Outer Ring** | 30-45 min | Rare resources, high-risk hauling contracts, PvE tier 4-5, ghost stations | High |
+| **Deep Void** | 45-60 min | Mythic encounters, The Silent Ones, ultra-rare drops, lore fragments, The Edge | Very High |
+
+### Scanner fog in Deep Void (from BWOWC, adopted)
+
+In Deep Void, objects appear as **unidentified dots** on scanner until you fly close enough to resolve them. Could be a derelict, a boss, a mythic drop, a pirate — or nothing. Explorer-class ships resolve dots at greater range than other classes. This is the Explorer's primary advantage in Deep Void.
+
+Scanner resolution range by class:
+- **Explorer:** 8 units (can identify objects from 8 minutes away)
+- **Fighter/Hauler/Salvager:** 4 units
+- **Bob:** 3 units
+
+### Holographic Universe Map — personal fog-of-war
+
+Every station and ship cockpit has access to a **holographic 3D sphere** showing the universe. But it only shows **places you have personally visited**. Unvisited space is dark.
+
+**How it works:**
+- The hologram renders as a translucent sphere with glowing dots for visited locations
+- Visit a location → it lights up permanently on your map
+- Others can see your map on your pilot profile (shows how much of the universe you've explored)
+- **Exploration percentage** is a prestige stat: "42% of universe explored"
+- The map is interactive — rotate, zoom, tap a visited location for info
+- Placed at stations near the leaderboard or mission board — a physical hologram you walk up to and interact with
+- Also accessible from cockpit HUD during free flight (smaller version)
+
+**Consequence:** Two players standing at the same hologram see different maps. The veteran's sphere is bright. The newbie's is almost entirely dark. That visual difference is powerful motivation.
+
+### Transport services (for stranded pilots)
+
+When your ship is wrecked and you don't want to tow, repair, or buy new:
+
+| Service | What happens | Cost | Who provides |
+|---|---|---|---|
+| **Space Taxi** | NPC taxi flies to your wreck location, picks you up, drops you at nearest station. You arrive without a ship. | 50-150 GHAI (zone-dependent) | NPC service (automated) |
+| **Ship Delivery** | You buy or select a ship from your collection at a station. It gets delivered to your current location. | Ship cost (if buying new) + 30-80 GHAI delivery fee | NPC service |
+| **Player Tow** | Another player tows your wreck back. You keep the ship. They earn a fee. | Tow fee (negotiated or fixed 40-80 GHAI) | Real players |
+| **Insurance Auto-Return** | If you have insurance (monthly subscription), your ship auto-returns to nearest station after timer expires. | Monthly insurance: 200 GHAI/month | Passive subscription |
+
+**Elite Dangerous parallel:** You saw this there — the rebuy screen. voidexa's version is warmer (taxi, delivery, player help) but serves the same purpose: getting stranded pilots back in action without rage-quitting.
+
+**Insurance subscription** is a new recurring revenue stream: 200 GHAI/month ($2). Cheap enough that most active players buy it. Prevents the worst-case scenario of losing a Legendary ship permanently because you couldn't get back in time.
 | **Inner Ring** | 5-15 min | Claimed planets, trade routes, moderate mission board contracts | Low |
 | **Mid Ring** | 15-30 min | Unclaimed planets, derelict ships, PvE tier 1-3, exploration signals | Medium |
 | **Outer Ring** | 30-45 min | Rare resources, high-risk hauling contracts, PvE tier 4-5, ghost stations | High |
@@ -1114,6 +1179,12 @@ Plus new tables from evening session:
 | 36 | AI quest generation pipeline | API integration, rate limiting, server-side validation |
 | 37 | Mythic supply tracking | Global count table, decrement on pull, Universe Wall hook |
 | 38 | Universe zone content population | Specific coordinates for landmarks, derelicts, beacons per zone |
+| 39 | Adjudicator AI ("The Arbiter") | Post-MVP: AI referee for PvP dispute resolution (from BWOWC) |
+| 40 | Cross-class cards | Post-MVP expansion: cards that unlock across class restrictions via quests |
+| 41 | 3D Universe Planner tool | Admin Three.js scene showing all zones + object positions for planning |
+| 42 | Holographic Universe Map component | Player-facing 3D sphere with personal fog-of-war |
+| 43 | Insurance subscription system | 200 GHAI/month auto-return for wrecked ships |
+| 44 | Space Taxi + Ship Delivery NPC services | Transport services for stranded pilots |
 
 ### Risks (from GPT analysis, adopted)
 
