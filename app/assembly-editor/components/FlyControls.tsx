@@ -68,21 +68,36 @@ export function FlyControls({ controlRef, initialSpeed = 0.5 }: Props) {
     pitch.current = eul.x
   }, [camera])
 
-  // Key handlers.
+  // Key handlers. Fly-control keys (WASDQE) are consumed here — we call
+  // preventDefault+stopPropagation so page-level hotkeys (D = duplicate,
+  // S = scale mode, etc.) don't fire while navigating.
   useEffect(() => {
+    const FLY_KEYS = new Set(['w', 'a', 's', 'd', 'q', 'e'])
     const down = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return
-      keys.current[e.key.toLowerCase()] = true
+      const k = e.key.toLowerCase()
+      keys.current[k] = true
+      if (FLY_KEYS.has(k)) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
     }
     const up = (e: KeyboardEvent) => {
-      keys.current[e.key.toLowerCase()] = false
+      const k = e.key.toLowerCase()
+      keys.current[k] = false
+      if (FLY_KEYS.has(k)) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
     }
-    window.addEventListener('keydown', down)
-    window.addEventListener('keyup', up)
+    // Use capture phase so we intercept WASDQE BEFORE the page-level keydown
+    // listener sees them — stopPropagation on capture prevents bubble reach.
+    window.addEventListener('keydown', down, true)
+    window.addEventListener('keyup', up, true)
     return () => {
-      window.removeEventListener('keydown', down)
-      window.removeEventListener('keyup', up)
+      window.removeEventListener('keydown', down, true)
+      window.removeEventListener('keyup', up, true)
     }
   }, [])
 

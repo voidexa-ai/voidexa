@@ -30,11 +30,8 @@ function CanvasFallback() {
 }
 
 export default function AssemblyEditorPage() {
-  const setTransformMode = useEditorStore(s => s.setTransformMode)
   const selectedId = useEditorStore(s => s.selectedId)
   const removeModel = useEditorStore(s => s.removeModel)
-  const duplicateModel = useEditorStore(s => s.duplicateModel)
-  const toggleVisibility = useEditorStore(s => s.toggleVisibility)
   const undo = useEditorStore(s => s.undo)
   const redo = useEditorStore(s => s.redo)
   const selectModel = useEditorStore(s => s.selectModel)
@@ -86,22 +83,13 @@ export default function AssemblyEditorPage() {
         if (e.shiftKey) redo(); else undo()
         return
       }
+      // Single-letter shortcuts that don't clash with WASD fly controls.
+      // G/R/S/D/H removed — they fired duplicateModel / setTransformMode
+      // every time the user strafed or moved with the fly camera.
       switch (e.key.toLowerCase()) {
-        case 'g': setTransformMode('translate'); break
-        case 'r': setTransformMode('rotate'); break
-        case 's':
-          if (!e.ctrlKey && !e.metaKey) setTransformMode('scale')
-          break
-        case 'x':
         case 'delete':
         case 'backspace':
           if (selectedId) { e.preventDefault(); removeModel(selectedId) }
-          break
-        case 'd':
-          if (selectedId && !e.ctrlKey && !e.metaKey) duplicateModel(selectedId)
-          break
-        case 'h':
-          if (selectedId) toggleVisibility(selectedId)
           break
         case 'escape':
           selectModel(null); break
@@ -113,7 +101,7 @@ export default function AssemblyEditorPage() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [selectedId, removeModel, duplicateModel, toggleVisibility, undo, redo, selectModel, setTransformMode, setCameraPreset])
+  }, [selectedId, removeModel, undo, redo, selectModel, setCameraPreset])
 
   return (
     <div style={{

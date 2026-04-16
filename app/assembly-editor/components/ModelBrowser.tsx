@@ -30,6 +30,7 @@ export function ModelBrowser() {
   const { catalog, loading, error } = useModelCatalog()
   const addModel = useEditorStore((s) => s.addModel)
   const addMatchedSet = useEditorStore((s) => s.addMatchedSet)
+  const setCameraPreset = useEditorStore((s) => s.setCameraPreset)
   const [filter, setFilter] = useState('')
   const [openCat, setOpenCat] = useState<Record<string, boolean>>({
     'Complete Cockpits': true,
@@ -87,6 +88,9 @@ export function ModelBrowser() {
       .filter((e): e is ModelEntry => !!e)
     if (pieces.length === 0) return
     addMatchedSet(pieces)
+    // Switch to pilot POV so the user sees inside the cockpit — from outside
+    // the opaque frame shell hides the interior, equipment, and screens.
+    setCameraPreset('pilot')
   }
 
   const grouped = useMemo(() => {
