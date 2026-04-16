@@ -753,6 +753,128 @@ Both clients run turn machine locally. Moves broadcast via Supabase channel. Ser
 
 ---
 
+### Void Prix — multiplayer racing (Mario Kart mode)
+
+2-8 players on the same 3D track simultaneously. Power-up pickups spawn along the track. Sabotage other racers. Wagering possible.
+
+**Track elements:** Gate rings (checkpoints), asteroid slalom, nebula tunnel (low visibility), gravity sling (speed boost), boost pads, shortcuts (risky alternative routes).
+
+**3 starter tracks:**
+
+| Track | Zone | Time | Difficulty | Special |
+|---|---|---|---|---|
+| Core Circuit | Core | 3-4 min | Easy | Tutorial, wide gates, few obstacles |
+| Nebula Run | Mid Ring | 5-7 min | Medium | Nebula tunnel, asteroid slalom, 1 shortcut |
+| Void Prix Championship | Outer Ring | 8-10 min | Hard | Full 3D vertical sections, gravity slings, dense debris |
+
+**Power-up pickups (spawn as glowing orbs on track):**
+
+| Pickup | Effect | Type |
+|---|---|---|
+| Thruster Surge | 3s 2× speed | Neutral |
+| Phase Shell | Absorb next hit | Defensive |
+| Null Drift | Phase through next obstacle | Defensive |
+| EMP Burst | All racers within 5 units lose 50% speed 2s | Offensive |
+| Debris Drop | 3 asteroids dropped behind you | Offensive |
+| Tractor Snare | Pull nearest racer 2 units back | Offensive |
+| Ghost Mode | Invisible + unhittable 3s | Defensive |
+| Scanner Jam | Remove HUD from all others 4s | Offensive |
+
+**Rubber banding:** Players behind get more offensive pickups. Players in front get more defensive. Keeps races tight.
+
+**Multiplayer tech:** Supabase Realtime ~100ms broadcast. Client-side prediction. Anti-cheat: server validates position vs time.
+
+**Camera:** Third-person chase cam default. Cockpit option.
+
+**Monetization:** Free entry or 10 GHAI ranked fee. Wagered races. Racing-specific skins (trails, engine glows) in shop Racing tab.
+
+### Void Duel — real-time ship dogfight (non-card PvP)
+
+Separate from card PvP. Real-time ship combat in dome. Reflexes, aim, maneuvers. 2-4 minute matches.
+
+**Core loop:** Both pilots spawn at opposite ends of dome → countdown → fly freely in 3D → shoot with primary weapon → use class abilities (cooldown-based) → first to destroy opponent's hull wins.
+
+**Class abilities in dogfight:**
+
+| Class | Ability 1 | Ability 2 | Ability 3 |
+|---|---|---|---|
+| Fighter | Afterburner (8s CD, 3s 2× speed) | Missile Lock (12s CD, tracking missile 15 dmg) | Barrel Roll (6s CD, 1s invulnerable) |
+| Hauler | Shield Wall (10s CD, 5s frontal shield 20 dmg absorb) | Tractor Snare (15s CD, pull + 2s slow) | Hull Repair (20s CD, heal 10) |
+| Explorer | Scanner Pulse (8s CD, reveal through obstacles 4s) | Cloak (15s CD, invisible 3s) | EMP Shot (12s CD, disable abilities 3s) |
+| Salvager | Repair Drone (12s CD, 3 hull/s for 5s) | Debris Scatter (10s CD, collision damage behind) | Tow Hook (15s CD, grapple 2s) |
+| Bob | Emergency Boost (10s CD, 2s speed) | Basic Shield (12s CD, absorb 10 dmg 3s) | Distress Flare (20s CD, blind 1.5s) |
+
+**Ship stats in dogfight (stats matter here — unlike card PvP):**
+
+| Stat | Fighter | Hauler | Explorer | Salvager | Bob |
+|---|---|---|---|---|---|
+| Hull HP | 80 | 130 | 90 | 110 | 100 |
+| Speed | 10 | 5 | 8 | 6 | 7 |
+| Turn rate | 9 | 4 | 7 | 6 | 6 |
+| DPS | 8 | 5 | 6 | 5 | 5 |
+| Range | Medium | Short | Long | Medium | Medium |
+
+**Class matchup meta:** Fighter beats Explorer (too fast to kite), Explorer beats Hauler (EMP + kite), Hauler beats Fighter (absorbs burst + snare). Salvager outlasts everyone slowly. Bob is wildcard.
+
+**Wreck choice after win:** Winner can Spare (opponent leaves with 1 HP) or Wreck (opponent's ship becomes wreck with standard timer). Creates emergent reputation — known sparers vs known wreckers.
+
+**Dome arenas:**
+
+| Arena | Content | Modifier |
+|---|---|---|
+| Open Void | Empty dome | Pure skill |
+| Asteroid Dome | 10-15 asteroids | Cover + collision |
+| Nebula Dome | Fog inside | Reduced sight, Scanner advantage |
+| Debris Dome | Floating wreckage | Tight spaces, Salvager advantage |
+| Hive Fragment | Piece of The Hive | Tunnels, chase sequences |
+
+**Wagering:** Same system as card PvP. GHAI/cards/ships. Bob never wagered.
+
+### The Hive — Swiss Cheese Mega-Structure
+
+Massive asteroid/structure (~1-2 km game-scale) in Mid Ring. Hundreds of holes, tunnels, chambers. From distance looks like a dark mass. Close up: full of passages you can fly through.
+
+**Uses:** Obstacle course (timed, leaderboard), Void Prix track through it, exploration (hidden chambers with lore/drops), social hangout, training ground for maneuver skills.
+
+**Tunnel types:**
+
+| Type | Width | Difficulty | Access |
+|---|---|---|---|
+| Highway | Broad | Easy | All ships |
+| Passage | Medium | Medium | All ships |
+| Crack | Narrow | Hard | Bob, Fighter, Explorer only |
+| Needle | Extremely narrow | Expert | Bob, Fighter only. Wall collision = wreck risk. |
+| Chamber | Large open room | Varies | Social area, boss lair, loot room |
+
+**Deep chamber:** Glowing core in center. Lore object. Potential boss lair. Bioluminescent walls (cyan/amber). Floating debris particles.
+
+### Shop organization
+
+| Tab | Contents |
+|---|---|
+| Ships | All ship classes and tiers |
+| Racing | Race-specific trails, engine glows, finish effects |
+| Combat | Card sleeves, battle effects, victory animations |
+| Pilot | Avatars, titles, profile badges |
+| Consumables | Repair kits, power-ups, beacons, warp fuel |
+| Packs | Booster packs (Standard/Premium/Legendary) |
+| Premium | Legendary trails, custom cockpit interiors, holographic badges, named asteroids |
+
+### Premium items
+
+| Item | Price (GHAI) | Type |
+|---|---|---|
+| Legendary ship trail (permanent) | 2000-5000 | Cosmetic |
+| Custom cockpit interior | 1500-3000 | Cosmetic |
+| Holographic ship badge | 1000-2000 | Cosmetic |
+| Named asteroid (permanent, your name in universe) | 5000 | Prestige |
+| The Hive Champion skin (requires record + purchase) | 3000 | Skill + cosmetic |
+| Insurance subscription | 200/month | Service |
+| Priority matchmaking | 100/month | Service |
+| Extended scanner range (+2 units) | 50/month | Service |
+
+---
+
 ## PART 7 — WRECK AND RECOVERY SYSTEM
 
 ### Core mechanic
@@ -1040,7 +1162,370 @@ Rarity shown through: border material, glow density, foil shimmer, subtle badge.
 
 ### CSS and Three.js code
 
-Full copy-paste CSS for card states, framer-motion for card play animation, R3F components for ability effects (WeaponFire, ShieldEffect, ExplosionEffect), damage number floats, ship hit reactions, PvP reveal phase, turn transition effect, and boss intro cinematic — all in the original VOIDEXA_GAMING_MASTER.md PART 9 which remains valid and is not repeated here to save space. Reference that file for implementation code.
+Full implementation code for all card battle visual states. Copy-paste ready.
+
+#### Card in hand (CSS)
+
+```css
+/* components/game/CardInHand.module.css */
+.card {
+  --card-w: 180px;
+  --card-h: 260px;
+  width: var(--card-w);
+  height: var(--card-h);
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(20,22,40,0.95) 0%, rgba(12,14,30,0.95) 100%);
+  border: 1px solid rgba(127,119,221,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.2s ease, border-color 0.2s ease;
+  color: #e8e4f0;
+  font-family: var(--font-sans);
+}
+.card:hover {
+  transform: translateY(-16px) scale(1.04);
+  border-color: rgba(127,119,221,0.7);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.8), 0 0 24px rgba(127,119,221,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index: 10;
+}
+.card[data-rarity="legendary"] { border-color: rgba(255,186,60,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 18px rgba(255,186,60,0.2); }
+.card[data-rarity="rare"] { border-color: rgba(90,200,250,0.5); }
+.card[data-rarity="mythic"] { border-color: rgba(200,50,255,0.8); animation: mythic-pulse 2s ease-in-out infinite; }
+.card[data-rarity="pioneer"] { border-color: rgba(175,82,222,0.7); animation: pioneer-pulse 3s ease-in-out infinite; }
+@keyframes pioneer-pulse { 0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 16px rgba(175,82,222,0.3); } 50% { box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 28px rgba(175,82,222,0.55); } }
+@keyframes mythic-pulse { 0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 20px rgba(200,50,255,0.4); } 50% { box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 40px rgba(200,50,255,0.7); } }
+.card.playable::after { content:''; position:absolute; inset:-2px; border-radius:14px; background:linear-gradient(135deg, rgba(127,255,212,0.4), rgba(127,119,221,0.4)); z-index:-1; filter:blur(4px); opacity:0.8; }
+.card.unplayable { opacity:0.45; cursor:not-allowed; }
+.card.unplayable:hover { transform:none; border-color:rgba(127,119,221,0.3); }
+.cost { position:absolute; top:8px; left:8px; width:32px; height:32px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #7ff7ff, #1d6b8a); color:#071019; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:600; box-shadow:0 0 12px rgba(125,245,255,0.6); }
+.art { position:absolute; top:48px; left:10px; right:10px; height:120px; border-radius:6px; object-fit:cover; background:#000; }
+.name { position:absolute; top:176px; left:12px; right:12px; font-size:16px; font-weight:500; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,0.6); }
+.abilityText { position:absolute; top:200px; left:12px; right:12px; bottom:32px; font-size:14px; line-height:1.4; color:rgba(220,216,230,0.85); overflow:hidden; }
+.stats { position:absolute; bottom:8px; right:12px; display:flex; gap:8px; font-size:18px; font-weight:500; color:#ffe082; text-shadow:0 0 6px rgba(255,186,60,0.5); }
+```
+
+#### Card play animation (framer-motion)
+
+```tsx
+// components/game/CardPlayAnimation.tsx
+'use client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useBattleStore } from '@/hooks/game/useBattleStore';
+
+export function CardPlayAnimation() {
+  const playingCard = useBattleStore(s => s.playingCard);
+  return (
+    <AnimatePresence>
+      {playingCard && (
+        <motion.div
+          key={playingCard.id}
+          initial={{ x: playingCard.startX, y: playingCard.startY, scale: 1.04, rotate: 0, opacity: 1 }}
+          animate={{ x: window.innerWidth/2-90, y: window.innerHeight*0.55-130, scale: 1.35, rotate: [0,6,-4,0], opacity: 1 }}
+          exit={{ scale: 0.2, opacity: 0, y: window.innerHeight*0.7 }}
+          transition={{ duration: 0.55, ease: [0.2,0.8,0.2,1] }}
+          style={{ position:'fixed', pointerEvents:'none', zIndex:100 }}
+        >
+          <div className="played-card" data-rarity={playingCard.rarity} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+```
+
+#### Ability effects (R3F — WeaponFire, Shield, Explosion)
+
+```tsx
+// components/game/AbilityEffects.tsx
+'use client';
+import { useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useBattleStore } from '@/hooks/game/useBattleStore';
+import * as THREE from 'three';
+
+const EFFECT_DURATION_MS = 900;
+
+export function AbilityEffects() {
+  const effectQueue = useBattleStore(s => s.effectQueue);
+  const consumeEffect = useBattleStore(s => s.consumeEffect);
+  const activeEffect = effectQueue[0];
+  if (!activeEffect) return null;
+  switch (activeEffect.kind) {
+    case 'weapon_fire': return <WeaponFireEffect effect={activeEffect} onComplete={consumeEffect} />;
+    case 'shield_up': return <ShieldEffect effect={activeEffect} onComplete={consumeEffect} />;
+    case 'explosion': return <ExplosionEffect effect={activeEffect} onComplete={consumeEffect} />;
+    default: return null;
+  }
+}
+
+function WeaponFireEffect({ effect, onComplete }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const startTime = useRef(performance.now());
+  useFrame(() => {
+    const t = (performance.now() - startTime.current) / EFFECT_DURATION_MS;
+    if (t >= 1) { onComplete(); return; }
+    if (meshRef.current) {
+      meshRef.current.position.lerpVectors(new THREE.Vector3(...effect.from), new THREE.Vector3(...effect.to), t);
+      meshRef.current.scale.setScalar(1 - t * 0.5);
+    }
+  });
+  return (
+    <mesh ref={meshRef} position={effect.from}>
+      <sphereGeometry args={[0.4,16,16]} />
+      <meshBasicMaterial color="#7ffcff" toneMapped={false} />
+      <pointLight intensity={8} color="#7ffcff" distance={5} />
+    </mesh>
+  );
+}
+
+function ShieldEffect({ effect, onComplete }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const startTime = useRef(performance.now());
+  useFrame(() => {
+    const t = (performance.now() - startTime.current) / EFFECT_DURATION_MS;
+    if (t >= 1) { onComplete(); return; }
+    if (meshRef.current) {
+      (meshRef.current.material as THREE.MeshBasicMaterial).opacity = Math.sin(t * Math.PI) * 0.7;
+      meshRef.current.scale.setScalar(2 + t * 0.5);
+    }
+  });
+  return (
+    <mesh ref={meshRef} position={effect.at}>
+      <sphereGeometry args={[1.8,32,32]} />
+      <meshBasicMaterial color="#7fd8ff" transparent opacity={0} side={THREE.DoubleSide} toneMapped={false} />
+    </mesh>
+  );
+}
+
+function ExplosionEffect({ effect, onComplete }) {
+  const pointsRef = useRef<THREE.Points>(null);
+  const startTime = useRef(performance.now());
+  useFrame(() => {
+    const t = (performance.now() - startTime.current) / (EFFECT_DURATION_MS * 1.3);
+    if (t >= 1) { onComplete(); return; }
+    if (pointsRef.current) {
+      pointsRef.current.scale.setScalar(1 + t * 4);
+      (pointsRef.current.material as THREE.PointsMaterial).opacity = 1 - t;
+    }
+  });
+  const particleCount = 80;
+  const positions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 0.2 + Math.random() * 0.8;
+    positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i*3+2] = r * Math.cos(phi);
+  }
+  return (
+    <points ref={pointsRef} position={effect.at}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={particleCount} array={positions} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial size={0.12} color="#ff8a3c" transparent opacity={1} toneMapped={false} blending={THREE.AdditiveBlending} />
+    </points>
+  );
+}
+```
+
+#### Damage numbers (R3F + framer-motion)
+
+```tsx
+// components/game/DamageNumbers.tsx
+'use client';
+import { Html } from '@react-three/drei';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useBattleStore } from '@/hooks/game/useBattleStore';
+
+export function DamageNumbers() {
+  const damageEvents = useBattleStore(s => s.damageEvents);
+  return (
+    <>
+      {damageEvents.map(event => (
+        <Html key={event.id} position={event.position} center style={{ pointerEvents:'none' }}>
+          <AnimatePresence>
+            <motion.div
+              initial={{ y:0, opacity:0, scale:0.6 }}
+              animate={{ y:-80, opacity:1, scale:1.1 }}
+              exit={{ opacity:0, scale:0.9 }}
+              transition={{ duration:1.1, ease:'easeOut' }}
+              style={{
+                fontFamily:'var(--font-sans)', fontSize:28, fontWeight:600,
+                color: event.kind==='damage' ? '#ff5a5a' : event.kind==='heal' ? '#7fff7f' : '#7fd8ff',
+                textShadow:'0 0 12px currentColor, 0 2px 6px rgba(0,0,0,0.8)', userSelect:'none'
+              }}
+            >
+              {event.kind==='damage' && `-${event.amount}`}
+              {event.kind==='heal' && `+${event.amount}`}
+              {event.kind==='shield' && `+${event.amount}⛉`}
+            </motion.div>
+          </AnimatePresence>
+        </Html>
+      ))}
+    </>
+  );
+}
+```
+
+#### Ship hit reaction (R3F)
+
+```tsx
+// components/game/Ship.tsx (hit-reaction excerpt)
+'use client';
+import { useRef, useEffect } from 'react';
+import { useGLTF } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+import { useBattleStore } from '@/hooks/game/useBattleStore';
+
+export function Ship({ pos, glbUrl, side }) {
+  const { scene } = useGLTF(glbUrl);
+  const groupRef = useRef<THREE.Group>(null);
+  const hitEffect = useBattleStore(s => s.effectQueue.find(e => e.kind==='hit_impact' && e.target===side));
+  const shakeRef = useRef({ startTime:0, active:false });
+  useEffect(() => { if (hitEffect && !shakeRef.current.active) shakeRef.current = { startTime:performance.now(), active:true }; }, [hitEffect]);
+  useFrame(() => {
+    if (!groupRef.current) return;
+    if (shakeRef.current.active) {
+      const elapsed = performance.now() - shakeRef.current.startTime;
+      if (elapsed > 420) { shakeRef.current.active = false; groupRef.current.position.set(...pos); }
+      else { const a = 0.18*(1-elapsed/420); groupRef.current.position.set(pos[0]+(Math.random()-0.5)*a, pos[1]+(Math.random()-0.5)*a, pos[2]+(Math.random()-0.5)*a); }
+    }
+  });
+  return <group ref={groupRef} position={pos}><primitive object={scene.clone()} /></group>;
+}
+```
+
+#### PvP card reveal (framer-motion)
+
+```tsx
+// components/game/PvPRevealPhase.tsx
+'use client';
+import { motion } from 'framer-motion';
+
+export function PvPRevealPhase({ playerCard, opponentCard, onComplete }) {
+  return (
+    <motion.div
+      initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+      transition={{ duration:0.3 }}
+      onAnimationComplete={() => setTimeout(onComplete, 1400)}
+      style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:80, display:'flex', alignItems:'center', justifyContent:'center', gap:'10rem', background:'radial-gradient(ellipse at center, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%)' }}
+    >
+      <motion.div initial={{ rotateY:180, x:-200, scale:0.8 }} animate={{ rotateY:[180,180,0,0], x:[-200,-100,-100,-100], scale:[0.8,1.1,1.2,1.15] }} transition={{ duration:1.2, times:[0,0.3,0.6,1] }} style={{ perspective:1200 }}>
+        <CardPanel card={playerCard} owner="player" />
+      </motion.div>
+      <motion.div initial={{ rotateY:180, x:200, scale:0.8 }} animate={{ rotateY:[180,180,0,0], x:[200,100,100,100], scale:[0.8,1.1,1.2,1.15] }} transition={{ duration:1.2, times:[0,0.3,0.6,1] }} style={{ perspective:1200 }}>
+        <CardPanel card={opponentCard} owner="opponent" />
+      </motion.div>
+    </motion.div>
+  );
+}
+```
+
+#### Turn transition + Boss intro cinematic
+
+```tsx
+// components/game/TurnTransitionEffect.tsx
+'use client';
+import { motion, AnimatePresence } from 'framer-motion';
+
+export function TurnTransitionEffect({ show, onComplete }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div initial={{ opacity:0 }} animate={{ opacity:[0,0.8,0] }} exit={{ opacity:0 }} transition={{ duration:0.6, ease:'easeInOut' }} onAnimationComplete={onComplete}
+          style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:60, background:'repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(127,255,212,0.05) 3px, rgba(127,255,212,0.18) 5px, transparent 5px, transparent 8px)', mixBlendMode:'screen' }}
+        />
+      )}
+    </AnimatePresence>
+  );
+}
+
+// components/game/BossIntroCinematic.tsx
+'use client';
+import { useThree, useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
+import * as THREE from 'three';
+
+export function BossIntroCinematic({ bossPosition, onComplete }) {
+  const { camera } = useThree();
+  const startTime = useRef(performance.now());
+  useFrame(() => {
+    const t = Math.min((performance.now() - startTime.current) / 2400, 1);
+    const e = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
+    camera.position.lerpVectors(new THREE.Vector3(0,5,15), new THREE.Vector3(bossPosition[0], bossPosition[1]+2, bossPosition[2]+8), e);
+    camera.lookAt(new THREE.Vector3(...bossPosition));
+    if (t >= 1) onComplete();
+  });
+  return null;
+}
+```
+
+### Audio hooks
+Each effect triggers SFX through event bus. Library under 500 KB. Palette: cyan woosh (card play), thump (impact), shimmer (shield), mechanical whir (drone), deep boom (explosion), ambient hum (background). SUNO ambient tracks rotate per arena.
+
+### Void Prix racing visuals
+
+**Camera:** Third-person chase cam behind ship. Option for cockpit.
+
+**HUD during race:**
+- Position indicator (1st/2nd/3rd...) top-left
+- Lap counter top-center
+- Minimap with racer dots bottom-left
+- Speed indicator bottom-right
+- Power-up slot center-bottom (single slot, shows current pickup)
+
+**Power-up effects (particle systems):**
+- Thruster Surge: blue flame trail extending 3× normal length
+- Phase Shell: translucent bubble wrapping ship for duration
+- EMP Burst: expanding blue electricity sphere from ship center
+- Debris Drop: brown/gray rocks tumbling behind ship
+- Tractor Snare: green beam shooting backward
+- Ghost Mode: ship fades to 20% opacity, slight shimmer
+- Scanner Jam: static noise overlay on other players' screens
+
+**Race finish:** Slow-mo camera of winner crossing line. Confetti particles in voidexa colors. Results overlay fades in.
+
+### Void Duel dogfight visuals
+
+**Camera:** Third-person default, cockpit option. Camera auto-tracks toward opponent when in range.
+
+**HUD during dogfight:**
+- Hull HP bar (player bottom-center, opponent top-center)
+- Ability cooldown indicators (3 slots, bottom-right)
+- Targeting reticle (center, locks when pointing at opponent)
+- Damage direction indicator (red flash on screen edge showing hit direction)
+- Kill cam on final blow (slow-mo, camera orbits around destruction)
+
+**Weapon visuals by class:**
+- Fighter: rapid cyan laser pulses
+- Hauler: slow heavy amber bolts
+- Explorer: long-range thin green beams
+- Salvager: spread gray pellets
+- Bob: basic white pulses
+
+**Ability visuals:**
+- Afterburner: engine flares to 3× size + speed lines
+- Missile Lock: red lock-on reticle + spiraling projectile with smoke trail
+- Barrel Roll: ship rolls with motion blur streak
+- Shield Wall: hexagonal barrier in front of hauler
+- Cloak: ship dissolves to near-invisible shimmer
+- EMP Shot: purple crackling projectile
+- Repair Drone: small green drone orbits ship, green particles on hull
+
+**Spare/Wreck choice screen:** After one ship hits 0 HP, time freezes. Winner sees two buttons floating in space next to the wreck: "SPARE" (green) and "WRECK" (red). 3 second timer. Default is spare.
+
+### The Hive visuals
+
+**From distance (>5 units):** Dark irregular mass with faint amber/cyan light leaking from holes. Silhouette against starfield. Looks mysterious.
+
+**Approach (<5 units):** Holes become visible. Light trails from pilots inside are visible. Structure detail resolves — rocky, organic-looking, like a petrified coral in space.
+
+**Inside:** Bioluminescent walls (soft cyan/amber glow). Narrow passages open into large chambers. Floating debris particles. Stalactite-like formations. In the deepest chamber: a glowing core (lore object, potential boss lair).
+
+**Collision with walls:** Sparks + hull damage. Not instant death — encourages trying, punishes carelessness. Wreck risk in Needle-class tunnels only.
 
 ---
 
