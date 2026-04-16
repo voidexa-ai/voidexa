@@ -32,6 +32,7 @@ export const en: Dict = {
       '/game/cards/deck-builder':   { label: 'Deck',     description: 'Build your 20-card deck' },
       '/game/speed-run':            { label: 'Speed Run', description: 'Three-track time trials' },
       '/game/hauling':              { label: 'Hauling',   description: 'Cargo contracts & route encounters' },
+      '/game/battle':               { label: 'Battle',    description: 'PvE card duels, Tier 1–5' },
       '/shop':         { label: 'Shop',         description: 'Skins & card packs' },
       '/achievements': { label: 'Achievements', description: 'Hall of records' },
       '/team':        { label: 'Team',        description: 'Meet the crew' },
