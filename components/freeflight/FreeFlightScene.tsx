@@ -17,9 +17,11 @@ import WarpGates from './environment/WarpGates'
 import CockpitModel from './cockpit/CockpitModel'
 import ModelErrorBoundary from './ModelErrorBoundary'
 import MissionRunner from './MissionRunner'
+import Landmarks from './environment/Landmarks'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
 import type { CockpitModelSpec } from '@/lib/data/shipCockpits'
 import type { MissionWaypoint } from '@/lib/game/missions/waypoints'
+import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 
 interface Props {
   onShipState: (ship: React.MutableRefObject<ReturnType<typeof createShipState>>) => void
@@ -28,6 +30,7 @@ interface Props {
   onNebulaChange?: (color: string | null) => void
   onWarpJump?: (fromId: string, toId: string) => void
   onFirstPersonChange?: (fp: boolean) => void
+  onNearLandmarkChange?: (landmark: LandmarkDef | null) => void
   shipUrl: string
   shipScale: number
   cockpitUrl: string
@@ -51,6 +54,7 @@ export default function FreeFlightScene({
   missionWaypoints,
   missionWaypointIndex = 0,
   onMissionWaypointCleared,
+  onNearLandmarkChange,
 }: Props) {
   const shipRef = useRef(createShipState())
   const shipGroupRef = useRef<THREE.Group>(null)
@@ -131,6 +135,8 @@ export default function FreeFlightScene({
           onCleared={onMissionWaypointCleared}
         />
       )}
+
+      <Landmarks ship={shipRef} onNearChange={onNearLandmarkChange} />
     </>
   )
 }

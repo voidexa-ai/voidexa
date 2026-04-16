@@ -9,6 +9,7 @@ import ShipPicker from './ships/ShipPicker'
 import AchievementPanel from '@/components/achievements/AchievementPanel'
 import MissionOverlay from './MissionOverlay'
 import { useActiveMission } from './useActiveMission'
+import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { ShipState, StationDef, DerelictDef } from './types'
 import { createShipState } from './types'
 import { recordArchaeologist, recordSalvager } from './achievements'
@@ -33,6 +34,7 @@ export default function FreeFlightPage() {
   const [firstPerson, setFirstPerson] = useState(false)
   const [dockStation, setDockStation] = useState<StationDef | null>(null)
   const [nearDerelict, setNearDerelict] = useState<DerelictDef | null>(null)
+  const [nearLandmark, setNearLandmark] = useState<LandmarkDef | null>(null)
   const [nebulaColor, setNebulaColor] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dockedAt, setDockedAt] = useState<StationDef | null>(null)
@@ -118,6 +120,15 @@ export default function FreeFlightPage() {
     if (res.isNew) pushToast(`SALVAGER +1 · ${res.total} ships scanned`, '#00d4ff')
   }
 
+  const handleScanLandmark = () => {
+    if (!nearLandmark) return
+    setLorePopup({
+      title: `${nearLandmark.name} · ${nearLandmark.zone}`,
+      body: `${nearLandmark.scanText}\n\n${nearLandmark.loreSnippet}\n\n— ${nearLandmark.hook}`,
+    })
+    pushToast(`SCANNED · ${nearLandmark.name.toUpperCase()}`, '#ffd166')
+  }
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
@@ -133,10 +144,13 @@ export default function FreeFlightPage() {
       if (e.code === 'KeyF' && nearDerelict && !menuOpen && !lorePopup) {
         handleScanDerelict()
       }
+      if (e.code === 'KeyF' && nearLandmark && !nearDerelict && !menuOpen && !lorePopup) {
+        handleScanLandmark()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [dockStation, nearDerelict, menuOpen, lorePopup, achievementsOpen])
+  }, [dockStation, nearDerelict, nearLandmark, menuOpen, lorePopup, achievementsOpen])
 
   const onShipState = (ref: React.MutableRefObject<ShipState>) => {
     shipRef.current = ref.current
@@ -183,6 +197,7 @@ export default function FreeFlightPage() {
           missionWaypoints={missionWaypoints}
           missionWaypointIndex={missionWaypointIndex}
           onMissionWaypointCleared={handleWaypointCleared}
+          onNearLandmarkChange={setNearLandmark}
         />
       )}
 
@@ -278,6 +293,11 @@ export default function FreeFlightPage() {
       {/* Scan prompt */}
       {nearDerelict && !menuOpen && !lorePopup && !dockStation && (
         <PromptBanner text={`Press F to scan · ${nearDerelict.name}`} color="#ff8855" offset={60} />
+      )}
+
+      {/* Landmark scan prompt */}
+      {nearLandmark && !nearDerelict && !menuOpen && !lorePopup && !dockStation && (
+        <PromptBanner text={`Press F to scan · ${nearLandmark.name}`} color={nearLandmark.color} offset={60} />
       )}
 
       {/* Toasts */}

@@ -9,6 +9,7 @@ export default defineConfig({
     include: [
       "lib/game/__tests__/**/*.test.ts",
       "lib/game/cards/__tests__/**/*.test.ts",
+      "lib/game/freeflight/__tests__/**/*.test.ts",
       "lib/credits/__tests__/**/*.test.ts",
       "lib/shop/__tests__/**/*.test.ts",
       "lib/cards/__tests__/**/*.test.ts",
