@@ -6,26 +6,9 @@ import { useEditorStore } from '../hooks/useEditorStore'
 import { CATEGORY_ORDER, type ModelEntry } from '../lib/editorTypes'
 import { ModelPreview } from './ModelPreview'
 
-// Individual equipment parts that have cockpit-relative positions baked into
-// their vertex data. Loaded with preserveOrigin=true so each sits at its
-// authored offset. Replaces the single hirez_equipments combined piece
-// (which spreads parts in a line along Z instead of nesting them in the cockpit).
-const EQUIPMENT_PARTS = [
-  'equipment_cockpitequipments_seat_mesh_650',
-  'equipment_cockpitequipments_joystick1_base_mesh_652',
-  'equipment_cockpitequipments_joystick1_handle_mesh_653',
-  'equipment_cockpitequipments_joystick2_base_mesh_643',
-  'equipment_cockpitequipments_joystick2_handle_mesh_644',
-  'equipment_cockpitequipments_screen1_mesh_632',
-  'equipment_cockpitequipments_screen2_mesh_633',
-  'equipment_cockpitequipments_hud_mesh_628',
-  'equipment_cockpitequipments_throttlecontro1_base_mesh_645',
-  'equipment_cockpitequipments_throttlecontrol2_base_mesh_648',
-]
-
-// 5 synthetic "Complete Cockpit" presets. Clicking one loads the frame +
-// interior + screens (combined) + individual equipment parts, all at origin
-// with preserveOrigin=true so they nest as the artist intended.
+// 5 synthetic "Cockpit Assembly" presets. Each loads the frame + interior +
+// screens only. Equipment parts (seats, joysticks, HUD, etc.) are available
+// in the "Individual Parts" category for manual placement.
 const COMPLETE_COCKPIT_PRESETS: Array<{
   label: string
   slugs: string[]
@@ -37,7 +20,6 @@ const COMPLETE_COCKPIT_PRESETS: Array<{
       `hirez_cockpit${id}`,
       `hirez_cockpit${id}_interior`,
       'hirez_screens',
-      ...EQUIPMENT_PARTS,
     ],
   }
 })
