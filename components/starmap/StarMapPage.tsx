@@ -157,21 +157,37 @@ function Kcp90FloatingPanel() {
 
 // ── Main page ──────────────────────────────────────────────────────────────
 
-export default function StarMapPage() {
+interface StarMapPageProps {
+  /**
+   * Fullscreen lockout mode (default true). When false, the map renders as a
+   * 100vh hero block that lets the page scroll — used by the homepage to
+   * stack below-the-fold sections under the star map.
+   */
+  fullscreen?: boolean
+}
+
+export default function StarMapPage({ fullscreen = true }: StarMapPageProps) {
   const t = useT()
-  // Lock scroll while on homepage
+  // Lock scroll only in fullscreen mode. The homepage hero variant keeps the
+  // page scrollable so sections below are reachable.
   useEffect(() => {
+    if (!fullscreen) return
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = prev }
-  }, [])
+  }, [fullscreen])
 
   return (
     <div
-      style={{
+      style={fullscreen ? {
         position: 'fixed',
         inset: 0,
         width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      } : {
+        position: 'relative',
+        width: '100%',
         height: '100vh',
         overflow: 'hidden',
       }}

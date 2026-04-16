@@ -29,6 +29,19 @@ export default function VoidexaSystem() {
       >
         ← Back to Galaxy
       </button>
+      <div style={{
+        position: 'fixed',
+        bottom: 10,
+        right: 16,
+        zIndex: 60,
+        fontSize: 12,
+        letterSpacing: '0.06em',
+        color: 'rgba(255,255,255,0.5)',
+        fontFamily: 'var(--font-inter, system-ui)',
+        pointerEvents: 'none',
+      }}>
+        Operating globally from Denmark · CVR 46343387
+      </div>
     </>
   )
 }

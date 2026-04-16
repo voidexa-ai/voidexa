@@ -1,8 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { Suspense, useMemo, useState } from 'react'
 import { SHIP_CATALOG, type ShipCatalogEntry, saveShipId } from './catalog'
+import { getShipTier, isStarterShip, TIER_COLOR, TIER_LABEL } from '@/lib/data/shipTiers'
 
 const ShipPreviewCanvas = dynamic(() => import('./ShipPreviewCanvas'), {
   ssr: false,
@@ -15,14 +17,42 @@ interface Props {
   currentId?: string
 }
 
+// Placeholder Stripe prices per tier until the shop wiring for ships lands.
+// Shown as a locked-ship badge so the player knows where they sit in the
+// rarity ladder. Kept local to the picker — the shop page remains the source
+// of truth for real prices.
+const TIER_PRICE_LABEL: Record<string, string> = {
+  common:    '$1.99',
+  uncommon:  '$2.99',
+  rare:      '$4.99',
+  epic:      '$7.99',
+  legendary: '$11.99',
+}
+
 export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
-  const [selectedId, setSelectedId] = useState<string>(currentId ?? SHIP_CATALOG[0].id)
+  const router = useRouter()
+  // Default to the stored selection if starter, else the first starter ship.
+  const firstStarterId = SHIP_CATALOG.find(s => isStarterShip(s.id))?.id ?? SHIP_CATALOG[0].id
+  const initialId = currentId && isStarterShip(currentId) ? currentId : firstStarterId
+  const [selectedId, setSelectedId] = useState<string>(initialId)
   const selected = useMemo(
     () => SHIP_CATALOG.find(s => s.id === selectedId) ?? SHIP_CATALOG[0],
     [selectedId],
   )
+  const selectedStarter = isStarterShip(selected.id)
+
+  const handleRowClick = (ship: ShipCatalogEntry) => {
+    if (isStarterShip(ship.id)) {
+      setSelectedId(ship.id)
+      return
+    }
+    // Locked ships route to the shop where the cosmetic gating lives. The
+    // picker stays a gameplay surface — buying happens in /shop only.
+    router.push(`/shop?ship=${encodeURIComponent(ship.id)}`)
+  }
 
   const confirm = () => {
+    if (!selectedStarter) return
     saveShipId(selected.id)
     onPick(selected)
   }
@@ -119,11 +149,13 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
               fontSize: 14,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              color: selected.tier === 'premium' ? '#ffc966' : '#66ff99',
-              textShadow: `0 0 8px ${selected.tier === 'premium' ? '#ffaa33' : '#66ff99'}`,
+              color: selectedStarter ? '#66ff99' : TIER_COLOR[getShipTier(selected.id)],
+              textShadow: `0 0 8px ${selectedStarter ? '#66ff99' : TIER_COLOR[getShipTier(selected.id)]}`,
               fontFamily: 'var(--font-space, monospace)',
             }}>
-              {selected.tier === 'premium' ? '★ Premium' : 'Starter · Free'}
+              {selectedStarter
+                ? '● Starter · Free · Play now'
+                : `🔒 ${TIER_LABEL[getShipTier(selected.id)]} · Unlock in shop`}
             </div>
             <div style={{
               fontSize: 32,
@@ -159,24 +191,31 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
         }}>
           {SHIP_CATALOG.map(s => {
             const active = s.id === selectedId
-            const premium = s.tier === 'premium'
+            const starter = isStarterShip(s.id)
+            const tier = getShipTier(s.id)
+            const tierColor = TIER_COLOR[tier]
+            const priceLabel = TIER_PRICE_LABEL[tier]
             return (
               <button
                 key={s.id}
-                onClick={() => setSelectedId(s.id)}
+                onClick={() => handleRowClick(s)}
+                title={starter ? 'Play now' : 'Unlock in shop'}
                 style={{
+                  position: 'relative',
                   textAlign: 'left',
                   padding: '14px 16px',
-                  background: active
+                  background: active && starter
                     ? 'linear-gradient(135deg, rgba(0,120,180,0.3), rgba(139,92,246,0.25))'
                     : 'rgba(10, 14, 24, 0.6)',
-                  border: `1px solid ${active ? 'rgba(0,212,255,0.6)' : 'rgba(255,255,255,0.1)'}`,
+                  border: `1px solid ${active && starter ? 'rgba(0,212,255,0.6)' : starter ? 'rgba(102,255,153,0.3)' : `${tierColor}55`}`,
                   borderRadius: 8,
                   color: '#fff',
                   fontFamily: 'var(--font-inter, system-ui)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
-                  boxShadow: active ? '0 0 18px rgba(0,212,255,0.3)' : 'none',
+                  boxShadow: active && starter ? '0 0 18px rgba(0,212,255,0.3)' : 'none',
+                  opacity: starter ? 1 : 0.7,
+                  overflow: 'hidden',
                 }}
               >
                 <div style={{
@@ -190,17 +229,27 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
                     fontWeight: 600,
                     letterSpacing: '-0.01em',
                     fontFamily: 'var(--font-space, system-ui)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
                   }}>
-                    {s.name}
+                    {!starter && <span style={{ fontSize: 14, opacity: 0.7 }}>🔒</span>}
+                    <span>{s.name}</span>
                   </div>
                   <span style={{
-                    fontSize: 14,
-                    letterSpacing: '0.1em',
+                    fontSize: 11,
+                    letterSpacing: '0.14em',
                     textTransform: 'uppercase',
-                    color: premium ? '#ffc966' : '#66ff99',
+                    color: starter ? '#0a0a0a' : tierColor,
+                    background: starter ? '#66ff99' : `${tierColor}22`,
+                    border: starter ? 'none' : `1px solid ${tierColor}99`,
+                    padding: '3px 8px',
+                    borderRadius: 999,
                     fontFamily: 'var(--font-space, monospace)',
+                    fontWeight: 700,
+                    textShadow: starter ? 'none' : `0 0 6px ${tierColor}`,
                   }}>
-                    {premium ? '★' : 'Free'}
+                    {starter ? 'Starter' : TIER_LABEL[tier]}
                   </span>
                 </div>
                 <div style={{
@@ -210,6 +259,15 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
                   lineHeight: 1.4,
                 }}>
                   {s.description}
+                </div>
+                <div style={{
+                  marginTop: 8,
+                  fontSize: 13,
+                  letterSpacing: '0.06em',
+                  color: starter ? '#86efac' : 'rgba(255,255,255,0.7)',
+                  fontFamily: 'var(--font-space, monospace)',
+                }}>
+                  {starter ? 'Play now · Free' : `Unlock in shop · ${priceLabel ?? 'See shop'}`}
                 </div>
               </button>
             )
@@ -224,26 +282,49 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-        <button
-          onClick={confirm}
-          style={{
-            padding: '14px 42px',
-            minWidth: 300,
-            fontSize: 16,
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            background: 'linear-gradient(135deg, rgba(0,120,180,0.4), rgba(139,92,246,0.35))',
-            border: '1px solid rgba(0,212,255,0.7)',
-            borderRadius: 999,
-            color: '#fff',
-            fontFamily: 'var(--font-space, system-ui)',
-            cursor: 'pointer',
-            boxShadow: '0 0 26px rgba(0,212,255,0.4)',
-            textShadow: '0 0 12px #00d4ff',
-          }}
-        >
-          Launch · {selected.name}
-        </button>
+        {selectedStarter ? (
+          <button
+            onClick={confirm}
+            style={{
+              padding: '14px 42px',
+              minWidth: 300,
+              fontSize: 16,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              background: 'linear-gradient(135deg, rgba(0,120,180,0.4), rgba(139,92,246,0.35))',
+              border: '1px solid rgba(0,212,255,0.7)',
+              borderRadius: 999,
+              color: '#fff',
+              fontFamily: 'var(--font-space, system-ui)',
+              cursor: 'pointer',
+              boxShadow: '0 0 26px rgba(0,212,255,0.4)',
+              textShadow: '0 0 12px #00d4ff',
+            }}
+          >
+            Launch · {selected.name}
+          </button>
+        ) : (
+          <button
+            onClick={() => router.push(`/shop?ship=${encodeURIComponent(selected.id)}`)}
+            style={{
+              padding: '14px 42px',
+              minWidth: 300,
+              fontSize: 16,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              background: 'linear-gradient(135deg, rgba(245,158,11,0.35), rgba(168,85,247,0.3))',
+              border: `1px solid ${TIER_COLOR[getShipTier(selected.id)]}`,
+              borderRadius: 999,
+              color: '#fff',
+              fontFamily: 'var(--font-space, system-ui)',
+              cursor: 'pointer',
+              boxShadow: `0 0 26px ${TIER_COLOR[getShipTier(selected.id)]}55`,
+              textShadow: `0 0 12px ${TIER_COLOR[getShipTier(selected.id)]}`,
+            }}
+          >
+            🔒 Unlock {selected.name} in Shop
+          </button>
+        )}
       </div>
     </div>
   )

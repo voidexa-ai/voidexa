@@ -63,12 +63,13 @@ const ITEM_IMAGE: Record<string, string> = {
   'cockpit-gilded':         '/images/renders/cockpits/hirez_cockpit02.png',
 }
 
-type TabKey = 'featured' | ShopCategory
+type TabKey = 'featured' | 'all' | ShopCategory
 
 function buildTabs(t: Dict): { key: TabKey; label: string }[] {
-  // Fortnite-style: Featured lands first, then the six canonical shelves.
+  // Fortnite-style: All + Featured land first, then the six canonical shelves.
   // Skins surfaces hull-customization attachments (fins, antennas, cannons).
   return [
+    { key: 'all',                     label: t.shop.tabs.all ?? 'All' },
     { key: 'featured',                label: 'Featured' },
     { key: ShopCategory.ShipSkin,     label: t.shop.tabs.ships },
     { key: ShopCategory.Attachment,   label: 'Skins' },
@@ -527,7 +528,7 @@ export default function ShopPage() {
   const t = useT()
   const TABS = buildTabs(t)
   const [selected, setSelected] = useState<ShopItem | null>(null)
-  const [activeTab, setActiveTab] = useState<TabKey>('featured')
+  const [activeTab, setActiveTab] = useState<TabKey>('all')
   const [page, setPage] = useState(0)
   const countdown = useCountdownToUtcMidnight()
 
@@ -546,10 +547,32 @@ export default function ShopPage() {
 
   useEffect(() => { setPage(0) }, [activeTab])
 
+  // Every shop item, sorted: daily featured first, then rarity high→low,
+  // then alphabetical.
+  const allItems = useMemo(() => {
+    const featuredIds = new Set(daily.map(i => i.id))
+    const rarityRank: Record<CardRarity, number> = {
+      [CardRarity.Legendary]: 0,
+      [CardRarity.Epic]:      1,
+      [CardRarity.Rare]:      2,
+      [CardRarity.Uncommon]:  3,
+      [CardRarity.Common]:    4,
+    }
+    const items = [...STARTER_SHOP_ITEMS]
+    return items.sort((a, b) => {
+      const aFeat = featuredIds.has(a.id) ? 0 : 1
+      const bFeat = featuredIds.has(b.id) ? 0 : 1
+      if (aFeat !== bFeat) return aFeat - bFeat
+      if (a.rarity !== b.rarity) return rarityRank[a.rarity] - rarityRank[b.rarity]
+      return a.name.localeCompare(b.name)
+    })
+  }, [daily])
+
   const tabItems = useMemo(() => {
     if (activeTab === 'featured') return [] as readonly ShopItem[]
+    if (activeTab === 'all') return allItems
     return STARTER_SHOP_ITEMS.filter(i => i.category === activeTab)
-  }, [activeTab])
+  }, [activeTab, allItems])
 
   const pageCount = Math.max(1, Math.ceil(tabItems.length / PAGE_SIZE))
   const pagedItems = tabItems.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE)

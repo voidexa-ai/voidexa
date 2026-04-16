@@ -127,6 +127,22 @@ export default function GalaxyPage() {
         Explore the Universe
       </button>
 
+      {/* Subtle CVR marker — small, low-opacity so it doesn't compete with
+          the 3D scene. This replaces the global Footer on galaxy views. */}
+      <div style={{
+        position: 'fixed',
+        bottom: 10,
+        right: 16,
+        zIndex: 20,
+        fontSize: 12,
+        letterSpacing: '0.06em',
+        color: 'rgba(255,255,255,0.5)',
+        fontFamily: 'var(--font-inter, system-ui)',
+        pointerEvents: 'none',
+      }}>
+        Operating globally from Denmark · CVR 46343387
+      </div>
+
       {/* Back to voidexa home */}
       <button
         onClick={() => router.push('/')}

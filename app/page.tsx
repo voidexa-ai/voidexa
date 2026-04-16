@@ -1,4 +1,4 @@
-import StarMapPage from '@/components/starmap/StarMapPage'
+import HomePage from '@/components/home/HomePage'
 
 export const metadata = {
   title: 'voidexa — Sovereign AI Infrastructure',
@@ -6,5 +6,5 @@ export const metadata = {
 }
 
 export default function Home() {
-  return <StarMapPage />
+  return <HomePage />
 }
