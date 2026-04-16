@@ -39,8 +39,7 @@ export default function AssemblyEditorPage() {
   const redo = useEditorStore(s => s.redo)
   const selectModel = useEditorStore(s => s.selectModel)
   const setCameraPreset = useEditorStore(s => s.setCameraPreset)
-  const addModel = useEditorStore(s => s.addModel)
-  const updateTransform = useEditorStore(s => s.updateTransform)
+  const addMatchedSet = useEditorStore(s => s.addMatchedSet)
   const catalog = useEditorStore(s => s.modelCatalog)
   const loadGeneratedAssembly = useEditorStore(s => s.loadGeneratedAssembly)
   const setValidationIssues = useEditorStore(s => s.setValidationIssues)
@@ -66,25 +65,15 @@ export default function AssemblyEditorPage() {
   )
 
   const quickCockpit = useCallback(() => {
-    const frame = catalog.find(e => e.name === 'hirez_cockpit01')
-    const interior = catalog.find(e => e.name === 'hirez_cockpit01_interior')
-    const equipments = catalog.find(e => /equipment/i.test(e.name))
-    const screens = catalog.find(e => /screen/i.test(e.name))
-    // Add the 4-piece matched set all at identical baseline so they overlap
-    // correctly. User fine-tunes from there.
-    ;[frame, interior, equipments, screens].forEach(e => { if (e) addModel(e) })
-    // Reset the four we just added (last 4 in the scene) to identical transforms
-    const state = useEditorStore.getState()
-    const recent = state.placedModels.slice(-4)
-    recent.forEach(m => {
-      updateTransform(m.id, {
-        position: [0, 0, 0],
-        rotation: [0, 0, 0],
-        scale: [1, 1, 1],
-      })
-    })
+    // Load the cockpit01 matched set as a single history step. Exact slugs —
+    // no regex — otherwise the split equipment/screen parts uploaded by
+    // scripts/split-glb-models.ts would match first. preserveOrigin=true
+    // (via addMatchedSet) keeps their shared world origin intact.
+    const wanted = ['hirez_cockpit01', 'hirez_cockpit01_interior', 'hirez_equipments', 'hirez_screens']
+    const pieces = wanted.map((slug) => catalog.find((e) => e.name === slug)).filter((e): e is NonNullable<typeof e> => !!e)
+    if (pieces.length > 0) addMatchedSet(pieces)
     setCameraPreset('pilot')
-  }, [catalog, addModel, updateTransform, setCameraPreset])
+  }, [catalog, addMatchedSet, setCameraPreset])
 
   // Keyboard shortcuts
   useEffect(() => {

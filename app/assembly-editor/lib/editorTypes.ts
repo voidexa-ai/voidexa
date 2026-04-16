@@ -10,6 +10,11 @@ export interface PlacedModel {
   scale: [number, number, number]
   visible: boolean
   opacity: number
+  // When true, the renderer preserves the GLB's baked-in origin (no AABB
+  // recenter). Required for matched-set pieces (frame+interior+equipment+
+  // screens) that share a common world origin — recentering would shift
+  // each piece independently and destroy the alignment.
+  preserveOrigin?: boolean
   // VoidForge-generated instances carry role + lineage so the editor can show
   // which slot they fill and which generation they came from.
   generated?: boolean
@@ -22,6 +27,8 @@ export interface ModelEntry {
   url: string
   category: string
   size: number
+  // Human-readable label — falls back to name when missing.
+  displayName?: string
 }
 
 export interface AssemblyConfig {
@@ -39,11 +46,16 @@ export interface AssemblyConfig {
   }
 }
 
+// UI category order in the Model Library left panel. "Complete Cockpits" is
+// a synthetic category containing click-to-add matched-set presets and
+// always sits at the top. The rest of the order follows the user's spec.
 export const CATEGORY_ORDER = [
+  'Complete Cockpits',
   'Cockpit Frames',
   'Cockpit Interiors',
   'Equipment',
   'Screens',
+  'Individual Parts',
   'Hi-Rez Ships',
   'Ships (USC)',
   'Ships (USC-X)',
@@ -55,6 +67,10 @@ export function deriveCategory(filename: string): string {
   const n = filename.replace(/\.glb$/i, '').toLowerCase()
   if (/^hirez_cockpit\d+_interior$/.test(n)) return 'Cockpit Interiors'
   if (/^hirez_cockpit\d+$/.test(n)) return 'Cockpit Frames'
+  if (n === 'hirez_equipments') return 'Equipment'
+  if (n === 'hirez_screens') return 'Screens'
+  // Split pieces uploaded by scripts/split-glb-models.ts.
+  if (n.startsWith('equipment_') || n.startsWith('screen_')) return 'Individual Parts'
   if (n.startsWith('hirez_equipment')) return 'Equipment'
   if (n.startsWith('hirez_screen')) return 'Screens'
   if (n.startsWith('hirez_ship')) return 'Hi-Rez Ships'

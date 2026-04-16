@@ -44,7 +44,8 @@ interface EditorState {
   voidForgeIssues: ValidationIssue[]
   voidForgeStyleSummary: string | null
 
-  addModel: (entry: ModelEntry) => void
+  addModel: (entry: ModelEntry, opts?: { preserveOrigin?: boolean }) => void
+  addMatchedSet: (entries: ModelEntry[]) => void
   removeModel: (id: string) => void
   selectModel: (id: string | null) => void
   updateTransform: (id: string, patch: Partial<Pick<PlacedModel, 'position' | 'rotation' | 'scale' | 'opacity'>>, commit?: boolean) => void
@@ -95,7 +96,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   voidForgeIssues: [],
   voidForgeStyleSummary: null,
 
-  addModel: (entry) => {
+  addModel: (entry, opts) => {
     const prev = get().placedModels
     const model: PlacedModel = {
       id: uuid(),
@@ -107,10 +108,37 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       scale: [1, 1, 1],
       visible: true,
       opacity: 1,
+      preserveOrigin: opts?.preserveOrigin,
     }
     set({
       placedModels: [...prev, model],
       selectedId: model.id,
+      history: [...get().history.slice(-HISTORY_LIMIT + 1), clone(prev)],
+      future: [],
+    })
+  },
+
+  addMatchedSet: (entries) => {
+    // Adds N models in one history step, all at origin with preserveOrigin=true.
+    // Used by "Complete Cockpit" presets — pieces share a common world origin
+    // inside their GLBs, so recentering would misalign them.
+    if (entries.length === 0) return
+    const prev = get().placedModels
+    const additions: PlacedModel[] = entries.map((entry) => ({
+      id: uuid(),
+      modelUrl: entry.url,
+      modelName: entry.name,
+      category: entry.category,
+      position: [0, 0, 0],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+      visible: true,
+      opacity: 1,
+      preserveOrigin: true,
+    }))
+    set({
+      placedModels: [...prev, ...additions],
+      selectedId: additions[additions.length - 1].id,
       history: [...get().history.slice(-HISTORY_LIMIT + 1), clone(prev)],
       future: [],
     })

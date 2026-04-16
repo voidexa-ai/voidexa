@@ -34,7 +34,6 @@ export async function GET() {
         const slug = f.name.replace(/\.glb$/i, '')
         const dbRow = activeBySlug.get(slug)
         return {
-          slug,
           name: slug,
           displayName: dbRow?.display_name ?? slug,
           url: `${SUPABASE_URL}/storage/v1/object/public/models/${f.name}`,
@@ -42,11 +41,11 @@ export async function GET() {
           size: (f.metadata as { size?: number } | null)?.size || 0,
           // If the slug isn't in DB yet, keep it visible (default true) — only
           // rows explicitly marked is_active=false get filtered.
-          isActive: dbRow ? dbRow.is_active : true,
+          _active: dbRow ? dbRow.is_active : true,
         }
       })
-      .filter(e => e.isActive)
-      .map(({ isActive: _, slug: __, displayName: ___, ...rest }) => rest)
+      .filter(e => e._active)
+      .map(({ _active: _, ...rest }) => rest)
 
     return NextResponse.json({ entries })
   } catch (e) {

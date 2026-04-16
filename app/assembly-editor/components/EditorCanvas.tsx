@@ -18,20 +18,24 @@ function WireframeBox() {
   )
 }
 
-function GLTFModel({ url }: { url: string }) {
+function GLTFModel({ url, preserveOrigin }: { url: string; preserveOrigin?: boolean }) {
   const { scene } = useGLTF(url)
   const cloned = useMemo(() => {
     const c = scene.clone(true)
-    // Recenter geometry so visual center sits at [0,0,0].
-    // Source GLTFs often have baked-in offsets — without this, all placed
-    // models at position [0,0,0] would spread apart.
-    const box = new THREE.Box3().setFromObject(c)
-    if (!box.isEmpty()) {
-      const center = box.getCenter(new THREE.Vector3())
-      c.position.sub(center)
+    // Standalone models get recentered so [0,0,0] places them where the user
+    // expects — source GLBs often have baked-in offsets. Matched-set pieces
+    // (frame + interior + equipment + screens) must skip this because they
+    // share a common world origin inside the source; recentering would shift
+    // each piece independently and break the alignment.
+    if (!preserveOrigin) {
+      const box = new THREE.Box3().setFromObject(c)
+      if (!box.isEmpty()) {
+        const center = box.getCenter(new THREE.Vector3())
+        c.position.sub(center)
+      }
     }
     return c
-  }, [scene])
+  }, [scene, preserveOrigin])
   return <primitive object={cloned} />
 }
 
@@ -70,7 +74,7 @@ function ModelInScene({
         onPointerDown={(e) => { e.stopPropagation(); selectModel(model.id) }}
       >
         <Suspense fallback={<WireframeBox />}>
-          <GLTFModel url={model.modelUrl} />
+          <GLTFModel url={model.modelUrl} preserveOrigin={model.preserveOrigin} />
           {isSelected && <Outlines thickness={3} color="#00d4ff" />}
         </Suspense>
       </group>
