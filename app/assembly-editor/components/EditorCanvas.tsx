@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { Environment, Grid, useGLTF, Outlines } from '@react-three/drei'
 import * as THREE from 'three'
@@ -8,6 +8,29 @@ import { useEditorStore } from '../hooks/useEditorStore'
 import { GizmoWrapper } from './GizmoWrapper'
 import { FlyControls, type FlyControlsHandle } from './FlyControls'
 import type { PlacedModel } from '../lib/editorTypes'
+
+// Error boundary that catches useGLTF / WebGL failures per model so one
+// broken asset doesn't take down the entire editor canvas.
+class ModelErrorBoundary extends Component<
+  { children: ReactNode; modelName: string },
+  { error: string | null }
+> {
+  state: { error: string | null } = { error: null }
+  static getDerivedStateFromError(err: Error) {
+    return { error: err.message || 'Unknown error' }
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <mesh>
+          <boxGeometry args={[0.5, 0.5, 0.5]} />
+          <meshBasicMaterial color="#ff6b9d" wireframe transparent opacity={0.6} />
+        </mesh>
+      )
+    }
+    return this.props.children
+  }
+}
 
 function WireframeBox() {
   return (
@@ -65,6 +88,10 @@ function ModelInScene({
 
   if (!model.visible) return null
 
+  // Guard: skip models with invalid URLs (e.g. "[object Promise]" from
+  // unresolved async — see commit note). Show a red wireframe placeholder.
+  const validUrl = model.modelUrl && model.modelUrl.startsWith('http')
+
   return (
     <>
       <group
@@ -73,10 +100,19 @@ function ModelInScene({
         onClick={(e) => { e.stopPropagation(); selectModel(model.id) }}
         onPointerDown={(e) => { e.stopPropagation(); selectModel(model.id) }}
       >
-        <Suspense fallback={<WireframeBox />}>
-          <GLTFModel url={model.modelUrl} preserveOrigin={model.preserveOrigin} />
-          {isSelected && <Outlines thickness={3} color="#00d4ff" />}
-        </Suspense>
+        <ModelErrorBoundary modelName={model.modelName}>
+          <Suspense fallback={<WireframeBox />}>
+            {validUrl ? (
+              <GLTFModel url={model.modelUrl} preserveOrigin={model.preserveOrigin} />
+            ) : (
+              <mesh>
+                <boxGeometry args={[0.5, 0.5, 0.5]} />
+                <meshBasicMaterial color="#ff6b9d" wireframe transparent opacity={0.6} />
+              </mesh>
+            )}
+            {isSelected && <Outlines thickness={3} color="#00d4ff" />}
+          </Suspense>
+        </ModelErrorBoundary>
       </group>
       {isSelected && ready && groupRef.current && (
         <GizmoWrapper

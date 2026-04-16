@@ -97,10 +97,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   voidForgeStyleSummary: null,
 
   addModel: (entry, opts) => {
+    // Guard against Promise objects leaking in as the URL (manifests as
+    // "[object Promise]" when coerced to string, crashing useGLTF).
+    const url = typeof entry.url === 'string' ? entry.url : String(entry.url ?? '')
+    if (!url || !url.startsWith('http')) {
+      console.warn(`[EditorStore] Skipping model "${entry.name}" — invalid URL:`, entry.url)
+      return
+    }
     const prev = get().placedModels
     const model: PlacedModel = {
       id: uuid(),
-      modelUrl: entry.url,
+      modelUrl: url,
       modelName: entry.name,
       category: entry.category,
       position: [0, 0, 0],
@@ -124,18 +131,27 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     // inside their GLBs, so recentering would misalign them.
     if (entries.length === 0) return
     const prev = get().placedModels
-    const additions: PlacedModel[] = entries.map((entry) => ({
-      id: uuid(),
-      modelUrl: entry.url,
-      modelName: entry.name,
-      category: entry.category,
-      position: [0, 0, 0],
-      rotation: [0, 0, 0],
-      scale: [1, 1, 1],
-      visible: true,
-      opacity: 1,
-      preserveOrigin: true,
-    }))
+    const additions: PlacedModel[] = []
+    for (const entry of entries) {
+      const url = typeof entry.url === 'string' ? entry.url : String(entry.url ?? '')
+      if (!url || !url.startsWith('http')) {
+        console.warn(`[EditorStore] Skipping matched-set piece "${entry.name}" — invalid URL:`, entry.url)
+        continue
+      }
+      additions.push({
+        id: uuid(),
+        modelUrl: url,
+        modelName: entry.name,
+        category: entry.category,
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1],
+        visible: true,
+        opacity: 1,
+        preserveOrigin: true,
+      })
+    }
+    if (additions.length === 0) return
     set({
       placedModels: [...prev, ...additions],
       selectedId: additions[additions.length - 1].id,
@@ -264,9 +280,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const nextPlaced: PlacedModel[] = []
     for (const inst of assembly.instances) {
       const catEntry = catalog.find((c) => c.name === inst.modelSlug)
+      const resolvedUrl = typeof catEntry?.url === 'string' ? catEntry.url : ''
+      if (!resolvedUrl || !resolvedUrl.startsWith('http')) {
+        console.warn(`[EditorStore] Skipping generated instance "${inst.modelSlug}" — no valid CDN URL`)
+        continue
+      }
       nextPlaced.push({
         id: uuid(),
-        modelUrl: catEntry?.url ?? '',
+        modelUrl: resolvedUrl,
         modelName: inst.modelSlug,
         category: catEntry?.category ?? 'Other',
         position: [inst.position.x, inst.position.y, inst.position.z],

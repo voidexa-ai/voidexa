@@ -43,11 +43,8 @@ export default function Navigation() {
       children: [
         { href: '/trading',  label: tLink('/trading', 'AI Trading (LIVE)'),            description: tDesc('/trading') },
         { href: '/apps',     label: tLink('/apps', 'Custom Apps (BETA)'),              description: tDesc('/apps') },
-        { href: '/apps',     label: tLink('/apps', 'Apps (BETA)'),                     description: tDesc('/apps') },
-        { href: '/ai-tools', label: tLink('/ai-tools', 'AI Book Creator (IN DEV)'),    description: tDesc('/ai-tools') },
-        { href: '/ai-tools', label: tLink('/ai-tools', 'AI Website Builder (SOON)'),   description: tDesc('/ai-tools') },
-        { href: '/services', label: tLink('/services', 'Data Intelligence (SERVICES)'),description: tDesc('/services') },
-        { href: '/services', label: tLink('/services', 'AI Consulting (SERVICES)'),    description: tDesc('/services') },
+        { href: '/ai-tools', label: tLink('/ai-tools', 'AI Tools (IN DEV)'),           description: tDesc('/ai-tools') },
+        { href: '/services', label: tLink('/services', 'Services'),                    description: tDesc('/services') },
       ],
     },
     {

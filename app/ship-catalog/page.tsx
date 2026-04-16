@@ -208,9 +208,12 @@ function ShipCard({ ship }: { ship: ShipEntry }) {
 
 // ---- Page ----
 
+const PAGE_SIZE = 10
+
 export default function ShipCatalogPage() {
   const [filterCat, setFilterCat] = useState<string | null>(null)
   const [cdnSlugs, setCdnSlugs] = useState<Set<string> | null>(null)
+  const [page, setPage] = useState(0)
 
   // Fetch the list of models currently in Supabase Storage via the
   // assembly API — this is the canonical "available on CDN" list.
@@ -242,17 +245,13 @@ export default function ShipCatalogPage() {
     return ships.filter((s) => s.category === filterCat)
   }, [ships, filterCat])
 
-  const grouped = useMemo(() => {
-    const g = new Map<string, ShipEntry[]>()
-    for (const s of filtered) {
-      const arr = g.get(s.category) ?? []
-      arr.push(s)
-      g.set(s.category, arr)
-    }
-    return g
-  }, [filtered])
-
   const cdnCount = ships.filter((s) => s.cdnUrl).length
+
+  // Reset page when filter changes
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages - 1)
+  const pageStart = currentPage * PAGE_SIZE
+  const pageSlice = filtered.slice(pageStart, pageStart + PAGE_SIZE)
 
   return (
     <div
@@ -275,12 +274,12 @@ export default function ShipCatalogPage() {
           </p>
 
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <FilterPill active={!filterCat} onClick={() => setFilterCat(null)} label="All" color="#e5e5f0" />
+            <FilterPill active={!filterCat} onClick={() => { setFilterCat(null); setPage(0) }} label="All" color="#e5e5f0" />
             {CATEGORY_ORDER.map((cat) => (
               <FilterPill
                 key={cat}
                 active={filterCat === cat}
-                onClick={() => setFilterCat(filterCat === cat ? null : cat)}
+                onClick={() => { setFilterCat(filterCat === cat ? null : cat); setPage(0) }}
                 label={CATEGORY_LABEL[cat]}
                 color={CATEGORY_COLOR[cat]}
               />
@@ -288,24 +287,73 @@ export default function ShipCatalogPage() {
           </div>
         </header>
 
-        {CATEGORY_ORDER.filter((cat) => grouped.has(cat)).map((cat) => (
-          <section key={cat} style={{ marginBottom: 36 }}>
-            <h2 style={{ fontSize: 18, color: CATEGORY_COLOR[cat], fontWeight: 600, marginBottom: 14, letterSpacing: 0.8 }}>
-              {CATEGORY_LABEL[cat]} <span style={{ opacity: 0.5, fontWeight: 400 }}>({grouped.get(cat)!.length})</span>
-            </h2>
-            <div
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+          <span style={{ fontSize: 14, color: '#a9b4d0' }}>
+            Showing {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)} of {filtered.length}
+          </span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={currentPage === 0}
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-                gap: 16,
+                padding: '6px 16px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: currentPage === 0 ? 'default' : 'pointer',
+                background: currentPage === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(0,212,255,0.12)',
+                border: '1px solid rgba(0,212,255,0.3)', color: currentPage === 0 ? '#4a3f7a' : '#00d4ff',
               }}
-            >
-              {grouped.get(cat)!.map((ship) => (
-                <ShipCard key={ship.name} ship={ship} />
-              ))}
-            </div>
-          </section>
-        ))}
+            >← Previous</button>
+            <span style={{ padding: '6px 10px', fontSize: 14, color: '#a9b4d0' }}>
+              {currentPage + 1} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+              disabled={currentPage >= totalPages - 1}
+              style={{
+                padding: '6px 16px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: currentPage >= totalPages - 1 ? 'default' : 'pointer',
+                background: currentPage >= totalPages - 1 ? 'rgba(255,255,255,0.04)' : 'rgba(0,212,255,0.12)',
+                border: '1px solid rgba(0,212,255,0.3)', color: currentPage >= totalPages - 1 ? '#4a3f7a' : '#00d4ff',
+              }}
+            >Next →</button>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gap: 16,
+            marginBottom: 32,
+          }}
+        >
+          {pageSlice.map((ship) => (
+            <ShipCard key={ship.name} ship={ship} />
+          ))}
+        </div>
+
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, paddingBottom: 40 }}>
+            <button
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={currentPage === 0}
+              style={{
+                padding: '8px 20px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: currentPage === 0 ? 'default' : 'pointer',
+                background: currentPage === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(0,212,255,0.12)',
+                border: '1px solid rgba(0,212,255,0.3)', color: currentPage === 0 ? '#4a3f7a' : '#00d4ff',
+              }}
+            >← Previous</button>
+            <span style={{ padding: '8px 10px', fontSize: 14, color: '#a9b4d0' }}>
+              {currentPage + 1} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+              disabled={currentPage >= totalPages - 1}
+              style={{
+                padding: '8px 20px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: currentPage >= totalPages - 1 ? 'default' : 'pointer',
+                background: currentPage >= totalPages - 1 ? 'rgba(255,255,255,0.04)' : 'rgba(0,212,255,0.12)',
+                border: '1px solid rgba(0,212,255,0.3)', color: currentPage >= totalPages - 1 ? '#4a3f7a' : '#00d4ff',
+              }}
+            >Next →</button>
+          </div>
+        )}
       </div>
     </div>
   )
