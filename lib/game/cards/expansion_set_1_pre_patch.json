@@ -7,9 +7,7 @@
     "cost": 1,
     "stats": {
       "damage": 5,
-      "apply": [
-        "burn"
-      ]
+      "apply": ["burn"]
     },
     "abilityText": "Deal 5 damage. Apply Burn.",
     "flavor": "Cuts through plating like a hot wire through wax.",
@@ -54,9 +52,7 @@
     "cost": 1,
     "stats": {
       "damage": 5,
-      "apply": [
-        "expose"
-      ]
+      "apply": ["expose"]
     },
     "abilityText": "Deal 5 damage. Apply Expose.",
     "flavor": "Tag the weak spot. Let the pack finish the job.",
@@ -71,9 +67,7 @@
     "cost": 2,
     "stats": {
       "damage": 10,
-      "apply": [
-        "scrap"
-      ],
+      "apply": ["scrap"],
       "conditional": "gain_scrap_on_hit"
     },
     "abilityText": "Deal 10 damage. Gain 1 Scrap.",
@@ -132,9 +126,9 @@
     "name": "Rail Line",
     "type": "weapon",
     "rarity": "uncommon",
-    "cost": 4,
+    "cost": 3,
     "stats": {
-      "damage": 11,
+      "damage": 15,
       "splash": 7
     },
     "abilityText": "Deal 15 to primary target. Deal 7 to secondary target.",
@@ -150,9 +144,7 @@
     "cost": 4,
     "stats": {
       "damage": 8,
-      "apply": [
-        "jam"
-      ],
+      "apply": ["jam"],
       "conditional": "hits_all_enemies"
     },
     "abilityText": "Deal 8 damage to all enemies. Apply Jam to all.",
@@ -167,7 +159,7 @@
     "rarity": "rare",
     "cost": 4,
     "stats": {
-      "damage": 15,
+      "damage": 18,
       "conditional": "bonus_8_vs_block"
     },
     "abilityText": "Deal 18 damage. If target has Block, deal 8 bonus damage.",
@@ -182,11 +174,8 @@
     "rarity": "rare",
     "cost": 5,
     "stats": {
-      "damage": 22,
-      "apply": [
-        "lock"
-      ],
-      "self_damage": 3
+      "damage": 28,
+      "apply": ["lock"]
     },
     "abilityText": "Deal 28 damage. Apply Lock.",
     "flavor": "A weapon from beyond the mapped sectors. It does not miss.",
@@ -215,7 +204,7 @@
     "rarity": "legendary",
     "cost": 7,
     "stats": {
-      "damage": 32,
+      "damage": 36,
       "conditional": "bonus_12_if_2_statuses",
       "exhaust": true
     },
@@ -232,9 +221,7 @@
     "cost": 6,
     "stats": {
       "conditional": "damage_equals_total_combat_damage",
-      "exhaust": true,
-      "damage": 35,
-      "draw": 1
+      "exhaust": true
     },
     "abilityText": "Deal damage equal to total damage dealt this combat. Once per game. Exhaust.",
     "flavor": "The void remembers every wound you've inflicted. And returns them all at once.",
@@ -263,11 +250,8 @@
     "rarity": "common",
     "cost": 1,
     "stats": {
-      "apply": [
-        "shielded"
-      ],
-      "draw": 1,
-      "block": 7
+      "apply": ["shielded"],
+      "draw": 1
     },
     "abilityText": "Gain Shielded. Draw 1.",
     "flavor": "A thin digital membrane between you and catastrophe.",
@@ -340,11 +324,10 @@
     "name": "Phase Shell",
     "type": "defense",
     "rarity": "rare",
-    "cost": 3,
+    "cost": 4,
     "stats": {
       "conditional": "negate_next_attack",
-      "draw": 1,
-      "block": 14
+      "draw": 1
     },
     "abilityText": "Ignore the next attack completely. Draw 1.",
     "flavor": "For one heartbeat, you exist slightly outside reality.",
@@ -358,10 +341,7 @@
     "rarity": "rare",
     "cost": 3,
     "stats": {
-      "conditional": "block_equals_half_weapon_damage",
-      "block": 10,
-      "heal": 5,
-      "draw": 1
+      "conditional": "block_equals_half_weapon_damage"
     },
     "abilityText": "This turn, gain Block equal to half the damage your weapons deal.",
     "flavor": "The best defense is a good offense. Literally.",
@@ -390,10 +370,9 @@
     "rarity": "legendary",
     "cost": 5,
     "stats": {
-      "block": 22,
+      "block": 10,
       "conditional": "prevent_lethal_set_hull_1",
-      "exhaust": true,
-      "draw": 1
+      "exhaust": true
     },
     "abilityText": "If you would take lethal damage this turn, survive with 1 hull instead. Gain 10 Block. Exhaust.",
     "flavor": "ERROR: DEATH.EXE — ACCESS DENIED.",
@@ -469,9 +448,7 @@
     "cost": 2,
     "stats": {
       "damage": 4,
-      "apply": [
-        "lock"
-      ]
+      "apply": ["lock"]
     },
     "abilityText": "Apply Lock. Deal 4 damage.",
     "flavor": "Grab them. Hold them. Hit them.",
@@ -559,9 +536,7 @@
     "rarity": "common",
     "cost": 2,
     "stats": {
-      "apply": [
-        "lock"
-      ],
+      "apply": ["lock"],
       "duration_turns": 2
     },
     "abilityText": "Deploy drone: Applies Lock each turn for 2 turns.",
@@ -576,9 +551,7 @@
     "rarity": "common",
     "cost": 2,
     "stats": {
-      "apply": [
-        "scrap"
-      ],
+      "apply": ["scrap"],
       "duration_turns": 3,
       "per_turn": 1
     },
@@ -594,9 +567,7 @@
     "rarity": "uncommon",
     "cost": 3,
     "stats": {
-      "apply": [
-        "jam"
-      ],
+      "apply": ["jam"],
       "duration_turns": 4,
       "conditional": "applies_every_other_turn"
     },
@@ -643,11 +614,10 @@
     "name": "Carrier Deploy",
     "type": "drone",
     "rarity": "rare",
-    "cost": 3,
+    "cost": 4,
     "stats": {
       "conditional": "deploy_scout_and_repair_drone",
-      "duration_turns": 3,
-      "per_turn": 4
+      "duration_turns": 3
     },
     "abilityText": "Deploy Scout Drone and Repair Drone. Each lasts 3 turns.",
     "flavor": "Open the bay. Launch everything. Sort it out later.",
@@ -661,9 +631,7 @@
     "rarity": "common",
     "cost": 1,
     "stats": {
-      "conditional": "next_2_cards_cost_1_less",
-      "energy": 2,
-      "draw": 2
+      "conditional": "next_2_cards_cost_1_less"
     },
     "abilityText": "Next 2 cards cost 1 less this turn.",
     "flavor": "Optimize. Compress. Execute.",
@@ -675,11 +643,9 @@
     "name": "System Query",
     "type": "ai",
     "rarity": "uncommon",
-    "cost": 1,
+    "cost": 2,
     "stats": {
-      "conditional": "search_deck_for_drone",
-      "draw": 2,
-      "block": 3
+      "conditional": "search_deck_for_drone"
     },
     "abilityText": "Search your deck for a Drone card. Add it to your hand.",
     "flavor": "Query: DRONE_TYPE=ANY. Status: LOADED. Deploy when ready.",
@@ -691,15 +657,9 @@
     "name": "Predator Lock",
     "type": "ai",
     "rarity": "rare",
-    "cost": 2,
+    "cost": 4,
     "stats": {
-      "apply": [
-        "expose",
-        "lock",
-        "drone_mark"
-      ],
-      "damage": 8,
-      "draw": 1
+      "apply": ["expose", "lock", "drone_mark"]
     },
     "abilityText": "Apply Expose, Lock, and Drone Mark to target.",
     "flavor": "Three targeting systems. Zero escape routes.",
@@ -711,13 +671,11 @@
     "name": "Fleet Commander",
     "type": "ai",
     "rarity": "legendary",
-    "cost": 2,
+    "cost": 5,
     "stats": {
       "per_turn": 4,
       "duration_turns": 2,
-      "conditional": "summon_2_gun_drones",
-      "damage": 10,
-      "draw": 2
+      "conditional": "summon_2_gun_drones"
     },
     "abilityText": "Summon 2 temporary Gun Drones. Each deals 4 damage per turn for 2 turns.",
     "flavor": "One order. Sixteen barrels. Coordinated annihilation.",
@@ -729,13 +687,12 @@
     "name": "Leviathan Presence",
     "type": "ai",
     "rarity": "legendary",
-    "cost": 2,
+    "cost": 5,
     "stats": {
       "block": 2,
       "duration_turns": 3,
-      "draw": 1,
-      "conditional": "all_allies_gain_2_block_per_turn",
-      "damage": 12
+      "draw": 2,
+      "conditional": "all_allies_gain_2_block_per_turn"
     },
     "abilityText": "All allies gain 2 Block each turn for 3 turns. Draw 2.",
     "flavor": "When a Leviathan enters the sector, even pirates hold their fire.",
@@ -747,20 +704,12 @@
     "name": "Quantum Convergence",
     "type": "ai",
     "rarity": "mythic",
-    "cost": 3,
+    "cost": 7,
     "stats": {
       "conditional": "duplicate_all_cards_played_this_turn",
-      "exhaust": true,
-      "damage": 18,
-      "draw": 3,
-      "energy": 3,
-      "heal": 6,
-      "block": 0,
-      "apply": [
-        "expose"
-      ]
+      "exhaust": true
     },
-    "abilityText": "Quantum collapse. Deal 12 damage, draw 3 cards, gain 2 energy, heal 5, expose target. Once per game.",
+    "abilityText": "Duplicate every card you play this turn. Once per game. Exhaust.",
     "flavor": "Every timeline collapses into one. And in that one, you played everything twice.",
     "faction": "void",
     "shipClassRestriction": null
@@ -788,12 +737,7 @@
     "cost": 1,
     "stats": {
       "heal": 5,
-      "remove": [
-        "burn",
-        "jam",
-        "lock",
-        "expose"
-      ],
+      "remove": ["burn", "jam", "lock", "expose"],
       "exhaust": true,
       "conditional": "remove_1_status"
     },
@@ -810,9 +754,7 @@
     "cost": 1,
     "stats": {
       "evade": true,
-      "remove": [
-        "lock"
-      ],
+      "remove": ["lock"],
       "exhaust": true
     },
     "abilityText": "Gain Evade. Remove Lock from self. Exhaust.",
@@ -861,13 +803,7 @@
     "rarity": "uncommon",
     "cost": 2,
     "stats": {
-      "remove": [
-        "burn",
-        "jam",
-        "lock",
-        "expose",
-        "drone_mark"
-      ],
+      "remove": ["burn", "jam", "lock", "expose", "drone_mark"],
       "exhaust": true,
       "conditional": "remove_all_statuses_skip_next_draw"
     },
@@ -883,9 +819,7 @@
     "rarity": "uncommon",
     "cost": 1,
     "stats": {
-      "remove": [
-        "overcharge"
-      ],
+      "remove": ["overcharge"],
       "damage": 3,
       "exhaust": true,
       "conditional": "damage_all_enemies"

@@ -1,0 +1,403 @@
+"""
+lib/game/simulator/report.py — Generates docs/CARD_BALANCE_REPORT.md from simulation results.
+
+Reads results.json produced by run_simulation.py and outputs an 8-section
+balance report:
+  1. Executive Summary
+  2. Top 10 Strongest Cards (by win rate when included)
+  3. Top 10 Weakest Cards (candidates for buff)
+  4. Dead Cards (never/rarely played)
+  5. Broken Combos (cards that co-appear in winning decks)
+  6. Mythic Balance Check
+  7. Rarity Balance
+  8. Recommended Adjustments
+"""
+
+import json
+import os
+from collections import Counter, defaultdict
+from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+RESULTS_PATH = SCRIPT_DIR / "results.json"
+REPORT_PATH = SCRIPT_DIR.parent.parent.parent / "docs" / "CARD_BALANCE_REPORT.md"
+
+
+def load_results() -> dict:
+    with open(RESULTS_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def fmt_pct(val: float) -> str:
+    return f"{val * 100:.1f}%"
+
+
+def generate_report(data: dict) -> str:
+    summary = data["summary"]
+    per_card = data["per_card"]
+    climb_meta = data.get("climb_meta", [])
+    rarity_dist = data.get("rarity_distribution", {})
+    type_dist = data.get("type_distribution", {})
+
+    # Build sorted card list
+    cards = list(per_card.values())
+    total_matches = summary["random_matches"] + summary["hill_matches"]
+
+    # Cards with enough appearances to be statistically meaningful (>= 50)
+    significant = [c for c in cards if c["total_appearances"] >= 50]
+    insignificant = [c for c in cards if c["total_appearances"] < 50]
+
+    # Sort by win rate (descending)
+    by_wr_desc = sorted(significant, key=lambda c: c["win_rate"], reverse=True)
+    by_wr_asc = sorted(significant, key=lambda c: c["win_rate"])
+
+    # Dead cards: low play rate (<0.5% of matches)
+    dead_cards = [c for c in cards if c["play_rate"] < 0.005]
+    dead_cards.sort(key=lambda c: c["play_rate"])
+
+    # ----- Co-occurrence analysis for broken combos -----
+    random_sample = data.get("random_sample", [])
+    hill_sample = data.get("hill_sample", [])
+    all_samples = random_sample + hill_sample
+
+    # Track which card pairs appear together in winning decks
+    pair_wins: Counter = Counter()
+    pair_total: Counter = Counter()
+
+    for r in all_samples:
+        for idx, dk in enumerate(["p0_deck_ids", "p1_deck_ids"]):
+            deck_ids = list(set(r[dk]))  # unique ids in deck
+            deck_ids.sort()
+            is_winner = r["winner"] == idx
+
+            for i in range(len(deck_ids)):
+                for j in range(i + 1, len(deck_ids)):
+                    pair = (deck_ids[i], deck_ids[j])
+                    pair_total[pair] += 1
+                    if is_winner:
+                        pair_wins[pair] += 1
+
+    # Pairs with enough data and high win rate
+    combo_candidates = []
+    for pair, total in pair_total.items():
+        if total >= 5:
+            wr = pair_wins[pair] / total
+            if wr >= 0.65:
+                combo_candidates.append((pair, wr, total))
+    combo_candidates.sort(key=lambda x: x[1], reverse=True)
+
+    # ----- Mythic cards -----
+    mythics = [c for c in cards if c["rarity"] == "mythic"]
+    mythics.sort(key=lambda c: c["win_rate"], reverse=True)
+
+    # ----- Rarity win rates -----
+    rarity_wr: dict[str, list[float]] = defaultdict(list)
+    for c in cards:
+        if c["total_appearances"] >= 10:
+            rarity_wr[c["rarity"]].append(c["win_rate"])
+    rarity_avg: dict[str, float] = {}
+    for r, wrs in rarity_wr.items():
+        rarity_avg[r] = sum(wrs) / len(wrs) if wrs else 0
+
+    # ----- Type win rates -----
+    type_wr: dict[str, list[float]] = defaultdict(list)
+    for c in cards:
+        if c["total_appearances"] >= 10:
+            type_wr[c["type"]].append(c["win_rate"])
+    type_avg: dict[str, float] = {}
+    for t, wrs in type_wr.items():
+        type_avg[t] = sum(wrs) / len(wrs) if wrs else 0
+
+    # ----- Hill-climb top decks -----
+    climb_meta_sorted = sorted(climb_meta, key=lambda x: x["win_rate"], reverse=True)
+    top_climb = climb_meta_sorted[:5] if climb_meta_sorted else []
+
+    # Most common cards in top hill-climb decks
+    top_climb_card_freq: Counter = Counter()
+    for cm in climb_meta_sorted[:20]:
+        for cid in cm["deck_ids"]:
+            top_climb_card_freq[cid] += 1
+
+    # ----- Build report -----
+    lines: list[str] = []
+
+    def h1(t):
+        lines.append(f"# {t}\n")
+
+    def h2(t):
+        lines.append(f"## {t}\n")
+
+    def h3(t):
+        lines.append(f"### {t}\n")
+
+    def p(t):
+        lines.append(f"{t}\n")
+
+    def table(headers, rows):
+        lines.append("| " + " | ".join(headers) + " |")
+        lines.append("| " + " | ".join("---" for _ in headers) + " |")
+        for row in rows:
+            lines.append("| " + " | ".join(str(v) for v in row) + " |")
+        lines.append("")
+
+    # ===== REPORT =====
+    h1("Voidexa Card Balance Report")
+    p(f"*Generated by simulator — {total_matches:,} matches analyzed*\n")
+
+    # --- Section 1: Executive Summary ---
+    h2("1. Executive Summary")
+    p(f"**Card pool:** {summary['total_cards']} unique cards")
+    p(f"**Random matches:** {summary['random_matches']:,} "
+      f"(P0 wins: {summary['random_p0_wins']:,}, "
+      f"P1 wins: {summary['random_p1_wins']:,}, "
+      f"draws: {summary['random_draws']:,})")
+    p(f"**P0 vs P1 balance:** {fmt_pct(summary['random_p0_wins'] / max(summary['random_matches'], 1))} "
+      f"vs {fmt_pct(summary['random_p1_wins'] / max(summary['random_matches'], 1))} "
+      f"(first-mover advantage)")
+    p(f"**Average game length:** {summary['random_avg_turns']} turns "
+      f"(median: {summary['random_median_turns']})")
+    p(f"**Hill-climb matches:** {summary['hill_matches']:,} "
+      f"(optimized deck wins: {summary['hill_optimized_wins']:,}, "
+      f"random opponent wins: {summary['hill_opponent_wins']:,})")
+
+    # Rarity distribution in pool
+    p("\n**Card pool distribution:**")
+    table(
+        ["Rarity", "Count", "% of Pool"],
+        [[r, rarity_dist.get(r, 0),
+          fmt_pct(rarity_dist.get(r, 0) / max(summary['total_cards'], 1))]
+         for r in ["common", "uncommon", "rare", "legendary", "mythic", "pioneer"]
+         if rarity_dist.get(r, 0) > 0],
+    )
+
+    p("**Type distribution:**")
+    table(
+        ["Type", "Count", "% of Pool"],
+        [[t, type_dist.get(t, 0),
+          fmt_pct(type_dist.get(t, 0) / max(summary['total_cards'], 1))]
+         for t in ["weapon", "defense", "maneuver", "drone", "ai", "consumable"]
+         if type_dist.get(t, 0) > 0],
+    )
+
+    # --- Section 2: Top 10 Strongest ---
+    h2("2. Top 10 Strongest Cards")
+    p("Cards with the highest win rate when included in a deck (minimum 50 appearances).\n")
+    table(
+        ["Rank", "Card", "Type", "Rarity", "Cost", "Win Rate", "Inclusion Rate", "Appearances"],
+        [[i + 1, c["name"], c["type"], c["rarity"], c["cost"],
+          fmt_pct(c["win_rate"]), fmt_pct(c["deck_inclusion_rate"]),
+          c["total_appearances"]]
+         for i, c in enumerate(by_wr_desc[:10])],
+    )
+
+    # --- Section 3: Top 10 Weakest ---
+    h2("3. Top 10 Weakest Cards (Buff Candidates)")
+    p("Cards with the lowest win rate when included (minimum 50 appearances).\n")
+    table(
+        ["Rank", "Card", "Type", "Rarity", "Cost", "Win Rate", "Inclusion Rate", "Appearances"],
+        [[i + 1, c["name"], c["type"], c["rarity"], c["cost"],
+          fmt_pct(c["win_rate"]), fmt_pct(c["deck_inclusion_rate"]),
+          c["total_appearances"]]
+         for i, c in enumerate(by_wr_asc[:10])],
+    )
+
+    # --- Section 4: Dead Cards ---
+    h2("4. Dead Cards (Never/Rarely Played)")
+    p(f"Cards with play rate below 0.5% across all matches. "
+      f"Found **{len(dead_cards)}** dead cards.\n")
+    if dead_cards:
+        table(
+            ["Card", "Type", "Rarity", "Cost", "Play Rate", "Deck Inclusion"],
+            [[c["name"], c["type"], c["rarity"], c["cost"],
+              fmt_pct(c["play_rate"]), fmt_pct(c["deck_inclusion_rate"])]
+             for c in dead_cards[:25]],
+        )
+    else:
+        p("No dead cards found — all cards see meaningful play.\n")
+
+    # --- Section 5: Broken Combos ---
+    h2("5. Broken Combos (High Win-Rate Card Pairs)")
+    p("Card pairs that co-appear in winning decks at ≥65% win rate "
+      f"(sample of {len(all_samples)} matches).\n")
+    if combo_candidates:
+        card_name_map = {c["id"]: c.get("name", c["id"]) for c in cards}
+        table(
+            ["Card A", "Card B", "Pair Win Rate", "Times Seen"],
+            [[card_name_map.get(a, a), card_name_map.get(b, b),
+              fmt_pct(wr), total]
+             for (a, b), wr, total in combo_candidates[:15]],
+        )
+    else:
+        p("No broken combos detected at the 65% threshold — "
+          "card interactions appear balanced.\n")
+
+    # --- Section 6: Mythic Balance ---
+    h2("6. Mythic Balance Check")
+    p("Mythic cards should be powerful but not auto-win. "
+      "Target: 52-58% win rate when included.\n")
+    if mythics:
+        table(
+            ["Card", "Cost", "Win Rate", "Inclusion Rate", "Appearances", "Verdict"],
+            [[c["name"], c["cost"], fmt_pct(c["win_rate"]),
+              fmt_pct(c["deck_inclusion_rate"]), c["total_appearances"],
+              "OK" if 0.48 <= c["win_rate"] <= 0.60 else
+              ("OVERTUNED" if c["win_rate"] > 0.60 else "UNDERTUNED")]
+             for c in mythics],
+        )
+    else:
+        p("No mythic cards found in simulation data.\n")
+
+    # --- Section 7: Rarity Balance ---
+    h2("7. Rarity & Type Balance")
+    p("Average win rate by rarity tier (cards with ≥10 appearances).\n")
+    rarity_order = ["common", "uncommon", "rare", "legendary", "mythic", "pioneer"]
+    table(
+        ["Rarity", "Avg Win Rate", "Cards Measured"],
+        [[r, fmt_pct(rarity_avg.get(r, 0)), len(rarity_wr.get(r, []))]
+         for r in rarity_order if r in rarity_avg],
+    )
+
+    p("\n**Average win rate by card type:**\n")
+    type_order = ["weapon", "defense", "maneuver", "drone", "ai", "consumable"]
+    table(
+        ["Type", "Avg Win Rate", "Cards Measured"],
+        [[t, fmt_pct(type_avg.get(t, 0)), len(type_wr.get(t, []))]
+         for t in type_order if t in type_avg],
+    )
+
+    # --- Section 8: Hill-Climb Insights + Recommendations ---
+    h2("8. Hill-Climb Insights & Recommended Adjustments")
+
+    if top_climb:
+        p("**Top 5 optimized decks:**\n")
+        for i, cm in enumerate(top_climb):
+            p(f"  {i+1}. Win rate: {fmt_pct(cm['win_rate'])} — "
+              f"Deck: {', '.join(cm['deck_ids'][:8])}{'...' if len(cm['deck_ids']) > 8 else ''}")
+        p("")
+
+    if top_climb_card_freq:
+        p("**Most common cards in top 20 optimized decks:**\n")
+        card_name_map = {c["id"]: c.get("name", c["id"]) for c in cards}
+        table(
+            ["Card", "Frequency (out of 20 decks)", "Rarity"],
+            [[card_name_map.get(cid, cid), freq,
+              per_card.get(cid, {}).get("rarity", "?")]
+             for cid, freq in top_climb_card_freq.most_common(15)],
+        )
+
+    h3("Recommended Adjustments")
+
+    # Auto-generate recommendations based on data
+    recommendations: list[str] = []
+
+    # First mover advantage
+    p0_wr = summary["random_p0_wins"] / max(summary["random_matches"], 1)
+    if p0_wr > 0.54:
+        recommendations.append(
+            f"**First-mover advantage is significant ({fmt_pct(p0_wr)}).** "
+            f"Consider giving P1 a compensating bonus (e.g., +1 starting card or +5 hull)."
+        )
+    elif p0_wr < 0.46:
+        recommendations.append(
+            f"**Second player has an advantage ({fmt_pct(1 - p0_wr)} P1 win rate).** "
+            f"Consider giving P0 a small buff."
+        )
+    else:
+        recommendations.append(
+            f"**Turn order balance is good** ({fmt_pct(p0_wr)} P0 / {fmt_pct(1-p0_wr)} P1)."
+        )
+
+    # Game length
+    avg_turns = summary["random_avg_turns"]
+    if avg_turns < 8:
+        recommendations.append(
+            f"**Games are too fast (avg {avg_turns} turns).** "
+            f"Consider increasing hull to 120 or reducing early damage."
+        )
+    elif avg_turns > 25:
+        recommendations.append(
+            f"**Games are too slow (avg {avg_turns} turns).** "
+            f"Consider adding more burst damage or reducing defense values."
+        )
+    else:
+        recommendations.append(
+            f"**Game length is healthy** (avg {avg_turns} turns, target 10-20)."
+        )
+
+    # Draw rate
+    draw_pct = summary["random_draws"] / max(summary["random_matches"], 1)
+    if draw_pct > 0.15:
+        recommendations.append(
+            f"**Draw rate is high ({fmt_pct(draw_pct)}).** "
+            f"Consider adding tiebreaker mechanics or reducing the turn cap."
+        )
+
+    # Overtuned cards
+    overtuned = [c for c in by_wr_desc[:5] if c["win_rate"] > 0.58]
+    if overtuned:
+        names = ", ".join(c["name"] for c in overtuned)
+        recommendations.append(
+            f"**Potentially overtuned cards (>58% WR):** {names}. "
+            f"Consider cost increase or stat reduction."
+        )
+
+    # Underperformers
+    underperf = [c for c in by_wr_asc[:5] if c["win_rate"] < 0.42]
+    if underperf:
+        names = ", ".join(c["name"] for c in underperf)
+        recommendations.append(
+            f"**Underperforming cards (<42% WR):** {names}. "
+            f"Consider cost reduction or stat buff."
+        )
+
+    # Dead card warning
+    if len(dead_cards) > 20:
+        recommendations.append(
+            f"**{len(dead_cards)} dead cards** in the pool. "
+            f"Review their cost/effect ratio — many may need redesign."
+        )
+
+    # Rarity power creep check
+    for r in ["common", "uncommon"]:
+        if rarity_avg.get(r, 0.5) > 0.52:
+            recommendations.append(
+                f"**{r.title()} cards average {fmt_pct(rarity_avg[r])} win rate** — "
+                f"higher rarity cards may not offer enough power advantage."
+            )
+
+    if not recommendations:
+        recommendations.append("No major balance issues detected. The card pool looks healthy.")
+
+    for i, rec in enumerate(recommendations, 1):
+        p(f"{i}. {rec}")
+
+    p("\n---")
+    p(f"*Report generated from {total_matches:,} simulated matches across "
+      f"{summary['total_cards']} unique cards.*")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    print("Loading results.json...")
+    data = load_results()
+
+    print("Generating balance report...")
+    report = generate_report(data)
+
+    # Ensure docs/ directory exists
+    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(REPORT_PATH, "w", encoding="utf-8") as f:
+        f.write(report)
+
+    print(f"Report written to: {REPORT_PATH}")
+    print(f"Report length: {len(report):,} characters, {report.count(chr(10)):,} lines")
+
+
+if __name__ == "__main__":
+    main()
