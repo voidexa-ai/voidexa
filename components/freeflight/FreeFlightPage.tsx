@@ -13,6 +13,7 @@ import ExplorationChoiceModal from './ExplorationChoiceModal'
 import TutorialGuide from './TutorialGuide'
 import CardDropReveal from '@/components/ui/CardDropReveal'
 import HolographicMap from './HolographicMap'
+import DesktopOnlyNotice from '@/components/ui/DesktopOnlyNotice'
 import WarpAnimation from './WarpAnimation'
 import ShipDownModal, { type RecoveryChoice } from '@/components/wrecks/ShipDownModal'
 import ClaimModal from '@/components/wrecks/ClaimModal'
@@ -334,6 +335,11 @@ export default function FreeFlightPage() {
       position: 'fixed', inset: 0, width: '100vw', height: '100vh',
       overflow: 'hidden', background: '#02030a',
     }}>
+      <DesktopOnlyNotice
+        reason="Free Flight needs a keyboard, mouse, and pointer-lock — touch devices cannot pilot."
+        fallbackHref="/starmap"
+        fallbackLabel="Back to Galaxy"
+      />
       {selectedShip && (
         <FreeFlightCanvas
           onShipState={onShipState}

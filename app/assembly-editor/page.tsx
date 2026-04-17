@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useState } from 'react'
+import DesktopOnlyNotice from '@/components/ui/DesktopOnlyNotice'
 import { ModelBrowser } from './components/ModelBrowser'
 import { SceneHierarchy } from './components/SceneHierarchy'
 import { TransformPanel } from './components/TransformPanel'
@@ -112,6 +113,11 @@ export default function AssemblyEditorPage() {
       color: '#e5e5f0',
       fontFamily: 'Inter, system-ui, sans-serif',
     }}>
+      <DesktopOnlyNotice
+        reason="The 3D Assembly Editor needs precision pointer + keyboard shortcuts."
+        fallbackHref="/"
+        fallbackLabel="Back to home"
+      />
       <div className="md:hidden" style={{
         background: 'rgba(168, 85, 247, 0.2)',
         color: '#fff',

@@ -4,6 +4,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { SHIP_CATALOG } from '@/components/freeflight/ships/catalog'
+import DesktopOnlyNotice from '@/components/ui/DesktopOnlyNotice'
 import {
   EMPTY_TAG,
   ROLE_LABELS,
@@ -168,6 +169,11 @@ export default function ShipTaggerClient() {
 
   return (
     <div style={layout}>
+      <DesktopOnlyNotice
+        reason="Ship Tagger is an admin tool — designed for desktop screens."
+        fallbackHref="/"
+        fallbackLabel="Back to home"
+      />
       <header style={{ marginBottom: 20 }}>
         <h1 style={{ fontFamily: 'var(--font-space, monospace)', fontSize: 28, margin: 0 }}>
           SHIP TAGGER · ADMIN
