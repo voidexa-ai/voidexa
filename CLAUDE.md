@@ -526,3 +526,23 @@ New directory `components/freeflight/` — game scene reuses the same R3F + post
 - Vitest uses esbuild transform and does **not** type-check. If `pickRisk` returns `'Low'` when `RiskLevel` didn't include it, tests pass but `npm run build` (via Next.js + tsc) catches it. Fix by widening the type.
 - When moving `useEffect` blocks that reference state declared later (e.g. `selectedShip` in `FreeFlightPage.tsx`), the whole block must land after the declaration — "used before declaration" hits at compile time.
 - Risk-level UI maps need entries for every `RiskLevel` union member wherever `Record<RiskLevel, …>` appears. Only `RISK_META` in `HaulingHub.tsx` needed updating this sprint.
+
+## Session 2026-04-17: Power Plan — autonomous 8-sprint chain
+Master plan: `docs/POWER_PLAN.md`. Per-sprint specs: `docs/skills/sprint-*.md`.
+
+Scan baseline:
+- `claude-opus-4-6` occurrences: 5 (Sprint 0 target).
+- `docs/gemini_universe_content_complete.json`: 80KB, schema verified (Sprint 6).
+- `docs/sounds/`: 67 MP3s + 1 stray .zip (Sprint 7).
+- `public/images/shuttle-hero.png`: 2.5MB (Sprint 8).
+- `docs/gpt_keywords_homepage.md`: **CORRUPT** (180 bytes UTF-16 PowerShell artifact).
+  Sprint 8 falls back to the 4 panel headings supplied in the run prompt.
+- Test baseline: 599/599 across 49 suites.
+
+Sprint chain in order: 0 (model ID swap) → 6 (universe import) → 7 (sound system) →
+8 (homepage redesign) → 9 (MTG audit) → 11 (mobile audit) → 12 (final polish +
+`mvp-launch-ready` tag). Sprint 10 (baseline card art) is owned externally on Vast.ai
+— see `docs/skills/sprint-10-baseline-art-handoff.md`.
+
+Global rules: backup tag before each sprint, `npx next build` clean, 599+ tests green,
+font 16/14/0.5 minima, all env reads `.trim()`, deploy = `git push origin main` only.
