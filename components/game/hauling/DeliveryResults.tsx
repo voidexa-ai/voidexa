@@ -7,8 +7,9 @@ import { rollLootCard } from '@/lib/game/loot/table'
 import CardDropReveal from '@/components/ui/CardDropReveal'
 import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import { formatHaulingTime, type HaulingContract } from '@/lib/game/hauling/contracts'
+import { deliveryGrade, deliveryBaseReward, type DeliveryOutcome } from '@/lib/game/hauling/delivery'
 
-export type DeliveryOutcome = 'delivered' | 'failed'
+export type { DeliveryOutcome }
 
 interface Props {
   contract: HaulingContract
@@ -36,16 +37,8 @@ export default function DeliveryResults({
   failureReason,
   onBackToHub,
 }: Props) {
-  // Grade: based on cargo integrity. Delivered + >=90% integrity → Gold,
-  // >=60% → Silver, lower → Bronze. Failed runs get no grade.
-  const grade = outcome === 'failed'
-    ? 'Failed'
-    : cargoIntegrity >= 90 ? 'Gold'
-    : cargoIntegrity >= 60 ? 'Silver' : 'Bronze'
-
-  const baseReward = outcome === 'failed'
-    ? 0
-    : Math.round((contract.rewardMin + contract.rewardMax) / 2 * (cargoIntegrity / 100))
+  const grade = deliveryGrade(outcome, cargoIntegrity)
+  const baseReward = deliveryBaseReward(contract, outcome, cargoIntegrity)
   const total = baseReward + bonusGhai
   const color = GRADE_COLOR[grade]
 
