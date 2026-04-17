@@ -12,9 +12,12 @@ import NPCDialogueBubble from './NPCDialogueBubble'
 import ExplorationChoiceModal from './ExplorationChoiceModal'
 import TutorialGuide from './TutorialGuide'
 import CardDropReveal from '@/components/ui/CardDropReveal'
+import HolographicMap from './HolographicMap'
+import WarpAnimation from './WarpAnimation'
 import { useActiveMission } from './useActiveMission'
 import { useExplorationResolved } from './useExplorationResolved'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
+import { useWarp } from './useWarp'
 import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
@@ -58,6 +61,7 @@ export default function FreeFlightPage() {
   })
 
   const [missionCardDrop, setMissionCardDrop] = useState<{ card: CardTemplate; rarity: GameCardRarity } | null>(null)
+  const warp = useWarp()
 
   const handleEncounterTrigger = (enc: ExplorationEncounter) => {
     if (resolvedEncounterIds.has(enc.id)) return
@@ -195,6 +199,10 @@ export default function FreeFlightPage() {
       }
       if (e.code === 'KeyG' && nearNPC && !npcHostile && !menuOpen && !lorePopup) {
         handleGreet()
+      }
+      if (e.code === 'KeyW' && !menuOpen && !lorePopup && !activeEncounter && !warp.state.warping && !warp.state.mapOpen) {
+        // Open the warp map. Ship is at the nearest warp node by default (Sprint 4 uses 'voidexa_hub').
+        warp.openMap()
       }
     }
     window.addEventListener('keydown', onKey)
@@ -396,6 +404,40 @@ export default function FreeFlightPage() {
           rarity={missionCardDrop.rarity}
           onDismiss={() => setMissionCardDrop(null)}
         />
+      )}
+
+      {/* Sprint 4 Task 2: Holographic warp map + animation. */}
+      {warp.state.mapOpen && (
+        <HolographicMap
+          currentNodeId="voidexa_hub"
+          ghaiBalance={warp.state.balance ?? 0}
+          onClose={warp.closeMap}
+          onWarp={async (dest, cost) => {
+            const ok = await warp.beginWarp(dest, cost)
+            if (ok) {
+              // Snap the ship position to the destination after animation ends.
+              window.setTimeout(() => {
+                shipRef.current.position.set(dest.x, dest.y + 8, dest.z + 12)
+                warp.finishWarp()
+                pushToast(`WARPED · ${dest.name.toUpperCase()} · -${cost} GHAI`, '#7fd8ff')
+              }, 1900)
+            }
+          }}
+        />
+      )}
+      {warp.state.warping && (
+        <WarpAnimation
+          destinationName={warp.state.warping.destination.name}
+          onComplete={warp.finishWarp}
+        />
+      )}
+      {warp.state.error && (
+        <div style={{
+          position: 'fixed', top: 80, right: 24, zIndex: 30,
+          padding: '10px 14px', borderRadius: 8,
+          background: 'rgba(255,107,107,0.14)', border: '1px solid rgba(255,107,107,0.5)',
+          color: '#ffafaf', fontSize: 14, fontFamily: 'var(--font-sans)',
+        }}>{warp.state.error}</div>
       )}
 
       {/* Toasts */}
