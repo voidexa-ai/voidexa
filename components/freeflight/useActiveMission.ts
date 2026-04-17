@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { creditGhai } from '@/lib/credits/credit'
 import { getMissionById, type MissionTemplate } from '@/lib/game/missions/board'
 import { generateMissionWaypoints, type MissionWaypoint } from '@/lib/game/missions/waypoints'
+import { useActiveQuestChain } from '@/lib/game/quests/progress'
 
 export interface ActiveMissionState {
   mission: MissionTemplate
@@ -22,6 +23,7 @@ export function useActiveMission(onPayout: (ghai: number, missionName: string) =
   const [active, setActive] = useState<ActiveMissionState | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const finalizingRef = useRef(false)
+  const questChain = useActiveQuestChain()
 
   // Load current user + active mission once.
   useEffect(() => {
@@ -91,6 +93,8 @@ export function useActiveMission(onPayout: (ghai: number, missionName: string) =
       if (credit.ok) {
         onPayout(reward, mission.name)
       }
+      // Sprint 3 Task 1: advance First Day Real Sky if this mission is a trigger.
+      void questChain.recordEvent({ type: 'mission_complete', target: mission.id })
       setActive(null)
       finalizingRef.current = false
     })()

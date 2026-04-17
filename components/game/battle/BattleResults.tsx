@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { CARD_TEMPLATES, type CardTemplate } from '@/lib/game/cards/index'
 import { BOSS_DEFS, type BossId, type PveTierId } from '@/lib/game/battle/encounters'
 import { creditGhai } from '@/lib/credits/credit'
+import { useActiveQuestChain } from '@/lib/game/quests/progress'
 import type { BattleConfig } from './BattleController'
 
 export type BattleOutcome = 'victory' | 'defeat'
@@ -63,6 +64,7 @@ export default function BattleResults({ outcome, config, turnsPlayed, onRetry, o
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const questChain = useActiveQuestChain()
   const reward = outcome === 'victory' ? rewardFor(config) : { ghai: 0, xp: 0 }
   const [loot] = useState<CardTemplate | null>(outcome === 'victory' ? pickLootCard(config) : null)
   const template = bossTemplate(config)
@@ -111,6 +113,8 @@ export default function BattleResults({ outcome, config, turnsPlayed, onRetry, o
               { onConflict: 'user_id,template_id' },
             )
           }
+          // Sprint 3 Task 1: advance First Day Real Sky if this battle matches.
+          void questChain.recordEvent({ type: 'battle_victory', target: template })
         }
         setSaved(true)
       }

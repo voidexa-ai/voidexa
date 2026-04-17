@@ -10,8 +10,10 @@ import AchievementPanel from '@/components/achievements/AchievementPanel'
 import MissionOverlay from './MissionOverlay'
 import NPCDialogueBubble from './NPCDialogueBubble'
 import ExplorationChoiceModal from './ExplorationChoiceModal'
+import TutorialGuide from './TutorialGuide'
 import { useActiveMission } from './useActiveMission'
 import { useExplorationResolved } from './useExplorationResolved'
+import { useActiveQuestChain } from '@/lib/game/quests/progress'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
 import type { ExplorationEncounter } from '@/lib/game/freeflight/explorationEncounters'
@@ -48,6 +50,10 @@ export default function FreeFlightPage() {
   const { resolved: resolvedEncounterIds, resolve: resolveEncounter } = useExplorationResolved(
     (ghai, name) => pushToast(`+${ghai} GHAI · ${name.toUpperCase()}`, '#ffd166'),
   )
+
+  const questChain = useActiveQuestChain((title) => {
+    pushToast(`TITLE UNLOCKED · ${title.toUpperCase()}`, '#ffd166')
+  })
 
   const handleEncounterTrigger = (enc: ExplorationEncounter) => {
     if (resolvedEncounterIds.has(enc.id)) return
@@ -156,6 +162,8 @@ export default function FreeFlightPage() {
       body: `${nearLandmark.scanText}\n\n${nearLandmark.loreSnippet}\n\n— ${nearLandmark.hook}`,
     })
     pushToast(`SCANNED · ${nearLandmark.name.toUpperCase()}`, '#ffd166')
+    // Sprint 3 Task 1: advance First Day Real Sky if this landmark triggers a step.
+    void questChain.recordEvent({ type: 'landmark_scan', target: nearLandmark.id })
   }
 
   useEffect(() => {
@@ -359,6 +367,16 @@ export default function FreeFlightPage() {
           encounter={activeEncounter}
           onChoose={choice => { void resolveEncounter(activeEncounter, choice) }}
           onDismiss={() => setActiveEncounter(null)}
+        />
+      )}
+
+      {/* First Day Real Sky tutorial panel */}
+      {questChain.step && !questChain.loading && (
+        <TutorialGuide
+          step={questChain.step}
+          completedIds={questChain.completedIds}
+          onSkip={questChain.skip}
+          visible={!menuOpen && !lorePopup && !activeEncounter && !activeDialogue}
         />
       )}
 

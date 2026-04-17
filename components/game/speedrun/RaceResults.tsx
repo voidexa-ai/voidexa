@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { creditGhai } from '@/lib/credits/credit'
+import { useActiveQuestChain } from '@/lib/game/quests/progress'
 import {
   GRADE_REWARDS,
   POWERUPS,
@@ -56,6 +57,7 @@ export default function RaceResults({
   const [saved, setSaved] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+  const questChain = useActiveQuestChain()
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null))
@@ -88,6 +90,8 @@ export default function RaceResults({
     if (reward > 0 && row?.id) {
       await creditGhai(userId, reward, { source: 'speedrun', sourceId: row.id as string })
     }
+    // Sprint 3 Task 1: advance First Day Real Sky if this speed-run matches.
+    void questChain.recordEvent({ type: 'speedrun_complete', target: track.id })
     setSaving(false)
     setSaved(true)
   }
