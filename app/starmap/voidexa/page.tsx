@@ -34,7 +34,7 @@ export default function VoidexaSystem() {
         bottom: 10,
         right: 16,
         zIndex: 60,
-        fontSize: 12,
+        fontSize: 14,
         letterSpacing: '0.06em',
         color: 'rgba(255,255,255,0.5)',
         fontFamily: 'var(--font-inter, system-ui)',

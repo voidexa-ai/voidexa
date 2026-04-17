@@ -35,7 +35,7 @@ export default function HomeDenmark() {
         textAlign: 'center',
       }}>
         <div style={{
-          fontSize: 13,
+          fontSize: 14,
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
           color: 'rgba(0,212,255,0.7)',

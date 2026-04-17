@@ -22,7 +22,7 @@ export default function HomePage() {
           transform: 'translateX(-50%)',
           zIndex: 20,
           color: 'rgba(0,212,255,0.5)',
-          fontSize: 13,
+          fontSize: 14,
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
           fontFamily: 'var(--font-space, monospace)',

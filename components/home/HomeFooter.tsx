@@ -70,7 +70,7 @@ export default function HomeFooter() {
           {COLUMNS.map(col => (
             <div key={col.heading}>
               <div style={{
-                fontSize: 13,
+                fontSize: 14,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
                 color: '#00d4ff',
@@ -118,7 +118,7 @@ export default function HomeFooter() {
             © {year} voidexa. CVR 46343387. Built from Denmark.
           </div>
           <div style={{
-            fontSize: 13,
+            fontSize: 14,
             letterSpacing: '0.16em',
             textTransform: 'uppercase',
             color: 'rgba(0,212,255,0.6)',

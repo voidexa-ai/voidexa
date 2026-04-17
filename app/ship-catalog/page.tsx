@@ -112,7 +112,7 @@ function PreviewUnavailable() {
         <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
         <line x1="12" y1="22.08" x2="12" y2="12" />
       </svg>
-      <span style={{ fontSize: 12, color: '#4a3f7a', textAlign: 'center', padding: '0 16px' }}>
+      <span style={{ fontSize: 14, color: '#4a3f7a', textAlign: 'center', padding: '0 16px' }}>
         Preview unavailable — model not yet uploaded
       </span>
     </div>
@@ -131,7 +131,7 @@ function ModelErrorFallback() {
         justifyContent: 'center',
       }}
     >
-      <span style={{ fontSize: 12, color: '#ff8b97' }}>Failed to load model</span>
+      <span style={{ fontSize: 14, color: '#ff8b97' }}>Failed to load model</span>
     </div>
   )
 }
@@ -152,7 +152,7 @@ function SafePreview({ url }: { url: string }) {
   if (status === 'checking') {
     return (
       <div style={{ width: '100%', height: 200, background: 'linear-gradient(180deg, #0d0a1f 0%, #060412 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 12, color: '#4a3f7a' }}>Checking CDN…</span>
+        <span style={{ fontSize: 14, color: '#4a3f7a' }}>Checking CDN…</span>
       </div>
     )
   }
@@ -194,7 +194,7 @@ function ShipCard({ ship }: { ship: ShipEntry }) {
       {hasPreview ? <SafePreview url={ship.cdnUrl!} /> : <PreviewUnavailable />}
       <div style={{ padding: '10px 14px' }}>
         <div style={{ fontSize: 15, fontWeight: 600, color: '#e5e5f0', marginBottom: 4 }}>{ship.displayName}</div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', fontSize: 13, color: '#a9b4d0' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', fontSize: 14, color: '#a9b4d0' }}>
           <span style={{ color, fontWeight: 500 }}>{CATEGORY_LABEL[ship.category]}</span>
           <span>{ship.skinsCount} skin{ship.skinsCount > 1 ? 's' : ''}</span>
           <span>{ship.fileSizeMb} MB</span>

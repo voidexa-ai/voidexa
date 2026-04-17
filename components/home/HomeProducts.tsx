@@ -137,7 +137,7 @@ function ProductCard({ p }: { p: Product }) {
       </div>
       <div style={{
         marginTop: 18,
-        fontSize: 13,
+        fontSize: 14,
         letterSpacing: '0.14em',
         textTransform: 'uppercase',
         color: '#00d4ff',
@@ -158,7 +158,7 @@ export default function HomeProducts() {
     }}>
       <div style={{ maxWidth: 1120, margin: '0 auto' }}>
         <div style={{
-          fontSize: 13,
+          fontSize: 14,
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
           color: 'rgba(0,212,255,0.75)',

@@ -124,7 +124,7 @@ export function PioneerRewards() {
         <motion.p
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
           style={{
-            fontSize: 13, color: '#64748b', marginTop: 24, textAlign: 'center',
+            fontSize: 14, color: '#64748b', marginTop: 24, textAlign: 'center',
             maxWidth: 620, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6,
             fontStyle: 'italic',
           }}
