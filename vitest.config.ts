@@ -19,6 +19,8 @@ export default defineConfig({
       "lib/game/packs/__tests__/**/*.test.ts",
       "lib/game/loot/__tests__/**/*.test.ts",
       "lib/game/reputation/__tests__/**/*.test.ts",
+      "lib/game/wrecks/__tests__/**/*.test.ts",
+      "lib/game/hauling/__tests__/**/*.test.ts",
       "lib/credits/__tests__/**/*.test.ts",
       "lib/shop/__tests__/**/*.test.ts",
       "lib/cards/__tests__/**/*.test.ts",

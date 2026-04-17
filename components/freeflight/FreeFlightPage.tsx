@@ -14,10 +14,14 @@ import TutorialGuide from './TutorialGuide'
 import CardDropReveal from '@/components/ui/CardDropReveal'
 import HolographicMap from './HolographicMap'
 import WarpAnimation from './WarpAnimation'
+import ShipDownModal, { type RecoveryChoice } from '@/components/wrecks/ShipDownModal'
+import ClaimModal from '@/components/wrecks/ClaimModal'
 import { useActiveMission } from './useActiveMission'
 import { useExplorationResolved } from './useExplorationResolved'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
 import { useWarp } from './useWarp'
+import { useWrecks } from './useWrecks'
+import type { WreckRow } from '@/lib/game/wrecks/types'
 import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
@@ -100,6 +104,69 @@ export default function FreeFlightPage() {
     const cid = getStoredCockpitId()
     if (cid) setSelectedCockpit(findCockpit(cid))
   }, [])
+
+  // Sprint 5 Task 1: wreck system — declared after selectedShip so the
+  // ship-id is available for spawn() payloads.
+  const wrecks = useWrecks('common')
+  const [shipDownPayload, setShipDownPayload] = useState<{ wreck: WreckRow } | null>(null)
+  const [claimTarget, setClaimTarget] = useState<WreckRow | null>(null)
+  const shipDownTriggered = useRef(false)
+
+  useEffect(() => {
+    const check = window.setInterval(async () => {
+      if (shipDownTriggered.current) return
+      if (shipRef.current.health <= 0) {
+        shipDownTriggered.current = true
+        const wreck = await wrecks.spawnWreck({
+          shipId: selectedShip?.id ?? 'qs_bob',
+          position: { x: shipRef.current.position.x, y: shipRef.current.position.y, z: shipRef.current.position.z },
+          zone: 'Core Zone',
+        })
+        if (wreck) setShipDownPayload({ wreck })
+      }
+    }, 800)
+    return () => window.clearInterval(check)
+  }, [wrecks, selectedShip])
+
+  const handleRecovery = async (choice: RecoveryChoice) => {
+    if (!shipDownPayload) return
+    const { wreck } = shipDownPayload
+    if (choice === 'self_repair') {
+      const ok = await wrecks.selfRepair(wreck)
+      if (ok) {
+        shipRef.current.health = 100
+        shipRef.current.shield = 100
+        shipDownTriggered.current = false
+        setShipDownPayload(null)
+        pushToast(`REPAIRED · HULL RESTORED`, '#7fff9f')
+      }
+    } else if (choice === 'tow') {
+      shipRef.current.position.set(0, 0, 0)
+      shipRef.current.health = 100
+      shipRef.current.shield = 100
+      shipDownTriggered.current = false
+      setShipDownPayload(null)
+      pushToast(`TOWED · RETURNED TO HUB`, '#7fd8ff')
+    } else if (choice === 'abandon') {
+      await wrecks.abandonWreck(wreck)
+      shipRef.current.position.set(0, 0, 0)
+      shipRef.current.health = 100
+      shipRef.current.shield = 100
+      shipDownTriggered.current = false
+      setShipDownPayload(null)
+      pushToast(`WRECK ABANDONED · 10% INSURANCE ON CLAIM`, '#ffd166')
+    } else if (choice === 'buy_new') {
+      const ok = await wrecks.buyNewShip(wreck)
+      if (ok) {
+        shipRef.current.position.set(0, 0, 0)
+        shipRef.current.health = 100
+        shipRef.current.shield = 100
+        shipDownTriggered.current = false
+        setShipDownPayload(null)
+        pushToast(`NEW SHIP · BACK IN THE AIR`, '#af52de')
+      }
+    }
+  }
 
   const pushToast = (text: string, color = '#66ff99') => {
     const id = ++toastIdRef.current
@@ -438,6 +505,31 @@ export default function FreeFlightPage() {
           background: 'rgba(255,107,107,0.14)', border: '1px solid rgba(255,107,107,0.5)',
           color: '#ffafaf', fontSize: 14, fontFamily: 'var(--font-sans)',
         }}>{warp.state.error}</div>
+      )}
+
+      {/* Sprint 5 Task 1: wreck system modals. */}
+      {shipDownPayload && (
+        <ShipDownModal
+          shipTier="common"
+          shipName={selectedShip?.name ?? 'Ship'}
+          ghaiBalance={wrecks.balance ?? 0}
+          onChoose={handleRecovery}
+          onClose={() => setShipDownPayload(null)}
+        />
+      )}
+      {claimTarget && (
+        <ClaimModal
+          wreck={claimTarget}
+          ghaiBalance={wrecks.balance ?? 0}
+          onClaim={async () => {
+            const ok = await wrecks.claimWreck(claimTarget)
+            if (ok) {
+              pushToast(`CLAIMED · ${claimTarget.ship_id.toUpperCase()}`, '#ff8a3c')
+              setClaimTarget(null)
+            }
+          }}
+          onDismiss={() => setClaimTarget(null)}
+        />
       )}
 
       {/* Toasts */}
