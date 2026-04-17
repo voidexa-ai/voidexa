@@ -1,0 +1,443 @@
+[
+  {
+    "n": 1,
+    "id": "tg001_orchard_glassfruit",
+    "name": "Orchard Glassfruit",
+    "category": "perishable",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Core Zone"
+    ],
+    "baseValueGhai": 18,
+    "weight": 1,
+    "riskNotes": "Spoils on long routes, attracts civilian priority scans, low pirate interest",
+    "lore": "A sweet translucent fruit grown in orbital ribbon farms around Orchard Meridian. Mostly bought by stations that want to feel more human than industrial."
+  },
+  {
+    "n": 2,
+    "id": "tg002_veilrun_blue_vapor",
+    "name": "Veilrun Blue Vapor",
+    "category": "raw material",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Mid Ring"
+    ],
+    "baseValueGhai": 26,
+    "weight": 2,
+    "riskNotes": "Volatile if overheated, unstable under repeated boost shocks",
+    "lore": "Condensed atmospheric harvest pulled from gas giant upper layers and used in coolant mixes, specialty fuel additives, and industrial chemistry."
+  },
+  {
+    "n": 3,
+    "id": "tg003_needlecore_ore",
+    "name": "Needlecore Ore",
+    "category": "raw material",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Inner Ring",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 22,
+    "weight": 3,
+    "riskNotes": "Heavy, low value-to-weight, boring enough to be safe until you haul a lot of it",
+    "lore": "Dense structural ore extracted from prospect shafts like Needle Prospect. Essential, unglamorous, always in demand."
+  },
+  {
+    "n": 4,
+    "id": "tg004_bale_furnace_bricks",
+    "name": "Bale Furnace Bricks",
+    "category": "refined goods",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Mid Ring",
+      "Outer Ring"
+    ],
+    "baseValueGhai": 31,
+    "weight": 4,
+    "riskNotes": "Heavy load reduces maneuverability, often shipped in bulk",
+    "lore": "Heat-resistant industrial lining bricks from Cinder Bale Works, used in refinery overhauls and emergency patching."
+  },
+  {
+    "n": 5,
+    "id": "tg005_helio_medfoam_kits",
+    "name": "Helio Medfoam Kits",
+    "category": "tech components",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Outer Ring"
+    ],
+    "baseValueGhai": 42,
+    "weight": 1,
+    "riskNotes": "High lawful scan priority, escort recommended in contested lanes",
+    "lore": "Rapid-seal trauma foam packs made at Helio Ward. Legitimate, lifesaving, and therefore stolen constantly."
+  },
+  {
+    "n": 6,
+    "id": "tg006_pelican_standard_shells",
+    "name": "Pelican Standard Shells",
+    "category": "refined goods",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 20,
+    "weight": 3,
+    "riskNotes": "Cheap but bulky, best in return-cargo loops",
+    "lore": "Empty freight shells designed for modular reuse. Nobody loves shipping them, everyone needs them."
+  },
+  {
+    "n": 7,
+    "id": "tg007_meridian_spice_dust",
+    "name": "Meridian Spice Dust",
+    "category": "luxury",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Core Zone"
+    ],
+    "baseValueGhai": 54,
+    "weight": 1,
+    "riskNotes": "Fragile aroma seal, customs-friendly but highly marked up",
+    "lore": "A fragrant culinary powder from farm satellites that turns boring station food into something people discuss on purpose."
+  },
+  {
+    "n": 8,
+    "id": "tg008_hollow_ledger_slates",
+    "name": "Hollow Ledger Slates",
+    "category": "tech components",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Outer Ring"
+    ],
+    "baseValueGhai": 63,
+    "weight": 1,
+    "riskNotes": "Data corruption risk if exposed to ion arcs",
+    "lore": "Hardened archival slates used for route law, manifests, and signed logistics records."
+  },
+  {
+    "n": 9,
+    "id": "tg009_bracket_home_textiles",
+    "name": "Bracket Home Textiles",
+    "category": "refined goods",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 24,
+    "weight": 2,
+    "riskNotes": "Low risk, stable, good beginner cargo",
+    "lore": "Civilian fabric rolls woven for station interiors, uniforms, blankets, and practical gifts."
+  },
+  {
+    "n": 10,
+    "id": "tg010_aureline_seal_tags",
+    "name": "Aureline Seal Tags",
+    "category": "tech components",
+    "sourceZone": "Inner Ring",
+    "destinationZones": [
+      "Mid Ring",
+      "Outer Ring"
+    ],
+    "baseValueGhai": 58,
+    "weight": 1,
+    "riskNotes": "Targeted by smugglers and counterfeiters",
+    "lore": "Authenticated customs tags used to verify legal cargo movement through formal routes."
+  },
+  {
+    "n": 11,
+    "id": "tg011_choir_condensate",
+    "name": "Choir Condensate",
+    "category": "raw material",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Inner Ring",
+      "Core Zone"
+    ],
+    "baseValueGhai": 68,
+    "weight": 2,
+    "riskNotes": "Scanner static can damage container reporting; mildly volatile",
+    "lore": "Nebula-born condensate harvested from Choir Dust, prized for advanced sensing gels and premium coolant compounds."
+  },
+  {
+    "n": 12,
+    "id": "tg012_lantern_hearts",
+    "name": "Lantern Hearts",
+    "category": "tech components",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Inner Ring"
+    ],
+    "baseValueGhai": 76,
+    "weight": 1,
+    "riskNotes": "Sensitive to impact, emotionally valued by some communities",
+    "lore": "Recovered beacon cores from old route markers. Technically components, culturally closer to public memory."
+  },
+  {
+    "n": 13,
+    "id": "tg013_bubblewake_gas_pearls",
+    "name": "Bubblewake Gas Pearls",
+    "category": "raw material",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Inner Ring"
+    ],
+    "baseValueGhai": 72,
+    "weight": 1,
+    "riskNotes": "Delicate pressure shell, cargo shock risk",
+    "lore": "Dense gas nodules collected from drifting pockets in Bubblewake Reach. Used in high-end lab work and odd drinks."
+  },
+  {
+    "n": 14,
+    "id": "tg014_oxblood_ferrite",
+    "name": "Oxblood Ferrite",
+    "category": "raw material",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Outer Ring"
+    ],
+    "baseValueGhai": 48,
+    "weight": 3,
+    "riskNotes": "Pirate interest medium, bulk shipments common ambush targets",
+    "lore": "Red mineral concentrate from Oxblood Mile, useful in hull reinforcement and field plating."
+  },
+  {
+    "n": 15,
+    "id": "tg015_mica_vault_preserves",
+    "name": "Mica Vault Preserves",
+    "category": "luxury",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Core Zone"
+    ],
+    "baseValueGhai": 84,
+    "weight": 1,
+    "riskNotes": "Rare stock, usually mission-linked, attracts thieves",
+    "lore": "Long-stored reserve foods and sealed cultural goods recovered from forgotten vault systems."
+  },
+  {
+    "n": 16,
+    "id": "tg016_chapel_wax_cells",
+    "name": "Chapel Wax Cells",
+    "category": "refined goods",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Outer Ring",
+      "Deep Void"
+    ],
+    "baseValueGhai": 37,
+    "weight": 1,
+    "riskNotes": "Small-value cargo, but popular on long-haul supply lines",
+    "lore": "Compact low-tech light cells and heat candles used where elegance matters more than output."
+  },
+  {
+    "n": 17,
+    "id": "tg017_snare_scrap_bundles",
+    "name": "Snare Scrap Bundles",
+    "category": "raw material",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Inner Ring"
+    ],
+    "baseValueGhai": 19,
+    "weight": 4,
+    "riskNotes": "Messy cargo, may trigger salvage claim disputes",
+    "lore": "Reclaimed mixed-metal bundles skimmed from fast debris currents and sold for reprocessing."
+  },
+  {
+    "n": 18,
+    "id": "tg018_taxonomy_bio_seals",
+    "name": "Taxonomy Bio-Seals",
+    "category": "tech components",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Outer Ring",
+      "Deep Void"
+    ],
+    "baseValueGhai": 88,
+    "weight": 1,
+    "riskNotes": "Strict handling protocols, spoilage if seal breaks",
+    "lore": "Containment and lab transport seals designed for unusual specimen handling."
+  },
+  {
+    "n": 19,
+    "id": "tg019_hive_patch_resin",
+    "name": "Hive Patch Resin",
+    "category": "refined goods",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "All zones"
+    ],
+    "baseValueGhai": 35,
+    "weight": 2,
+    "riskNotes": "Sticky, awkward, but stable",
+    "lore": "A fast-bond repair resin sold heavily around The Hive. Not pretty, extremely useful."
+  },
+  {
+    "n": 20,
+    "id": "tg020_far_lantern_seedlocks",
+    "name": "Far Lantern Seedlocks",
+    "category": "perishable",
+    "sourceZone": "Mid Ring",
+    "destinationZones": [
+      "Inner Ring",
+      "Core Zone"
+    ],
+    "baseValueGhai": 96,
+    "weight": 1,
+    "riskNotes": "Must stay cold, very high heritage value",
+    "lore": "Preserved colony seed canisters and botanical lineage stock from the Far Lantern wreck."
+  },
+  {
+    "n": 21,
+    "id": "tg021_brine_halo_salts",
+    "name": "Brine Halo Salts",
+    "category": "raw material",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Inner Ring",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 91,
+    "weight": 2,
+    "riskNotes": "Moisture-sensitive packaging, pirate interest moderate",
+    "lore": "Coolant-grade mineral salts skimmed from the Brine Halo's white particulate ring."
+  },
+  {
+    "n": 22,
+    "id": "tg022_frostbite_cryocrystals",
+    "name": "Frostbite Cryocrystals",
+    "category": "tech components",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Inner Ring"
+    ],
+    "baseValueGhai": 108,
+    "weight": 1,
+    "riskNotes": "Fracture risk under hard turns, prized and heavily insured",
+    "lore": "Exotic crystal forms harvested near Frostbite Lantern, used in sensors, medicine, and advanced refrigeration."
+  },
+  {
+    "n": 23,
+    "id": "tg023_graywake_power_cartridges",
+    "name": "Graywake Power Cartridges",
+    "category": "tech components",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Outer Ring",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 66,
+    "weight": 2,
+    "riskNotes": "High demand in blackout regions, moderate theft risk",
+    "lore": "Durable emergency cells designed to restore power to dead rings, dark docks, and failing relays."
+  },
+  {
+    "n": 24,
+    "id": "tg024_char_archive_memory_racks",
+    "name": "Char Archive Memory Racks",
+    "category": "tech components",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Inner Ring",
+      "Core Zone"
+    ],
+    "baseValueGhai": 124,
+    "weight": 2,
+    "riskNotes": "Data theft risk extreme, fragile to thermal spikes",
+    "lore": "Hardened memory assemblies recovered from burnt archives and tribunal stations."
+  },
+  {
+    "n": 25,
+    "id": "tg025_velvet_spill_filter_mesh",
+    "name": "Velvet Spill Filter Mesh",
+    "category": "refined goods",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Mid Ring"
+    ],
+    "baseValueGhai": 73,
+    "weight": 1,
+    "riskNotes": "Illegal variants exist, inspection interest elevated",
+    "lore": "Specialized filtration mesh needed for operations in murky nebula fields and contaminated cloud pockets."
+  },
+  {
+    "n": 26,
+    "id": "tg026_sable_blackroute_ink",
+    "name": "Sable Blackroute Ink",
+    "category": "contraband",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Inner Ring",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 137,
+    "weight": 1,
+    "riskNotes": "Illegal in formal lanes, attracts pirate and customs attention alike",
+    "lore": "A stealth-tagging compound used to falsify route stamps, repaint IDs, and hide cargo lineage."
+  },
+  {
+    "n": 27,
+    "id": "tg027_crown_lattice_shards",
+    "name": "Crown Lattice Shards",
+    "category": "raw material",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Mid Ring"
+    ],
+    "baseValueGhai": 116,
+    "weight": 2,
+    "riskNotes": "Razor-edged cargo, loading injury risk",
+    "lore": "High-value crystal fragments from Crown of Splinters, essential for precision optics and decorative wealth."
+  },
+  {
+    "n": 28,
+    "id": "tg028_last_cordial_soup_bricks",
+    "name": "Last Cordial Soup Bricks",
+    "category": "perishable",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Deep Void",
+      "Outer Ring"
+    ],
+    "baseValueGhai": 44,
+    "weight": 2,
+    "riskNotes": "Time-sensitive only in terms of dignity; morale value unusually high",
+    "lore": "Dense flavor bricks boiled into the station's famous long-haul soup. Objectively practical, spiritually critical."
+  },
+  {
+    "n": 29,
+    "id": "tg029_warden_plating_segments",
+    "name": "Warden Plating Segments",
+    "category": "refined goods",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Outer Ring",
+      "Deep Void"
+    ],
+    "baseValueGhai": 98,
+    "weight": 4,
+    "riskNotes": "Heavy and high-priority in dangerous sectors",
+    "lore": "Modular armor segments salvaged from defense outposts and repurposed for hard frontier infrastructure."
+  },
+  {
+    "n": 30,
+    "id": "tg030_debt_relay_packet_cores",
+    "name": "Debt Relay Packet Cores",
+    "category": "contraband",
+    "sourceZone": "Outer Ring",
+    "destinationZones": [
+      "Core Zone",
+      "Inner Ring"
+    ],
+    "baseValueGhai": 142,
+    "weight": 1,
+    "riskNotes": "Illegal to inspect without authority, heavily targeted by thieves",
+    "lore": "Encrypted settlement cores carrying debt ledgers, route leverage, and quiet leverage over loud people."
+  }
+]

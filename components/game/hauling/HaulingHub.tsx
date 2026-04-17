@@ -11,12 +11,18 @@ import {
   type HaulingContract,
   type RiskLevel,
 } from '@/lib/game/hauling/contracts'
+import { generateDailyContracts, todayDateSeed } from '@/lib/game/hauling/generateContract'
 
 type RiskFilter = 'All' | RiskLevel
 type RewardFilter = 'All' | 'Low' | 'Mid' | 'High'
+type TabKey = 'legacy' | 'dynamic'
 
 const RISK_META: Readonly<Record<RiskLevel, { color: string; bg: string }>> = {
   Safe: { color: '#7fff9f', bg: 'rgba(127,255,159,0.14)' },
+  Low: { color: '#7fd8ff', bg: 'rgba(127,216,255,0.14)' },
+  Medium: { color: '#b8c2cc', bg: 'rgba(184,194,204,0.14)' },
+  Timed: { color: '#ffd166', bg: 'rgba(255,209,102,0.14)' },
+  Ranked: { color: '#af52de', bg: 'rgba(175,82,222,0.14)' },
   Contested: { color: '#ffb347', bg: 'rgba(255,179,71,0.14)' },
   'Wreck Risk': { color: '#ff6b6b', bg: 'rgba(255,107,107,0.14)' },
 }
@@ -26,19 +32,23 @@ interface Props {
 }
 
 export default function HaulingHub({ onAccept }: Props) {
+  const [tab, setTab] = useState<TabKey>('legacy')
   const [riskFilter, setRiskFilter] = useState<RiskFilter>('All')
   const [rewardFilter, setRewardFilter] = useState<RewardFilter>('All')
   const [accepting, setAccepting] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
-  const filtered = useMemo(() => HAULING_CONTRACTS.filter(c => {
+  const dynamicContracts = useMemo(() => generateDailyContracts(todayDateSeed(), 8), [])
+  const source: readonly HaulingContract[] = tab === 'legacy' ? HAULING_CONTRACTS : dynamicContracts
+
+  const filtered = useMemo(() => source.filter(c => {
     if (riskFilter !== 'All' && c.risk !== riskFilter) return false
     const avg = (c.rewardMin + c.rewardMax) / 2
     if (rewardFilter === 'Low' && avg >= 80) return false
     if (rewardFilter === 'Mid' && (avg < 80 || avg > 160)) return false
     if (rewardFilter === 'High' && avg <= 160) return false
     return true
-  }), [riskFilter, rewardFilter])
+  }), [source, riskFilter, rewardFilter])
 
   async function handleAccept(c: HaulingContract) {
     setErr(null)
@@ -86,6 +96,15 @@ export default function HaulingHub({ onAccept }: Props) {
       </header>
 
       <main style={S.main}>
+        <div style={S.tabBar} role="tablist">
+          <TabButton active={tab === 'legacy'} onClick={() => setTab('legacy')}>Legacy Routes</TabButton>
+          <TabButton active={tab === 'dynamic'} onClick={() => setTab('dynamic')}>
+            Dynamic Routes
+            <span style={S.tabBadge}>{dynamicContracts.length}/day</span>
+          </TabButton>
+          {tab === 'dynamic' && <span style={S.tabHint}>Rotates daily · seed {todayDateSeed()}</span>}
+        </div>
+
         <div style={S.filtersRow}>
           <FilterGroup label="Risk">
             {(['All', 'Safe', 'Contested', 'Wreck Risk'] as RiskFilter[]).map(r => (
@@ -159,6 +178,24 @@ function ContractCard({ contract, accepting, onAccept }: { contract: HaulingCont
   )
 }
 
+function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      style={{
+        ...S.tabBtn,
+        color: active ? '#00d4ff' : 'rgba(220,216,230,0.72)',
+        borderColor: active ? 'rgba(0,212,255,0.55)' : 'rgba(127,119,221,0.22)',
+        background: active ? 'rgba(0,212,255,0.08)' : 'transparent',
+      }}
+    >
+      {children}
+    </button>
+  )
+}
+
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={S.filterGroup}>
@@ -197,6 +234,10 @@ const S: Record<string, React.CSSProperties> = {
   title: { fontSize: 40, fontWeight: 700, letterSpacing: '-0.02em', background: 'linear-gradient(135deg, #00d4ff, #af52de)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: '0 0 8px' },
   subtitle: { fontSize: 16, color: 'rgba(220,216,230,0.8)', maxWidth: 680, margin: 0, lineHeight: 1.55 },
   main: { maxWidth: 1280, margin: '0 auto', padding: '28px 28px 32px' },
+  tabBar: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' },
+  tabBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10, border: '1px solid', fontSize: 14, fontWeight: 600, letterSpacing: '0.02em', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' },
+  tabBadge: { fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 999, background: 'rgba(0,212,255,0.14)', color: '#7fd8ff', textTransform: 'uppercase' },
+  tabHint: { fontSize: 14, color: 'rgba(148,163,184,0.8)', marginLeft: 6 },
   filtersRow: { display: 'flex', flexWrap: 'wrap', gap: 24, marginBottom: 22, alignItems: 'center' },
   filterGroup: { display: 'flex', alignItems: 'center', gap: 10 },
   filterLabel: { fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(148,163,184,0.9)', fontWeight: 600 },

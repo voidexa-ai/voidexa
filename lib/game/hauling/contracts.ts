@@ -5,7 +5,7 @@
 
 import type { CastIssuer } from '@/lib/game/missions/board'
 
-export type RiskLevel = 'Safe' | 'Contested' | 'Wreck Risk'
+export type RiskLevel = 'Safe' | 'Low' | 'Medium' | 'Timed' | 'Ranked' | 'Contested' | 'Wreck Risk'
 export type ContractRiskDb = 'safe' | 'low' | 'medium' | 'wreck_risk'
 
 export interface HaulingContract {
@@ -131,7 +131,8 @@ export const HAULING_CONTRACTS: readonly HaulingContract[] = [
  */
 export function riskToDb(risk: RiskLevel): ContractRiskDb {
   if (risk === 'Safe') return 'safe'
-  if (risk === 'Contested') return 'medium'
+  if (risk === 'Low') return 'low'
+  if (risk === 'Medium' || risk === 'Timed' || risk === 'Ranked' || risk === 'Contested') return 'medium'
   return 'wreck_risk'
 }
 
