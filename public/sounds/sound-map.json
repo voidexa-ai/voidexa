@@ -1,0 +1,337 @@
+[
+  {
+    "originalName": "1_Weapon_fire_____laser_beam.mp3",
+    "fileName": "weapon-fire-laser-beam.mp3",
+    "eventKey": "weapon-fire-laser-beam"
+  },
+  {
+    "originalName": "2_Weapon_fire_____kinetic_slug.mp3",
+    "fileName": "weapon-fire-kinetic-slug.mp3",
+    "eventKey": "weapon-fire-kinetic-slug"
+  },
+  {
+    "originalName": "3_Weapon_fire_____missile_launch.mp3",
+    "fileName": "weapon-fire-missile-launch.mp3",
+    "eventKey": "weapon-fire-missile-launch"
+  },
+  {
+    "originalName": "4_Weapon_fire_____flak_burst.mp3",
+    "fileName": "weapon-fire-flak-burst.mp3",
+    "eventKey": "weapon-fire-flak-burst"
+  },
+  {
+    "originalName": "5_Shield_hit_____absorbed.mp3",
+    "fileName": "shield-hit-absorbed.mp3",
+    "eventKey": "shield-hit-absorbed"
+  },
+  {
+    "originalName": "6_Shield_hit_____broken_through.mp3",
+    "fileName": "shield-hit-broken-through.mp3",
+    "eventKey": "shield-hit-broken-through"
+  },
+  {
+    "originalName": "7_Shield_activate.mp3",
+    "fileName": "shield-activate.mp3",
+    "eventKey": "shield-activate"
+  },
+  {
+    "originalName": "8_Drone_deploy.mp3",
+    "fileName": "drone-deploy.mp3",
+    "eventKey": "drone-deploy"
+  },
+  {
+    "originalName": "9_Drone_swarm_buzz.mp3",
+    "fileName": "drone-swarm-buzz.mp3",
+    "eventKey": "drone-swarm-buzz"
+  },
+  {
+    "originalName": "10_EMP_pulse.mp3",
+    "fileName": "emp-pulse.mp3",
+    "eventKey": "emp-pulse"
+  },
+  {
+    "originalName": "11_Hull_breach.mp3",
+    "fileName": "hull-breach.mp3",
+    "eventKey": "hull-breach"
+  },
+  {
+    "originalName": "12_Explosion_____small.mp3",
+    "fileName": "explosion-small.mp3",
+    "eventKey": "explosion-small"
+  },
+  {
+    "originalName": "13_Explosion_____large.mp3",
+    "fileName": "explosion-large.mp3",
+    "eventKey": "explosion-large"
+  },
+  {
+    "originalName": "14_Card_play_____weapon.mp3",
+    "fileName": "card-play-weapon.mp3",
+    "eventKey": "card-play-weapon"
+  },
+  {
+    "originalName": "15_Card_play_____shield.mp3",
+    "fileName": "card-play-shield.mp3",
+    "eventKey": "card-play-shield"
+  },
+  {
+    "originalName": "16_Card_draw.mp3",
+    "fileName": "card-draw.mp3",
+    "eventKey": "card-draw"
+  },
+  {
+    "originalName": "17_Card_discard.mp3",
+    "fileName": "card-discard.mp3",
+    "eventKey": "card-discard"
+  },
+  {
+    "originalName": "18_Turn_start.mp3",
+    "fileName": "turn-start.mp3",
+    "eventKey": "turn-start"
+  },
+  {
+    "originalName": "19_Turn_end.mp3",
+    "fileName": "turn-end.mp3",
+    "eventKey": "turn-end"
+  },
+  {
+    "originalName": "20_Victory_fanfare.mp3",
+    "fileName": "victory-fanfare.mp3",
+    "eventKey": "victory-fanfare"
+  },
+  {
+    "originalName": "21_Defeat_sound.mp3",
+    "fileName": "defeat-sound.mp3",
+    "eventKey": "defeat-sound"
+  },
+  {
+    "originalName": "22_Menu_click.mp3",
+    "fileName": "menu-click.mp3",
+    "eventKey": "menu-click"
+  },
+  {
+    "originalName": "23_Menu_hover.mp3",
+    "fileName": "menu-hover.mp3",
+    "eventKey": "menu-hover"
+  },
+  {
+    "originalName": "24_Notification_ping.mp3",
+    "fileName": "notification-ping.mp3",
+    "eventKey": "notification-ping"
+  },
+  {
+    "originalName": "25_GHAI_earned_chime.mp3",
+    "fileName": "ghai-earned-chime.mp3",
+    "eventKey": "ghai-earned-chime"
+  },
+  {
+    "originalName": "26_Pack_opening_____standard.mp3",
+    "fileName": "pack-opening-standard.mp3",
+    "eventKey": "pack-opening-standard"
+  },
+  {
+    "originalName": "27_Pack_opening_____legendary.mp3",
+    "fileName": "pack-opening-legendary.mp3",
+    "eventKey": "pack-opening-legendary"
+  },
+  {
+    "originalName": "28_Freeflight_____calm_space.mp3",
+    "fileName": "freeflight-calm-space.mp3",
+    "eventKey": "freeflight-calm-space"
+  },
+  {
+    "originalName": "29_Freeflight_____nebula_zone.mp3",
+    "fileName": "freeflight-nebula-zone.mp3",
+    "eventKey": "freeflight-nebula-zone"
+  },
+  {
+    "originalName": "30_Freeflight_____asteroid_field.mp3",
+    "fileName": "freeflight-asteroid-field.mp3",
+    "eventKey": "freeflight-asteroid-field"
+  },
+  {
+    "originalName": "31_Freeflight_____near_station.mp3",
+    "fileName": "freeflight-near-station.mp3",
+    "eventKey": "freeflight-near-station"
+  },
+  {
+    "originalName": "32_Freeflight_____deep_void.mp3",
+    "fileName": "freeflight-deep-void.mp3",
+    "eventKey": "freeflight-deep-void"
+  },
+  {
+    "originalName": "33_Battle_____tension_loop.mp3",
+    "fileName": "battle-tension-loop.mp3",
+    "eventKey": "battle-tension-loop"
+  },
+  {
+    "originalName": "34_Battle_____intense_loop.mp3",
+    "fileName": "battle-intense-loop.mp3",
+    "eventKey": "battle-intense-loop"
+  },
+  {
+    "originalName": "35_Mission_board_____ambient.mp3",
+    "fileName": "mission-board-ambient.mp3",
+    "eventKey": "mission-board-ambient"
+  },
+  {
+    "originalName": "36_Shop_____ambient.mp3",
+    "fileName": "shop-ambient.mp3",
+    "eventKey": "shop-ambient"
+  },
+  {
+    "originalName": "37_Warp_travel.mp3",
+    "fileName": "warp-travel.mp3",
+    "eventKey": "warp-travel"
+  },
+  {
+    "originalName": "38_Scanner_ping.mp3",
+    "fileName": "scanner-ping.mp3",
+    "eventKey": "scanner-ping"
+  },
+  {
+    "originalName": "39_NPC_hail.mp3",
+    "fileName": "npc-hail.mp3",
+    "eventKey": "npc-hail"
+  },
+  {
+    "originalName": "40_Encounter_alert.mp3",
+    "fileName": "encounter-alert.mp3",
+    "eventKey": "encounter-alert"
+  },
+  {
+    "originalName": "41_Quest_complete.mp3",
+    "fileName": "quest-complete.mp3",
+    "eventKey": "quest-complete"
+  },
+  {
+    "originalName": "42_Docking_at_station.mp3",
+    "fileName": "docking-at-station.mp3",
+    "eventKey": "docking-at-station"
+  },
+  {
+    "originalName": "43_Kestrel_Reclaimer_theme.mp3",
+    "fileName": "kestrel-reclaimer-theme.mp3",
+    "eventKey": "kestrel-reclaimer-theme"
+  },
+  {
+    "originalName": "44_Lantern_Auditor_theme.mp3",
+    "fileName": "lantern-auditor-theme.mp3",
+    "eventKey": "lantern-auditor-theme"
+  },
+  {
+    "originalName": "45_Varka_the_Unmoored_theme.mp3",
+    "fileName": "varka-the-unmoored-theme.mp3",
+    "eventKey": "varka-the-unmoored-theme"
+  },
+  {
+    "originalName": "46_Choir_Sight_Envoy_theme.mp3",
+    "fileName": "choir-sight-envoy-theme.mp3",
+    "eventKey": "choir-sight-envoy-theme"
+  },
+  {
+    "originalName": "47_Patient_Wreck_theme.mp3",
+    "fileName": "patient-wreck-theme.mp3",
+    "eventKey": "patient-wreck-theme"
+  },
+  {
+    "originalName": "48_Boss_appear.mp3",
+    "fileName": "boss-appear.mp3",
+    "eventKey": "boss-appear"
+  },
+  {
+    "originalName": "49_Boss_phase_change.mp3",
+    "fileName": "boss-phase-change.mp3",
+    "eventKey": "boss-phase-change"
+  },
+  {
+    "originalName": "50_Boss_defeated.mp3",
+    "fileName": "boss-defeated.mp3",
+    "eventKey": "boss-defeated"
+  },
+  {
+    "originalName": "51_Boss_rage_mode.mp3",
+    "fileName": "boss-rage-mode.mp3",
+    "eventKey": "boss-rage-mode"
+  },
+  {
+    "originalName": "52_Boss_special_attack.mp3",
+    "fileName": "boss-special-attack.mp3",
+    "eventKey": "boss-special-attack"
+  },
+  {
+    "originalName": "53_Mythic_card_reveal.mp3",
+    "fileName": "mythic-card-reveal.mp3",
+    "eventKey": "mythic-card-reveal"
+  },
+  {
+    "originalName": "54_Legendary_card_reveal.mp3",
+    "fileName": "legendary-card-reveal.mp3",
+    "eventKey": "legendary-card-reveal"
+  },
+  {
+    "originalName": "55_Level_up.mp3",
+    "fileName": "level-up.mp3",
+    "eventKey": "level-up"
+  },
+  {
+    "originalName": "56_Achievement_unlock.mp3",
+    "fileName": "achievement-unlock.mp3",
+    "eventKey": "achievement-unlock"
+  },
+  {
+    "originalName": "57_Reputation_gain.mp3",
+    "fileName": "reputation-gain.mp3",
+    "eventKey": "reputation-gain"
+  },
+  {
+    "originalName": "58_Tutorial_prompt.mp3",
+    "fileName": "tutorial-prompt.mp3",
+    "eventKey": "tutorial-prompt"
+  },
+  {
+    "originalName": "59_Warning_alarm.mp3",
+    "fileName": "warning-alarm.mp3",
+    "eventKey": "warning-alarm"
+  },
+  {
+    "originalName": "60_Wreck_detected.mp3",
+    "fileName": "wreck-detected.mp3",
+    "eventKey": "wreck-detected"
+  },
+  {
+    "originalName": "61_Trade_complete.mp3",
+    "fileName": "trade-complete.mp3",
+    "eventKey": "trade-complete"
+  },
+  {
+    "originalName": "62_Race_countdown_beep.mp3",
+    "fileName": "race-countdown-beep.mp3",
+    "eventKey": "race-countdown-beep"
+  },
+  {
+    "originalName": "63_Player_death.mp3",
+    "fileName": "player-death.mp3",
+    "eventKey": "player-death"
+  },
+  {
+    "originalName": "64_Item_crafted.mp3",
+    "fileName": "item-crafted.mp3",
+    "eventKey": "item-crafted"
+  },
+  {
+    "originalName": "65_Rare_find.mp3",
+    "fileName": "rare-find.mp3",
+    "eventKey": "rare-find"
+  },
+  {
+    "originalName": "66_Ship_engine_start.mp3",
+    "fileName": "ship-engine-start.mp3",
+    "eventKey": "ship-engine-start"
+  },
+  {
+    "originalName": "67_Critical_failure.mp3",
+    "fileName": "critical-failure.mp3",
+    "eventKey": "critical-failure"
+  }
+]

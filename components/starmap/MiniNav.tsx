@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { STAR_MAP_NODES } from '@/components/starmap/nodes'
 import { useI18n } from '@/lib/i18n/context'
 import { stripLocale } from '@/lib/i18n/locale'
+import VolumeControl from '@/components/sound/VolumeControl'
 
 const LINK_HREFS = ['/starmap', '/game/mission-board', '/game/cards/deck-builder', '/game/speed-run', '/game/hauling', '/game/battle', '/trading', '/apps', '/ai-tools', '/services', '/about', '/contact']
 const FALLBACK: Record<string, string> = {
@@ -92,7 +93,8 @@ export default function MiniNav() {
       </Link>
 
       {/* Links — desktop */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+       <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         {links.map(({ href, label }) => {
           const active = pathname === href
           const isHovered = hoveredHref === href
@@ -124,6 +126,8 @@ export default function MiniNav() {
             </Link>
           )
         })}
+       </div>
+       <VolumeControl />
       </div>
     </nav>
   )

@@ -195,6 +195,34 @@ export default function FreeFlightPage() {
     return () => { document.body.style.overflow = prev }
   }, [])
 
+  // Sprint 7 — sound wiring: engine start one-shot + calm ambient loop on entry,
+  // stop ambient on exit. Mute respected by SoundManager singleton.
+  useEffect(() => {
+    void import('@/lib/sound/events').then(({ playEvent, stopEvent }) => {
+      playEvent('ff.engine.start')
+      playEvent('ff.ambient.calm', { loop: true, volume: 0.35 })
+      const cleanup = () => stopEvent('ff.ambient.calm')
+      ;(window as unknown as { __ffSoundCleanup?: () => void }).__ffSoundCleanup = cleanup
+    })
+    return () => {
+      const w = window as unknown as { __ffSoundCleanup?: () => void }
+      w.__ffSoundCleanup?.()
+      delete w.__ffSoundCleanup
+    }
+  }, [])
+
+  // Sprint 7 — scanner ping when a new landmark enters scan range.
+  useEffect(() => {
+    if (!nearLandmark) return
+    void import('@/lib/sound/events').then(({ playEvent }) => playEvent('ff.scanner.ping'))
+  }, [nearLandmark])
+
+  // Sprint 7 — docking sound when dock prompt activates.
+  useEffect(() => {
+    if (!dockStation) return
+    void import('@/lib/sound/events').then(({ playEvent }) => playEvent('ff.dock', { volume: 0.5 }))
+  }, [dockStation])
+
   const handleDock = () => {
     if (!dockStation) return
     if (document.pointerLockElement) document.exitPointerLock()
