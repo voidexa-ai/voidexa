@@ -365,7 +365,7 @@ Create `lib/voidforge/candidate-pool.ts`:
 **Step 8: Opus planner**
 Create `lib/voidforge/planner.ts`:
 - Construct prompt payload (user intent + template + candidates)
-- Call Opus 4.6 API with JSON-only instruction
+- Call Opus 4.7 API with JSON-only instruction
 - Parse response, validate model slugs exist
 - Return AssemblyPlan
 
@@ -450,6 +450,6 @@ Add to existing editor store:
 7. Do NOT build: image upload, depth estimation, loot boxes, marketplace, 689-model rollout
 8. Git backup before build, git push origin main after
 9. Minimum font: 14px labels, 16px body, opacity >= 0.5
-10. Opus model: claude-opus-4-6-20250205 — nothing else
+10. Opus model: claude-opus-4-7 — nothing else
 11. ALL model loading from Supabase Storage CDN
 12. API routes use SUPABASE_SERVICE_ROLE_KEY server-side only

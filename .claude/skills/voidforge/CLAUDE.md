@@ -20,7 +20,7 @@ VoidForge then:
 - Scope: cockpits ONLY
 - Models: only the 20 uploaded CDN models
 - Templates: exactly 5
-- AI: Opus 4.6 ONLY (model: claude-opus-4-6-20250205)
+- AI: Opus 4.7 ONLY (model: claude-opus-4-7)
 - Placement: deterministic socket-based, NOT AI geometry
 - Opus role: selection and planning ONLY, never transforms or geometry math
 
@@ -29,7 +29,7 @@ VoidForge then:
 - Supabase PostgreSQL + Storage (project: ihuljnekxkyqgroklurp, EU)
 - React Three Fiber + @react-three/drei (existing editor)
 - Zustand (existing editor store)
-- Claude Opus 4.6 API for planning calls
+- Claude Opus 4.7 API for planning calls
 
 ## System Architecture
 ```
@@ -200,4 +200,4 @@ lib/
 6. Minimum font: 14px labels, 16px body, opacity >= 0.5
 7. All API routes use SUPABASE_SERVICE_ROLE_KEY server-side only
 8. Opus API key: ANTHROPIC_API_KEY (already in Vercel env vars)
-9. Opus model string: claude-opus-4-6-20250205
+9. Opus model string: claude-opus-4-7

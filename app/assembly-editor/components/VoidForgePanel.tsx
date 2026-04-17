@@ -316,7 +316,7 @@ export function VoidForgePanel({ onVariantsReady }: Props) {
 function stageLabel(stage: Stage): string {
   switch (stage) {
     case 'planning':
-      return 'Planning with Opus 4.6…'
+      return 'Planning with Opus 4.7…'
     case 'placing':
       return 'Placing parts via sockets…'
     case 'validating':

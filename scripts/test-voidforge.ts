@@ -36,7 +36,7 @@ import { validateAssembly } from '../lib/voidforge/validator'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY
-const OPUS_MODEL = process.env.VOIDFORGE_OPUS_MODEL || 'claude-opus-4-6'
+const OPUS_MODEL = process.env.VOIDFORGE_OPUS_MODEL || 'claude-opus-4-7'
 if (!SUPABASE_URL || !SERVICE_KEY) {
   console.error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY')
   process.exit(1)

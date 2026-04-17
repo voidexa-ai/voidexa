@@ -55,7 +55,7 @@ New gaming code goes in:
 - **SKILL.md + CLAUDE.md before every new subproject.** Done for this one.
 - **One build = one command.** Ask "anything to add?" before running.
 - **Two-box Claude Code invocation.** Box 1: `cd C:\Users\Jixwu\Desktop\voidexa; claude --dangerously-skip-permissions`. Box 2: the actual task. Never inline long task prompts.
-- **Model pin:** `claude-opus-4-6-20250205` or current — never legacy Opus 4.
+- **Model pin:** `claude-opus-4-7` or current — never legacy Opus 4.
 
 ## Single source of truth for gaming decisions
 `VOIDEXA_GAMING_MASTER.md` in this folder. Read it before answering anything about game modes, card mechanics, battle engine, visual effects, or MVP scope. If this `CLAUDE.md` conflicts with the master doc, the master doc wins.

@@ -1,6 +1,6 @@
 // lib/voidforge/planner.ts
 //
-// Calls Opus 4.6 to produce an AssemblyPlan: which model plays which role,
+// Calls Opus 4.7 to produce an AssemblyPlan: which model plays which role,
 // plus alternates for the repair engine to swap in. Opus never sees or emits
 // transforms — the placement engine handles geometry downstream.
 
@@ -14,9 +14,9 @@ import type {
 } from './types'
 import { buildPlannerPayload, buildUserMessage, VOIDFORGE_SYSTEM_PROMPT } from './prompts'
 
-// Opus 4.6 model ID. Override with VOIDFORGE_OPUS_MODEL env var if Anthropic
+// Opus 4.7 model ID. Override with VOIDFORGE_OPUS_MODEL env var if Anthropic
 // ships a new snapshot and the alias lags.
-const OPUS_MODEL = (process.env.VOIDFORGE_OPUS_MODEL || 'claude-opus-4-6').trim()
+const OPUS_MODEL = (process.env.VOIDFORGE_OPUS_MODEL || 'claude-opus-4-7').trim()
 
 let _client: Anthropic | null = null
 function client(): Anthropic {
