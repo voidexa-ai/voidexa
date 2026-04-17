@@ -1,10 +1,11 @@
-import HomePage from '@/components/home/HomePage'
+import HomeRoot from '@/components/home/HomeRoot'
 
 export const metadata = {
-  title: 'voidexa — Sovereign AI Infrastructure',
-  description: 'AI-powered trading systems, encrypted communication, and an interactive star-map universe.',
+  title: 'voidexa — A universe we built',
+  description:
+    'Welcome to voidexa. Website creation, custom apps, AI tools — and a living sci-fi universe to explore.',
 }
 
 export default function Home() {
-  return <HomePage />
+  return <HomeRoot />
 }
