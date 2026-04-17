@@ -18,6 +18,7 @@ import CockpitModel from './cockpit/CockpitModel'
 import ModelErrorBoundary from './ModelErrorBoundary'
 import MissionRunner from './MissionRunner'
 import Landmarks from './environment/Landmarks'
+import UniverseLandmarks from './environment/UniverseLandmarks'
 import NamedNPCs from './environment/NamedNPCs'
 import ExplorationEncounters from './environment/ExplorationEncounters'
 import { PLANETS, createShipState, type StationDef, type DerelictDef } from './types'
@@ -147,6 +148,7 @@ export default function FreeFlightScene({
       )}
 
       <Landmarks ship={shipRef} onNearChange={onNearLandmarkChange} />
+      <UniverseLandmarks ship={shipRef} />
       <NamedNPCs ship={shipRef} onNearChange={onNearNPCChange} />
       <ExplorationEncounters
         ship={shipRef}

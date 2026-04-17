@@ -21,6 +21,8 @@ export default defineConfig({
       "lib/game/reputation/__tests__/**/*.test.ts",
       "lib/game/wrecks/__tests__/**/*.test.ts",
       "lib/game/hauling/__tests__/**/*.test.ts",
+      "lib/game/universe/__tests__/**/*.test.ts",
+      "lib/sound/__tests__/**/*.test.ts",
       "lib/credits/__tests__/**/*.test.ts",
       "lib/shop/__tests__/**/*.test.ts",
       "lib/cards/__tests__/**/*.test.ts",
