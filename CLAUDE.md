@@ -478,3 +478,51 @@ New directory `components/freeflight/` — game scene reuses the same R3F + post
 - **Mount + streaming writes:** `gltf-pipeline`, `obj2gltf`, `fbx2gltf`, Next.js `next build` all write through stream APIs that the mount drops to 0 bytes. Pipeline always works in `/tmp` then `cp` to mount — `cp` is fine.
 - **Headless Chromium + WebGL:** needs `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist --enable-webgl`. Without these flags `getContext('webgl')` returns null even on the latest puppeteer-bundled Chromium.
 - **`lib/shop/items.ts` type+const alias pattern is intentional** — `export type ShopRarity = CardRarity; export const ShopRarity = CardRarity;`. Don't revert to `export { CardRarity as ShopRarity }` (TS 2300 conflict).
+
+## Session 2026-04-16: Sprint 5 shipped — wrecks, hauling catalog, verification, font audit
+
+### Commits + deploy
+- Task 1 — Wreck system (earlier in session chain)
+- `ec2ce29` feat(sprint5): hauling trade goods catalog + dynamic daily contracts
+- `41bfe9c` feat(sprint5): gameplay verification scaffolding + integration tests
+- `fbc8ca6` feat(sprint5): font + opacity audit — 12 legacy fixes
+- Deploy: `dpl_9M1VJY73mq1NBT8BnduS1K3kchyC` → https://voidexa.com (READY, 200 OK on /, /game/hauling, /starmap/voidexa)
+
+### Task 1 — Wreck system
+- `lib/game/wrecks/{types,economics}.ts` + 14 unit tests
+- `components/wrecks/{ShipDownModal,ClaimModal}.tsx`, `components/freeflight/environment/Wrecks.tsx`, `components/freeflight/useWrecks.ts`
+- `app/api/wrecks/{spawn,claim}/route.ts` — atomic claim with insurance payout
+- Timer tiers per V3 PART 7 (Low Risk 15/60m, High Risk 5/25m), class-based 70%-off claim economics
+- Wired into `FreeFlightPage.tsx` with ship-down detection + 4 recovery paths (self-repair / tow / abandon / buy new)
+
+### Task 2 — Hauling trade goods + dynamic contracts
+- `lib/game/hauling/tradeGoods.{json,ts}` — 30 goods from VOIDEXA_UNIVERSE_CONTENT.md Section 7
+- `lib/game/hauling/generateContract.ts` — deterministic `generateDailyContracts(seed, count=8)` + `distanceMultiplier` (same 1.0x / adjacent 1.5x / cross 2.2x / Deep Void 3.0x) + `riskMultiplier` (Contested 1.3x, Wreck Risk 1.6x)
+- `HaulingHub.tsx` gained tab bar: **Legacy Routes** (6 original) + **Dynamic Routes** (today's 8 generated). Tab hint shows UTC date seed.
+- Widened `RiskLevel` to `Safe|Low|Medium|Timed|Ranked|Contested|Wreck Risk` so generator output + tests are typesafe; `riskToDb` maps new values to existing DB enum.
+- 18 new tests in `lib/game/hauling/__tests__/generateContract.test.ts`
+
+### Task 3 — Gameplay verification + integration tests
+- Extracted hauling grade into `lib/game/hauling/delivery.ts` (`deliveryGrade(outcome, integrity)`, `deliveryBaseReward(...)`). `DeliveryResults.tsx` now consumes those helpers — single source of truth.
+- `lib/debug/gameplayLog.ts` — `gplog(area, ...args)` gated by `.trim()`'d `NEXT_PUBLIC_DEBUG_GAMEPLAY === 'true'`. Zero prod cost.
+- `lib/game/__tests__/integration.test.ts` — 20 cross-mode tests pinning speed-run grade matrix, hauling delivery grades, encounter distribution, route gen, dynamic contracts, wreck economics.
+- `docs/SPRINT5_VERIFICATION.md` — manual run-through checklist for every mode's golden path + fragile-area watchlist.
+
+### Task 4 — Font + opacity audit
+- `docs/FONT_OPACITY_AUDIT.md` — grep-based sweep of `app/**` + `components/**`
+- Fixed 12 user-facing violations:
+  - `components/home/HomePage.tsx`, `HomeDenmark.tsx`, `HomeFooter.tsx` (×2), `HomeProducts.tsx` (×2): 13 → 14 labels
+  - `app/ship-catalog/page.tsx` (×4): 12 → 14 status copy + meta row
+  - `app/starmap/voidexa/page.tsx`: 12 → 14 Back-to-Galaxy footer
+  - `app/claim-your-planet/components/PioneerRewards.tsx`: 13 → 14 disclaimer
+- Deferred: `app/assembly-editor/**` (50) + `app/admin/ship-tagger/**` (5) — internal dev tools, not in scope.
+- Accepted decorative: status pills (11), CDN pips (11), monospace filenames (12), event-type chips (12).
+- **0 text-opacity violations** — all opacity<0.5 hits are background art / atmosphere shells / CSS keyframes.
+
+### Tests
+- Full suite: **599/599 passing** across 49 suites.
+
+### Gotchas
+- Vitest uses esbuild transform and does **not** type-check. If `pickRisk` returns `'Low'` when `RiskLevel` didn't include it, tests pass but `npm run build` (via Next.js + tsc) catches it. Fix by widening the type.
+- When moving `useEffect` blocks that reference state declared later (e.g. `selectedShip` in `FreeFlightPage.tsx`), the whole block must land after the declaration — "used before declaration" hits at compile time.
+- Risk-level UI maps need entries for every `RiskLevel` union member wherever `Record<RiskLevel, …>` appears. Only `RISK_META` in `HaulingHub.tsx` needed updating this sprint.
