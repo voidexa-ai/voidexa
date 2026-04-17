@@ -5,6 +5,8 @@ import { supabase } from '@/lib/supabase'
 import { creditGhai } from '@/lib/credits/credit'
 import { getMissionById, type MissionTemplate } from '@/lib/game/missions/board'
 import { generateMissionWaypoints, type MissionWaypoint } from '@/lib/game/missions/waypoints'
+import { rollLootCard } from '@/lib/game/loot/table'
+import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
 
 export interface ActiveMissionState {
@@ -19,7 +21,10 @@ export interface ActiveMissionState {
  * Supabase, synthesises waypoints for it, tracks clearance progress, and
  * finalises the contract + credits GHAI on the last waypoint.
  */
-export function useActiveMission(onPayout: (ghai: number, missionName: string) => void) {
+export function useActiveMission(
+  onPayout: (ghai: number, missionName: string) => void,
+  onCardDrop?: (card: CardTemplate, rarity: GameCardRarity) => void,
+) {
   const [active, setActive] = useState<ActiveMissionState | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const finalizingRef = useRef(false)
@@ -95,6 +100,15 @@ export function useActiveMission(onPayout: (ghai: number, missionName: string) =
       }
       // Sprint 3 Task 1: advance First Day Real Sky if this mission is a trigger.
       void questChain.recordEvent({ type: 'mission_complete', target: mission.id })
+      // Sprint 3 Task 3: card drop on mission completion.
+      const rolled = rollLootCard({ source: 'mission', tier: 'gold', seedKey: active.acceptanceId })
+      if (rolled) {
+        await supabase.from('user_cards').upsert(
+          { user_id: userId, template_id: rolled.card.id, quantity: 1, acquired_from: 'mission' },
+          { onConflict: 'user_id,template_id' },
+        )
+        onCardDrop?.(rolled.card, rolled.rarity)
+      }
       setActive(null)
       finalizingRef.current = false
     })()

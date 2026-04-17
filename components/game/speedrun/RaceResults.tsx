@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { creditGhai } from '@/lib/credits/credit'
+import { rollLootCard } from '@/lib/game/loot/table'
+import CardDropReveal from '@/components/ui/CardDropReveal'
+import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
 import {
   GRADE_REWARDS,
@@ -57,6 +60,7 @@ export default function RaceResults({
   const [saved, setSaved] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+  const [drop, setDrop] = useState<{ card: CardTemplate; rarity: GameCardRarity } | null>(null)
   const questChain = useActiveQuestChain()
 
   useEffect(() => {
@@ -92,6 +96,17 @@ export default function RaceResults({
     }
     // Sprint 3 Task 1: advance First Day Real Sky if this speed-run matches.
     void questChain.recordEvent({ type: 'speedrun_complete', target: track.id })
+    // Sprint 3 Task 3: card drop.
+    if (row?.id && grade !== 'dnf') {
+      const rolled = rollLootCard({ source: 'speedrun', tier: grade, seedKey: row.id as string })
+      if (rolled) {
+        await supabase.from('user_cards').upsert(
+          { user_id: userId, template_id: rolled.card.id, quantity: 1, acquired_from: 'mission' },
+          { onConflict: 'user_id,template_id' },
+        )
+        setDrop({ card: rolled.card, rarity: rolled.rarity })
+      }
+    }
     setSaving(false)
     setSaved(true)
   }
@@ -142,6 +157,7 @@ export default function RaceResults({
           </button>
         </div>
       </div>
+      {drop && <CardDropReveal card={drop.card} rarity={drop.rarity} onDismiss={() => setDrop(null)} />}
     </div>
   )
 }

@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { CARD_TEMPLATES, type CardTemplate } from '@/lib/game/cards/index'
+import { CARD_TEMPLATES, type CardTemplate, type GameCardRarity } from '@/lib/game/cards/index'
 import { BOSS_DEFS, type BossId, type PveTierId } from '@/lib/game/battle/encounters'
 import { creditGhai } from '@/lib/credits/credit'
+import { rollLootCard } from '@/lib/game/loot/table'
+import CardDropReveal from '@/components/ui/CardDropReveal'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
 import type { BattleConfig } from './BattleController'
 
@@ -66,8 +68,14 @@ export default function BattleResults({ outcome, config, turnsPlayed, onRetry, o
   const [err, setErr] = useState<string | null>(null)
   const questChain = useActiveQuestChain()
   const reward = outcome === 'victory' ? rewardFor(config) : { ghai: 0, xp: 0 }
-  const [loot] = useState<CardTemplate | null>(outcome === 'victory' ? pickLootCard(config) : null)
   const template = bossTemplate(config)
+  // Deterministic per-battle seed — same session = same card, no re-roll on re-render.
+  const [seedKey] = useState(() => `${template}_${Date.now()}`)
+  const rolledDrop = outcome === 'victory'
+    ? rollLootCard({ source: 'battle', tier: template, seedKey })
+    : null
+  const loot: CardTemplate | null = rolledDrop?.card ?? null
+  const lootRarity: GameCardRarity | null = rolledDrop?.rarity ?? null
 
   useEffect(() => { void finalizeBattle() /* eslint-disable-line react-hooks/exhaustive-deps */ }, [])
 
@@ -170,6 +178,7 @@ export default function BattleResults({ outcome, config, turnsPlayed, onRetry, o
           </button>
         </div>
       </div>
+      {loot && lootRarity && <CardDropReveal card={loot} rarity={lootRarity} />}
     </div>
   )
 }

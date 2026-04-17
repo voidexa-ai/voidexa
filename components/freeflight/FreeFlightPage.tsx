@@ -11,9 +11,11 @@ import MissionOverlay from './MissionOverlay'
 import NPCDialogueBubble from './NPCDialogueBubble'
 import ExplorationChoiceModal from './ExplorationChoiceModal'
 import TutorialGuide from './TutorialGuide'
+import CardDropReveal from '@/components/ui/CardDropReveal'
 import { useActiveMission } from './useActiveMission'
 import { useExplorationResolved } from './useExplorationResolved'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
+import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import type { LandmarkDef } from '@/lib/game/freeflight/landmarks'
 import type { NPCDef } from '@/lib/game/freeflight/npcs'
 import type { ExplorationEncounter } from '@/lib/game/freeflight/explorationEncounters'
@@ -54,6 +56,8 @@ export default function FreeFlightPage() {
   const questChain = useActiveQuestChain((title) => {
     pushToast(`TITLE UNLOCKED · ${title.toUpperCase()}`, '#ffd166')
   })
+
+  const [missionCardDrop, setMissionCardDrop] = useState<{ card: CardTemplate; rarity: GameCardRarity } | null>(null)
 
   const handleEncounterTrigger = (enc: ExplorationEncounter) => {
     if (resolvedEncounterIds.has(enc.id)) return
@@ -105,9 +109,14 @@ export default function FreeFlightPage() {
     currentIndex: missionWaypointIndex,
     total: missionWaypointTotal,
     handleWaypointCleared,
-  } = useActiveMission((ghai, name) => {
-    pushToast(`+${ghai} GHAI · ${name.toUpperCase()} DELIVERED`, '#ffd166')
-  })
+  } = useActiveMission(
+    (ghai, name) => {
+      pushToast(`+${ghai} GHAI · ${name.toUpperCase()} DELIVERED`, '#ffd166')
+    },
+    (card, rarity) => {
+      setMissionCardDrop({ card, rarity })
+    },
+  )
 
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -377,6 +386,15 @@ export default function FreeFlightPage() {
           completedIds={questChain.completedIds}
           onSkip={questChain.skip}
           visible={!menuOpen && !lorePopup && !activeEncounter && !activeDialogue}
+        />
+      )}
+
+      {/* Card drop reveal — fires when a mission completion rolls a loot card. */}
+      {missionCardDrop && (
+        <CardDropReveal
+          card={missionCardDrop.card}
+          rarity={missionCardDrop.rarity}
+          onDismiss={() => setMissionCardDrop(null)}
         />
       )}
 

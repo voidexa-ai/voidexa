@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { creditGhai } from '@/lib/credits/credit'
+import { rollLootCard } from '@/lib/game/loot/table'
+import CardDropReveal from '@/components/ui/CardDropReveal'
+import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import { formatHaulingTime, type HaulingContract } from '@/lib/game/hauling/contracts'
 
 export type DeliveryOutcome = 'delivered' | 'failed'
@@ -49,6 +52,7 @@ export default function DeliveryResults({
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [drop, setDrop] = useState<{ card: CardTemplate; rarity: GameCardRarity } | null>(null)
 
   useEffect(() => { void finalizeContract() /* eslint-disable-line react-hooks/exhaustive-deps */ }, [])
 
@@ -86,6 +90,18 @@ export default function DeliveryResults({
       if (error) { setErr(error.message); return }
       if (outcome === 'delivered' && total > 0) {
         await creditGhai(userData.user.id, total, { source: 'hauling', sourceId: row.id as string })
+      }
+      // Sprint 3 Task 3: card drop on successful delivery.
+      if (outcome === 'delivered' && grade !== 'Failed') {
+        const tierKey = grade.toLowerCase() // 'gold' | 'silver' | 'bronze'
+        const rolled = rollLootCard({ source: 'hauling', tier: tierKey, seedKey: row.id as string })
+        if (rolled) {
+          await supabase.from('user_cards').upsert(
+            { user_id: userData.user.id, template_id: rolled.card.id, quantity: 1, acquired_from: 'mission' },
+            { onConflict: 'user_id,template_id' },
+          )
+          setDrop({ card: rolled.card, rarity: rolled.rarity })
+        }
       }
       setSubmitted(true)
     } catch (e) {
@@ -127,6 +143,7 @@ export default function DeliveryResults({
           <button onClick={onBackToHub} style={S.primaryBtn}>Back to Hub</button>
         </div>
       </div>
+      {drop && <CardDropReveal card={drop.card} rarity={drop.rarity} onDismiss={() => setDrop(null)} />}
     </div>
   )
 }
