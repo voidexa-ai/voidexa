@@ -546,3 +546,20 @@ Sprint chain in order: 0 (model ID swap) → 6 (universe import) → 7 (sound sy
 
 Global rules: backup tag before each sprint, `npx next build` clean, 599+ tests green,
 font 16/14/0.5 minima, all env reads `.trim()`, deploy = `git push origin main` only.
+
+### Sprint completion summary
+| # | Tag | Tests | Notes |
+|---|---|---|---|
+| 0 | `sprint-0-complete` | 599 | 6 files: lib/voidforge/planner.ts, scripts/test-voidforge.ts, .claude/skills × 3, VoidForgePanel UI text |
+| 6 | `sprint-6-complete` | 616 (+17) | lib/game/universe/ + 4 edge API routes + UniverseLandmarks component |
+| 7 | `sprint-7-complete` | 633 (+17) | 67 sounds renamed, SoundManager + VolumeControl + freeflight wiring |
+| 8 | `sprint-8-complete` | 633 | ShuttleHero parallax + ProductPanels (4 panels) — keywords inferred (gpt_keywords MD was corrupt) |
+| 9 | `sprint-9-complete` | 642 (+9) | MTG audit doc + 19 keyword definitions (3 net-new: Stalwart/Probe/Reactive) |
+| 11 | `sprint-11-complete` | 642 | useIsTouch + DesktopOnlyNotice on /freeflight, /assembly-editor, /admin/ship-tagger |
+| 12 | `sprint-12-complete`, `mvp-launch-ready` | 642 | error.tsx + global-error.tsx + not-found.tsx, font/opacity audit refresh, MVP launch checklist |
+
+Final state: 642 tests green, 7 sprint tags + `mvp-launch-ready` pushed, no
+build errors, 4 marketing page routes responsive-friendly, 3 desktop-first
+surfaces flagged with banner. Items deferred to Jix: live device test,
+Lighthouse run, baseline card art (Vast.ai), sound voiceover recording,
+public/sounds/ + public/models/ asset upload to CDN.
