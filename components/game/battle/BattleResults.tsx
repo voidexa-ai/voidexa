@@ -8,7 +8,10 @@ import { creditGhai } from '@/lib/credits/credit'
 import { rollLootCard } from '@/lib/game/loot/table'
 import CardDropReveal from '@/components/ui/CardDropReveal'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
+import { emitBossDefeat } from '@/lib/game/universeWall/emit'
 import type { BattleConfig } from './BattleController'
+
+const NAMED_BOSS_IDS = new Set(['kestrel', 'lantern_auditor', 'varka', 'choir_sight', 'patient_wreck'])
 
 export type BattleOutcome = 'victory' | 'defeat'
 
@@ -123,6 +126,20 @@ export default function BattleResults({ outcome, config, turnsPlayed, onRetry, o
           }
           // Sprint 3 Task 1: advance First Day Real Sky if this battle matches.
           void questChain.recordEvent({ type: 'battle_victory', target: template })
+          // Sprint 4 Task 1: Universe Wall emit on named-boss defeat.
+          if (NAMED_BOSS_IDS.has(template)) {
+            const { data: prof } = await supabase
+              .from('pilot_reputation')
+              .select('pilot_name')
+              .eq('user_id', userData.user.id)
+              .maybeSingle()
+            void emitBossDefeat({
+              userId: userData.user.id,
+              actorName: prof?.pilot_name ?? null,
+              bossId: template,
+              sessionId: session?.id as string | undefined,
+            })
+          }
         }
         setSaved(true)
       }

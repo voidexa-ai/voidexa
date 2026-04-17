@@ -8,6 +8,7 @@ import { generateMissionWaypoints, type MissionWaypoint } from '@/lib/game/missi
 import { rollLootCard } from '@/lib/game/loot/table'
 import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
+import { emitDebut, isFirstEventForPilot } from '@/lib/game/universeWall/emit'
 
 export interface ActiveMissionState {
   mission: MissionTemplate
@@ -100,6 +101,18 @@ export function useActiveMission(
       }
       // Sprint 3 Task 1: advance First Day Real Sky if this mission is a trigger.
       void questChain.recordEvent({ type: 'mission_complete', target: mission.id })
+      // Sprint 4 Task 1: Universe Wall debut if this is the pilot's first event.
+      if (userId) {
+        const first = await isFirstEventForPilot(userId)
+        if (first) {
+          const { data: prof } = await supabase
+            .from('pilot_reputation')
+            .select('pilot_name')
+            .eq('user_id', userId)
+            .maybeSingle()
+          void emitDebut({ userId, actorName: prof?.pilot_name ?? null })
+        }
+      }
       // Sprint 3 Task 3: card drop on mission completion.
       const rolled = rollLootCard({ source: 'mission', tier: 'gold', seedKey: active.acceptanceId })
       if (rolled) {

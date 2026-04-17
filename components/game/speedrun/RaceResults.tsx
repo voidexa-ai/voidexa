@@ -7,6 +7,7 @@ import { rollLootCard } from '@/lib/game/loot/table'
 import CardDropReveal from '@/components/ui/CardDropReveal'
 import type { CardTemplate, GameCardRarity } from '@/lib/game/cards/index'
 import { useActiveQuestChain } from '@/lib/game/quests/progress'
+import { emitSpeedRecord } from '@/lib/game/universeWall/emit'
 import {
   GRADE_REWARDS,
   POWERUPS,
@@ -96,6 +97,32 @@ export default function RaceResults({
     }
     // Sprint 3 Task 1: advance First Day Real Sky if this speed-run matches.
     void questChain.recordEvent({ type: 'speedrun_complete', target: track.id })
+    // Sprint 4 Task 1: Universe Wall on personal best.
+    if (row?.id && grade !== 'dnf') {
+      const { data: prev } = await supabase
+        .from('speedrun_times')
+        .select('duration_ms')
+        .eq('user_id', userId)
+        .eq('track_id', track.id)
+        .order('duration_ms', { ascending: true })
+        .limit(2)
+      const other = (prev ?? []).find(r => (r.duration_ms as number) !== Math.round(timeMs))
+      const isPB = !other || Math.round(timeMs) < (other.duration_ms as number)
+      if (isPB) {
+        const { data: prof } = await supabase
+          .from('pilot_reputation')
+          .select('pilot_name')
+          .eq('user_id', userId)
+          .maybeSingle()
+        void emitSpeedRecord({
+          userId,
+          actorName: prof?.pilot_name ?? null,
+          trackId: track.id,
+          durationMs: Math.round(timeMs),
+          runId: row.id as string,
+        })
+      }
+    }
     // Sprint 3 Task 3: card drop.
     if (row?.id && grade !== 'dnf') {
       const rolled = rollLootCard({ source: 'speedrun', tier: grade, seedKey: row.id as string })

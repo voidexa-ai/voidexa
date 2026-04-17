@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server'
 import PilotCard from '@/components/profile/PilotCard'
 import TalesLog from '@/components/profile/TalesLog'
 import ProfileEditForm from '@/components/profile/ProfileEditForm'
+import UniverseWallFeed from '@/components/universe-wall/UniverseWallFeed'
 import { computeReputation } from '@/lib/game/reputation/summary'
 import { buildTalesFeed } from '@/lib/game/reputation/tales'
 
@@ -79,6 +80,9 @@ export default async function PilotProfilePage({ params }: Props) {
           />
         )}
         <TalesLog tales={tales} />
+        <div style={{ marginTop: 24 }}>
+          <UniverseWallFeed forUserId={userId} pageSize={10} />
+        </div>
       </main>
     </div>
   )
