@@ -19,6 +19,7 @@ const ICON_MAP: Record<HomePanel['icon'], string> = {
 export default function CinematicOverlay({ visible }: Props) {
   const router = useRouter()
   const [launching, setLaunching] = useState(false)
+  const [hoverKey, setHoverKey] = useState<string | null>(null)
 
   useEffect(() => {
     if (!launching) return
@@ -38,58 +39,95 @@ export default function CinematicOverlay({ visible }: Props) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 24,
+        gap: 28,
         padding: 24,
         zIndex: 30,
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? 'auto' : 'none',
-        transition: 'opacity 0.9s ease-out',
+        transition: 'opacity 1.2s ease-out',
         fontFamily: 'var(--font-sans)',
       }}
     >
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: 18,
-          width: 'min(720px, 100%)',
+          gridTemplateColumns: 'repeat(2, minmax(0, 300px))',
+          gap: 16,
+          width: 'min(640px, 100%)',
         }}
       >
-        {HOMEPAGE_PANELS.map((panel) => (
-          <Link
-            key={panel.title}
-            href={panel.route}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 8,
-              padding: 24,
-              background: 'rgba(0,0,0,0.6)',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 12,
-              color: 'rgba(230,240,255,0.95)',
-              textDecoration: 'none',
-            }}
-          >
-            <div style={{ fontSize: 26, lineHeight: 1 }} aria-hidden>{ICON_MAP[panel.icon]}</div>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>{panel.title}</div>
-            <div style={{ fontSize: 14, opacity: 0.85, lineHeight: 1.45 }}>{panel.description}</div>
-            <div
+        {HOMEPAGE_PANELS.map((panel) => {
+          const isHover = hoverKey === panel.title
+          return (
+            <Link
+              key={panel.title}
+              href={panel.route}
+              onMouseEnter={() => setHoverKey(panel.title)}
+              onMouseLeave={() => setHoverKey(null)}
               style={{
-                marginTop: 6,
-                fontSize: 14,
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: '#7fd8ff',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: 6,
+                padding: '18px 20px',
+                minHeight: 140,
+                maxHeight: 160,
+                background: isHover
+                  ? 'rgba(20, 30, 60, 0.45)'
+                  : 'rgba(10, 15, 30, 0.35)',
+                backdropFilter: 'blur(6px)',
+                WebkitBackdropFilter: 'blur(6px)',
+                border: isHover
+                  ? '1px solid rgba(150, 200, 255, 0.45)'
+                  : '1px solid rgba(150, 200, 255, 0.25)',
+                borderRadius: 14,
+                color: '#ffffff',
+                textDecoration: 'none',
+                boxShadow:
+                  'inset 0 0 20px rgba(0, 180, 255, 0.08), 0 8px 28px rgba(0, 0, 0, 0.35)',
+                transition:
+                  'background 0.25s ease, border-color 0.25s ease, transform 0.25s ease',
+                transform: isHover ? 'translateY(-2px)' : 'translateY(0)',
               }}
             >
-              {panel.cta} →
-            </div>
-          </Link>
-        ))}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ fontSize: 22, lineHeight: 1 }} aria-hidden>
+                  {ICON_MAP[panel.icon]}
+                </div>
+                <div
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 700,
+                    color: 'rgba(255,255,255,0.9)',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {panel.title}
+                </div>
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  color: 'rgba(255,255,255,0.75)',
+                  lineHeight: 1.4,
+                }}
+              >
+                {panel.description}
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#7fd8ff',
+                }}
+              >
+                {panel.cta} →
+              </div>
+            </Link>
+          )
+        })}
       </div>
 
       <button
@@ -107,7 +145,8 @@ export default function CinematicOverlay({ visible }: Props) {
           border: 'none',
           borderRadius: 999,
           cursor: launching ? 'progress' : 'pointer',
-          boxShadow: '0 0 28px rgba(127,216,255,0.55), 0 0 60px rgba(167,139,250,0.35)',
+          boxShadow:
+            '0 0 28px rgba(127,216,255,0.55), 0 0 60px rgba(167,139,250,0.35)',
         }}
       >
         {launching ? FREE_FLIGHT_CTA.loadingText : FREE_FLIGHT_CTA.label}

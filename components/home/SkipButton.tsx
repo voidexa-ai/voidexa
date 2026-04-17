@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { SKIP_BUTTON_VISIBLE_FROM } from '@/lib/cinematic/config'
 
 interface Props {
@@ -9,30 +10,36 @@ interface Props {
 }
 
 export default function SkipButton({ elapsed, onSkip, hidden = false }: Props) {
+  const [hover, setHover] = useState(false)
   const visible = elapsed >= SKIP_BUTTON_VISIBLE_FROM && !hidden
-  const opacity = visible
+  const fadeIn = visible
     ? Math.min(1, (elapsed - SKIP_BUTTON_VISIBLE_FROM) / 0.5)
     : 0
+  const baseOpacity = hover ? 1 : 0.7
+  const opacity = fadeIn * baseOpacity
 
   return (
     <button
       type="button"
       aria-label="Skip cinematic intro"
       onClick={onSkip}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       style={{
         position: 'fixed',
         top: 24,
         right: 24,
-        zIndex: 50,
+        zIndex: 100,
         opacity,
         pointerEvents: visible ? 'auto' : 'none',
-        transition: 'opacity 0.5s ease-out',
-        background: 'rgba(8,12,24,0.55)',
+        transform: `scale(${hover ? 1.05 : 1})`,
+        transition: 'opacity 0.35s ease-out, transform 0.2s ease-out',
+        background: 'rgba(0,0,0,0.5)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
-        border: '1px solid rgba(255,255,255,0.18)',
+        border: '1px solid rgba(255,255,255,0.2)',
         borderRadius: 999,
-        color: 'rgba(230,240,255,0.95)',
+        color: '#ffffff',
         padding: '10px 18px',
         fontSize: 14,
         fontWeight: 600,

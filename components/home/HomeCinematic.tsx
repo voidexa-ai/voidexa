@@ -31,7 +31,9 @@ export default function HomeCinematic() {
   const { elapsed, phase, overlayVisible } = timeline
   const approachActive = phase === 'approach'
   const warpActive = phase === 'warp'
-  const arrivalActive = phase === 'arrival'
+  // Arrival scene stays mounted through end-state so the galaxy keeps breathing
+  // behind the glass panels (starfield drift + planet rotation continue).
+  const arrivalActive = phase === 'arrival' || phase === 'end-state'
   const doorActive = phase === 'door-open' || phase === 'reveal'
   const doorProgress =
     phase === 'door-open' ? phaseProgress(elapsed, 'door-open') : 1
@@ -56,7 +58,7 @@ export default function HomeCinematic() {
         style={{ position: 'absolute', inset: 0 }}
       >
         <color attach="background" args={['#02060f']} />
-        <fog attach="fog" args={['#02060f', 30, 120]} />
+        <fog attach="fog" args={['#02060f', 120, 260]} />
         <SceneApproach active={approachActive} elapsed={elapsed} />
         <SceneWarp active={warpActive} progress={warpProgress} />
         <SceneArrival active={arrivalActive} elapsed={elapsed} />
