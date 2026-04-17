@@ -1,0 +1,535 @@
+{
+  "totalCards": 257,
+  "totalKeywordCandidates": 138,
+  "topKeywords": [
+    {
+      "keyword": "Exhaust",
+      "count": 54,
+      "sampleCardIds": [
+        "emergency_bulkhead",
+        "repair_foam",
+        "coolant_purge",
+        "stellar_annihilator",
+        "void_echo"
+      ]
+    },
+    {
+      "keyword": "Weapon",
+      "count": 13,
+      "sampleCardIds": [
+        "drift_turn",
+        "phantom_strike",
+        "heat_injector",
+        "signal_denial",
+        "echo_shot"
+      ]
+    },
+    {
+      "keyword": "Deploy",
+      "count": 11,
+      "sampleCardIds": [
+        "decoy_drone",
+        "oracle_drone",
+        "snare_drone",
+        "salvage_drone",
+        "emp_drone"
+      ]
+    },
+    {
+      "keyword": "Enemy",
+      "count": 10,
+      "sampleCardIds": [
+        "emp_spike",
+        "heat_injector",
+        "energy_siphon",
+        "lag_injection",
+        "rate_limiter"
+      ]
+    },
+    {
+      "keyword": "Once",
+      "count": 9,
+      "sampleCardIds": [
+        "void_echo",
+        "quantum_convergence",
+        "singularity_cannon",
+        "temporal_loop",
+        "the_hive_mind"
+      ]
+    },
+    {
+      "keyword": "Hot Deploy",
+      "count": 9,
+      "sampleCardIds": [
+        "escort_wing",
+        "fleet_commander",
+        "spare_drone_kit",
+        "micro_swarm",
+        "drone_controller"
+      ]
+    },
+    {
+      "keyword": "Heal",
+      "count": 8,
+      "sampleCardIds": [
+        "repair_drone",
+        "repair_foam",
+        "auto_repair_module",
+        "nanite_pack",
+        "field_patch"
+      ]
+    },
+    {
+      "keyword": "After",
+      "count": 7,
+      "sampleCardIds": [
+        "weapons_hot",
+        "intel_cascade",
+        "heat_sink_protocol",
+        "jettison",
+        "heat_sink_module"
+      ]
+    },
+    {
+      "keyword": "Apply Lock",
+      "count": 6,
+      "sampleCardIds": [
+        "rail_spike",
+        "void_lance",
+        "tractor_pulse",
+        "guided_missile",
+        "grapple_lock"
+      ]
+    },
+    {
+      "keyword": "Scrap",
+      "count": 6,
+      "sampleCardIds": [
+        "salvage_harpoon",
+        "salvo_barrage",
+        "salvage_drone",
+        "scrap_synergy",
+        "derelict_debris_field"
+      ]
+    },
+    {
+      "keyword": "Evade",
+      "count": 6,
+      "sampleCardIds": [
+        "strafe_burn",
+        "afterburn",
+        "blink_strike",
+        "flash_routine",
+        "asteroid_field"
+      ]
+    },
+    {
+      "keyword": "Next",
+      "count": 6,
+      "sampleCardIds": [
+        "strafe_burn",
+        "vector_cut",
+        "tactical_predict",
+        "efficiency_protocol",
+        "true_aim"
+      ]
+    },
+    {
+      "keyword": "Remove",
+      "count": 5,
+      "sampleCardIds": [
+        "coolant_purge",
+        "nanite_pack",
+        "hard_reboot",
+        "purge_protocol",
+        "defrag_routine"
+      ]
+    },
+    {
+      "keyword": "Lock",
+      "count": 5,
+      "sampleCardIds": [
+        "coolant_purge",
+        "predator_lock",
+        "trace_protocol",
+        "ecm_suite",
+        "missile_guidance"
+      ]
+    },
+    {
+      "keyword": "Tracking Lock",
+      "count": 5,
+      "sampleCardIds": [
+        "flak_burst",
+        "flak_warhead",
+        "missile_guidance",
+        "skyhook_flak_drone",
+        "predictive_aegis_grid"
+      ]
+    },
+    {
+      "keyword": "Twin Barrels",
+      "count": 5,
+      "sampleCardIds": [
+        "drift_turn",
+        "drone_controller",
+        "dualcoil_pursuer",
+        "barrage_widow",
+        "overclocked_gunbrain"
+      ]
+    },
+    {
+      "keyword": "Ammo",
+      "count": 5,
+      "sampleCardIds": [
+        "heavy_torpedo",
+        "guided_missile",
+        "load_rack",
+        "emergency_reload",
+        "ammo_rack"
+      ]
+    },
+    {
+      "keyword": "Critical Breach",
+      "count": 5,
+      "sampleCardIds": [
+        "singularity_cannon",
+        "emp_net",
+        "needlefang_hunter",
+        "blacksite_sever_pod",
+        "surgical_kill_mesh"
+      ]
+    },
+    {
+      "keyword": "Cold Boot",
+      "count": 5,
+      "sampleCardIds": [
+        "sleeper_drone",
+        "scrapline_reclaimer",
+        "lazarus_swarm_node",
+        "dockborn_interceptor",
+        "assembly_line_siege_pod"
+      ]
+    },
+    {
+      "keyword": "Consume",
+      "count": 4,
+      "sampleCardIds": [
+        "nova_charge",
+        "heavy_torpedo",
+        "guided_missile",
+        "detonate_drone"
+      ]
+    },
+    {
+      "keyword": "Overcharge",
+      "count": 4,
+      "sampleCardIds": [
+        "nova_charge",
+        "weapons_hot",
+        "power_surge_protocol",
+        "heat_sink_protocol"
+      ]
+    },
+    {
+      "keyword": "Expose",
+      "count": 4,
+      "sampleCardIds": [
+        "strafe_burn",
+        "hunter_logic",
+        "paint_target",
+        "catastrophic_strike"
+      ]
+    },
+    {
+      "keyword": "Summon",
+      "count": 4,
+      "sampleCardIds": [
+        "fleet_commander",
+        "spare_drone_kit",
+        "emergency_swarm",
+        "the_hive_mind"
+      ]
+    },
+    {
+      "keyword": "Noise",
+      "count": 4,
+      "sampleCardIds": [
+        "chaff_torpedo",
+        "defrag_routine",
+        "chaff_packet",
+        "black_market_deal"
+      ]
+    },
+    {
+      "keyword": "Weapons",
+      "count": 4,
+      "sampleCardIds": [
+        "system_shutdown",
+        "heat_sink_protocol",
+        "missile_guidance",
+        "heat_sink_module"
+      ]
+    },
+    {
+      "keyword": "Mission",
+      "count": 4,
+      "sampleCardIds": [
+        "risk_rider",
+        "insurance_clause",
+        "reputation_first",
+        "black_market_deal"
+      ]
+    },
+    {
+      "keyword": "Drones",
+      "count": 4,
+      "sampleCardIds": [
+        "burnwake_assault_rack",
+        "phantom_mesh_array",
+        "burngate_commander",
+        "surgical_kill_mesh"
+      ]
+    },
+    {
+      "keyword": "High Orbit",
+      "count": 4,
+      "sampleCardIds": [
+        "stratos_relay_kite",
+        "orbital_lance_platform",
+        "skyhook_flak_drone",
+        "predictive_aegis_grid"
+      ]
+    },
+    {
+      "keyword": "Take",
+      "count": 3,
+      "sampleCardIds": [
+        "overclock_core",
+        "reactor_spike",
+        "field_patch"
+      ]
+    },
+    {
+      "keyword": "Apply Burn",
+      "count": 3,
+      "sampleCardIds": [
+        "thermal_lance",
+        "thermal_breach",
+        "catastrophic_strike"
+      ]
+    },
+    {
+      "keyword": "Retain",
+      "count": 3,
+      "sampleCardIds": [
+        "shield_lattice",
+        "persistent_barrier",
+        "capacitor_hold"
+      ]
+    },
+    {
+      "keyword": "Auto-Repair",
+      "count": 3,
+      "sampleCardIds": [
+        "crash_override",
+        "patchwork_bastion",
+        "self_mending_bulwark"
+      ]
+    },
+    {
+      "keyword": "Protocol",
+      "count": 3,
+      "sampleCardIds": [
+        "crash_override",
+        "patchwork_bastion",
+        "self_mending_bulwark"
+      ]
+    },
+    {
+      "keyword": "Gain Stealth",
+      "count": 3,
+      "sampleCardIds": [
+        "cloak_burst",
+        "phantom_strike",
+        "stealth_mask"
+      ]
+    },
+    {
+      "keyword": "Coating",
+      "count": 3,
+      "sampleCardIds": [
+        "cloak_burst",
+        "phantom_strike",
+        "stealth_mask"
+      ]
+    },
+    {
+      "keyword": "Gun Drone",
+      "count": 3,
+      "sampleCardIds": [
+        "spare_drone_kit",
+        "hangar_pod",
+        "sleeper_drone"
+      ]
+    },
+    {
+      "keyword": "Disable",
+      "count": 3,
+      "sampleCardIds": [
+        "null_field",
+        "system_shutdown",
+        "null_ray"
+      ]
+    },
+    {
+      "keyword": "Place",
+      "count": 3,
+      "sampleCardIds": [
+        "proximity_mine",
+        "decoy_flare_token",
+        "preload_sequence"
+      ]
+    },
+    {
+      "keyword": "Negate",
+      "count": 3,
+      "sampleCardIds": [
+        "point_defense",
+        "digital_firewall",
+        "warp_blink"
+      ]
+    },
+    {
+      "keyword": "Priority Fire",
+      "count": 3,
+      "sampleCardIds": [
+        "dome_protocol",
+        "vector_duelist",
+        "sentinel_mark_iv"
+      ]
+    }
+  ],
+  "mtgEquivalence": {
+    "Flying": {
+      "equivalent": "n/a (3D space, no flying axis)",
+      "status": "N-A"
+    },
+    "Trample": {
+      "equivalent": "Pierce / Overflow",
+      "status": "?"
+    },
+    "Vigilance": {
+      "equivalent": "Stalwart / Hold",
+      "status": "?"
+    },
+    "Haste": {
+      "equivalent": "Charge / Quick",
+      "status": "?"
+    },
+    "First Strike": {
+      "equivalent": "Volley / Initiative",
+      "status": "?"
+    },
+    "Double Strike": {
+      "equivalent": "n/a (consider for legendaries)",
+      "status": "GAP"
+    },
+    "Lifelink": {
+      "equivalent": "Salvage / Drain",
+      "status": "?"
+    },
+    "Deathtouch": {
+      "equivalent": "Corrosive / Critical",
+      "status": "?"
+    },
+    "Reach": {
+      "equivalent": "Long-range / Sniper",
+      "status": "?"
+    },
+    "Hexproof": {
+      "equivalent": "Cloak / Phase / Stealth",
+      "status": "?"
+    },
+    "Indestructible": {
+      "equivalent": "Hardened / Reinforced",
+      "status": "?"
+    },
+    "Menace": {
+      "equivalent": "Intimidate / Threat",
+      "status": "?"
+    },
+    "Defender": {
+      "equivalent": "Shield / Bulwark",
+      "status": "?"
+    },
+    "Flash": {
+      "equivalent": "Reactive / Instant",
+      "status": "?"
+    },
+    "Ward": {
+      "equivalent": "Shield / Barrier",
+      "status": "?"
+    },
+    "Prowess": {
+      "equivalent": "Momentum / Combo",
+      "status": "?"
+    },
+    "Scry": {
+      "equivalent": "Scan / Probe",
+      "status": "?"
+    },
+    "Surveil": {
+      "equivalent": "n/a (consider for AI cards)",
+      "status": "GAP"
+    },
+    "Mill": {
+      "equivalent": "Discard / Disrupt",
+      "status": "?"
+    },
+    "Convoke": {
+      "equivalent": "Coordinate / Squadron",
+      "status": "?"
+    },
+    "Cycling": {
+      "equivalent": "Discard-draw / Recycle",
+      "status": "?"
+    },
+    "Equip": {
+      "equivalent": "Module / Attach",
+      "status": "?"
+    },
+    "Kicker": {
+      "equivalent": "Overcharge / Boost",
+      "status": "?"
+    },
+    "Flashback": {
+      "equivalent": "n/a (consider for AI cards)",
+      "status": "GAP"
+    },
+    "Madness": {
+      "equivalent": "n/a",
+      "status": "N-A"
+    },
+    "Storm": {
+      "equivalent": "n/a (very strong, skip)",
+      "status": "N-A"
+    },
+    "Affinity": {
+      "equivalent": "Synergy / Faction-cost",
+      "status": "?"
+    },
+    "Dredge": {
+      "equivalent": "n/a",
+      "status": "N-A"
+    },
+    "Suspend": {
+      "equivalent": "Cooldown / Charge-up",
+      "status": "?"
+    },
+    "Embalm": {
+      "equivalent": "n/a",
+      "status": "N-A"
+    }
+  }
+}
