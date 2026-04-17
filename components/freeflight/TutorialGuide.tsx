@@ -1,7 +1,7 @@
 'use client'
 
-import type { QuestStep } from '@/lib/game/quests/firstDayRealSky'
-import { FIRST_DAY_STEPS } from '@/lib/game/quests/firstDayRealSky'
+import type { QuestStep } from '@/lib/game/quests/chains/firstDayRealSky'
+import { getStepByIdAcrossChains } from '@/lib/game/quests/chains'
 
 interface Props {
   step: QuestStep
@@ -22,15 +22,21 @@ const ISSUER_META: Record<string, { name: string; color: string }> = {
 export default function TutorialGuide({ step, completedIds, onSkip, visible }: Props) {
   if (!visible) return null
   const issuer = ISSUER_META[step.issuer] ?? ISSUER_META.jix
+  // Look up which chain this step belongs to so we can show the chain name
+  // and full step count in the header.
+  const lookup = getStepByIdAcrossChains(step.id)
+  const chainName = lookup?.chain.name ?? 'Quest Chain'
+  const totalSteps = lookup?.chain.steps.length ?? 4
+  const chainSteps = lookup?.chain.steps ?? []
   return (
     <div style={S.wrap}>
       <div style={S.eyebrow}>
-        <span style={S.eyebrowLabel}>First Day, Real Sky</span>
+        <span style={S.eyebrowLabel}>{chainName}</span>
         <button onClick={onSkip} style={S.skipBtn}>Skip tutorial</button>
       </div>
       <div style={S.stepHeader}>
         <span style={{ ...S.stepNum, color: issuer.color, borderColor: `${issuer.color}88` }}>
-          Step {step.stepNumber} / 4
+          Step {step.stepNumber} / {totalSteps}
         </span>
         <span style={{ ...S.category, color: issuer.color }}>{step.category}</span>
       </div>
@@ -41,7 +47,7 @@ export default function TutorialGuide({ step, completedIds, onSkip, visible }: P
         <span style={S.quoteText}>&ldquo;{step.castLine}&rdquo;</span>
       </blockquote>
       <div style={S.progressRow}>
-        {FIRST_DAY_STEPS.map(s => (
+        {chainSteps.map(s => (
           <span
             key={s.id}
             style={{

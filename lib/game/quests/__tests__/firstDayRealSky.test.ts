@@ -7,7 +7,7 @@ import {
   nextStep,
   isChainComplete,
   triggerMatches,
-} from '../firstDayRealSky'
+} from '../chains/firstDayRealSky'
 
 const VALID_ISSUERS = new Set(['jix', 'claude', 'gpt', 'gemini', 'perplexity', 'llama'])
 const VALID_TRIGGERS = new Set([

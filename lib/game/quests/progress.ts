@@ -4,122 +4,142 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { creditGhai } from '@/lib/credits/credit'
 import {
-  FIRST_DAY_FINAL_REWARD,
-  FIRST_DAY_REAL_SKY_CHAIN_ID,
-  FIRST_DAY_STEPS,
-  isChainComplete,
-  nextStep,
+  CHAINS,
+  getActiveSteps,
+  computeChainCompletion,
   triggerMatches,
   type QuestStep,
   type QuestStepTriggerType,
-} from './firstDayRealSky'
+} from './chains'
 
 const SKIP_FLAG_KEY = 'voidexa:first_day_skipped'
+const ALL_STEP_IDS: string[] = CHAINS.flatMap(c => c.steps.map(s => s.id))
 
 export interface QuestChainState {
-  step: QuestStep | null
-  completedIds: Set<string>
+  activeSteps: readonly QuestStep[]
+  completedStepIds: Set<string>
+  completedChainIds: Set<string>
   skipped: boolean
   loading: boolean
 }
 
 /**
- * Active quest chain hook. Reads `user_quest_progress` for completed steps,
- * exposes the current step, and handles:
- *   - trigger-based step advancement (called from completion screens)
- *   - final reward grant (600 GHAI + "Licensed Breather" title) on chain completion
- *   - skip flag via localStorage
+ * Generalised multi-chain hook.
+ *   - Loads every known chain's completion state once on mount
+ *   - Exposes `activeSteps` — one next step per chain whose prerequisites
+ *     have been satisfied
+ *   - Advances the matching active step on each `recordEvent`
+ *   - Fires `onChainComplete` + grants the chain's final reward when all
+ *     steps complete
+ *
+ * Backward compat: Sprint 3 callers reading `.step` / `.completedIds`
+ * still work — `.step` returns the earliest active step across all chains.
  */
-export function useActiveQuestChain(onChainComplete?: (title: string) => void) {
+export function useActiveQuestChain(
+  onChainComplete?: (title: string, chainId: string) => void,
+) {
   const [state, setState] = useState<QuestChainState>({
-    step: null,
-    completedIds: new Set(),
+    activeSteps: [],
+    completedStepIds: new Set(),
+    completedChainIds: new Set(),
     skipped: false,
     loading: true,
   })
   const [userId, setUserId] = useState<string | null>(null)
-  const finalizingRef = useRef(false)
+  const finalizingRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     ;(async () => {
       const { data } = await supabase.auth.getUser()
       const uid = data.user?.id ?? null
       setUserId(uid)
-
       const skipped = typeof window !== 'undefined' && window.localStorage.getItem(SKIP_FLAG_KEY) === '1'
 
-      let completedIds = new Set<string>()
+      let completedStepIds = new Set<string>()
       if (uid) {
         const { data: rows } = await supabase
           .from('user_quest_progress')
           .select('quest_id, status')
           .eq('user_id', uid)
-          .in('quest_id', FIRST_DAY_STEPS.map(s => s.id))
+          .in('quest_id', ALL_STEP_IDS)
           .eq('status', 'completed')
-        completedIds = new Set((rows ?? []).map(r => r.quest_id as string))
+        completedStepIds = new Set((rows ?? []).map(r => r.quest_id as string))
       }
 
-      setState({
-        step: skipped ? null : nextStep(completedIds),
-        completedIds,
-        skipped,
-        loading: false,
-      })
+      const completedChainIds = computeChainCompletion(completedStepIds)
+      const activeSteps = skipped ? [] : getActiveSteps(completedStepIds)
+      setState({ activeSteps, completedStepIds, completedChainIds, skipped, loading: false })
     })()
   }, [])
 
-  /**
-   * Record a gameplay event that MAY advance the chain. Idempotent — re-firing
-   * with the same trigger after the step is already completed is a no-op.
-   */
   const recordEvent = useCallback(async (event: { type: QuestStepTriggerType; target: string }) => {
-    if (state.skipped || !state.step || !userId) return
-    const current = state.step
-    if (!triggerMatches(current, event)) return
-    if (state.completedIds.has(current.id)) return
+    if (state.skipped || state.activeSteps.length === 0 || !userId) return
+    const matched = state.activeSteps.find(s => triggerMatches(s, event))
+    if (!matched || state.completedStepIds.has(matched.id)) return
 
-    // Mark this step complete.
-    const nextCompleted = new Set(state.completedIds)
-    nextCompleted.add(current.id)
-    const next = nextStep(nextCompleted)
+    const nextCompletedSteps = new Set(state.completedStepIds)
+    nextCompletedSteps.add(matched.id)
+    const nextCompletedChains = computeChainCompletion(nextCompletedSteps)
+    const nextActive = getActiveSteps(nextCompletedSteps)
 
-    setState(prev => ({ ...prev, step: next, completedIds: nextCompleted }))
+    setState(prev => ({
+      ...prev,
+      completedStepIds: nextCompletedSteps,
+      completedChainIds: nextCompletedChains,
+      activeSteps: nextActive,
+    }))
 
     await supabase.from('user_quest_progress').upsert({
       user_id: userId,
-      quest_id: current.id,
+      quest_id: matched.id,
       status: 'completed',
       completed_at: new Date().toISOString(),
     }, { onConflict: 'user_id,quest_id' })
 
-    // Grant the step GHAI bonus.
-    if (current.rewardGhai > 0) {
-      await creditGhai(userId, current.rewardGhai, {
+    if (matched.rewardGhai > 0) {
+      await creditGhai(userId, matched.rewardGhai, {
         source: 'mission',
-        sourceId: `quest_${current.id}`,
+        sourceId: `quest_${matched.id}`,
       })
     }
 
-    // If chain just completed, fire final reward once.
-    if (isChainComplete(nextCompleted) && !finalizingRef.current) {
-      finalizingRef.current = true
-      await creditGhai(userId, FIRST_DAY_FINAL_REWARD.ghai, {
+    const freshlyComplete = [...nextCompletedChains].filter(id => !state.completedChainIds.has(id))
+    for (const chainId of freshlyComplete) {
+      if (finalizingRef.current.has(chainId)) continue
+      finalizingRef.current.add(chainId)
+      const chain = CHAINS.find(c => c.id === chainId)
+      if (!chain) continue
+      await creditGhai(userId, chain.finalReward.ghai, {
         source: 'mission',
-        sourceId: `quest_${FIRST_DAY_REAL_SKY_CHAIN_ID}_final`,
+        sourceId: `quest_${chainId}_final`,
       })
       await supabase.from('pilot_reputation').upsert({
         user_id: userId,
-        composed_title: FIRST_DAY_FINAL_REWARD.title,
+        composed_title: chain.finalReward.title,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'user_id' })
-      onChainComplete?.(FIRST_DAY_FINAL_REWARD.title)
+      onChainComplete?.(chain.finalReward.title, chain.id)
     }
-  }, [state.step, state.completedIds, state.skipped, userId, onChainComplete])
+  }, [state.skipped, state.activeSteps, state.completedStepIds, state.completedChainIds, userId, onChainComplete])
 
   const skip = useCallback(() => {
     if (typeof window !== 'undefined') window.localStorage.setItem(SKIP_FLAG_KEY, '1')
-    setState(prev => ({ ...prev, step: null, skipped: true }))
+    setState(prev => ({ ...prev, activeSteps: [], skipped: true }))
   }, [])
 
-  return { ...state, recordEvent, skip }
+  // Back-compat shim for Sprint 3 single-chain callers.
+  const firstActive = state.activeSteps[0] ?? null
+  return {
+    activeSteps: state.activeSteps,
+    completedStepIds: state.completedStepIds,
+    completedChainIds: state.completedChainIds,
+    step: firstActive,
+    completedIds: state.completedStepIds,
+    skipped: state.skipped,
+    loading: state.loading,
+    recordEvent,
+    skip,
+  }
 }
+
+export { CHAINS } from './chains'

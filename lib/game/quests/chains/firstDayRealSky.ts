@@ -24,7 +24,7 @@ export interface QuestStepTrigger {
 export interface QuestStep {
   /** Step id — also the row id in `user_quest_progress.quest_id`. */
   id: string
-  stepNumber: 1 | 2 | 3 | 4
+  stepNumber: 1 | 2 | 3 | 4 | 5
   name: string
   category: 'Rush' | 'Courier' | 'Signal' | 'Hunt'
   issuer: CastIssuer
