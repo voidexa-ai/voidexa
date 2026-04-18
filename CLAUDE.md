@@ -563,3 +563,89 @@ build errors, 4 marketing page routes responsive-friendly, 3 desktop-first
 surfaces flagged with banner. Items deferred to Jix: live device test,
 Lighthouse run, baseline card art (Vast.ai), sound voiceover recording,
 public/sounds/ + public/models/ asset upload to CDN.
+
+## Session 2026-04-18: Sprint 13C — Veo MP4 + ElevenLabs voiceover homepage
+Replaced the Three.js cinematic film (Sprint 13 / 13b) with the real 31.1s Veo MP4
+plus AI voiceover on `/`.
+
+### Assets (Supabase Storage bucket `intro`, public)
+- `voidexa_intro_final.mp4` — 33 MB, h264 yuv420p, 31.146s, 2 streams
+  (original Veo output was 65 MB 4:4:4; re-encoded with CRF 23 to fit the
+  50 MB Supabase standard-upload ceiling)
+- `stil_picture_intro.png` — 2.6 MB backdrop for post-video state
+- Vercel env vars added (production + preview): `NEXT_PUBLIC_INTRO_VIDEO_URL`,
+  `NEXT_PUBLIC_INTRO_BACKDROP_URL`
+
+### Voiceover (ElevenLabs multilingual_v2, stability 0.5, similarity 0.75, style 0.3)
+Generated 4 MP3 clips via the ElevenLabs REST API using the Jarvis `.env`
+credentials, then stitched them over the Veo ambient track (0.4x volume) with
+`adelay=0|7000|22000|28000` and volume 1.2 for each voice line.
+- vo_01_welcome.mp3 "Welcome aboard Voidexa Intergalactic Transit." — 2.79s, 45.6 KB
+- vo_02_engage.mp3 "Engaging warp drive. Destination: Voidexa Star System." — 3.72s, 60.6 KB
+- vo_03_arrive.mp3 "Arriving at Voidexa Star System." — 2.32s, 38.1 KB
+- vo_04_welcome_future.mp3 "Welcome to the future of AI." — 1.81s, 30.1 KB
+
+### New components
+- `app/page.tsx` (94 lines, `'use client'`) — mounts IntroVideo → backdrop → overlay,
+  reads `voidexa_skip_intro` localStorage flag and `router.replace('/starmap')`
+  on returning visits
+- `components/home/IntroVideo.tsx` (151 lines) — HTML5 `<video autoPlay muted playsInline>`,
+  emits onSkipAvailable at `currentTime >= 3`, mute toggle with pulsing glow +
+  5s tooltip, forwardRef handle with `jumpToEnd()` for skip button
+- `components/home/QuickMenuOverlay.tsx` (180 lines) — 4 glass panels in 2x2 grid
+  (1 column mobile <768px), 2 CTAs (Enter Free Flight primary, Enter Star Map
+  secondary), "don't show next time" checkbox. 800ms opacity fade-in
+- `components/home/WebsiteCreationModal.tsx` (149 lines) — modal with call/email
+  buttons + inline form POSTing to `/api/contact/website-lead`. ESC + click-outside
+  + close button. Resets state on close
+- `lib/intro/panels.ts` — pure data module: QUICK_MENU_PANELS, PRIMARY_CTA,
+  SECONDARY_CTA, SKIP_BUTTON_THRESHOLD_SEC (3), OVERLAY_FADE_IN_DELAY_MS (2000).
+  Extracted so tests can import without pulling React / next/navigation
+- `lib/intro/preferences.ts` — SSR-safe `shouldSkipIntro()` / `setSkipIntro()` over
+  localStorage key `voidexa_skip_intro`
+
+### Backend
+- `app/api/contact/website-lead/route.ts` — POST `{contact, type}` validator,
+  trims env vars, inserts into Supabase `leads` table. stdout log stub for
+  email notification (email integration deferred)
+- Migration `20260418_website_leads.sql` — `leads` table with RLS policy
+  allowing public anon inserts (applied via Supabase MCP `apply_migration`)
+
+### Nav + delete sweep
+- Removed "Break Room" from top nav — final nav is Home, Products, Universe, About
+- Deleted `components/home/{HomeCinematic,HomeRoot,VoiceoverPlayer,CinematicOverlay}.tsx`,
+  `components/home/scenes/Scene{Approach,Warp,Arrival,DoorOpen}.tsx`,
+  `hooks/useCinematicTimeline.ts`, `hooks/useVoiceoverSync.ts`,
+  `lib/cinematic/` (dir + its 8-test suite),
+  `lib/game/preload.ts` + its 4-test suite
+- `SkipButton.tsx` — inlined `SKIP_BUTTON_VISIBLE_FROM = 3` since `lib/cinematic/config`
+  is gone
+
+### Tests
+- New `tests/homepage-intro.test.ts` — 15 cases covering skip preferences
+  roundtrip, panel count/titles/routes, Website Creation modal trigger (no href),
+  CTA targets, and timing constants. Mocks `window.localStorage` via
+  `vi.stubGlobal` — no jsdom dependency added
+- `vitest.config.ts` — added `tests/**/*.test.ts` glob, removed deleted
+  `lib/cinematic/__tests__/**`
+- Total: 658 / 658 passing across 53 suites (654 baseline − 8 cinematic tests
+  − 4 preload tests + 15 new + 1 misc = 658)
+
+### Deploy + gotchas
+- Tag `sprint-13c-complete` pushed; commit `19f4178`
+- Vercel production → https://voidexa.com (confirmed markers: `intro-video`
+  testid, Enter Free Flight, Enter Star Map, Website Creation, `voidexa_intro_final`
+  URL)
+- **Supabase upload ceiling** — the 65 MB 4:4:4 Veo MP4 hit `413 Payload too
+  large` on the standard storage endpoint even with `file_size_limit=null`.
+  The project-level edge has a fixed ~50 MB cap on non-resumable uploads; for
+  larger masters use the TUS resumable endpoint or pre-compress. Re-encoding
+  to yuv420p CRF 23 cut the file in half with no perceptible quality loss
+- **`npx vercel env add <VAR> preview` with no git branch** — prompts
+  interactively. Pass an empty positional branch arg + `--value` + `--yes` to
+  set it for *all* preview branches non-interactively:
+  `npx --yes vercel@latest env add NAME preview "" --value "..." --yes`
+- **Package line-ending** — all new `.ts`/`.tsx` files came out with LF; git
+  auto-warned about CRLF on next touch. Harmless, matches repo norms
+- `docs/gpt_keywords_homepage.md` (referenced by Sprint 8) is still corrupt
+  UTF-16 PowerShell artifact; not touched this sprint
