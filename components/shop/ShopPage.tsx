@@ -12,6 +12,7 @@ import {
 import { useT } from '@/lib/i18n/context'
 import type { Dict } from '@/lib/i18n/types'
 import { MODEL_URLS } from '@/lib/config/modelUrls'
+import { formatCentsAsGhai, formatUsdAsGhai } from '@/lib/ghai/format'
 
 const ShopItemPreviewCanvas = dynamic(() => import('./ShopItemPreviewCanvas'), {
   ssr: false,
@@ -81,8 +82,10 @@ function buildTabs(t: Dict): { key: TabKey; label: string }[] {
 
 const PAGE_SIZE = 8
 
+// Shop prices are stored as USD cents. GHAI rate: $1 = 100 GHAI, so
+// cents → GHAI is a 1:1 integer mapping (e.g. $3.00 = 300¢ = 300 GHAI).
 function formatPrice(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`
+  return formatCentsAsGhai(cents)
 }
 
 function parseCardPackContents(description: string): string[] {
@@ -669,25 +672,39 @@ export default function ShopPage() {
               textShadow: '0 0 14px #00d4ff',
               fontFamily: 'var(--font-space, system-ui)',
             }}>
-              $1.99
+              {formatUsdAsGhai(1.99)}
             </div>
             <button
-              disabled
+              onClick={async () => {
+                try {
+                  const res = await fetch('/api/wallet/deduct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount_usd: 1.99, description: 'Starter Pack purchase' }),
+                  })
+                  if (res.status === 402) {
+                    // Insufficient balance — prompt top-up by dispatching a custom event the nav can listen for.
+                    window.dispatchEvent(new CustomEvent('voidexa:topup-required', { detail: { amount_usd: 1.99 } }))
+                  }
+                  // Success / other — noop for now; Starter Pack inventory wiring is a later sprint.
+                } catch { /* silent */ }
+              }}
               style={{
                 padding: '12px 26px',
                 background: 'linear-gradient(135deg, rgba(0,212,255,0.4), rgba(139,92,246,0.35))',
                 border: '1px solid rgba(0,212,255,0.7)',
                 borderRadius: 999,
-                color: 'rgba(255,255,255,0.85)',
+                color: '#fff',
                 fontFamily: 'var(--font-space, monospace)',
                 fontSize: 13,
+                fontWeight: 700,
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',
-                cursor: 'not-allowed',
+                cursor: 'pointer',
                 textShadow: '0 0 8px #00d4ff',
               }}
             >
-              {t.shop.comingSoonStripe}
+              BUY · {formatUsdAsGhai(1.99)}
             </button>
           </div>
         </div>

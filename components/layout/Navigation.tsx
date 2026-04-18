@@ -11,6 +11,7 @@ import { useAuth } from '@/components/AuthProvider'
 import { useI18n } from '@/lib/i18n/context'
 import { stripLocale } from '@/lib/i18n/locale'
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
+import GhaiBalance from '@/components/wallet/GhaiBalance'
 
 interface NavLink {
   href: string
@@ -320,6 +321,7 @@ export default function Navigation() {
 
             {/* Desktop right */}
             <div className="hidden lg:flex items-center gap-3 shrink-0">
+              <GhaiBalance />
               <LanguageSwitcher />
               {!isAdmin && (
                 <button
