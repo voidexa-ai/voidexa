@@ -58,12 +58,14 @@ export default function Navigation() {
     {
       label: t.nav.universe,
       children: [
-        { href: '/starmap',      label: tLink('/starmap', 'Star Map'),           description: tDesc('/starmap') },
-        { href: '/freeflight',   label: tLink('/freeflight', 'Free Flight'),    description: tDesc('/freeflight') },
-        { href: '/shop',         label: tLink('/shop', 'Shop'),                 description: tDesc('/shop') },
-        { href: '/cards',        label: tLink('/cards', 'Cards'),               description: tDesc('/cards') },
-        { href: '/achievements', label: tLink('/achievements', 'Achievements'), description: tDesc('/achievements') },
-        { href: '/assembly-editor', label: tLink('/assembly-editor', 'Assembly Editor'), description: tDesc('/assembly-editor') },
+        { href: '/starmap',         label: tLink('/starmap', 'Star Map'),                 description: tDesc('/starmap') },
+        { href: '/starmap/voidexa', label: tLink('/starmap/voidexa', 'voidexa System'),   description: tDesc('/starmap/voidexa') },
+        { href: '/freeflight',      label: tLink('/freeflight', 'Free Flight'),           description: tDesc('/freeflight') },
+        { href: '/shop',            label: tLink('/shop', 'Shop'),                        description: tDesc('/shop') },
+        { href: '/cards',           label: tLink('/cards', 'Cards'),                      description: tDesc('/cards') },
+        { href: '/achievements',    label: tLink('/achievements', 'Achievements'),        description: tDesc('/achievements') },
+        { href: '/assembly-editor', label: tLink('/assembly-editor', 'Assembly Editor'),  description: tDesc('/assembly-editor') },
+        { href: '/break-room',      label: tLink('/break-room', 'Break Room'),            description: tDesc('/break-room') },
       ],
     },
     {
