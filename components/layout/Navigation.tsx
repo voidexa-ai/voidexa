@@ -18,6 +18,7 @@ interface NavLink {
   label: string
   description?: string
   badge?: string
+  external?: boolean
 }
 
 interface NavGroup {
@@ -53,6 +54,14 @@ export default function Navigation() {
         { href: '/services', label: tLink('/services', 'Custom Apps (BETA)'),          description: tDesc('/services') },
         { href: '/apps',     label: tLink('/apps', 'Apps'),                            description: tDesc('/apps') ?? 'All voidexa apps and products', badge: 'BETA' },
         { href: '/ai-tools', label: tLink('/ai-tools', 'AI Tools (IN DEV)'),           description: tDesc('/ai-tools') },
+      ],
+    },
+    {
+      label: 'Quantum Tools',
+      children: [
+        { href: '/void-chat',                 label: 'Void Chat',     description: 'Multi-AI chat' },
+        { href: '/quantum/chat',              label: 'Quantum Chat',  description: 'Multi-AI debate engine' },
+        { href: 'https://forge.voidexa.com',  label: 'Quantum Forge', description: 'AI-assisted cockpit generator', external: true },
       ],
     },
     {
@@ -242,30 +251,26 @@ export default function Navigation() {
                         >
                           {group.children.map(link => {
                             const linkActive =
-                              pathname === link.href || pathname.startsWith(link.href + '/')
-                            return (
-                              <Link
-                                key={`${link.href}-${link.label}`}
-                                href={localizeHref(link.href)}
-                                onClick={() => setOpenGroup(null)}
-                                style={{
-                                  display: 'block',
-                                  padding: '10px 12px',
-                                  borderRadius: 8,
-                                  textDecoration: 'none',
-                                  background: linkActive ? 'rgba(0,212,255,0.1)' : 'transparent',
-                                  transition: 'background 0.15s',
-                                }}
-                                onMouseEnter={e => {
-                                  ;(e.currentTarget as HTMLElement).style.background =
-                                    'rgba(0,212,255,0.08)'
-                                }}
-                                onMouseLeave={e => {
-                                  ;(e.currentTarget as HTMLElement).style.background = linkActive
-                                    ? 'rgba(0,212,255,0.1)'
-                                    : 'transparent'
-                                }}
-                              >
+                              !link.external &&
+                              (pathname === link.href || pathname.startsWith(link.href + '/'))
+                            const itemStyle = {
+                              display: 'block',
+                              padding: '10px 12px',
+                              borderRadius: 8,
+                              textDecoration: 'none',
+                              background: linkActive ? 'rgba(0,212,255,0.1)' : 'transparent',
+                              transition: 'background 0.15s',
+                            } as const
+                            const onEnter = (e: { currentTarget: EventTarget & HTMLElement }) => {
+                              e.currentTarget.style.background = 'rgba(0,212,255,0.08)'
+                            }
+                            const onLeave = (e: { currentTarget: EventTarget & HTMLElement }) => {
+                              e.currentTarget.style.background = linkActive
+                                ? 'rgba(0,212,255,0.1)'
+                                : 'transparent'
+                            }
+                            const inner = (
+                              <>
                                 <div
                                   style={{
                                     fontSize: 14.5,
@@ -279,6 +284,18 @@ export default function Navigation() {
                                   }}
                                 >
                                   <span>{link.label}</span>
+                                  {link.external && (
+                                    <span
+                                      aria-hidden="true"
+                                      style={{
+                                        fontSize: 11,
+                                        color: 'rgba(0,212,255,0.75)',
+                                        lineHeight: 1,
+                                      }}
+                                    >
+                                      ↗
+                                    </span>
+                                  )}
                                   {link.badge && (
                                     <span
                                       style={{
@@ -310,6 +327,34 @@ export default function Navigation() {
                                     {link.description}
                                   </div>
                                 )}
+                              </>
+                            )
+                            if (link.external) {
+                              return (
+                                <a
+                                  key={`${link.href}-${link.label}`}
+                                  href={link.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={() => setOpenGroup(null)}
+                                  style={itemStyle}
+                                  onMouseEnter={onEnter}
+                                  onMouseLeave={onLeave}
+                                >
+                                  {inner}
+                                </a>
+                              )
+                            }
+                            return (
+                              <Link
+                                key={`${link.href}-${link.label}`}
+                                href={localizeHref(link.href)}
+                                onClick={() => setOpenGroup(null)}
+                                style={itemStyle}
+                                onMouseEnter={onEnter}
+                                onMouseLeave={onLeave}
+                              >
+                                {inner}
                               </Link>
                             )
                           })}
@@ -450,26 +495,36 @@ export default function Navigation() {
                           <div style={{ padding: '4px 0 8px 12px' }}>
                             {group.children.map(link => {
                               const linkActive =
-                                pathname === link.href || pathname.startsWith(link.href + '/')
-                              return (
-                                <Link
-                                  key={`${link.href}-${link.label}`}
-                                  href={localizeHref(link.href)}
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 8,
-                                    padding: '10px 16px',
-                                    borderRadius: 10,
-                                    fontSize: 15,
-                                    color: linkActive ? '#00d4ff' : '#cbd5e1',
-                                    background: linkActive
-                                      ? 'rgba(0,212,255,0.08)'
-                                      : 'transparent',
-                                    textDecoration: 'none',
-                                  }}
-                                >
+                                !link.external &&
+                                (pathname === link.href || pathname.startsWith(link.href + '/'))
+                              const mobileItemStyle = {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 8,
+                                padding: '10px 16px',
+                                borderRadius: 10,
+                                fontSize: 15,
+                                color: linkActive ? '#00d4ff' : '#cbd5e1',
+                                background: linkActive
+                                  ? 'rgba(0,212,255,0.08)'
+                                  : 'transparent',
+                                textDecoration: 'none',
+                              } as const
+                              const mobileInner = (
+                                <>
                                   <span>{link.label}</span>
+                                  {link.external && (
+                                    <span
+                                      aria-hidden="true"
+                                      style={{
+                                        fontSize: 12,
+                                        color: 'rgba(0,212,255,0.75)',
+                                        lineHeight: 1,
+                                      }}
+                                    >
+                                      ↗
+                                    </span>
+                                  )}
                                   {link.badge && (
                                     <span
                                       style={{
@@ -488,6 +543,28 @@ export default function Navigation() {
                                       {link.badge}
                                     </span>
                                   )}
+                                </>
+                              )
+                              if (link.external) {
+                                return (
+                                  <a
+                                    key={`${link.href}-${link.label}`}
+                                    href={link.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={mobileItemStyle}
+                                  >
+                                    {mobileInner}
+                                  </a>
+                                )
+                              }
+                              return (
+                                <Link
+                                  key={`${link.href}-${link.label}`}
+                                  href={localizeHref(link.href)}
+                                  style={mobileItemStyle}
+                                >
+                                  {mobileInner}
                                 </Link>
                               )
                             })}
