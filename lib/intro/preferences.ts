@@ -18,3 +18,17 @@ export function setSkipIntro(value: boolean): void {
     // ignore — storage may be blocked
   }
 }
+
+export type IntroMode = 'redirect' | 'menu-only' | 'video'
+
+// Source of truth for what the / route renders on load.
+// menu-only wins over the skip-intro redirect — users who click "Quick Menu"
+// from the nav dropdown expect the menu, not a jump to /starmap.
+export function computeIntroMode(params: {
+  menuOnly: boolean
+  skipIntro: boolean
+}): IntroMode {
+  if (params.menuOnly) return 'menu-only'
+  if (params.skipIntro) return 'redirect'
+  return 'video'
+}

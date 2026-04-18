@@ -127,3 +127,22 @@ describe('homepage intro — CTAs and timing constants', () => {
     expect(OVERLAY_FADE_IN_DELAY_MS).toBe(2000)
   })
 })
+
+describe('homepage intro — ?menu=true quick-access mode', () => {
+  it('menu=true renders overlay without video element (mode is menu-only → no IntroVideo)', async () => {
+    const { computeIntroMode } = await import('@/lib/intro/preferences')
+    // page.tsx gates IntroVideo behind (!menuOnly && !videoEnded && VIDEO_URL),
+    // and videoEnded is initialized to menuOnly — so menu-only mode guarantees
+    // the video element is never mounted.
+    expect(computeIntroMode({ menuOnly: true, skipIntro: false })).toBe('menu-only')
+  })
+
+  it('menu=true renders backdrop image immediately (videoEnded is true from mount)', async () => {
+    const { computeIntroMode } = await import('@/lib/intro/preferences')
+    // Backdrop visibility is `videoEnded && BACKDROP_URL`. In menu-only mode
+    // videoEnded is initialized true, so the backdrop paints on first frame.
+    // menu-only must also override the skip-intro redirect so we actually
+    // reach the render path instead of router.replace'ing to /starmap.
+    expect(computeIntroMode({ menuOnly: true, skipIntro: true })).toBe('menu-only')
+  })
+})

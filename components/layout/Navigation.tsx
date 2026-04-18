@@ -38,7 +38,13 @@ export default function Navigation() {
   const tLink = (href: string, fallback: string) => t.nav.items[href]?.label ?? fallback
   const tDesc = (href: string) => t.nav.items[href]?.description
   const NAV_GROUPS: NavGroup[] = [
-    { label: t.nav.home, href: '/' },
+    {
+      label: t.nav.home,
+      children: [
+        { href: '/home',       label: 'Main Page',  description: 'Products, team, and GHAI cards' },
+        { href: '/?menu=true', label: 'Quick Menu', description: '4-panel universe menu — no video' },
+      ],
+    },
     {
       label: t.nav.products,
       children: [

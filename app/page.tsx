@@ -1,33 +1,45 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import IntroVideo, { IntroVideoHandle } from '@/components/home/IntroVideo'
 import QuickMenuOverlay from '@/components/home/QuickMenuOverlay'
 import WebsiteCreationModal from '@/components/home/WebsiteCreationModal'
 import SkipButton from '@/components/home/SkipButton'
-import { shouldSkipIntro } from '@/lib/intro/preferences'
+import { computeIntroMode, shouldSkipIntro } from '@/lib/intro/preferences'
 import { OVERLAY_FADE_IN_DELAY_MS } from '@/lib/intro/panels'
 
 const VIDEO_URL = (process.env.NEXT_PUBLIC_INTRO_VIDEO_URL ?? '').trim()
 const BACKDROP_URL = (process.env.NEXT_PUBLIC_INTRO_BACKDROP_URL ?? '').trim()
 
 export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomePageInner />
+    </Suspense>
+  )
+}
+
+function HomePageInner() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const menuOnly = searchParams?.get('menu') === 'true'
+
   const videoRef = useRef<IntroVideoHandle>(null)
   const [redirecting, setRedirecting] = useState(false)
   const [showSkip, setShowSkip] = useState(false)
-  const [videoEnded, setVideoEnded] = useState(false)
-  const [showOverlay, setShowOverlay] = useState(false)
+  const [videoEnded, setVideoEnded] = useState(menuOnly)
+  const [showOverlay, setShowOverlay] = useState(menuOnly)
   const [checkboxChecked, setCheckboxChecked] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
 
   useEffect(() => {
-    if (shouldSkipIntro()) {
+    const mode = computeIntroMode({ menuOnly, skipIntro: shouldSkipIntro() })
+    if (mode === 'redirect') {
       setRedirecting(true)
       router.replace('/starmap')
     }
-  }, [router])
+  }, [router, menuOnly])
 
   const handleEnded = useCallback(() => {
     setVideoEnded((prev) => {
@@ -55,6 +67,7 @@ export default function HomePage() {
           src={BACKDROP_URL}
           alt=""
           aria-hidden
+          data-testid="intro-backdrop"
           style={{
             position: 'fixed',
             inset: 0,
@@ -66,7 +79,7 @@ export default function HomePage() {
         />
       )}
 
-      {!videoEnded && VIDEO_URL && (
+      {!menuOnly && !videoEnded && VIDEO_URL && (
         <IntroVideo
           ref={videoRef}
           src={VIDEO_URL}
@@ -75,11 +88,13 @@ export default function HomePage() {
         />
       )}
 
-      <SkipButton
-        elapsed={showSkip ? 999 : 0}
-        hidden={videoEnded}
-        onSkip={() => videoRef.current?.jumpToEnd()}
-      />
+      {!menuOnly && (
+        <SkipButton
+          elapsed={showSkip ? 999 : 0}
+          hidden={videoEnded}
+          onSkip={() => videoRef.current?.jumpToEnd()}
+        />
+      )}
 
       <QuickMenuOverlay
         show={showOverlay}
