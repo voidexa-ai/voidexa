@@ -649,3 +649,60 @@ credentials, then stitched them over the Veo ambient track (0.4x volume) with
   auto-warned about CRLF on next touch. Harmless, matches repo norms
 - `docs/gpt_keywords_homepage.md` (referenced by Sprint 8) is still corrupt
   UTF-16 PowerShell artifact; not touched this sprint
+
+## Session 2026-04-18 (2): Sprint 13d — global GHAI display + mission auto-payout REST
+Sprint 13c already landed Home dropdown + `?menu=true` overlay. Remaining Sprint 13d work: global GHAI balance in nav, shop prices in GHAI, REST credit endpoint.
+
+### Discovery — mission auto-payout was already wired
+All four gameplay modes route payouts through `creditGhai()` in
+`lib/credits/credit.ts`, which idempotently credits
+`user_credits.ghai_balance_platform` via a unique index on
+`ghai_transactions(user_id, tx_signature)`. Call sites:
+- `components/freeflight/useActiveMission.ts:95` — mission completion
+- `components/game/battle/BattleResults.tsx` — card battle victory
+- `components/game/hauling/DeliveryResults.tsx` — hauling contract delivery
+- `components/game/speedrun/RaceResults.tsx` — speed run finish
+- `components/freeflight/useExplorationResolved.ts` — exploration encounters
+- `lib/game/quests/progress.ts` — quest chain completion
+No change needed for Step 5.1–5.2. Only the REST wrapper from 5.3 was new.
+
+### Two-wallet clarification
+voidexa has two parallel wallet tables:
+1. `user_credits.ghai_balance_platform` — platform-GHAI (missions/hauling/etc). Balance source for `/api/ghai/balance`.
+2. `user_wallets.balance_usd` — USD wallet for Quantum Chat. Balance source for `/api/wallet` + `components/quantum/WalletBar.tsx`.
+`GhaiBalance` in the nav reads from `/api/ghai/balance` (platform GHAI). `components/quantum/WalletBar.tsx` stays on `/api/wallet` (USD). `/api/wallet/credit` credits the GHAI platform balance (not the USD wallet) — the `amount_usd` param is a dollar-equivalent converted at $1 = 100 GHAI, so it still aligns with the sprint spec's expected payload shape.
+
+### Frontend (voidexa)
+- `components/wallet/GhaiBalance.tsx` — compact nav pill (`⬡ N GHAI`) with top-up modal. Reads `/api/ghai/balance`. Exempt emails (`ceo@voidexa.com`, `tom@voidexa.com`) render `Free Access`. Modal rebrands amounts as `+500 GHAI ($5)`, `+1,000 GHAI ($10)`, etc. while calling the existing Stripe checkout at `/api/wallet/topup`.
+- `components/layout/Navigation.tsx` — imports `GhaiBalance`, mounts it in the desktop right cluster between `LanguageSwitcher` and the Get-in-Touch CTA. Logged-out users see nothing (component returns null).
+- `components/shop/ShopPage.tsx` — `formatPrice(cents)` now delegates to `formatCentsAsGhai` from `lib/ghai/format.ts`. Since shop prices are stored as USD cents and the rate is $1 = 100 GHAI, cents map 1:1 to GHAI. Starter Pack banner shows `199 GHAI` + `BUY · 199 GHAI` button that calls `/api/wallet/deduct` and dispatches a `voidexa:topup-required` custom event on 402.
+- `lib/ghai/format.ts` — `usdToGhai`, `centsToGhai`, `formatGhai`, `formatUsdAsGhai`, `formatCentsAsGhai` + `USD_TO_GHAI = 100` constant.
+- `public/icons/ghai.svg` — placeholder cyan-glow "G" icon (32×32, radial gradient glow + gradient stroke).
+
+### Backend (voidexa)
+- `app/api/wallet/credit/route.ts` — POST `{amount_usd, reason?, source_id?}`. 401 if unauthenticated, 400 if `amount_usd` not a finite number in (0, 100]. Inserts into `ghai_transactions` (type=credit, amount in GHAI = `Math.floor(amount_usd * 100)`, product=reason, tx_signature=source_id) with 23505 unique-violation branch returning `already_credited:true`. On fresh insert, upserts running total in `user_credits.ghai_balance_platform`. All env reads trimmed in existing helpers — no new env vars.
+
+### Tests — +40 tests, total 700/700 green
+- `tests/ghai-format.test.ts` (11) — USD↔GHAI conversion + display formatting, thousands separator, clamp negatives to zero, USD_TO_GHAI=100 invariant.
+- `tests/nav-dropdown.test.ts` (5) — source-inspection: Home children have `{href:'/home', label:'Main Page'}` and `{href:'/?menu=true', label:'Quick Menu'}`, description anchors, no top-level `/` href on the Home group.
+- `tests/quick-menu-route.test.ts` (7) — `computeIntroMode` precedence (menu-only wins over redirect), and source-inspection asserts `app/page.tsx` reads `useSearchParams`, seeds `showOverlay/videoEnded = menuOnly`, and guards `<IntroVideo>` with `!menuOnly`.
+- `tests/ghai-balance-component.test.ts` (7) — `formatGhai` import, `/api/ghai/balance` fetch, null-when-logged-out, `data-testid="ghai-balance"`, exempt emails, usdToGhai in top-up modal, nav mount.
+- `tests/mission-payout.test.ts` (10) — `useActiveMission` calls `creditGhai({source:'mission', sourceId: acceptanceId})`, reward is avg of min/max, status flip happens before credit (idempotency anchor). `/api/wallet/credit` rejects 401/400, caps at $100, handles 23505 as already_credited, credits `ghai_balance_platform` at 100 GHAI/$.
+
+### Verification
+- `npx next build` clean — 87 static pages, only the pre-existing bigint non-fatal warning.
+- `npm test` → 700 passed (58 files). Baseline was 660 → +40 new = 700.
+- `curl -sI https://voidexa.com/` → 200, `/shop` → 200, `/api/ghai/balance` → `{"error":"Unauthorized"}` as expected for unauthenticated.
+
+### Commit + deploy
+- Commit: `0cf0d22 feat(sprint-13d): global GHAI nav balance + shop GHAI prices + mission payout REST`
+- Backup tag: `backup/pre-sprint-13d-20260418`
+- Completion tag: `sprint-13d-complete`
+- Vercel production: `voidexa-d7v2klqlx-jixxwulff-4032s-projects.vercel.app` → aliased to https://voidexa.com (READY, 58s build).
+
+### Gotchas
+- **Testing React components in node env** — tests run via `vitest` in `environment: 'node'` (no jsdom). For the new components, we rely on source-inspection (`readFileSync` + regex) rather than render tests. Follow the same pattern as `tests/homepage-intro.test.ts`.
+- **Regex pitfalls over source text** — `[^}]*` won't span across `{…}` pairs. When asserting multi-line blocks like `if (!user) { return NextResponse.json({ ... }, { status: 401 }) }`, use multiple `toMatch()` calls on the individual anchors instead.
+- **Wallet dichotomy** — don't accidentally route mission payouts through `/api/wallet/topup`/`deduct` (those touch `user_wallets.balance_usd` which is the Quantum Chat USD wallet). Platform-GHAI goes through `creditGhai` or the new `/api/wallet/credit`. Both end up in `user_credits.ghai_balance_platform`.
+- **Shop price mapping is 1:1 cents→GHAI** because $1 = 100 GHAI = 100 cents. No rounding error. `formatCentsAsGhai(199)` = `"199 GHAI"`. Don't divide by 100 first.
+- **Icon not served as Next <Image>** — `GhaiBalance` uses a raw `<img>` for `/icons/ghai.svg` because the icon is a tiny inline SVG and doesn't need Next's image optimizer. The `eslint-disable-next-line @next/next/no-img-element` comment silences the lint rule.
