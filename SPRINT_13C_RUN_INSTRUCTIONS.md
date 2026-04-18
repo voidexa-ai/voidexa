@@ -1,22 +1,32 @@
-# SPRINT 13C — HOMEPAGE CINEMATIC REPLACEMENT
-## Replace Three.js Sprint 13/13b Film with Veo 3.1 MP4 Video
+# SPRINT 13C — HOMEPAGE CINEMATIC REPLACEMENT + VOICEOVER
+## Replace Three.js Sprint 13/13b Film with Veo 3.1 MP4 Video (with AI voiceover)
 
 ---
 
 ## CONTEXT
 
-Sprint 13 and Sprint 13b built a 45-second Three.js cinematic film on the homepage. Sprint 13b identified 8 rendering bugs (black Phase 1, invisible warp shader, dark door reveal, invisible skip button, opaque panels, etc). Root cause: Three.js was the wrong tool for this cinematic.
+Sprint 13 and Sprint 13b built a 45-second Three.js cinematic film on the homepage. It had 8 rendering bugs and was the wrong tool for the job.
 
 During the April 17-18 session, Jix produced a real 31.1-second cinematic MP4 using Runway Veo 3.1 (`voidexa_intro_final.mp4`, 1920x1080, 65MB, H.264/AAC). The final video frame matches `stil_picture_intro.png` pixel-for-pixel, enabling a seamless transition from video to overlay background.
 
-**This sprint replaces the Three.js film entirely with the MP4 video.** Keep the good parts from Sprint 13/13b (glass panel overlay, skip button, no scroll, 100vh single screen). Remove everything else.
+**This sprint replaces the Three.js film entirely with the MP4 video + adds AI voiceover.** Keep the good parts from Sprint 13/13b (glass panel overlay, skip button, no scroll, 100vh single screen). Remove everything else.
 
 ---
 
-## ASSETS READY IN JIX'S DOWNLOADS
+## ASSETS READY
 
-- `voidexa_intro_final.mp4` — 31.1s cinematic, 1920x1080, ~65MB
-- `stil_picture_intro.png` — final frame backdrop (matches last video frame)
+In Jix's Downloads:
+- `voidexa_intro_final.mp4` — 31.1s cinematic, 1920x1080, ~65MB (NO voiceover yet — only ambient sound from Veo)
+- `stil_picture_intro.png` — final frame backdrop
+
+In Jarvis project (for voiceover generation):
+- `C:\Users\Jixwu\Projects\jarvis\.env` contains `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID`
+
+Voiceover script (locked — confirmed by Jix):
+- **Sec 0-2:** "Welcome aboard Voidexa Intergalactic Transit."
+- **Sec 7-10:** "Engaging warp drive. Destination: Voidexa Star System."
+- **Sec 22-25:** "Arriving at Voidexa Star System."
+- **Sec 28-30:** "Welcome to the future of AI."
 
 ---
 
@@ -28,40 +38,146 @@ During the April 17-18 session, Jix produced a real 31.1-second cinematic MP4 us
 cd C:\Users\Jixwu\Desktop\voidexa; claude --dangerously-skip-permissions
 ```
 
-### Box 2 — Paste this prompt when Claude Code asks "what do you want to do?"
+### Box 2 — Paste this prompt
 
 ```
-Read docs/VOIDEXA_INTENT_SPEC.md section 2 first. Then read docs/skills/sprint-13-homepage-cinematic.md to understand what Sprint 13 built.
+Read docs/VOIDEXA_INTENT_SPEC.md section 2 first. Then read docs/skills/sprint-13c-homepage-video.md for full context. Then read docs/skills/sprint-13-homepage-cinematic.md to understand what Sprint 13 built (and what needs to be removed).
 
-This sprint (Sprint 13c) REPLACES the Three.js cinematic with a real Veo MP4 video. The film has already been produced and is ready.
+This sprint replaces the Three.js cinematic with a real Veo MP4 video + AI voiceover.
 
-Summary of what to do:
-- Remove the Three.js cinematic from Sprint 13 (components/home/HomeCinematic.tsx, all scenes/*.tsx, useCinematicTimeline.ts, lib/cinematic/*)
-- Keep the glass panel overlay design from Sprint 13b (those visual choices are good)
-- Replace Three.js film with HTML5 video element playing voidexa_intro_final.mp4
-- Video ends on the same frame as stil_picture_intro.png (seamless transition to overlay background)
-- After video ends, wait 2 seconds, then fade in the 4 glass panels + 2 CTAs + checkbox
-- Fix Break Room nav issue (remove from top nav — not built yet)
-- Remove the session persistence bug (film must replay from sec 0 on every reload, no skip-by-default)
+Summary:
+- Generate AI voiceover using ElevenLabs API (4 lines, script locked)
+- Stitch voiceover into voidexa_intro_final.mp4 at correct timings (preserve existing ambient audio)
+- Upload new MP4 with voiceover + backdrop image to Supabase Storage
+- Remove the Three.js cinematic from Sprint 13 (HomeCinematic.tsx, all scenes/*.tsx, useCinematicTimeline.ts, lib/cinematic/*)
+- Keep the glass panel overlay design from Sprint 13b
+- Build new intro system: HTML5 video → overlay with 4 glass panels + 2 CTAs + checkbox
+- Website Creation panel opens modal (not a route)
+- Fix Break Room nav issue (remove from top nav)
+- Remove the session persistence bug (film must replay from sec 0 on every reload)
 
 Pre-flight:
 1. Create git backup tag: git tag backup/pre-sprint-13c-20260418
 2. Push the tag: git push origin --tags
-3. Verify current test count: node node_modules/vitest/vitest.mjs run (expect 654 or higher from Sprint 13b)
+3. Verify current test count: node node_modules/vitest/vitest.mjs run (expect 654 or higher)
 4. Verify video file exists: Test-Path "$env:USERPROFILE\Downloads\voidexa_intro_final.mp4"
 5. Verify backdrop file exists: Test-Path "$env:USERPROFILE\Downloads\stil_picture_intro.png"
-6. If either asset missing, HALT and report
+6. Verify Jarvis .env exists: Test-Path "C:\Users\Jixwu\Projects\jarvis\.env"
+7. Verify ffmpeg is installed: ffmpeg -version (must exist in PATH)
+8. If any check fails, HALT and report
 
-Execute plan:
+===========================================
+STEP 0 — AI VOICEOVER GENERATION + AUDIO STITCHING
+===========================================
 
+This step produces `voidexa_intro_final_with_voiceover.mp4` before anything else.
+
+STEP 0.1 — Read ElevenLabs credentials
+
+Read ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID from C:\Users\Jixwu\Projects\jarvis\.env.
+
+Method: Use PowerShell to parse the .env file:
+```
+$envPath = "C:\Users\Jixwu\Projects\jarvis\.env"
+$envContent = Get-Content $envPath
+$apiKey = ($envContent | Where-Object { $_ -match "^ELEVENLABS_API_KEY=" }) -replace "^ELEVENLABS_API_KEY=", "" -replace '"', ''
+$voiceId = ($envContent | Where-Object { $_ -match "^ELEVENLABS_VOICE_ID=" }) -replace "^ELEVENLABS_VOICE_ID=", "" -replace '"', ''
+```
+
+Verify both values are non-empty. If empty, HALT and report.
+
+STEP 0.2 — Generate 4 voiceover MP3 files
+
+Use the ElevenLabs Text-to-Speech API. Model: eleven_multilingual_v2 (highest quality for cinematic voiceover).
+
+For each of the 4 scripts below, call POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=mp3_44100_128 with JSON body:
+{
+  "text": "<script text>",
+  "model_id": "eleven_multilingual_v2",
+  "voice_settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.3,
+    "use_speaker_boost": true
+  }
+}
+
+Headers:
+- xi-api-key: <API_KEY>
+- Content-Type: application/json
+
+Save each response body as MP3 to:
+- C:\Users\Jixwu\Desktop\voidexa\tmp\audio\vo_01_welcome.mp3 — Text: "Welcome aboard Voidexa Intergalactic Transit."
+- C:\Users\Jixwu\Desktop\voidexa\tmp\audio\vo_02_engage.mp3 — Text: "Engaging warp drive. Destination: Voidexa Star System."
+- C:\Users\Jixwu\Desktop\voidexa\tmp\audio\vo_03_arrive.mp3 — Text: "Arriving at Voidexa Star System."
+- C:\Users\Jixwu\Desktop\voidexa\tmp\audio\vo_04_welcome_future.mp3 — Text: "Welcome to the future of AI."
+
+Create tmp/audio/ directory first. Add tmp/ to .gitignore if not already there.
+
+If any API call fails (non-200 response), HALT and report the error.
+
+STEP 0.3 — Verify audio files
+
+For each generated MP3, check:
+- File exists
+- File size > 10KB
+- ffprobe can read duration (should be 1-4 seconds each)
+
+STEP 0.4 — Copy video to working directory
+
+Copy C:\Users\Jixwu\Downloads\voidexa_intro_final.mp4 to C:\Users\Jixwu\Desktop\voidexa\tmp\video\voidexa_intro_final.mp4 (create folders).
+
+STEP 0.5 — Stitch voiceover into video using ffmpeg
+
+Use ffmpeg's amix filter to mix the 4 voiceover clips into the existing audio track at precise timings. This PRESERVES the ambient warp sounds from Veo and layers the AI voice on top.
+
+Run this ffmpeg command (PowerShell):
+
+cd C:\Users\Jixwu\Desktop\voidexa\tmp\video
+
+ffmpeg -y `
+  -i voidexa_intro_final.mp4 `
+  -i ..\audio\vo_01_welcome.mp3 `
+  -i ..\audio\vo_02_engage.mp3 `
+  -i ..\audio\vo_03_arrive.mp3 `
+  -i ..\audio\vo_04_welcome_future.mp3 `
+  -filter_complex "[1:a]adelay=0|0,volume=1.2[a1];[2:a]adelay=7000|7000,volume=1.2[a2];[3:a]adelay=22000|22000,volume=1.2[a3];[4:a]adelay=28000|28000,volume=1.2[a4];[0:a]volume=0.4[bg];[bg][a1][a2][a3][a4]amix=inputs=5:duration=first:dropout_transition=0:normalize=0[aout]" `
+  -map 0:v -map "[aout]" `
+  -c:v copy `
+  -c:a aac -b:a 192k `
+  voidexa_intro_final_with_voiceover.mp4
+
+Notes:
+- adelay values are in milliseconds (0, 7000, 22000, 28000)
+- Voiceover clips get volume 1.2 (boost for clarity)
+- Original ambient audio reduced to volume 0.4 so voiceover is dominant
+- Video stream is copied unchanged (fast, lossless)
+- Output is AAC 192kbps stereo audio
+
+If ffmpeg fails, HALT and report stderr output.
+
+STEP 0.6 — Verify final MP4
+
+Check:
+- File exists at C:\Users\Jixwu\Desktop\voidexa\tmp\video\voidexa_intro_final_with_voiceover.mp4
+- ffprobe duration is approximately 31.1 seconds (within 0.5s tolerance)
+- ffprobe reports 2 streams: video (h264) + audio (aac)
+- File size is between 55MB and 80MB
+
+If any check fails, HALT and report.
+
+STEP 0.7 — Continue to STEP 1 once audio version is ready
+
+===========================================
 STEP 1 — Upload video + backdrop to Supabase Storage
+===========================================
 
 Project ID: ihuljnekxkyqgroklurp (EU)
 Bucket: intro (create if missing, PUBLIC read access)
 
-Upload two files from Jix's Downloads:
-- voidexa_intro_final.mp4 → public/voidexa_intro_final.mp4
-- stil_picture_intro.png → public/stil_picture_intro.png
+Upload two files:
+- voidexa_intro_final_with_voiceover.mp4 from tmp/video/ → public/voidexa_intro_final.mp4 (USE THE VOICEOVER VERSION)
+- stil_picture_intro.png from Jix's Downloads → public/stil_picture_intro.png
 
 Use Supabase MCP tool if available. Otherwise write a one-shot PowerShell script using @supabase/supabase-js with service role key from .env.local.
 
@@ -69,225 +185,216 @@ Record public URLs and add to .env.local AND Vercel env vars (production + previ
 NEXT_PUBLIC_INTRO_VIDEO_URL=https://ihuljnekxkyqgroklurp.supabase.co/storage/v1/object/public/intro/voidexa_intro_final.mp4
 NEXT_PUBLIC_INTRO_BACKDROP_URL=https://ihuljnekxkyqgroklurp.supabase.co/storage/v1/object/public/intro/stil_picture_intro.png
 
+===========================================
 STEP 2 — Remove Sprint 13 Three.js cinematic files
+===========================================
 
-Delete these files (Sprint 13 created them, Sprint 13c replaces them):
+Delete these files:
 - components/home/HomeCinematic.tsx
 - components/home/scenes/SceneApproach.tsx
 - components/home/scenes/SceneWarp.tsx
 - components/home/scenes/SceneArrival.tsx
 - components/home/scenes/SceneDoorOpen.tsx
 - components/home/scenes/SceneGalaxyReveal.tsx
-- components/home/VoiceoverPlayer.tsx (no voiceover in MP4 version)
+- components/home/VoiceoverPlayer.tsx
 - hooks/useCinematicTimeline.ts
 - lib/cinematic/config.ts
-- lib/cinematic/* (whole directory if it exists)
-- lib/game/preload.ts (was used for Three.js asset preloading, not needed with MP4)
+- lib/cinematic/* (whole directory)
+- lib/game/preload.ts
 
-Keep these from Sprint 13/13b:
-- components/home/SkipButton.tsx (reuse, may need small tweaks)
-- components/home/CinematicOverlay.tsx (rename to QuickMenuOverlay.tsx — glass panel design is kept)
+Keep:
+- components/home/SkipButton.tsx
+- components/home/CinematicOverlay.tsx (rename to QuickMenuOverlay.tsx)
 
+===========================================
 STEP 3 — Create new homepage components
+===========================================
 
-Create components/home/IntroVideo.tsx:
-- HTML5 <video> element with src from NEXT_PUBLIC_INTRO_VIDEO_URL
-- Props: autoPlay, muted (initially true for browser policy), playsInline
+components/home/IntroVideo.tsx (max 200 lines):
+- HTML5 video element with src from NEXT_PUBLIC_INTRO_VIDEO_URL
+- autoPlay, muted (initially true), playsInline
 - Mute toggle button bottom-right — clickable icon, toggles video.muted
+  - IMPORTANT: When user unmutes, they hear AI voiceover (primary feature)
+  - Default muted=true for autoplay, prompt user to unmute via animated icon/tooltip
 - onTimeUpdate callback — when currentTime >= 3, notify parent to show skip button
-- onEnded callback — notify parent that video is complete
+- onEnded callback — notify parent video is complete
 - Full-bleed: fixed inset-0, object-fit cover, z-10
-- Max file size: 200 lines
 
-Create components/home/WebsiteCreationModal.tsx:
-- Modal popup triggered by clicking Website Creation panel
-- Content (warm, short copy):
-  "We'd love to help you build your website. Our team automates the process with AI so we can deliver fast and affordable. Give us a call, send an email, or leave your contact and we'll reach out."
+components/home/WebsiteCreationModal.tsx (max 200 lines):
+- Modal popup triggered by Website Creation panel click
+- Copy: "We'd love to help you build your website. Our team automates the process with AI so we can deliver fast and affordable. Give us a call, send an email, or leave your contact and we'll reach out."
 - Three contact options:
-  1. Phone button (tel: link) — use jix's phone number from CONTACT_EMAIL env or placeholder
-  2. Email button (mailto: link) — contact@voidexa.com
-  3. Inline form: email OR phone input + submit → POST to /api/contact/website-lead (create stub route that writes to Supabase leads table OR just sends email to contact@voidexa.com for now)
-- Close button top-right
-- ESC key closes modal
-- Click outside modal closes modal
-- Font rules: body 16px, labels 14px, opacity 0.9 on titles / 0.75 on body
-- Max file size: 200 lines
+  1. Phone button (tel: link)
+  2. Email button (mailto:contact@voidexa.com)
+  3. Inline form: email OR phone input + submit → POST /api/contact/website-lead
+- Close button, ESC key, click outside — all close modal
+- Body 16px, labels 14px, titles opacity 0.9 / body 0.75
 
-Rename components/home/CinematicOverlay.tsx → components/home/QuickMenuOverlay.tsx and modify:
-- Keep glass panel styling from Sprint 13b (rgba(10,15,30,0.35), backdrop-filter blur(6px), border rgba(150,200,255,0.25))
-- Reduce to 4 panels total (2x2 grid):
-  1. Website Creation — onClick opens WebsiteCreationModal (no navigation)
+Rename components/home/CinematicOverlay.tsx → QuickMenuOverlay.tsx (max 250 lines):
+- Keep Sprint 13b glass panel styling (rgba(10,15,30,0.35), backdrop-filter blur(6px), border rgba(150,200,255,0.25))
+- 4 panels in 2x2 grid (1 column on mobile <768px):
+  1. Website Creation — onClick opens WebsiteCreationModal (no nav)
   2. Custom Apps — href: /products/apps
   3. Universe — href: /universe
   4. Tools — href: /products/ai-tools
-- Below panels: 2 CTAs side by side
-  1. Enter Free Flight — href: /freeflight (primary style, stronger glow)
-  2. Enter Star Map — href: /starmap (secondary style, subtler)
-- Below CTAs: checkbox "Don't show quick menu next time"
+- 2 CTAs side by side below panels (stack on mobile):
+  1. Enter Free Flight — href: /freeflight (primary, stronger glow)
+  2. Enter Star Map — href: /starmap (secondary, subtler)
+- Checkbox: "Don't show quick menu next time"
 - Panel title 18px opacity 0.9, description 14px opacity 0.75
-- When any CTA or panel is clicked with checkbox checked, write localStorage.setItem('voidexa_skip_intro', 'true') before navigation
-- Max file size: 250 lines
+- On CTA click with checkbox checked → localStorage.setItem('voidexa_skip_intro', 'true') before navigation
 
-Create lib/intro/preferences.ts (max 40 lines):
+lib/intro/preferences.ts (max 40 lines):
 - export const SKIP_KEY = 'voidexa_skip_intro'
-- export function shouldSkipIntro(): boolean (client-side safe)
+- export function shouldSkipIntro(): boolean
 - export function setSkipIntro(value: boolean): void
 
-STEP 4 — Replace app/page.tsx
+===========================================
+STEP 4 — Replace app/page.tsx (max 150 lines)
+===========================================
 
-Rewrite app/page.tsx as client component:
-- 'use client'
-- On mount: check shouldSkipIntro() → if true, router.replace('/starmap') and return null
-- State: videoEnded (boolean), showOverlay (boolean), showSkip (boolean), checkboxChecked (boolean)
-- Render <IntroVideo> with onEnded callback setting videoEnded=true and setTimeout 2000ms → showOverlay=true
-- Render <SkipButton> with visible={showSkip}
-- When videoEnded, render full-bleed <img src={NEXT_PUBLIC_INTRO_BACKDROP_URL}> as background behind overlay
-- Render <QuickMenuOverlay> with show={showOverlay} and checkbox state lifted
-- Render <WebsiteCreationModal> controlled by overlay click
-- Layout: single screen, overflow hidden, 100vh, no scroll
-- Max file size: 150 lines
+- 'use client' directive
+- On mount: if shouldSkipIntro() → router.replace('/starmap'), return null
+- State: videoEnded, showOverlay, showSkip, checkboxChecked
+- Render IntroVideo with callbacks
+- Render SkipButton with visible={showSkip}
+- When videoEnded, render backdrop img full-bleed behind overlay
+- Render QuickMenuOverlay with show={showOverlay}
+- Render WebsiteCreationModal controlled by overlay
+- Layout: h-screen w-screen overflow-hidden fixed inset-0
 
-STEP 5 — Fix top nav Break Room issue
+===========================================
+STEP 5 — Fix top nav
+===========================================
 
-File: components/layout/Nav.tsx (or wherever top nav is)
+File: components/layout/Nav.tsx
+- Remove Break Room link entirely
+- Final nav: Home, Products, Universe, About
+- Home → /, Universe → /universe
 
-Current nav: Home, Products, Universe, About, Break Room
+===========================================
+STEP 6 — Contact lead API route
+===========================================
 
-Break Room is not built yet. Either:
-- Option A: Remove Break Room from nav entirely until it ships
-- Option B: Keep it but link to /break-room and create a simple "Coming Soon" page at app/break-room/page.tsx
-
-Choose Option A (simpler, clean nav). Remove Break Room entirely.
-
-Final top nav: Home, Products, Universe, About
-
-Ensure Home link points to / (the new intro page). Ensure Universe link points to /universe.
-
-STEP 6 — Create contact lead API route
-
-Create app/api/contact/website-lead/route.ts:
-- POST method
-- Accepts { contact: string, type: 'email' | 'phone' }
-- Trim env vars defensively (process.env.SUPABASE_URL?.trim())
-- Insert into Supabase 'leads' table (create table if missing: id uuid, contact text, type text, source text default 'website_creation', created_at timestamptz default now())
-- Also send email notification to contact@voidexa.com (can be stubbed as console.log for now if email sending not configured)
+app/api/contact/website-lead/route.ts (max 80 lines):
+- POST { contact: string, type: 'email' | 'phone' }
+- .trim() all env vars defensively
+- Create leads table if missing:
+  create table if not exists leads (
+    id uuid primary key default gen_random_uuid(),
+    contact text not null,
+    type text not null check (type in ('email', 'phone')),
+    source text not null default 'website_creation',
+    created_at timestamptz not null default now()
+  );
+  alter table leads enable row level security;
+  create policy "leads insert public" on leads for insert to anon with check (true);
+- Insert lead into Supabase
+- Stub email notification to contact@voidexa.com (console.log for now)
 - Return { success: true } or { error: string }
-- Max file size: 80 lines
 
+===========================================
 STEP 7 — Tests
+===========================================
 
-Create tests/homepage-intro.test.ts with minimum 8 tests:
+tests/homepage-intro.test.ts (minimum 8 tests):
 1. Homepage renders video element on first visit
-2. Homepage redirects to /starmap when skip flag is set in localStorage
-3. Skip button hidden before video currentTime reaches 3
-4. Skip button appears after currentTime 3
+2. Homepage redirects to /starmap when skip flag set
+3. Skip button hidden before currentTime >= 3
+4. Skip button appears at currentTime >= 3
 5. Overlay hidden while video plays
-6. Overlay fades in 2 seconds after video ends
-7. Checkbox click toggles localStorage skip flag
-8. All 4 panels have expected routes (Website Creation opens modal, others navigate)
-9. (bonus) Enter Free Flight button has href=/freeflight
-10. (bonus) Enter Star Map button has href=/starmap
-11. (bonus) WebsiteCreationModal opens when Website Creation panel clicked
-12. (bonus) Modal closes on ESC key
+6. Overlay fades in 2s after video ends
+7. Checkbox toggles localStorage flag
+8. All 4 panels have expected handlers
+9. (bonus) Enter Free Flight href is /freeflight
+10. (bonus) Enter Star Map href is /starmap
+11. (bonus) Modal opens on Website Creation click
+12. (bonus) ESC closes modal
 
-Test count must remain at or above 654 (from Sprint 13b).
+Test count must remain at 654+ (from Sprint 13b).
 
+===========================================
 STEP 8 — Build, verify, deploy
+===========================================
 
 1. npm run build — zero errors
-2. npm run lint — no new errors  
+2. npm run lint — no new errors
 3. npm test — 654+ green
-4. npm run dev — visit localhost:3000
-   - Video plays from start
+4. npm run dev — manual verification at localhost:3000:
+   - Video plays from start with ambient warp sound
+   - Click unmute → AI voiceover audible at sec 0, 7, 22, 28
    - Skip button appears at sec 3
-   - After video ends + 2s, overlay fades in with glass panels visible over voidexa galaxy backdrop
-   - Click Website Creation → modal opens
-   - Click Custom Apps → routes to /products/apps
-   - Click Universe → routes to /universe
-   - Click Tools → routes to /products/ai-tools
-   - Click Enter Free Flight → routes to /freeflight
-   - Click Enter Star Map → routes to /starmap
-   - Click checkbox + click any route → reload page → skips intro, lands on /starmap
+   - Overlay fades in 2s after video ends with glass panels over backdrop
+   - Website Creation → modal opens
+   - Custom Apps → /products/apps
+   - Universe → /universe
+   - Tools → /products/ai-tools
+   - Enter Free Flight → /freeflight
+   - Enter Star Map → /starmap
+   - Checkbox + click CTA → reload → lands directly on /starmap
    - Clear localStorage → reload → intro plays again
-5. Mobile check at 375x812:
-   - Panels stack vertically (1 column instead of 2x2)
-   - CTAs stack vertically
-   - Video still covers full viewport
-   - Skip button remains top-right
+5. Mobile check at 375x812 — panels and CTAs stack vertically
+6. Delete tmp/video/ and tmp/audio/ working directories
 
-6. git add .
-7. git commit -m "feat(sprint-13c): replace Three.js cinematic with Veo MP4 + quick menu overlay + website creation modal"
-8. git push origin main
-9. Wait for Vercel deploy
-10. Test on production voidexa.com (incognito to reset localStorage)
-11. git tag sprint-13c-complete
-12. git push origin --tags
+7. git add .
+8. git commit -m "feat(sprint-13c): replace Three.js cinematic with Veo MP4 + ElevenLabs voiceover + quick menu overlay"
+9. git push origin main
+10. Wait for Vercel deploy
+11. Test on production (incognito)
+12. git tag sprint-13c-complete
+13. git push origin --tags
 
 Report back:
-- Files created (with line counts)
-- Files deleted (from Sprint 13 cleanup)
-- Build status
-- Test results
-- Video and backdrop public URLs from Supabase
-- Any blockers
-- Commit hash
+- 4 MP3 durations from ElevenLabs
+- Final video file size with audio
+- Files created/deleted (line counts)
+- Build status, test count, commit hash
+- Video + backdrop Supabase URLs
 - Vercel deployment URL
+- Any blockers
 
 Stop conditions:
-- Build fails 3 times consecutively → halt, report
+- ElevenLabs API failure → halt, report
+- ffmpeg stitching failure → halt, report
+- Build fails 3 times → halt, report
 - Tests regress below 654 → halt, report
-- Video or backdrop upload to Supabase fails → halt, report (may need manual upload)
-- Any panel destination route does not exist in app/ → halt, report which one
+- Supabase upload fails → halt, report
+- Panel destination route missing → halt, report
 
-File size rules apply:
-- React components max 300 lines (Tom's rule)
-- app/page.tsx max 100 lines (split into components if grows)
-- Hooks max 300 lines
-- Lib files max 500 lines
-
-Use claude-opus-4-7 model. Font rules: body ≥16px, labels ≥14px, opacity ≥0.5 (glass panels may go lower for intentional transparency effect).
+Use claude-opus-4-7. Font rules: body ≥16px, labels ≥14px, opacity ≥0.5.
 
 GO.
 ```
 
 ---
 
-## AFTER SPRINT 13C COMPLETES, VERIFY ON VOIDEXA.COM
+## AFTER SPRINT 13C COMPLETES — VERIFY ON VOIDEXA.COM
 
 1. Visit https://voidexa.com/ in incognito
-2. Video should auto-play muted
-3. Mute toggle should be visible bottom-right, clickable to unmute
-4. Skip button visible top-right from sec 3
-5. At video end + 2s: 4 glass panels fade in over galaxy backdrop
-6. Enter Free Flight CTA works → leads to /freeflight
-7. Enter Star Map CTA works → leads to /starmap
-8. Click Website Creation → modal opens with phone/email/form
-9. Check the checkbox + click any CTA → reload → skips directly to /starmap
-10. Clear localStorage → reload → intro plays again from start
-11. Top nav shows: Home, Products, Universe, About (no Break Room)
+2. Video auto-plays muted (ambient warp sounds only)
+3. Click unmute → AI voiceover audible:
+   - Sec 0: "Welcome aboard Voidexa Intergalactic Transit."
+   - Sec 7: "Engaging warp drive. Destination: Voidexa Star System."
+   - Sec 22: "Arriving at Voidexa Star System."
+   - Sec 28: "Welcome to the future of AI."
+4. Skip button top-right from sec 3
+5. Video end + 2s: 4 glass panels fade in over galaxy backdrop
+6. Enter Free Flight → /freeflight
+7. Enter Star Map → /starmap
+8. Website Creation → modal with phone/email/form
+9. Checkbox + CTA click → reload → skips to /starmap
+10. Clear localStorage → reload → intro plays again
+11. Top nav: Home, Products, Universe, About
 
 ---
 
-## IF SPRINT 13C SUCCEEDS
-
-Next sprints in order:
-- **Sprint 14:** Cards UI rewire to 257 rendered PNGs
-- **Sprint 15:** Starter GHAI grant + Warp Gate texture + Supabase Lock fix
-- **Sprint 16:** Shop Stripe checkout wire-up
-- **Sprint 17:** Starmap Level 2 + Universe zoom + gaming landmarks
-- **Sprint 18:** Enable disabled Universe sidebar search (was previously planned in 13c but deferred)
-
----
-
-## ROLLBACK IF NEEDED
+## ROLLBACK
 
 ```powershell
 cd C:\Users\Jixwu\Desktop\voidexa
 git reset --hard backup/pre-sprint-13c-20260418
 git push --force-with-lease origin main
 ```
-
-Previous Sprint 13b state becomes active again (Three.js film, buggy but present).
 
 ---
 
@@ -296,21 +403,22 @@ Previous Sprint 13b state becomes active again (Three.js film, buggy but present
 **New:**
 - components/home/IntroVideo.tsx
 - components/home/WebsiteCreationModal.tsx
-- components/home/QuickMenuOverlay.tsx (renamed from CinematicOverlay.tsx)
+- components/home/QuickMenuOverlay.tsx (renamed)
 - lib/intro/preferences.ts
 - app/api/contact/website-lead/route.ts
 - tests/homepage-intro.test.ts
-- Supabase bucket 'intro' with voidexa_intro_final.mp4 + stil_picture_intro.png
+- Supabase bucket 'intro' with voiceover MP4 + backdrop PNG
 
 **Modified:**
 - app/page.tsx (full rewrite)
 - components/layout/Nav.tsx (remove Break Room)
-- .env.local (+ Vercel env vars)
+- .env.local + Vercel env vars
+- .gitignore (+ tmp/)
 
 **Deleted:**
 - components/home/HomeCinematic.tsx
 - components/home/scenes/*.tsx (5 files)
 - components/home/VoiceoverPlayer.tsx
 - hooks/useCinematicTimeline.ts
-- lib/cinematic/* (directory)
+- lib/cinematic/*
 - lib/game/preload.ts
