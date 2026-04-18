@@ -68,9 +68,6 @@ export default function Navigation() {
         { href: '/contact',    label: tLink('/contact', 'Contact'),        description: tDesc('/contact') },
       ],
     },
-    // Break Room has a real landing page at /break-room (arcade, AI lounge,
-    // jukebox, YouTube lounge, leaderboard) — nav entry is intentional.
-    { label: t.nav.breakRoom, href: '/break-room' },
   ]
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)

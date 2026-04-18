@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { SKIP_BUTTON_VISIBLE_FROM } from '@/lib/cinematic/config'
+
+const SKIP_BUTTON_VISIBLE_FROM = 3
 
 interface Props {
   elapsed: number

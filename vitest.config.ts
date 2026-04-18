@@ -30,8 +30,9 @@ export default defineConfig({
       "lib/achievements/__tests__/**/*.test.ts",
       "lib/race/__tests__/**/*.test.ts",
       "lib/missions/__tests__/**/*.test.ts",
-      "lib/cinematic/__tests__/**/*.test.ts",
+      "lib/intro/__tests__/**/*.test.ts",
       "components/combat/__tests__/**/*.test.ts",
+      "tests/**/*.test.ts",
     ],
     alias: {
       "@/lib": new URL("./lib", import.meta.url).pathname,
