@@ -22,6 +22,8 @@ export interface CardComponentProps {
   hoverEnlarge?: boolean
   /** Disabled (greyed out). */
   disabled?: boolean
+  /** Optional keyword labels shown as chips under the effect text. */
+  keywords?: string[]
 }
 
 const SIZES = {
@@ -39,6 +41,7 @@ export default function CardComponent({
   size = 'normal',
   hoverEnlarge,
   disabled,
+  keywords,
 }: CardComponentProps) {
   const [hover, setHover] = useState(false)
   const enlarge = hoverEnlarge ?? size === 'normal'
@@ -212,6 +215,33 @@ export default function CardComponent({
         }}
       >
         {card.primaryEffect}
+        {keywords && keywords.length > 0 && (
+          <div
+            style={{
+              marginTop: 4,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 3,
+            }}
+          >
+            {keywords.map((kw) => (
+              <span
+                key={kw}
+                style={{
+                  fontSize: dim.font - 3,
+                  color: glow,
+                  background: `${glow}18`,
+                  border: `1px solid ${glow}55`,
+                  borderRadius: 3,
+                  padding: '1px 5px',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                {kw}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Alien backfire warning */}

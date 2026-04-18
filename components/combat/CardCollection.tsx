@@ -10,11 +10,12 @@ import {
   calculateDust,
   canFuse,
 } from '@/lib/game/cards'
+import type { CoreSetCard } from '@/lib/cards/starter_set'
 import {
-  STARTER_CARDS,
-  STARTER_CATALOGUE,
-  type CoreSetCard,
-} from '@/lib/cards/starter_set'
+  FULL_CARDS,
+  FULL_CATALOGUE,
+  formatKeyword,
+} from '@/lib/cards/full_library'
 import {
   addCardToCollection,
   craftCard,
@@ -68,7 +69,7 @@ export default function CardCollectionView() {
   }
 
   const filtered = useMemo(() => {
-    return STARTER_CARDS.filter((c) => {
+    return FULL_CARDS.filter((c) => {
       if (filterCategory && c.category !== filterCategory) return false
       if (filterRarity && c.rarity !== filterRarity) return false
       if (search.trim() && !c.name.toLowerCase().includes(search.toLowerCase())) return false
@@ -76,13 +77,13 @@ export default function CardCollectionView() {
     })
   }, [search, filterCategory, filterRarity])
 
-  const totalDust = totalDustValue(collection, STARTER_CATALOGUE)
+  const totalDust = totalDustValue(collection, FULL_CATALOGUE)
 
   // ─── actions ───────────────────────────────────────────────────────────
 
   const handleDisenchant = (card: CoreSetCard) => {
     try {
-      const r = disenchantCard(collection, card.id, STARTER_CATALOGUE)
+      const r = disenchantCard(collection, card.id, FULL_CATALOGUE)
       setCollection(r.collection)
       flashToast(`Disenchanted ${card.name} → +${r.dustGained} dust`)
     } catch (e) {
@@ -92,7 +93,7 @@ export default function CardCollectionView() {
 
   const handleCraft = (card: CoreSetCard) => {
     try {
-      const next = craftCard(collection, card.id, STARTER_CATALOGUE)
+      const next = craftCard(collection, card.id, FULL_CATALOGUE)
       setCollection(next)
       flashToast(`Crafted ${card.name}`)
     } catch (e) {
@@ -116,9 +117,9 @@ export default function CardCollectionView() {
       return
     }
     try {
-      const r = fuseCards(collection, fuseTarget.id, card.id, STARTER_CATALOGUE)
+      const r = fuseCards(collection, fuseTarget.id, card.id, FULL_CATALOGUE)
       setCollection(r.collection)
-      const result = STARTER_CATALOGUE[r.resultCardId]
+      const result = FULL_CATALOGUE[r.resultCardId]
       flashToast(`Fused into ${result?.name ?? r.resultCardId} (${r.resultRarity})`)
     } catch (e) {
       flashToast(`Fuse failed: ${(e as Error).message}`)
@@ -130,7 +131,7 @@ export default function CardCollectionView() {
   // Dev convenience: grant 1 of every card (unblocks deck-builder testing)
   const handleSeedAll = () => {
     let next = collection
-    for (const c of STARTER_CARDS) {
+    for (const c of FULL_CARDS) {
       if (ownedCount(next, c.id) < 2 && c.rarity !== CardRarity.Legendary) {
         next = addCardToCollection(next, c.id, 2 - ownedCount(next, c.id))
       } else if (c.rarity === CardRarity.Legendary && ownedCount(next, c.id) < 1) {
@@ -169,7 +170,7 @@ export default function CardCollectionView() {
               Card Collection
             </h1>
             <p style={{ fontSize: 16, opacity: 0.7, margin: '4px 0 0' }}>
-              {STARTER_CARDS.length} cards in the Core Set · disenchant for dust, craft new ones, fuse for higher rarity
+              {FULL_CARDS.length} cards in the library · disenchant for dust, craft new ones, fuse for higher rarity
             </p>
           </div>
           <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -342,11 +343,13 @@ export default function CardCollectionView() {
         >
           {filtered.map((card) => {
             const owned = ownedCount(collection, card.id)
+            const keywordLabels = card.keywords?.map(formatKeyword) ?? []
             return (
               <div key={card.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                 <CardComponent
                   card={card}
                   ownedCount={owned}
+                  keywords={keywordLabels}
                   onClick={(c) => {
                     if (fuseTarget) handleFuseSecond(c)
                     else setSelected(selected?.id === c.id ? null : c)

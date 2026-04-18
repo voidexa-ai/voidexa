@@ -1,17 +1,21 @@
 /**
  * components/combat/cardArt.ts
  *
- * Maps card ids to the preview render PNGs under public/images/renders/.
- * Mirrors docs/CARD_ART_MAPPING.md.
- *
- * Cards without a 3D source fall back to a procedural gradient generated
- * via CSS (returned as `null` here; the consumer renders the fallback).
+ * Sprint 14g — card art now loads from `/cards/rendered/<id>.png` (257 files
+ * matching every id in the full 257-card library). The legacy `CARD_ART`
+ * map below only covers the 40-card starter set and is retained as a
+ * fallback for any consumer still rendering starter cards.
  */
 
 import { CardRarity } from '@/lib/game/cards'
 
-/** Returns the render path for a card id, or null if it has no 3D source. */
+/** Returns the render path for a card id. Falls back to the legacy 40-card map. */
 export function cardArtPath(cardId: string): string | null {
+  return `/cards/rendered/${cardId}.png`
+}
+
+/** Legacy mapping to ship/cockpit renders — kept for starter-only consumers. */
+export function legacyCardArtPath(cardId: string): string | null {
   return CARD_ART[cardId] ?? null
 }
 
