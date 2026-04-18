@@ -1,7 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/AuthProvider'
 import { spendGhai } from '@/lib/credits/deduct'
 import type { WarpNode } from '@/lib/game/warp/network'
 
@@ -23,6 +24,8 @@ export interface WarpState {
  *   - expose destination on complete → caller teleports the ship
  */
 export function useWarp() {
+  const { user, loading: authLoading } = useAuth()
+  const userId = user?.id ?? null
   const [state, setState] = useState<WarpState>({
     mapOpen: false,
     warping: null,
@@ -30,22 +33,20 @@ export function useWarp() {
     balance: null,
     error: null,
   })
-  const userIdRef = useRef<string | null>(null)
-
   const refreshBalance = useCallback(async () => {
-    const { data } = await supabase.auth.getUser()
-    const uid = data.user?.id ?? null
-    userIdRef.current = uid
-    if (!uid) return
+    if (!userId) return
     const { data: wallet } = await supabase
       .from('user_credits')
       .select('ghai_balance_platform')
-      .eq('user_id', uid)
+      .eq('user_id', userId)
       .maybeSingle()
     setState(prev => ({ ...prev, balance: wallet?.ghai_balance_platform ?? 0 }))
-  }, [])
+  }, [userId])
 
-  useEffect(() => { void refreshBalance() }, [refreshBalance])
+  useEffect(() => {
+    if (authLoading) return
+    void refreshBalance()
+  }, [refreshBalance, authLoading])
 
   const openMap = useCallback(() => {
     if (Date.now() < state.cooldownUntil) {
@@ -62,13 +63,12 @@ export function useWarp() {
   }, [])
 
   const beginWarp = useCallback(async (destination: WarpNode, cost: number): Promise<boolean> => {
-    const uid = userIdRef.current
-    if (!uid) {
+    if (!userId) {
       setState(prev => ({ ...prev, error: 'Sign in to warp' }))
       return false
     }
     const sourceId = crypto.randomUUID()
-    const result = await spendGhai(uid, cost, { source: 'warp', sourceId })
+    const result = await spendGhai(userId, cost, { source: 'warp', sourceId })
     if (!result.ok) {
       setState(prev => ({ ...prev, error: result.error ?? 'warp failed' }))
       return false
@@ -80,7 +80,7 @@ export function useWarp() {
       balance: result.newBalance ?? prev.balance,
     }))
     return true
-  }, [])
+  }, [userId])
 
   const finishWarp = useCallback(() => {
     setState(prev => ({

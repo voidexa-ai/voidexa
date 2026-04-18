@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/AuthProvider'
 import { creditGhai } from '@/lib/credits/credit'
 import {
   CHAINS,
@@ -38,6 +39,8 @@ export interface QuestChainState {
 export function useActiveQuestChain(
   onChainComplete?: (title: string, chainId: string) => void,
 ) {
+  const { user, loading: authLoading } = useAuth()
+  const userId = user?.id ?? null
   const [state, setState] = useState<QuestChainState>({
     activeSteps: [],
     completedStepIds: new Set(),
@@ -45,32 +48,32 @@ export function useActiveQuestChain(
     skipped: false,
     loading: true,
   })
-  const [userId, setUserId] = useState<string | null>(null)
   const finalizingRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
+    if (authLoading) return
+    let cancelled = false
     ;(async () => {
-      const { data } = await supabase.auth.getUser()
-      const uid = data.user?.id ?? null
-      setUserId(uid)
       const skipped = typeof window !== 'undefined' && window.localStorage.getItem(SKIP_FLAG_KEY) === '1'
 
       let completedStepIds = new Set<string>()
-      if (uid) {
+      if (userId) {
         const { data: rows } = await supabase
           .from('user_quest_progress')
           .select('quest_id, status')
-          .eq('user_id', uid)
+          .eq('user_id', userId)
           .in('quest_id', ALL_STEP_IDS)
           .eq('status', 'completed')
         completedStepIds = new Set((rows ?? []).map(r => r.quest_id as string))
       }
 
+      if (cancelled) return
       const completedChainIds = computeChainCompletion(completedStepIds)
       const activeSteps = skipped ? [] : getActiveSteps(completedStepIds)
       setState({ activeSteps, completedStepIds, completedChainIds, skipped, loading: false })
     })()
-  }, [])
+    return () => { cancelled = true }
+  }, [userId, authLoading])
 
   const recordEvent = useCallback(async (event: { type: QuestStepTriggerType; target: string }) => {
     if (state.skipped || state.activeSteps.length === 0 || !userId) return

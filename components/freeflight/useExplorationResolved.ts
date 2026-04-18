@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/AuthProvider'
 import { creditGhai } from '@/lib/credits/credit'
 import type { EncounterChoice, ExplorationEncounter } from '@/lib/game/freeflight/explorationEncounters'
 
@@ -11,23 +12,24 @@ import type { EncounterChoice, ExplorationEncounter } from '@/lib/game/freefligh
  * GHAI if the choice awards any.
  */
 export function useExplorationResolved(onReward: (amount: number, label: string) => void) {
+  const { user, loading: authLoading } = useAuth()
+  const userId = user?.id ?? null
   const [resolved, setResolved] = useState<Set<string>>(new Set())
-  const [userId, setUserId] = useState<string | null>(null)
   const inFlight = useRef<Set<string>>(new Set())
 
   useEffect(() => {
+    if (authLoading || !userId) return
+    let cancelled = false
     ;(async () => {
-      const { data } = await supabase.auth.getUser()
-      const uid = data.user?.id ?? null
-      setUserId(uid)
-      if (!uid) return
       const { data: rows } = await supabase
         .from('exploration_encounters_resolved')
         .select('encounter_id')
-        .eq('user_id', uid)
+        .eq('user_id', userId)
+      if (cancelled) return
       if (rows) setResolved(new Set(rows.map(r => r.encounter_id as string)))
     })()
-  }, [])
+    return () => { cancelled = true }
+  }, [userId, authLoading])
 
   const resolve = useCallback(async (enc: ExplorationEncounter, choice: EncounterChoice) => {
     // Mark as resolved locally immediately so the glyph disappears and

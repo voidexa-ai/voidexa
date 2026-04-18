@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/AuthProvider'
 import { creditGhai } from '@/lib/credits/credit'
 import { getMissionById, type MissionTemplate } from '@/lib/game/missions/board'
 import { generateMissionWaypoints, type MissionWaypoint } from '@/lib/game/missions/waypoints'
@@ -26,25 +27,25 @@ export function useActiveMission(
   onPayout: (ghai: number, missionName: string) => void,
   onCardDrop?: (card: CardTemplate, rarity: GameCardRarity) => void,
 ) {
+  const { user, loading: authLoading } = useAuth()
+  const userId = user?.id ?? null
   const [active, setActive] = useState<ActiveMissionState | null>(null)
-  const [userId, setUserId] = useState<string | null>(null)
   const finalizingRef = useRef(false)
   const questChain = useActiveQuestChain()
 
-  // Load current user + active mission once.
+  // Sprint 14A: user comes from AuthProvider context (single shared source).
   useEffect(() => {
+    if (authLoading || !userId) return
+    let cancelled = false
     ;(async () => {
-      const { data } = await supabase.auth.getUser()
-      const uid = data.user?.id ?? null
-      setUserId(uid)
-      if (!uid) return
       const { data: rows } = await supabase
         .from('mission_acceptances')
         .select('id, mission_id, status, accepted_at')
-        .eq('user_id', uid)
+        .eq('user_id', userId)
         .in('status', ['accepted', 'in_progress'])
         .order('accepted_at', { ascending: false })
         .limit(1)
+      if (cancelled) return
       const row = rows?.[0]
       if (!row) return
       const tpl = getMissionById(row.mission_id as string)
@@ -56,7 +57,8 @@ export function useActiveMission(
         currentIndex: 0,
       })
     })()
-  }, [])
+    return () => { cancelled = true }
+  }, [userId, authLoading])
 
   const handleWaypointCleared = useCallback(async (_index: number) => {
     setActive(prev => {
