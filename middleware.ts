@@ -62,6 +62,7 @@ const SECURITY_HEADERS: Record<string, string> = {
     "child-src 'self' blob:; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https: blob:; " +
+    "media-src 'self' https://ihuljnekxkyqgroklurp.supabase.co https://*.supabase.co blob:; " +
     "font-src 'self' data:; " +
     "connect-src 'self' https: http://localhost:8888 blob: data:;",
 };

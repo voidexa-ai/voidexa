@@ -96,9 +96,9 @@ describe('homepage intro — quick menu panels', () => {
     const routesByKey = Object.fromEntries(
       QUICK_MENU_PANELS.filter((p) => p.href).map((p) => [p.key, p.href]),
     )
-    expect(routesByKey.apps).toBe('/products/apps')
-    expect(routesByKey.universe).toBe('/universe')
-    expect(routesByKey.tools).toBe('/products/ai-tools')
+    expect(routesByKey.apps).toBe('/apps')
+    expect(routesByKey.universe).toBe('/starmap')
+    expect(routesByKey.tools).toBe('/ai-tools')
   })
 
   it('every panel has a non-empty description at least 14 chars', () => {
@@ -114,8 +114,8 @@ describe('homepage intro — CTAs and timing constants', () => {
     expect(PRIMARY_CTA.label).toBe('Enter Free Flight')
   })
 
-  it('Enter Star Map CTA href is /starmap', () => {
-    expect(SECONDARY_CTA.href).toBe('/starmap')
+  it('Enter Star Map CTA href is /starmap/voidexa', () => {
+    expect(SECONDARY_CTA.href).toBe('/starmap/voidexa')
     expect(SECONDARY_CTA.label).toBe('Enter Star Map')
   })
 
