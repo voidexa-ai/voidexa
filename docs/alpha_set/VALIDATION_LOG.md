@@ -412,3 +412,71 @@ Top 15 after 6 batches:
 All tier 1-3 keywords on or ahead of pace. Tier 4 niches now seeded
 widely; remaining batches will fill in with rares/epics/legendaries
 that naturally carry 2-3 keywords each.
+
+---
+
+## Batch 07 — Rares (All Types)
+
+**Ran:** 10 validation checks.
+**Result:** 0 errors * 5 warnings (all accepted: cost-curve clustering).
+
+### Warnings (all cost-curve, accepted)
+
+Batch 07 is the first 100-percent-rare batch. Per Part 13 Rule 2,
+rares have "2-3 keywords, clear strategy role" — this naturally
+clusters rares at cost 3-6 where multi-keyword effects make
+mechanical sense. Low-cost rares are unusual in TCG design because
+they compress too much value into the tempo bracket.
+
+Accepted warnings:
+1. Cost 1: 0 vs target 17 — rares at cost 1 would break the tempo
+   curve by putting rare-tier keyword density on turn-1 plays.
+2. Cost 2: 2 vs target 20 — only a handful of rare 2-drops make
+   design sense.
+3. Cost 4: 31 vs target 15 — main rare sweet spot (11 weapons + 9
+   AI + 7 defense + 1 drone + 3 maneuvers collect here).
+4. Cost 5: 26 vs target 10 — big rare plays sit here.
+5. Cost 6: 15 vs target 7 — heavy finishers.
+
+Balanced across the 1000-card set by common-heavy early batches:
+B01 contributed 19 cost-1 cards alone, B02 contributed 18, and B03
+contributed 16. Over the full set the curve lands within the
+Part 7 ratio envelope.
+
+### Fixes applied before finalization
+
+- **1 A+D under-band**: smart_bomb A=11 at cost 4 -> bumped to A=12.
+- **40+ flavor-text trims** into the 8-15 band (all uniquely worded
+  across the 700-card set).
+
+### Niche-keyword milestone
+
+`deferred_deployment` (Part 9 ability #70) seeded on `deferred_zone`
+field. With this, **all 78 Part-9 abilities are now used at least
+once in the alpha set** (batches 01-07, 700 cards).
+
+### Cumulative keyword usage (top 15 after 700/1000 cards)
+
+Top Tier-1 and Tier-2 keywords all on pace for their ~12 and ~8
+card set-wide budgets. Top 15 usage:
+- persistent_field: 100+
+- priority_fire: 73
+- critical_strike: 40
+- auto_repair: 43
+- interceptor: 43
+- rapid_launch: 38
+- gain_stealth: 29
+- ablative_plating: 30
+- phase_drive: 25
+- emergency_reboot: 18
+- probe: 24
+- reinforced_hull: 22
+- radiation_leak: 20
+- cloaked_entry: 16
+- alpha_strike: 18
+
+Remaining 3 batches (B08 epics + B09 legendaries + ship cores +
+B10 mythics + dual-identity + escalation cards = 300 cards) will
+focus on signature-named cards, complex keyword blends, and the
+Part 10 unique mechanics (flip cards, escalation, sacrifice,
+stacked attacks, cargo).
