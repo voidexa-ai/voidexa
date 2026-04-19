@@ -25,7 +25,8 @@ import {
   totalDustValue,
   type CardCollection,
 } from '@/lib/cards/collection'
-import CardComponent, { RarityChip, RARITY_GLOW } from './CardComponent'
+import { RarityChip, RARITY_GLOW } from './CardComponent'
+import { cardArtPath } from './cardArt'
 import {
   loadCollection,
   saveCollection,
@@ -344,19 +345,112 @@ export default function CardCollectionView() {
           {filtered.map((card) => {
             const owned = ownedCount(collection, card.id)
             const keywordLabels = card.keywords?.map(formatKeyword) ?? []
+            const isFuseTarget = fuseTarget?.id === card.id
+            const glow = RARITY_GLOW[card.rarity]
+            const src = cardArtPath(card.id) ?? ''
+            const handleClick = () => {
+              if (fuseTarget) handleFuseSecond(card)
+              else setSelected(selected?.id === card.id ? null : card)
+            }
             return (
               <div key={card.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                <CardComponent
-                  card={card}
-                  ownedCount={owned}
-                  keywords={keywordLabels}
-                  onClick={(c) => {
-                    if (fuseTarget) handleFuseSecond(c)
-                    else setSelected(selected?.id === c.id ? null : c)
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={handleClick}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleClick()
                   }}
-                  affordable={true}
-                  hoverEnlarge={false}
-                />
+                  aria-label={`${card.name} — ${card.rarity} ${card.category} card`}
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: 260,
+                    aspectRatio: '600 / 900',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    border: isFuseTarget ? `2px solid ${glow}` : '2px solid transparent',
+                    boxShadow: isFuseTarget ? `0 0 16px ${glow}aa` : 'none',
+                    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                    background: '#0a0a0f',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)'
+                    e.currentTarget.style.boxShadow = `0 0 20px ${glow}66`
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)'
+                    e.currentTarget.style.boxShadow = isFuseTarget
+                      ? `0 0 16px ${glow}aa`
+                      : 'none'
+                  }}
+                >
+                  { /* eslint-disable-next-line @next/next/no-img-element */ }
+                  <img
+                    src={src}
+                    alt={card.name}
+                    loading="lazy"
+                    width={600}
+                    height={900}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                    }}
+                  />
+                  {owned > 0 && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 8,
+                        left: 8,
+                        padding: '2px 8px',
+                        background: 'rgba(0,0,0,0.72)',
+                        border: `1px solid ${glow}`,
+                        borderRadius: 4,
+                        fontSize: 14,
+                        fontWeight: 700,
+                        color: '#e5f7fa',
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      ×{owned}
+                    </div>
+                  )}
+                  {keywordLabels.length > 0 && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 8,
+                        left: 8,
+                        right: 8,
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 4,
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      {keywordLabels.slice(0, 3).map((kw) => (
+                        <span
+                          key={kw}
+                          style={{
+                            fontSize: 11,
+                            color: glow,
+                            background: 'rgba(0,0,0,0.78)',
+                            border: `1px solid ${glow}aa`,
+                            borderRadius: 3,
+                            padding: '1px 6px',
+                            letterSpacing: '0.02em',
+                          }}
+                        >
+                          {kw}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <CardActions
                   card={card}
                   owned={owned}
