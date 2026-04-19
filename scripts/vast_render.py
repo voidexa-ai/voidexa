@@ -345,60 +345,102 @@ class Orchestrator:
         if not offers:
             raise RuntimeError("no Vast.ai offers matched — widen filters or try later")
 
-        attempts = 0
-        for offer in offers[: filt["lease_retries"]]:
-            attempts += 1
-            log(
-                f"  Lease attempt {attempts}: offer {offer.get('id')} "
-                f"@ ${offer.get('dph_total')}/hr"
-            )
-            launched = client.create_instance(
-                id=offer["id"],
-                image=self.config["docker_image"],
-                disk=40,
-                onstart_cmd=(
-                    "mkdir -p /workspace/ComfyUI/models/checkpoints "
-                    "/workspace/ComfyUI/models/vae /workspace/output"
-                ),
-                runtype="ssh",
-                label="voidexa-vast_render",
-            )
-            instance_id = (
-                launched.get("new_contract")
-                or launched.get("instance_id")
-                or launched.get("id")
-            )
-            if not instance_id:
-                log(f"  unexpected create_instance response: {launched}")
-                continue
+        images = self.config.get("docker_images") or []
+        if not images:
+            raise RuntimeError("render_config.yaml docker_images list is empty")
 
-            ssh_pub_path = os.environ.get("VAST_SSH_PUBLIC_KEY_PATH")
-            if ssh_pub_path:
-                pub_path = pathlib.Path(os.path.expanduser(ssh_pub_path))
-                if pub_path.exists():
-                    try:
-                        client.attach_ssh(
-                            instance_id=instance_id,
-                            ssh_key=pub_path.read_text(encoding="utf-8").strip(),
-                        )
-                        log(f"  attached ssh key {pub_path.name} to instance {instance_id}")
-                    except Exception as exc:
-                        log(f"  WARN: attach_ssh failed: {exc}")
+        last_exc: str | None = None
+        for image_spec in images:
+            image_name = image_spec["name"]
+            log(f"  trying image: {image_name}")
+            onstart = self._build_onstart(image_spec)
+            env_flags = image_spec.get("env_flags", "")
+            disk_gb = int(image_spec.get("min_disk_gb", 40))
 
-            if self._wait_running(client, instance_id):
-                info = client.show_instance(id=instance_id)
-                return {
-                    "instance_id": instance_id,
-                    "gpu_name": self.gpu_profile["gpu_name"],
-                    "dph_total": offer["dph_total"],
-                    "status": "running",
-                    "ssh_host": info.get("ssh_host") or info.get("public_ipaddr"),
-                    "ssh_port": info.get("ssh_port"),
-                    "public_ipaddr": info.get("public_ipaddr"),
-                    "ports": info.get("ports"),
-                    "raw": info,
-                }
-        raise RuntimeError("all lease retries exhausted")
+            attempts = 0
+            for offer in offers[: filt["lease_retries"]]:
+                attempts += 1
+                log(
+                    f"  Lease attempt {attempts} [{image_name}]: offer {offer.get('id')} "
+                    f"@ ${offer.get('dph_total')}/hr"
+                )
+                try:
+                    launched = client.create_instance(
+                        id=offer["id"],
+                        image=image_name,
+                        disk=disk_gb,
+                        onstart_cmd=onstart,
+                        env=env_flags,
+                        runtype="ssh",
+                        label="voidexa-vast_render",
+                    )
+                except Exception as exc:
+                    last_exc = f"{image_name}: create_instance failed: {exc}"
+                    log(f"  create_instance failed: {exc}")
+                    continue
+
+                instance_id = (
+                    launched.get("new_contract")
+                    or launched.get("instance_id")
+                    or launched.get("id")
+                )
+                if not instance_id:
+                    log(f"  unexpected create_instance response: {launched}")
+                    last_exc = f"no instance_id in response: {launched}"
+                    continue
+
+                # Attach SSH key — not critical for this image (onstart handles setup),
+                # but nice to have for post-hoc debugging via `ssh root@...`.
+                ssh_pub_path = os.environ.get("VAST_SSH_PUBLIC_KEY_PATH")
+                if ssh_pub_path:
+                    pub_path = pathlib.Path(os.path.expanduser(ssh_pub_path))
+                    if pub_path.exists():
+                        try:
+                            client.attach_ssh(
+                                instance_id=instance_id,
+                                ssh_key=pub_path.read_text(encoding="utf-8").strip(),
+                            )
+                            log(f"  attached ssh key {pub_path.name} to instance {instance_id}")
+                        except Exception as exc:
+                            log(f"  WARN: attach_ssh failed: {exc}")
+
+                if self._wait_running(client, instance_id):
+                    info = client.show_instance(id=instance_id)
+                    return {
+                        "instance_id": instance_id,
+                        "gpu_name": self.gpu_profile["gpu_name"],
+                        "dph_total": offer["dph_total"],
+                        "status": "running",
+                        "image": image_name,
+                        "ssh_host": info.get("ssh_host") or info.get("public_ipaddr"),
+                        "ssh_port": info.get("ssh_port"),
+                        "public_ipaddr": info.get("public_ipaddr"),
+                        "ports": info.get("ports"),
+                        "raw": info,
+                    }
+                last_exc = f"{image_name}: instance {instance_id} never reached running"
+                # loop continues to next offer with same image
+
+            log(f"  all {attempts} offers exhausted for image {image_name}, falling back...")
+
+        raise RuntimeError(f"all lease retries exhausted — last: {last_exc}")
+
+    def _build_onstart(self, image_spec: dict) -> str:
+        """Compose the container boot script: dirs + wget models + image init."""
+        init = image_spec.get("init_cmd", "/bin/true")
+        parts = [
+            "env >> /etc/environment",
+            "mkdir -p /workspace/ComfyUI/models/checkpoints "
+            "/workspace/ComfyUI/models/vae /workspace/output",
+        ]
+        for m in self.config["model_files"]:
+            # -c resumes, -nv = less-verbose, skip if target already non-empty
+            parts.append(
+                f"[ -s {shlex.quote(m['dest'])} ] || "
+                f"wget -c -nv {shlex.quote(m['url'])} -O {shlex.quote(m['dest'])}"
+            )
+        parts.append(init)
+        return " && ".join(parts)
 
     def _build_vast_query(self) -> str:
         filt = self.config["offer_filters"]
@@ -455,66 +497,28 @@ class Orchestrator:
     # ---------------- Phase 3: setup ----------------
 
     def setup_instance(self, instance: dict) -> None:
-        """SSH to instance, download SDXL models, start ComfyUI, verify HTTP ready.
+        """Wait for ComfyUI to come up on the leased instance.
 
-        Dry-run path: simulate each step, compute the ComfyUI URL from a fake
-        port map, and store it on self._comfy_base_url so render_batch's
-        mocked path can still echo realistic URLs.
+        Model downloads and the ComfyUI launch both happen inside the
+        container via the onstart_cmd we pass on create_instance — so this
+        phase just resolves the public URL and polls `/queue` until it
+        returns 200. No SSH needed on the happy path.
         """
-        banner("Phase 3 — instance setup (models + ComfyUI)")
-        log(f"  Target: ssh {instance.get('ssh_host')} :{instance.get('ssh_port')}")
+        banner("Phase 3 — wait for ComfyUI")
         comfy_port = int(self.config["comfyui"]["port"])
 
         if self.dry_run:
-            for m in self.config["model_files"]:
-                log(f"  DRY-RUN ensure model: wget -c {m['url']} -> {m['dest']}")
-            log("  DRY-RUN start ComfyUI: nohup python3 /workspace/ComfyUI/main.py "
-                f"--listen 0.0.0.0 --port {comfy_port} &")
-            log("  DRY-RUN poll GET http://<ip>:{0}/queue until 200".format(comfy_port))
-            self._comfy_base_url = "http://dry-run.local:{0}".format(comfy_port)
+            log(f"  DRY-RUN: onstart_cmd handles dirs + wget of "
+                f"{len(self.config['model_files'])} models + init.sh")
+            log(f"  DRY-RUN: would poll GET http://<ip>:{comfy_port}/queue until 200")
+            self._comfy_base_url = f"http://dry-run.local:{comfy_port}"
             log(f"  DRY-RUN setup complete — mock base URL {self._comfy_base_url}")
             return
 
-        ssh = self._ssh_connect(instance)
-        try:
-            self._ssh_exec(
-                ssh,
-                "mkdir -p /workspace/ComfyUI/models/checkpoints "
-                "/workspace/ComfyUI/models/vae /workspace/output",
-            )
-            for m in self.config["model_files"]:
-                # -c resumes partial downloads, -nv is less-verbose, --tries retries on transient errors
-                cmd = (
-                    f"test -s {shlex.quote(m['dest'])} "
-                    "|| ("
-                    f"wget -c -nv --tries={self.config['retry']['per_prompt_max_attempts']} "
-                    f"{shlex.quote(m['url'])} -O {shlex.quote(m['dest'])}"
-                    ")"
-                )
-                log(f"  ensure model: {m['name']}")
-                self._ssh_exec(ssh, cmd, timeout=1800)  # up to 30min per model
-
-            # Start ComfyUI in background (nohup so it survives SSH disconnect)
-            launch_cmd = (
-                "pkill -f 'ComfyUI/main.py' || true; "
-                f"cd /workspace/ComfyUI && nohup python3 main.py "
-                f"--listen 0.0.0.0 --port {comfy_port} "
-                "> /tmp/comfy.log 2>&1 &"
-            )
-            log(f"  start ComfyUI on :{comfy_port} (background)")
-            self._ssh_exec(ssh, launch_cmd, timeout=30)
-        finally:
-            try:
-                ssh.close()
-            except Exception:
-                pass
-
-        # Resolve public URL + port (vast maps inner port to a public host port)
         base_url = self._resolve_comfy_base_url(instance, comfy_port)
         self._comfy_base_url = base_url
         log(f"  ComfyUI HTTP base: {base_url}")
 
-        # Poll /queue until ready
         ready_timeout = int(self.config.get("comfyui", {}).get(
             "ready_timeout_seconds", 300
         ))

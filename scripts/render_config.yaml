@@ -41,8 +41,19 @@ offer_filters:
   lease_timeout_seconds: 900         # 15 min — large image pulls on fresh hosts take 5-12 min
   lease_status_log_seconds: 30       # every N seconds log actual_status + status_msg while waiting
 
-# Docker image + model set (Part 4)
-docker_image: "runpod/stable-diffusion:comfyui-latest"
+# Docker image fallback chain (Part 4 — original runpod/stable-diffusion:comfyui-latest
+# was removed from Docker Hub, returns "failed to resolve reference"). Each entry is
+# tried in order; first one that schedules wins.
+docker_images:
+  - name: "aidockorg/comfyui-cuda:latest"
+    init_cmd: "/opt/ai-dock/bin/init.sh"
+    env_flags: "-e WEB_ENABLE_AUTH=false -e WEB_ENABLE_HTTPS=false -e AUTO_UPDATE=false -e JUPYTER_PASSWORD=voidexa -p 8188:8188"
+    min_disk_gb: 40
+  - name: "yanwk/comfyui-boot:cu124-megapak"
+    init_cmd: "/docker/entrypoint.sh"
+    env_flags: "-p 8188:8188"
+    min_disk_gb: 40
+
 model_files:
   - name: "sd_xl_base_1.0.safetensors"
     url: "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
@@ -67,7 +78,7 @@ comfyui:
   output_dir: "/workspace/output"
   poll_seconds: 2
   job_timeout_seconds: 120
-  ready_timeout_seconds: 300   # wait for /queue 200 after ComfyUI launch
+  ready_timeout_seconds: 1200  # /queue may take 10+min: image pull + 3 model downloads + ComfyUI model scan
 
 # Part 10 — retry + resumability
 retry:
