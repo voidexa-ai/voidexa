@@ -521,8 +521,8 @@
     "cargo": false
   },
   {
-    "id": "heavy_striker_r",
-    "name": "Heavy Striker",
+    "id": "warhammer_fighter",
+    "name": "Warhammer Fighter",
     "type": "Drone",
     "rarity": "rare",
     "energy_cost": 5,
@@ -626,8 +626,8 @@
     "cargo": false
   },
   {
-    "id": "siege_bomber_r",
-    "name": "Siege Bomber",
+    "id": "siege_reaver",
+    "name": "Siege Reaver",
     "type": "Drone",
     "rarity": "rare",
     "energy_cost": 5,
@@ -1340,8 +1340,8 @@
     "cargo": false
   },
   {
-    "id": "titanic_aegis_r",
-    "name": "Titanic Aegis",
+    "id": "colossal_aegis",
+    "name": "Colossal Aegis",
     "type": "Defense",
     "rarity": "rare",
     "energy_cost": 5,
@@ -1353,7 +1353,7 @@
       "emergency_reboot",
       "reinforced_hull"
     ],
-    "flavor_text": "Four layers of slow refusal. The fifth layer is the pilot's stubbornness, added without permission.",
+    "flavor_text": "Four layers of slow refusal. The fifth layer is the pilot's own stubbornness.",
     "archetype": "midrange",
     "subsystem_target": null,
     "escalation": false,
@@ -1361,8 +1361,8 @@
     "cargo": false
   },
   {
-    "id": "ultimate_shield_r",
-    "name": "Ultimate Shield",
+    "id": "paragon_shield",
+    "name": "Paragon Shield",
     "type": "Defense",
     "rarity": "rare",
     "energy_cost": 6,
@@ -1498,7 +1498,7 @@
       "disable",
       "apply_lock"
     ],
-    "flavor_text": "A bright needle in the enemy's clock. The clock stays bright. The hands stay still.",
+    "flavor_text": "A bright needle in the enemy's clock. The hands stop moving at once.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -1881,8 +1881,8 @@
     "cargo": false
   },
   {
-    "id": "master_targeting_r",
-    "name": "Master Targeting",
+    "id": "virtuoso_scope",
+    "name": "Virtuoso Scope",
     "type": "Equipment",
     "rarity": "rare",
     "energy_cost": 3,
@@ -1894,7 +1894,7 @@
       "tracking_lock",
       "critical_strike"
     ],
-    "flavor_text": "Three lenses. Three opinions. The fourth is the pilot's. The target agrees with all four.",
+    "flavor_text": "Three lenses. Three opinions. One pilot. The target agrees with all of them.",
     "archetype": "combo",
     "subsystem_target": null,
     "escalation": false,
@@ -1935,7 +1935,7 @@
       "reinforced_hull",
       "ablative_plating"
     ],
-    "flavor_text": "Thicker than the rookie's frame. Stubborner than the rookie's pilot. Both get older together.",
+    "flavor_text": "Thicker than the rookie's frame. Stubborner than the rookie's pilot as well.",
     "archetype": "midrange",
     "subsystem_target": null,
     "escalation": false,

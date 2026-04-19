@@ -328,7 +328,7 @@
       "phase_drive",
       "overflow_fire"
     ],
-    "flavor_text": "Born in a shipyard that no longer exists. The shipyard's manifest still has it listed.",
+    "flavor_text": "Born in a shipyard that no longer exists. Still listed on its manifest.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -454,7 +454,7 @@
       "critical_breach",
       "alpha_strike"
     ],
-    "flavor_text": "Runs every sortie twice. Lands once. Drops a long note into the enemy's deck plating.",
+    "flavor_text": "Runs every sortie twice. Lands once. Drops a long note into the plating.",
     "archetype": "midrange",
     "subsystem_target": null,
     "escalation": false,
@@ -820,7 +820,7 @@
       "priority_fire",
       "critical_strike"
     ],
-    "flavor_text": "Writes the target's name on every instrument panel in the fleet. The target notices late.",
+    "flavor_text": "Writes the target's name on every instrument panel in the fleet. Target learns late.",
     "archetype": "combo",
     "subsystem_target": null,
     "escalation": false,
@@ -1211,7 +1211,7 @@
       "disable",
       "data_wipe"
     ],
-    "flavor_text": "A loud minute on the enemy's comm. Nothing goes through. Nothing comes back. Small receipt.",
+    "flavor_text": "A loud minute on the enemy's comm. Nothing goes through. Nothing comes back.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -1440,7 +1440,7 @@
       "phantom_echo",
       "gain_stealth"
     ],
-    "flavor_text": "Copies the enemy's best drone. Tells the copy whose side it is on. It listens.",
+    "flavor_text": "Copies the enemy's best drone. Tells the copy whose side it is on.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -1934,7 +1934,7 @@
       "reinforced_hull",
       "auto_repair"
     ],
-    "flavor_text": "A quiet weight under the drone's ribs. The drone flies with a little more confidence.",
+    "flavor_text": "A quiet weight under the drone's ribs. The drone flies with more confidence.",
     "archetype": "midrange",
     "subsystem_target": null,
     "escalation": false,

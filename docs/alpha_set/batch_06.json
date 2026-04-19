@@ -1573,8 +1573,8 @@
     "cargo": false
   },
   {
-    "id": "elite_striker_r",
-    "name": "Elite Striker",
+    "id": "strike_vanguard",
+    "name": "Strike Vanguard",
     "type": "Drone",
     "rarity": "rare",
     "energy_cost": 4,
@@ -1628,7 +1628,7 @@
       "hot_deploy",
       "battle_hardened"
     ],
-    "flavor_text": "The pilot name is half-remembered. The chassis is rebuilt every quarter. The kill count climbs.",
+    "flavor_text": "Pilot name half-remembered. Chassis rebuilt every quarter. Kill count still climbing.",
     "archetype": "midrange",
     "subsystem_target": null,
     "escalation": false,

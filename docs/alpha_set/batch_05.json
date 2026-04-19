@@ -484,7 +484,7 @@
       "rapid_launch",
       "hot_activation"
     ],
-    "flavor_text": "Comes with the pilot's name on the grip. Comes with the target's later, too.",
+    "flavor_text": "Comes with the pilot's name on the grip. The target's name comes later.",
     "archetype": "combo",
     "subsystem_target": null,
     "escalation": false,
@@ -744,7 +744,7 @@
       "critical_strike",
       "radiation_leak"
     ],
-    "flavor_text": "A slow-burning weapon. The damage happens on a schedule the target prefers not to read.",
+    "flavor_text": "A slow-burning weapon. Damage arrives on a schedule the target refuses to read.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -844,7 +844,7 @@
       "auto_repair",
       "hull_drain"
     ],
-    "flavor_text": "Bites the enemy. Carries the enemy's blood home in the tank. Keeps the ship alive.",
+    "flavor_text": "Bites the enemy. Carries the enemy's blood home. Keeps the ship alive afterwards.",
     "archetype": "ramp",
     "subsystem_target": null,
     "escalation": false,
@@ -864,7 +864,7 @@
       "deploy_burst",
       "disable"
     ],
-    "flavor_text": "Arrives with a small screwdriver. Leaves with most of the enemy's ideas in its pocket.",
+    "flavor_text": "Arrives with a small screwdriver. Leaves with most of the enemy's ideas.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -1509,7 +1509,7 @@
       "signal_jammer",
       "gain_stealth"
     ],
-    "flavor_text": "Scatters the wavelength, scatters the sight, scatters the enemy's best ideas on the comm line.",
+    "flavor_text": "Scatters the wavelength, scatters the sight, scatters the enemy's best comm ideas.",
     "archetype": "control",
     "subsystem_target": null,
     "escalation": false,
@@ -1994,7 +1994,7 @@
       "reinforced_hull",
       "auto_repair"
     ],
-    "flavor_text": "The grand name is not bragging. It is the fleet's polite warning to the enemy.",
+    "flavor_text": "The grand name is not bragging. It is the fleet's polite enemy warning.",
     "archetype": "midrange",
     "subsystem_target": null,
     "escalation": false,

@@ -708,7 +708,7 @@ Distribution:
 | 578 | siege_lance_r | Siege Lance | Weapon | R | 6 | 21/0 | aggro | rapid_launch, overflow_fire, critical_strike |
 | 579 | elite_interceptor | Elite Interceptor | Drone | R | 3 | 4/7 | control | interceptor, priority_fire, emergency_reboot |
 | 580 | master_scout | Master Scout | Drone | R | 3 | 3/6 | utility | deploy_burst, probe, deep_scan |
-| 581 | elite_striker_r | Elite Striker | Drone | R | 4 | 8/5 | aggro | rapid_launch, alpha_strike, priority_fire |
+| 581 | strike_vanguard | Strike Vanguard | Drone | R | 4 | 8/5 | aggro | rapid_launch, alpha_strike, priority_fire |
 | 582 | ghost_operative | Ghost Operative | Drone | R | 4 | 6/6 | utility | gain_stealth, cloaked_entry, phase_drive |
 | 583 | heavy_fighter_r | Heavy Fighter (Ace Class) | Drone | R | 5 | 9/8 | midrange | priority_fire, hot_deploy, battle_hardened |
 | 584 | capital_warship | Capital Warship | Drone | R | 6 | 12/12 | midrange | rapid_launch, cold_boot, priority_fire |
@@ -769,12 +769,12 @@ Distribution:
 | 623 | elite_hunter | Elite Hunter | Drone | 4 | 7/5 | midrange | tracking_lock, critical_strike, priority_fire |
 | 624 | phantom_bomber | Phantom Bomber | Drone | 4 | 7/5 | aggro | cloaked_entry, critical_breach, rapid_launch |
 | 625 | engineer_drone | Engineer Drone | Drone | 4 | 4/9 | ramp | auto_repair, emergency_reboot, hull_drain |
-| 626 | heavy_striker_r | Heavy Striker | Drone | 5 | 9/7 | midrange | rapid_launch, priority_fire, alpha_strike |
+| 626 | warhammer_fighter | Warhammer Fighter | Drone | 5 | 9/7 | midrange | rapid_launch, priority_fire, alpha_strike |
 | 627 | assault_leader | Assault Leader | Drone | 5 | 10/6 | midrange | battle_hardened, priority_fire, outrider |
 | 628 | sentinel_elite | Sentinel Elite | Drone | 5 | 5/13 | midrange | interceptor, reinforced_hull, emergency_reboot |
 | 629 | ghost_commander | Ghost Commander | Drone | 5 | 7/9 | utility | gain_stealth, phase_drive, cloaked_entry |
 | 630 | swarm_captain | Swarm Captain | Drone | 5 | 8/8 | midrange | rapid_launch, battle_hardened, priority_fire |
-| 631 | siege_bomber_r | Siege Bomber | Drone | 5 | 10/6 | midrange | cold_boot, critical_breach, rapid_launch |
+| 631 | siege_reaver | Siege Reaver | Drone | 5 | 10/6 | midrange | cold_boot, critical_breach, rapid_launch |
 | 632 | master_tactician | Master Tactician | Drone | 6 | 10/11 | midrange | priority_fire, overclock, battle_hardened |
 | 633 | capital_striker | Capital Striker | Drone | 6 | 13/8 | midrange | rapid_launch, alpha_strike, priority_fire |
 | 634 | grand_defender | Grand Defender | Drone | 6 | 7/14 | midrange | interceptor, reinforced_hull, auto_repair |
@@ -808,8 +808,8 @@ Distribution:
 | 662 | master_fortress_r | Master Fortress | Defense | 5 | 2/17 | midrange | interceptor, reinforced_hull, auto_repair |
 | 663 | phase_bastion | Phase Bastion | Defense | 5 | 0/17 | control | phase_drive, gain_stealth, reinforced_hull |
 | 664 | regen_fortress | Regen Fortress | Defense | 5 | 0/17 | ramp | auto_repair, emergency_reboot, ablative_plating |
-| 665 | titanic_aegis_r | Titanic Aegis | Defense | 5 | 0/18 | midrange | ablative_plating, emergency_reboot, reinforced_hull |
-| 666 | ultimate_shield_r | Ultimate Shield | Defense | 6 | 0/22 | ramp | ablative_plating, auto_repair, reinforced_hull |
+| 665 | colossal_aegis | Colossal Aegis | Defense | 5 | 0/18 | midrange | ablative_plating, emergency_reboot, reinforced_hull |
+| 666 | paragon_shield | Paragon Shield | Defense | 6 | 0/22 | ramp | ablative_plating, auto_repair, reinforced_hull |
 | 667 | fortress_bastion | Fortress Bastion | Defense | 6 | 2/20 | midrange | interceptor, reinforced_hull, emergency_reboot |
 | 668 | apex_aegis | Apex Aegis | Defense | 6 | 0/21 | ramp | ablative_plating, auto_repair, emergency_reboot |
 | 669 | primordial_wall | Primordial Wall | Defense | 7 | 0/26 | midrange | interceptor, reinforced_hull, auto_repair |
@@ -835,7 +835,7 @@ Distribution:
 | 689 | apex_charge | Apex Charge | Maneuver | 5 | 0/0 | combo | critical_strike, overclock |
 | 690 | tactical_reset | Tactical Reset | Maneuver | 5 | 0/0 | utility | system_reset, probe |
 | 691 | grand_vector | Grand Vector | Maneuver | 6 | 0/0 | combo | priority_fire, rapid_launch, reactive |
-| 692 | master_targeting_r | Master Targeting | Equipment | 3 | 0/0 | combo | priority_fire, tracking_lock, critical_strike |
+| 692 | virtuoso_scope | Virtuoso Scope | Equipment | 3 | 0/0 | combo | priority_fire, tracking_lock, critical_strike |
 | 693 | phantom_cloak | Phantom Cloak | Equipment | 3 | 0/0 | utility | gain_stealth, cloaked_entry, evade |
 | 694 | elite_plating_r | Elite Plating (Rare) | Equipment | 4 | 0/0 | midrange | reinforced_hull, ablative_plating |
 | 695 | fleet_conduit | Fleet Conduit | Equipment | 4 | 0/0 | ramp | crew_pooling, cascading_power |
