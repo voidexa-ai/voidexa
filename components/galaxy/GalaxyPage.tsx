@@ -127,18 +127,25 @@ export default function GalaxyPage() {
         Explore the Universe
       </button>
 
-      {/* Subtle CVR marker — small, low-opacity so it doesn't compete with
-          the 3D scene. This replaces the global Footer on galaxy views. */}
+      {/* Sprint 16 Task 6 — thin full-width footer strip at z:10, low-opacity
+          gradient so it doesn't compete with the scene but still anchors the
+          brand. Font bumped to 14 px to clear the 14 px label minimum. */}
       <div style={{
         position: 'fixed',
-        bottom: 10,
-        right: 16,
-        zIndex: 20,
-        fontSize: 12,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: 28,
+        zIndex: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 14,
         letterSpacing: '0.06em',
         color: 'rgba(255,255,255,0.5)',
         fontFamily: 'var(--font-inter, system-ui)',
         pointerEvents: 'none',
+        background: 'linear-gradient(180deg, transparent, rgba(2,4,14,0.55))',
       }}>
         Operating globally from Denmark · CVR 46343387
       </div>

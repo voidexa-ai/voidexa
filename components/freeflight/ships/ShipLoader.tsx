@@ -7,6 +7,7 @@ import ShipModel from './ShipModel'
 import ShipWireframe from './ShipWireframe'
 import ModelErrorBoundary from '../ModelErrorBoundary'
 import type { ShipState } from '../types'
+import { MODEL_URLS } from '@/lib/config/modelUrls'
 
 interface Props {
   ship: React.MutableRefObject<ShipState>
@@ -18,28 +19,34 @@ interface Props {
 
 const MAX_ATTEMPTS = 3
 const RETRY_DELAY_MS = 2000
+const BOB_FALLBACK_URL = MODEL_URLS.qs_bob
 
 /**
- * Ship loader with retry + wireframe placeholder.
+ * Ship loader with retry + Bob fallback + wireframe placeholder.
  *
  * - First paint: wireframe silhouette (Suspense fallback) while Supabase CDN
  *   streams the .glb.
  * - On GLTF error: bump attempt, drop drei's cached entry, re-mount after a
  *   short delay. Wireframe stays visible in the gap.
- * - After MAX_ATTEMPTS failures: wireframe + "Loading ship..." label (no more
- *   retries), so the player never sees a raw blocky fallback.
+ * - After MAX_ATTEMPTS failures: Sprint 16 Task 7 kicks in — swap to Bob's
+ *   GLB so the pilot always has a flyable ship, instead of staring at the
+ *   wireframe indefinitely.
+ * - If Bob itself fails (rare — means the Supabase bucket is offline): fall
+ *   through to the old wireframe + "Loading ship..." label path.
  */
 const ShipLoader = forwardRef<THREE.Group, Props>(function ShipLoader(
   { ship, visible, url, scale, onSize },
   ref,
 ) {
   const [attempt, setAttempt] = useState(0)
+  const [usingBobFallback, setUsingBobFallback] = useState(false)
   const [gaveUp, setGaveUp] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Reset when URL changes (player switched ships).
   useEffect(() => {
     setAttempt(0)
+    setUsingBobFallback(false)
     setGaveUp(false)
   }, [url])
 
@@ -54,31 +61,41 @@ const ShipLoader = forwardRef<THREE.Group, Props>(function ShipLoader(
     timer.current = setTimeout(() => {
       setAttempt(prev => {
         if (prev + 1 >= MAX_ATTEMPTS) {
+          // Task 7: fall back to Bob before truly giving up — unless Bob is
+          // exactly what we were trying to load, in which case the wireframe
+          // remains the only safe render path.
+          if (url !== BOB_FALLBACK_URL && !usingBobFallback) {
+            console.warn(`[ship-loader] ${url} failed ${MAX_ATTEMPTS}x — falling back to Bob`)
+            setUsingBobFallback(true)
+            return 0
+          }
           setGaveUp(true)
           return prev
         }
         return prev + 1
       })
     }, RETRY_DELAY_MS)
-  }, [url])
+  }, [url, usingBobFallback])
 
   if (gaveUp) {
     return <ShipWireframe ship={ship} visible={visible} label="Loading ship..." />
   }
 
+  const activeUrl = usingBobFallback ? BOB_FALLBACK_URL : url
+
   return (
     <ModelErrorBoundary
       onError={handleError}
-      resetKey={`${url}-${attempt}`}
+      resetKey={`${activeUrl}-${attempt}`}
       fallback={<ShipWireframe ship={ship} visible={visible} />}
     >
       <Suspense fallback={<ShipWireframe ship={ship} visible={visible} />}>
         <ShipModel
-          key={`${url}-${attempt}`}
+          key={`${activeUrl}-${attempt}`}
           ref={ref}
           ship={ship}
           visible={visible}
-          url={url}
+          url={activeUrl}
           scale={scale}
           onSize={onSize}
         />

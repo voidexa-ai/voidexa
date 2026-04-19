@@ -94,16 +94,26 @@ export default function VoidexaSystem() {
         </div>
       )}
 
+      {/* Sprint 16 Task 6 — company footer is a thin full-width strip at
+          z-index 10 so the KCP-90 (z:50) and Jarvis bubble (z:60) sit above
+          it without any collision. Pointer-events: none keeps clicks passing
+          through to the 3D scene. */}
       <div style={{
         position: 'fixed',
-        bottom: 10,
-        right: 16,
-        zIndex: 60,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: 28,
+        zIndex: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         fontSize: 14,
         letterSpacing: '0.06em',
         color: 'rgba(255,255,255,0.5)',
         fontFamily: 'var(--font-inter, system-ui)',
         pointerEvents: 'none',
+        background: 'linear-gradient(180deg, transparent, rgba(2,4,14,0.55))',
       }}>
         Operating globally from Denmark · CVR 46343387
       </div>

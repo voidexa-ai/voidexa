@@ -42,7 +42,9 @@ function Kcp90FloatingPanel() {
   const t = useT()
   const [summary, setSummary] = useState<KcpSummary | null | undefined>(undefined)
   const [visible, setVisible] = useState(true)
-  const hasData = summary != null
+  // Sprint 16 Task 6 — auto-collapse to a small cyan icon below 1280px so the
+  // star-map HUD remains legible on laptops. Pilot can re-open by clicking.
+  const [collapsed, setCollapsed] = useState(false)
 
   useEffect(() => {
     fetch('/api/kcp90/public-stats')
@@ -51,7 +53,57 @@ function Kcp90FloatingPanel() {
       .catch(() => setSummary(null))
   }, [])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(max-width: 1279px)')
+    const sync = () => setCollapsed(mq.matches)
+    sync()
+    if ('addEventListener' in mq) mq.addEventListener('change', sync)
+    else (mq as MediaQueryList).addListener(sync)
+    return () => {
+      if ('removeEventListener' in mq) mq.removeEventListener('change', sync)
+      else (mq as MediaQueryList).removeListener(sync)
+    }
+  }, [])
+
+  const hasData = summary != null
+
   if (!visible) return null
+
+  // Collapsed state: small cyan pill that expands to the full panel on click.
+  if (collapsed) {
+    return (
+      <button
+        data-testid="kcp-collapsed-icon"
+        onClick={() => setCollapsed(false)}
+        aria-label="Expand KCP-90 panel"
+        style={{
+          position: 'fixed',
+          bottom: 20,
+          right: 20,
+          zIndex: 50,
+          width: 44,
+          height: 44,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(10, 14, 24, 0.85)',
+          border: '1px solid rgba(59,130,246,0.55)',
+          borderRadius: '50%',
+          color: '#60a5fa',
+          fontSize: 14,
+          fontWeight: 700,
+          letterSpacing: '0.05em',
+          fontFamily: 'monospace',
+          cursor: 'pointer',
+          boxShadow: '0 0 18px rgba(59,130,246,0.3)',
+          backdropFilter: 'blur(6px)',
+        }}
+      >
+        KCP
+      </button>
+    )
+  }
 
   const sessions  = hasData && (summary!.total_compressions ?? 0) > 0
     ? summary!.total_compressions.toLocaleString()

@@ -25,11 +25,24 @@ export type ShipTier = 'starter' | 'common' | 'uncommon' | 'rare' | 'epic' | 'le
  * reserved slugs — catalog entries can be added in follow-up work without
  * needing to re-tune tier data.
  */
+// Sprint 16 — starter set is every ship whose catalog rarity is `starter`,
+// `common`, or `rare` hero (Astro/Cosmic/Void). Other ships still route to
+// /shop. Keeping the list explicit beats deriving at runtime because the
+// shop-gating UI is rendered server-side in some places.
 export const STARTER_SHIPS: readonly string[] = [
+  // Starter + Common (free tier)
   'qs_bob',
   'qs_challenger',
   'qs_striker',
   'qs_imperial',
+  'qs_executioner',
+  'qs_omen',
+  'qs_spitfire',
+  'qs_dispatcher',
+  'qs_insurgent',
+  'qs_zenith',
+  'qs_pancake',
+  // Rare hero ships playable from day one
   'usc_astroeagle',
   'usc_cosmicshark',
 ] as const
@@ -38,17 +51,45 @@ export const STARTER_SHIPS: readonly string[] = [
  * Premium content tiers — color-coded in the shop (Common → Legendary).
  * A slug can be tested against these in UI code to pick a lock glow color.
  */
+// Sprint 16 — legacy shop-tier map kept for compat. The authoritative rarity
+// lives on the catalog entry (`ShipCatalogEntry.rarity`). This structure
+// still drives the shop's price-band UI.
 export const SHIP_TIERS: Record<ShipTier, readonly string[]> = {
   starter: STARTER_SHIPS,
   common: [],
-  uncommon: [],
-  rare: [],
+  uncommon: [
+    'usc_hyperfalcon',
+    'usc_lightfox',
+    'usc_starsparrow',
+    'usc_striderox',
+    'usc_nightaye',
+    'usc_meteormantis',
+    'usc_craizanstar',
+    'usc_forcebadger',
+    'usc_protonlegacy',
+    'usc_galacticleopard',
+    'usc_galaxyraptor',
+    'usc_spacesphinx',
+    'usc_spaceexcalibur',
+    'usc_genericspaceship',
+  ],
+  rare: [
+    'usc_voidwhale',
+  ],
   epic: [
+    'hirez_mainbody01',
+    'hirez_mainbody02',
+    'hirez_mainbody05',
     'uscx_starforce',
   ],
   legendary: [
-    'usc_voidwhale',
     'uscx_galacticokamoto',
+    'uscx_nova',
+    'uscx_scorpionship',
+    'uscx_spidership',
+    'uscx_pullora',
+    'uscx_arrowship',
+    'uscx_starship',
   ],
 }
 

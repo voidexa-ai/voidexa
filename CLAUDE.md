@@ -775,3 +775,69 @@ Skill spec: `docs/skills/sprint-15-flight-foundation.md`. Backup tag `backup/pre
 - **Zustand pop inside useEffect cleanup** — registering a layer with the ESC stack means the cleanup function MUST `unregister(id)` on unmount, otherwise stale layers accumulate and ESC will try to pop nonexistent handlers. Every `escRegister` call in Sprint 15 is paired with `escUnregister` in its return.
 - **Legacy `setSkipIntro` must still write `voidexa_skip_intro`** — Sprint 13c persisted user prefs under that key; renaming it silently would log users out of their skip-intro choice. The Sprint 15 rewrite writes the new `voidexaSkipIntroVideo` key via `setSkipIntroVideo`, but `setSkipIntro` (legacy alias) stays pointed at the old key.
 - **Pre-existing untracked scripts in the working tree** mean `npm run lint` shows +3 errors today that weren't in `backup/pre-sprint-15-20260419`. Those come from `scripts/render_cards.js` — the Vast.ai handoff file, not a Sprint 15 change. Comparing via `git stash -u` confirms zero new rule violations in sprint files.
+
+## Session 2026-04-19 (2): Sprint 16 — performance, asset pipeline, visual polish
+Skill spec: `docs/skills/sprint-16-performance-and-asset-pipeline.md`. Backup tag `backup/pre-sprint-16-20260419`, completion tag `sprint-16-complete`.
+
+### Task 1 — BoostTrail GPU thrash fixed
+- `components/freeflight/ships/BoostTrail.tsx` — three levers dialled back:
+  - `PARTICLE_COUNT` 150 → 80 (additive-blend overdraw was the dominant GPU cost)
+  - boost emit 600/sec → 250/sec, idle 180+200×speedN → 120+80×speedN
+  - `needsUpdate` now gated behind per-attribute dirty flags (set only when a particle was emitted or moved this frame); per-particle `dead` Uint8Array lets the advance loop `continue` over faded slots instead of re-zeroing their colour/size every frame.
+- Sprint 15 ShaderMaterial kept (PointsMaterial's uniform-only size was the real bug back then, not the culprit this sprint). `BOOST_TRAIL_TUNING` exported for tests to pin the new limits.
+
+### Task 2 — USC / Expansion / Hi-Rez asset pipeline
+- Discovery: `public/models/glb-ready/` holds **690 valid GLBs** (USC 347 + USCX 58 + Hi-Rez 88 + Quaternius 194 + 3 station/cockpit). Embedded textures intact (`node -e` GLTF JSON inspection showed materials/images/textures all populated). Blocker wasn't "texture binding lost" — it was that `MODEL_URLS` + Supabase CDN only listed ~12 hero slugs.
+- `scripts/upload-ships-to-supabase.mjs` — idempotent uploader (HEAD check → upload with `upsert=false`). Reads `SUPABASE_SERVICE_ROLE_KEY` + `NEXT_PUBLIC_SUPABASE_URL` from `.env.local` via a minimal bespoke parser (avoids adding `dotenv` as a runtime dep). Supports `--dry-run` and `--all` for the full 690-file bulk upload.
+- Ran curated upload of 39 ships covering every rarity tier: 28 already on CDN, 8 freshly uploaded (qs_dispatcher/insurgent/zenith/pancake, usc_craizanstar01, hirez_mainbody01/02/05), 3 skipped (slug mismatch — `usc_galacticleopard1` not `01`, `uscx_nova` not `01`, `uscx_starship` not `01`; script updated).
+- `lib/config/modelUrls.ts` extended from 12 → 39 manifest entries, grouped by rarity tier.
+
+### Task 3 — Rarity badges
+- `components/freeflight/ships/catalog.ts` — added `Rarity = 'starter' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic'` + `ShipClass` + `rarity: Rarity` + `shipClass: ShipClass` fields on every catalog entry.
+- Catalog grew 9 → 39 entries:
+  - Bob alone carries `starter`.
+  - 10 QS fighters = `common` (challenger/striker/imperial/executioner/omen/spitfire + dispatcher/insurgent/zenith/pancake).
+  - 14 USC families = `uncommon` (hyperfalcon, lightfox, starsparrow, striderox, nightaye, meteormantis, craizanstar, forcebadger, protonlegacy, galacticleopard, galaxyraptor, spacesphinx, spaceexcalibur, genericspaceship).
+  - USC named heroes = `rare` (astroeagle, cosmicshark, voidwhale).
+  - Hi-Rez full hulls = `epic` (mainbody01/02/05).
+  - USCX expansion = `legendary` (galacticokamoto, starforce, nova, scorpionship, spidership, pullora, arrowship, starship).
+  - `mythic` reserved.
+- Badge metadata: `RARITY_LABEL` + `RARITY_STYLE` (solid vs outlined, per-tier glow colour, iridescent gradient for mythic).
+- `ShipPicker.tsx` now reads `s.rarity` directly; badge label bumped 11 → 14 px for voidexa UI minimums. Unused `TIER_LABEL` import dropped (would-have-been-new-warning neutralised).
+- `lib/data/shipTiers.ts` — `STARTER_SHIPS` widened to the 13-ship playable list (Bob + common QS + Astro/Cosmic heroes); `SHIP_TIERS.uncommon/epic/legendary` populated from the new catalog entries for shop-price-band consistency.
+
+### Task 4 — Quick menu text polish
+- `components/home/QuickMenuOverlay.tsx` — card background 0.35 → 0.72 opacity, `backdrop-filter: blur(6px)` → `blur(12px)` (static overlay, only 4 cards — perf fine), border switched from neutral blue to cyan tech tint `rgba(0,212,255,0.25)`. Title still 18 px, body bumped 14 → 16 px (voidexa ≥16 body rule). Icon renders monochrome cyan via hue-rotate filter with subtle glow. Box-shadow added for depth against the freeze-frame backdrop.
+
+### Task 5 — Controls legend premium redesign
+- `components/freeflight/ControlsLegend.tsx` rewritten from a flat 9-line list into a category-driven layout with `KeyChip` / `Binding` / `Category` primitives.
+  - `CONTROLS_LEGEND_CATEGORIES` = 5 groups (thrust, camera, systems, navigation, menu); each binding is `{ keys: string[], action: string }`.
+  - Keys render as tinted cyan chips (bg `rgba(0,212,255,0.12)`, border `0.4`, bold 14 px white text, 2 px rounded corners). Action text is 14 px regular `rgba(220,230,245,0.82)`.
+  - Category headers are 14 px uppercase `rgba(0,212,255,0.72)` with 0.14em letter-spacing + subtle shadow. Hairline dividers between groups.
+  - Panel: `rgba(5,8,18,0.75)` + 8 px blur + 10 px radius + outer cyan glow.
+  - Legacy `CONTROLS_LEGEND_LINES` export kept so Sprint 15 tests keep matching; `formatKeys` collapses 4+ single-letter keys into a word (WASD) but keeps 2-letter pairs as `Q / E` so `/Q \/ E/` regex tests still pass.
+
+### Task 6 — Starmap HUD declutter
+- `components/ui/JarvisAssistant.tsx` — orb + chat panel moved from `bottom-6 right-6` to `bottom-6 left-6`; z-index lifted to `z-[60]` so it sits above the KCP-90 panel (`z:50`).
+- `components/starmap/StarMapPage.tsx` — `Kcp90FloatingPanel` gained a `matchMedia('(max-width: 1279px)')` listener; below 1280 px viewport width the panel collapses to a 44×44 cyan "KCP" pill (`data-testid="kcp-collapsed-icon"`) that re-opens the full terminal on click.
+- `app/starmap/voidexa/page.tsx` + `components/galaxy/GalaxyPage.tsx` — company-info marker converted from a bottom-right badge into a full-width thin footer strip (28 px tall, `position: fixed; left:0; right:0; bottom:0; z-index:10`) with a subtle gradient so it doesn't compete with the 3D scene but still anchors the brand. `pointer-events: none` keeps scene clicks unaffected. Font size 14 px to clear the ≥14 label minimum.
+
+### Task 7 — Ship fallback to Bob
+- `components/freeflight/ships/ShipLoader.tsx` — after `MAX_ATTEMPTS` failures the loader swaps `url` → `MODEL_URLS.qs_bob` instead of stopping at the wireframe. Short-circuit: if the failing URL *is* Bob itself, stay on the wireframe to avoid an infinite-retry loop. Logs via `console.warn` for telemetry.
+
+### Tests
+- `tests/sprint-16-performance-and-asset-pipeline.test.ts` (34 tests) — BoostTrail tuning, MODEL_URLS completeness, catalog size + rarity mapping, QuickMenu visual assertions, ControlsLegend category shape + legacy line compatibility, Starmap HUD positioning, ShipLoader Bob-fallback wiring.
+- Adjusted `CONTROLS_LEGEND_LINES` flattener so Sprint 15 regex tests (`/WASD/`, `/Q \/ E/`) still pass.
+- **766 → 800 green across 62 suites**.
+
+### Verification
+- `npm run build` clean, only the pre-existing non-fatal bigint bindings warning. 87 prerendered pages.
+- `npm run lint` — 215 vs baseline 212 problems; diff confirms the +3 comes from pre-existing untracked `scripts/render_cards.js`. Zero new lint violations in Sprint 16 code.
+- Curated Supabase upload: 28 existed, 8 newly uploaded, 0 errored. `node scripts/upload-ships-to-supabase.mjs --all` still available for the remaining ~650 GLBs when Jix has bandwidth.
+
+### Gotchas worth keeping
+- **"Texture binding broken" was a stale memory** — USC/USCX GLBs in `public/models/glb-ready/` are structurally valid with embedded PBR textures. The previous Sprint 14 texture-fix run (see `public/models/TEXTURE_FIX_GUIDE.md`) already solved it. When the audit says "ship not loading", first check the manifest + Supabase CDN (`curl -sI $URL`), not the GLB body.
+- **Supabase CDN slug mismatches** — several of the uploader's first-pass names had the wrong index: `usc_galacticleopard1` (no leading zero), `uscx_nova` (no `01`), `uscx_starship` (no `01`). Always re-run the uploader in `--dry-run` mode first and fix slugs before the real upload.
+- **Three-lever BoostTrail optimisation pattern** — when a per-frame R3F system pegs the GPU, the usual fix is (1) cap pool size, (2) cap emission, (3) gate `needsUpdate` behind dirty flags. Don't blindly rewrite the shader; unconditional `needsUpdate = true` on three Float32Arrays × 60 fps was the dominant cost.
+- **`.env.local` parser without dotenv** — the uploader reads env vars with a 20-line loader that handles quotes and comments. Pattern is reusable for any ops script that needs `SUPABASE_SERVICE_ROLE_KEY` without adding a runtime dep. Save yourself: don't `npm i dotenv` for a one-off.
+- **`CONTROLS_LEGEND_LINES` flatten rules** — Sprint 15 tests regex `/WASD/` (word) and `/Q \/ E/` (pair), so the serializer must treat 4-letter bundles as words and 2-letter pairs as slashed. A naive `keys.join('')` broke the Q/E test on first pass.

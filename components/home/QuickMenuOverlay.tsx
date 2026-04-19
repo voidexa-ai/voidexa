@@ -26,18 +26,22 @@ const ctaBase: React.CSSProperties = {
   minWidth: 220,
 }
 
+// Sprint 16 Task 4 — the video freeze-frame behind this overlay was too close
+// in luminance to the old 0.35-opacity card, so copy barely read. The card is
+// now a near-opaque dark slab with a 12 px blur (static overlay, 4 panels
+// only — perf is fine) and a subtle cyan border.
 const CARD_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
-  gap: 8,
-  padding: '20px 22px',
-  minHeight: 140,
-  background: 'rgba(10, 15, 30, 0.35)',
-  backdropFilter: 'blur(6px)',
-  WebkitBackdropFilter: 'blur(6px)',
-  border: '1px solid rgba(150, 200, 255, 0.25)',
+  gap: 10,
+  padding: '22px 24px',
+  minHeight: 150,
+  background: 'rgba(8, 12, 28, 0.72)',
+  backdropFilter: 'blur(12px)',
+  WebkitBackdropFilter: 'blur(12px)',
+  border: '1px solid rgba(0, 212, 255, 0.25)',
   borderRadius: 14,
-  boxShadow: 'inset 0 0 20px rgba(0, 180, 255, 0.08), 0 8px 28px rgba(0, 0, 0, 0.35)',
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 180, 255, 0.05)',
   color: '#ffffff',
   cursor: 'pointer',
   transition: 'transform 0.25s ease, border-color 0.25s ease',
@@ -81,20 +85,36 @@ export default function QuickMenuOverlay({
         style={CARD_STYLE}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-2px)'
-          e.currentTarget.style.borderColor = 'rgba(150, 200, 255, 0.5)'
+          e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.55)'
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.borderColor = 'rgba(150, 200, 255, 0.25)'
+          e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.25)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span aria-hidden style={{ fontSize: 22, lineHeight: 1 }}>{panel.icon}</span>
-          <span style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.01em' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span
+            aria-hidden
+            style={{
+              fontSize: 22,
+              lineHeight: 1,
+              width: 24,
+              height: 24,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#00d4ff',
+              textShadow: '0 0 10px rgba(0,212,255,0.6)',
+              filter: 'grayscale(1) brightness(1.6) sepia(1) hue-rotate(155deg) saturate(6)',
+            }}
+          >
+            {panel.icon}
+          </span>
+          <span style={{ fontSize: 18, fontWeight: 600, color: '#ffffff', letterSpacing: '-0.01em', textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}>
             {panel.title}
           </span>
         </div>
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>
+        <div style={{ fontSize: 16, color: '#e0e8f0', lineHeight: 1.45, opacity: 0.92, fontWeight: 400 }}>
           {panel.description}
         </div>
       </div>

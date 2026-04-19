@@ -3,8 +3,8 @@
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { Suspense, useMemo, useState } from 'react'
-import { SHIP_CATALOG, type ShipCatalogEntry, saveShipId } from './catalog'
-import { getShipTier, isStarterShip, TIER_COLOR, TIER_LABEL } from '@/lib/data/shipTiers'
+import { SHIP_CATALOG, type ShipCatalogEntry, saveShipId, RARITY_LABEL, RARITY_STYLE, getShipRarity } from './catalog'
+import { getShipTier, isStarterShip, TIER_COLOR } from '@/lib/data/shipTiers'
 
 const ShipPreviewCanvas = dynamic(() => import('./ShipPreviewCanvas'), {
   ssr: false,
@@ -149,13 +149,13 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
               fontSize: 14,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              color: selectedStarter ? '#66ff99' : TIER_COLOR[getShipTier(selected.id)],
-              textShadow: `0 0 8px ${selectedStarter ? '#66ff99' : TIER_COLOR[getShipTier(selected.id)]}`,
+              color: RARITY_STYLE[selected.rarity ?? getShipRarity(selected.id)].border,
+              textShadow: `0 0 8px ${RARITY_STYLE[selected.rarity ?? getShipRarity(selected.id)].glow}`,
               fontFamily: 'var(--font-space, monospace)',
             }}>
               {selectedStarter
-                ? '● Starter · Free · Play now'
-                : `🔒 ${TIER_LABEL[getShipTier(selected.id)]} · Unlock in shop`}
+                ? `● ${RARITY_LABEL[selected.rarity ?? 'starter']} · Play now`
+                : `🔒 ${RARITY_LABEL[selected.rarity ?? getShipRarity(selected.id)]} · Unlock in shop`}
             </div>
             <div style={{
               fontSize: 32,
@@ -195,6 +195,10 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
             const tier = getShipTier(s.id)
             const tierColor = TIER_COLOR[tier]
             const priceLabel = TIER_PRICE_LABEL[tier]
+            // Sprint 16 Task 3: rarity drives the badge, independent of whether
+            // the ship is playable (starter) or locked (premium).
+            const rarity = s.rarity ?? getShipRarity(s.id)
+            const rStyle = RARITY_STYLE[rarity]
             return (
               <button
                 key={s.id}
@@ -236,20 +240,24 @@ export default function ShipPicker({ onPick, onCancel, currentId }: Props) {
                     {!starter && <span style={{ fontSize: 14, opacity: 0.7 }}>🔒</span>}
                     <span>{s.name}</span>
                   </div>
-                  <span style={{
-                    fontSize: 11,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    color: starter ? '#0a0a0a' : tierColor,
-                    background: starter ? '#66ff99' : `${tierColor}22`,
-                    border: starter ? 'none' : `1px solid ${tierColor}99`,
-                    padding: '3px 8px',
-                    borderRadius: 999,
-                    fontFamily: 'var(--font-space, monospace)',
-                    fontWeight: 700,
-                    textShadow: starter ? 'none' : `0 0 6px ${tierColor}`,
-                  }}>
-                    {starter ? 'Starter' : TIER_LABEL[tier]}
+                  <span
+                    data-testid={`rarity-badge-${rarity}`}
+                    style={{
+                      fontSize: 14,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: rStyle.text,
+                      background: rStyle.gradient ?? (rStyle.solid ? rStyle.bg : rStyle.bg),
+                      border: rStyle.solid ? 'none' : `1px solid ${rStyle.border}`,
+                      padding: '3px 8px',
+                      borderRadius: 999,
+                      fontFamily: 'var(--font-space, monospace)',
+                      fontWeight: 700,
+                      textShadow: rStyle.solid ? 'none' : `0 0 6px ${rStyle.border}`,
+                      boxShadow: `0 0 10px ${rStyle.glow}`,
+                    }}
+                  >
+                    {RARITY_LABEL[rarity]}
                   </span>
                 </div>
                 <div style={{
