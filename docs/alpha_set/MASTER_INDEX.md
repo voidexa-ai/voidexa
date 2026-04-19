@@ -13,18 +13,18 @@ Each batch's plan is derived from remaining budget ÷ remaining batches, not
 from the static Rule 8 per-batch average — so a batch that over-delivers on
 one archetype must be offset by the next.
 
-| Archetype | Target | After B01 | After B02 | Remaining | Batches left | Avg needed |
-|---|---|---|---|---|---|---|
-| Aggro    | 200 | 51 | 55  | 145 | 8 | 18.1 |
-| Control  | 200 | 18 | 68  | 132 | 8 | 16.5 |
-| Midrange | 250 | 21 | 38  | 212 | 8 | 26.5 |
-| Combo    | 150 |  5 | 16  | 134 | 8 | 16.8 |
-| Ramp     |  80 |  0 |  5  |  75 | 8 |  9.4 |
-| Utility  | 120 |  5 | 18  | 102 | 8 | 12.8 |
+| Archetype | Target | After B01 | After B02 | After B03 | Remaining | Batches left | Avg needed |
+|---|---|---|---|---|---|---|---|
+| Aggro    | 200 | 51 | 55  | 68  | 132 | 7 | 18.9 |
+| Control  | 200 | 18 | 68  | 82  | 118 | 7 | 16.9 |
+| Midrange | 250 | 21 | 38  | 69  | 181 | 7 | 25.9 |
+| Combo    | 150 |  5 | 16  | 36  | 114 | 7 | 16.3 |
+| Ramp     |  80 |  0 |  5  | 15  |  65 | 7 |  9.3 |
+| Utility  | 120 |  5 | 18  | 30  |  90 | 7 | 12.9 |
 
-Status after B02: Aggro ahead of pace (need less than 20/batch going
-forward). Control slightly ahead. Midrange behind — future batches must
-lean midrange-heavy. Ramp+Utility on pace. Combo on pace.
+Status after B03: All six archetypes now within 1 card/batch of their
+per-batch pace. Midrange still the heaviest remaining lift (25.9/batch
+average). Control and Aggro both on track. Ramp and Utility smooth.
 
 ---
 
@@ -260,3 +260,120 @@ Distribution:
 | 198 | full_alpha_strike | Full Alpha Strike | Maneuver | 5 | 0/0 | aggro | alpha_strike |
 | 199 | battle_warp | Battle Warp | Maneuver | 5 | 0/0 | control | reactive |
 | 200 | heroic_dive | Heroic Dive | Maneuver | 5 | 0/0 | control |  |
+
+## Batch 03 — Common AI Routines + Common Modules
+
+**Cards:** 100 * **File:** `batch_03.json`
+
+Distribution:
+- Rarity: 100 common
+- Types: 55 AI Routine, 45 Module
+- Cost: 3x 0 * 16x 1 * 24x 2 * 26x 3 * 18x 4 * 9x 5 * 4x 6
+- Archetype: 31 midrange * 20 combo * 14 control * 13 aggro * 12 utility * 10 ramp
+  (midrange-lean to pull cumulative back toward target)
+- Keywords used: persistent_field (27), end_cycle (7), probe (5), deep_scan (4), auto_repair (3), tracking_lock (3), disable (3), deploy_burst (2), chain_catalyst (2), priority_fire (2), interceptor (2), cascading_power (2), bounce (2), radiation_leak (2), cycling_protocol (1), assault_protocol (1), fuel_scavenge (1), overclock (1), adaptive_learning (1), efficiency_protocol (1), linked_fire (1), reinforced_hull (1), overcharge (1), modular_payload (1), reactive (1), scrap (1), reactor_vent (1), energy_surge (1), salvage_redirect (1), system_reset (1), archive_recall (1), breach_cascade (1)
+
+### Cards
+
+| # | id | name | type | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|
+| 201 | targeting_assist | Targeting Assist | AI Routine | 1 | 0/3 | combo | persistent_field |
+| 202 | auto_reload | Auto Reload | AI Routine | 1 | 0/3 | utility | end_cycle |
+| 203 | combat_protocol | Combat Protocol | AI Routine | 1 | 0/3 | midrange |  |
+| 204 | basic_subroutine | Basic Subroutine | AI Routine | 1 | 0/3 | midrange |  |
+| 205 | scan_array | Scan Array | AI Routine | 1 | 0/3 | utility | deploy_burst, probe |
+| 206 | heat_sink_protocol | Heat Sink Protocol | AI Routine | 1 | 0/3 | midrange | persistent_field |
+| 207 | repair_protocol | Repair Protocol | AI Routine | 1 | 0/3 | ramp | auto_repair |
+| 208 | patrol_routine | Patrol Routine | AI Routine | 1 | 1/2 | midrange | end_cycle |
+| 209 | targeting_grid | Targeting Grid | AI Routine | 2 | 0/6 | combo | persistent_field |
+| 210 | defensive_grid | Defensive Grid | AI Routine | 2 | 0/6 | midrange | persistent_field |
+| 211 | recon_array | Recon Array | AI Routine | 2 | 0/5 | utility | end_cycle, probe |
+| 212 | combat_controller | Combat Controller | AI Routine | 2 | 0/5 | midrange | persistent_field |
+| 213 | tactical_analyzer | Tactical Analyzer | AI Routine | 2 | 0/5 | utility | deploy_burst, deep_scan |
+| 214 | shield_optimizer | Shield Optimizer | AI Routine | 2 | 0/6 | control | persistent_field |
+| 215 | weapons_optimizer | Weapons Optimizer | AI Routine | 2 | 0/6 | combo | persistent_field |
+| 216 | drone_manager | Drone Manager | AI Routine | 2 | 0/5 | midrange | persistent_field |
+| 217 | heat_reducer | Heat Reducer | AI Routine | 2 | 0/6 | midrange | persistent_field |
+| 218 | burst_analyzer | Burst Analyzer | AI Routine | 2 | 0/5 | combo | chain_catalyst |
+| 219 | cycle_routine_ai | Cycle Routine AI | AI Routine | 2 | 0/5 | utility | cycling_protocol |
+| 220 | energy_regulator | Energy Regulator | AI Routine | 2 | 0/5 | ramp | end_cycle |
+| 221 | assault_coordinator | Assault Coordinator | AI Routine | 2 | 0/5 | combo | persistent_field, assault_protocol |
+| 222 | defense_coordinator | Defense Coordinator | AI Routine | 2 | 0/6 | midrange | persistent_field |
+| 223 | master_targeting | Master Targeting | AI Routine | 3 | 0/9 | combo | persistent_field |
+| 224 | repair_grid | Repair Grid | AI Routine | 3 | 0/9 | ramp | auto_repair |
+| 225 | tactical_uplink | Tactical Uplink | AI Routine | 3 | 0/8 | utility | end_cycle, probe |
+| 226 | drone_swarm_ai | Drone Swarm AI | AI Routine | 3 | 0/8 | aggro | persistent_field |
+| 227 | weapons_coordinator | Weapons Coordinator | AI Routine | 3 | 0/8 | combo | persistent_field, priority_fire |
+| 228 | defense_network | Defense Network | AI Routine | 3 | 0/9 | control | persistent_field, interceptor |
+| 229 | salvage_protocol | Salvage Protocol | AI Routine | 3 | 0/8 | ramp | fuel_scavenge |
+| 230 | combat_planner | Combat Planner | AI Routine | 3 | 0/8 | midrange | persistent_field, overclock |
+| 231 | hunter_logic | Hunter Logic | AI Routine | 3 | 0/8 | combo | persistent_field, tracking_lock |
+| 232 | deep_strategy | Deep Strategy | AI Routine | 3 | 0/8 | utility | end_cycle, deep_scan |
+| 233 | adaptive_ai | Adaptive AI | AI Routine | 3 | 0/8 | midrange | adaptive_learning |
+| 234 | efficiency_routine | Efficiency Routine | AI Routine | 3 | 0/8 | combo | efficiency_protocol |
+| 235 | priority_manager | Priority Manager | AI Routine | 3 | 0/8 | combo | persistent_field, priority_fire |
+| 236 | chain_coordinator | Chain Coordinator | AI Routine | 3 | 0/8 | combo | chain_catalyst |
+| 237 | cascade_protocol | Cascade Protocol | AI Routine | 3 | 0/8 | combo | cascading_power |
+| 238 | linked_fire_ai | Linked Fire AI | AI Routine | 3 | 0/9 | combo | linked_fire |
+| 239 | heavy_battle_ai | Heavy Battle AI | AI Routine | 4 | 0/13 | midrange |  |
+| 240 | fortress_ai | Fortress AI | AI Routine | 4 | 0/14 | control | persistent_field, reinforced_hull |
+| 241 | master_controller | Master Controller | AI Routine | 4 | 0/12 | midrange | persistent_field |
+| 242 | auto_commander | Auto Commander | AI Routine | 4 | 0/13 | ramp | auto_repair |
+| 243 | warfare_subroutine | Warfare Subroutine | AI Routine | 4 | 0/12 | combo | overcharge |
+| 244 | tactical_superiority | Tactical Superiority | AI Routine | 4 | 0/13 | midrange | persistent_field |
+| 245 | sentinel_network | Sentinel Network | AI Routine | 4 | 0/14 | control | persistent_field, interceptor |
+| 246 | analyzer_matrix | Analyzer Matrix | AI Routine | 4 | 0/12 | utility | modular_payload, probe |
+| 247 | command_net | Command Net | AI Routine | 4 | 0/13 | midrange | persistent_field |
+| 248 | advanced_targeting | Advanced Targeting | AI Routine | 4 | 0/12 | combo | persistent_field, tracking_lock |
+| 249 | master_protocol | Master Protocol | AI Routine | 5 | 0/16 | midrange |  |
+| 250 | prime_directive | Prime Directive | AI Routine | 5 | 0/16 | midrange | persistent_field |
+| 251 | overmind_ai | Overmind AI | AI Routine | 5 | 0/16 | combo | cascading_power |
+| 252 | fortress_net | Fortress Net | AI Routine | 5 | 0/17 | control | persistent_field |
+| 253 | ultimate_strategy | Ultimate Strategy | AI Routine | 5 | 0/17 | utility | end_cycle, deep_scan |
+| 254 | total_supremacy | Total Supremacy | AI Routine | 6 | 0/20 | midrange | persistent_field |
+| 255 | apex_ai | Apex AI | AI Routine | 6 | 0/21 | midrange |  |
+| 256 | flare_charge | Flare Charge | Module | 0 | 0/0 | control | reactive |
+| 257 | emergency_kit | Emergency Kit | Module | 0 | 0/0 | midrange |  |
+| 258 | panic_dump | Panic Dump | Module | 0 | 0/0 | ramp | scrap |
+| 259 | warhead_mk1 | Warhead Mk.I | Module | 1 | 0/0 | aggro |  |
+| 260 | repair_kit | Repair Kit | Module | 1 | 0/0 | midrange |  |
+| 261 | emp_charge | EMP Charge | Module | 1 | 0/0 | control | disable |
+| 262 | shield_patch | Shield Patch | Module | 1 | 0/0 | midrange |  |
+| 263 | targeting_flare | Targeting Flare | Module | 1 | 0/0 | combo | tracking_lock |
+| 264 | energy_cell | Energy Cell | Module | 1 | 0/0 | ramp |  |
+| 265 | scan_module | Scan Module | Module | 1 | 0/0 | utility | probe |
+| 266 | hot_plating | Hot Plating | Module | 1 | 0/0 | midrange |  |
+| 267 | warhead_mk2 | Warhead Mk.II | Module | 2 | 0/0 | aggro |  |
+| 268 | plasma_grenade | Plasma Grenade | Module | 2 | 0/0 | aggro |  |
+| 269 | emp_burst | EMP Burst | Module | 2 | 0/0 | control | disable |
+| 270 | shield_booster | Shield Booster | Module | 2 | 0/0 | midrange |  |
+| 271 | heat_sink | Heat Sink | Module | 2 | 0/0 | midrange |  |
+| 272 | jury_rigged_booster | Jury-Rigged Booster | Module | 2 | 0/0 | combo |  |
+| 273 | nanite_repair | Nanite Repair | Module | 2 | 0/0 | midrange |  |
+| 274 | deep_scan_module | Deep Scan Module | Module | 2 | 0/0 | utility | deep_scan |
+| 275 | reactor_vent_module | Reactor Vent Module | Module | 2 | 0/0 | ramp | reactor_vent |
+| 276 | bounce_module | Bounce Module | Module | 2 | 0/0 | control | bounce |
+| 277 | warhead_mk3 | Warhead Mk.III | Module | 3 | 0/0 | aggro |  |
+| 278 | ion_bomb | Ion Bomb | Module | 3 | 0/0 | control |  |
+| 279 | radiation_charge | Radiation Charge | Module | 3 | 0/0 | control | radiation_leak |
+| 280 | emp_wave | EMP Wave | Module | 3 | 0/0 | control | disable |
+| 281 | shield_matrix | Shield Matrix | Module | 3 | 0/0 | midrange |  |
+| 282 | energy_surge_module | Energy Surge Module | Module | 3 | 0/0 | ramp | energy_surge |
+| 283 | salvage_beam | Salvage Beam | Module | 3 | 0/0 | ramp | salvage_redirect |
+| 284 | system_reset | System Reset | Module | 3 | 0/0 | control | system_reset |
+| 285 | teleport_charge | Teleport Charge | Module | 3 | 0/0 | utility | bounce |
+| 286 | mass_repair | Mass Repair | Module | 3 | 0/0 | midrange |  |
+| 287 | warhead_mk4 | Warhead Mk.IV | Module | 4 | 0/0 | aggro |  |
+| 288 | nova_grenade | Nova Grenade | Module | 4 | 0/0 | aggro |  |
+| 289 | ion_cannon_payload | Ion Cannon Payload | Module | 4 | 0/0 | control |  |
+| 290 | defensive_shell | Defensive Shell | Module | 4 | 0/0 | midrange |  |
+| 291 | combat_stim | Combat Stim | Module | 4 | 0/0 | combo |  |
+| 292 | cargo_missile | Cargo Missile | Module | 4 | 0/0 | aggro |  |
+| 293 | fusion_bomb | Fusion Bomb | Module | 4 | 0/0 | aggro | radiation_leak |
+| 294 | tactical_recall | Tactical Recall | Module | 4 | 0/0 | combo | archive_recall |
+| 295 | warhead_mk5 | Warhead Mk.V | Module | 5 | 0/0 | aggro |  |
+| 296 | cascade_warhead | Cascade Warhead | Module | 5 | 0/0 | aggro | breach_cascade |
+| 297 | orbital_strike | Orbital Strike | Module | 5 | 0/0 | aggro |  |
+| 298 | ultimate_shield | Ultimate Shield | Module | 5 | 0/0 | midrange |  |
+| 299 | nuclear_charge | Nuclear Charge | Module | 6 | 0/0 | aggro |  |
+| 300 | life_reactor | Life Reactor | Module | 6 | 0/0 | midrange |  |

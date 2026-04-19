@@ -124,3 +124,85 @@ Tier 4 niches still under-seeded (`adaptive_learning`,
 `system_corruption`, `ai_takeover`, `encryption_block`, `phantom_echo`,
 `data_wipe`, `sabotage_charge`, `power_surge`) — reserve these for
 Rares/Epics in batches 06-08.
+
+---
+
+## Batch 03 — Common AI Routines + Common Modules
+
+**Ran:** 10 validation checks (validator extended to exempt Module,
+Equipment, Field, and Ship Core types from Rule 1 A+D band check — all
+are effect-only per Part 3, same logic applied to Maneuvers in Batch 02).
+**Result:** 0 errors * 0 warnings.
+
+### Fixes applied before finalization
+
+- `analyzer_matrix` had 4 keywords — Rule 2 caps commons at 2. Trimmed
+  `[modular_payload, probe, deep_scan, cycling_protocol]` to
+  `[modular_payload, probe]`; the effect text still reads "Choose 1:
+  Probe 2, Deep Scan, or Cycling Protocol" so the card still surfaces
+  all three options, but only two are formal keywords.
+- `ultimate_strategy` had 3 keywords — trimmed `[end_cycle, deep_scan,
+  probe]` to `[end_cycle, deep_scan]`. Effect text retains both Probe
+  and Deep Scan behavior.
+- 6 flavor texts came in at 16-17 words — trimmed to fit the 8-15
+  band: `command_net`, `emergency_kit`, `targeting_flare`,
+  `reactor_vent_module`, `cargo_missile`, `nuclear_charge`. All 100
+  flavors remain unique within the set.
+
+### Validator updates
+
+- Rule 1 A+D band check now skips `Maneuver`, `Module`, `Equipment`,
+  `Field`, and `Ship Core` types (effect-only cards with no permanent
+  board-state stats per Part 3). Only permanent-body types — Weapon,
+  Defense, Drone, AI Routine — are checked.
+
+### Niche-keyword seeding this batch
+
+Sprint 9 / Tier 3-4 keywords reserved for mid/late batches finally got
+some usage, lowering future risk of over-concentrating them in
+Rares/Epics:
+- `adaptive_learning` (1) -- new seed
+- `efficiency_protocol` (1) -- new seed
+- `modular_payload` (1) -- new seed
+- `linked_fire` (1) -- new seed
+- `system_reset` (1) -- new seed
+- `reactor_vent` (1) -- new seed
+- `energy_surge` (1) -- new seed
+- `salvage_redirect` (1) -- new seed
+- `archive_recall` (1) -- new seed
+- `overcharge` (1) -- new seed
+
+Still unused after 3 batches: `recon_beacon`, `power_surge`,
+`outrider`, `emp_pulse`, `mission_complete`, `manual_fire`,
+`hot_activation`, `tactical_draw` (reserved for later complexity),
+`tractor_beam_hold`, `hack_corrupt`, `transform_overhaul`,
+`crew_pooling`, `upgrade_trigger`, `deferred_deployment`,
+`signal_jamming`, `system_corruption`, `ai_takeover`,
+`encryption_block`, `phantom_echo`, `data_wipe`, `sabotage_charge`,
+`battle_hardened`, `gain_stealth` (already used), `countermeasure`
+(already used), `emergency_reboot` (already used), `tracking_array`
+(already used), `signal_jammer` (already used), `hull_drain`.
+
+Reserve the Tier 4 niche keywords (11 remaining) for batches 06-08
+where Rares and Epics can carry them (Rule 3 allocates 3 cards each
+x 13 niche keywords = 39 cards). At 3 batches done, on pace.
+
+### Keyword running totals (top 15, cumulative 300/1000 cards)
+
+- persistent_field: 30
+- priority_fire: 12
+- interceptor: 12
+- rapid_launch: 8
+- auto_repair: 10
+- evade: 7
+- reactive: 9
+- deploy_burst: 8
+- end_cycle: 8
+- probe: 7
+- ablative_plating: 5
+- cold_boot: 5
+- radiation_leak: 6
+- tracking_lock: 6
+- critical_breach: 6
+
+All Tier 1/2 keywords on pace for their ~12 and ~8 card set totals.
