@@ -66,6 +66,7 @@ comfyui:
   output_dir: "/workspace/output"
   poll_seconds: 2
   job_timeout_seconds: 120
+  ready_timeout_seconds: 300   # wait for /queue 200 after ComfyUI launch
 
 # Part 10 — retry + resumability
 retry:

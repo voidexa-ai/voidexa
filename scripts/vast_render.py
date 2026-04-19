@@ -18,8 +18,10 @@ import json
 import os
 import pathlib
 import random
+import shlex
 import sys
 import time
+import uuid
 from collections import Counter
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
@@ -233,6 +235,9 @@ class Orchestrator:
         self.workflow = load_workflow()
         self.gpu_profile = self.config["gpu_profiles"][self.gpu_key]
         self.state_path = ROOT / self.config["state"]["path"]
+        self.client_id = f"voidexa-{uuid.uuid4().hex[:12]}"
+        self._comfy_base_url: str | None = None
+        self._image_tmp_dir = ROOT / "scripts" / ".voidexa_render_cache"
 
     # ---------------- Phase 1: pre-flight ----------------
 
@@ -343,13 +348,39 @@ class Orchestrator:
                 f"  Lease attempt {attempts}: offer {offer.get('id')} "
                 f"@ ${offer.get('dph_total')}/hr"
             )
-            launched = client.launch_instance(
+            launched = client.create_instance(
                 id=offer["id"],
                 image=self.config["docker_image"],
                 disk=40,
-                env={"COMFY_PORT": str(self.config["comfyui"]["port"])},
+                onstart_cmd=(
+                    "mkdir -p /workspace/ComfyUI/models/checkpoints "
+                    "/workspace/ComfyUI/models/vae /workspace/output"
+                ),
+                runtype="ssh",
+                label="voidexa-vast_render",
             )
-            instance_id = launched["new_contract"]
+            instance_id = (
+                launched.get("new_contract")
+                or launched.get("instance_id")
+                or launched.get("id")
+            )
+            if not instance_id:
+                log(f"  unexpected create_instance response: {launched}")
+                continue
+
+            ssh_pub_path = os.environ.get("VAST_SSH_PUBLIC_KEY_PATH")
+            if ssh_pub_path:
+                pub_path = pathlib.Path(os.path.expanduser(ssh_pub_path))
+                if pub_path.exists():
+                    try:
+                        client.attach_ssh(
+                            instance_id=instance_id,
+                            ssh_key=pub_path.read_text(encoding="utf-8").strip(),
+                        )
+                        log(f"  attached ssh key {pub_path.name} to instance {instance_id}")
+                    except Exception as exc:
+                        log(f"  WARN: attach_ssh failed: {exc}")
+
             if self._wait_running(client, instance_id):
                 info = client.show_instance(id=instance_id)
                 return {
@@ -357,8 +388,11 @@ class Orchestrator:
                     "gpu_name": self.gpu_profile["gpu_name"],
                     "dph_total": offer["dph_total"],
                     "status": "running",
-                    "ssh_host": info.get("ssh_host"),
+                    "ssh_host": info.get("ssh_host") or info.get("public_ipaddr"),
                     "ssh_port": info.get("ssh_port"),
+                    "public_ipaddr": info.get("public_ipaddr"),
+                    "ports": info.get("ports"),
+                    "raw": info,
                 }
         raise RuntimeError("all lease retries exhausted")
 
@@ -392,22 +426,161 @@ class Orchestrator:
     # ---------------- Phase 3: setup ----------------
 
     def setup_instance(self, instance: dict) -> None:
+        """SSH to instance, download SDXL models, start ComfyUI, verify HTTP ready.
+
+        Dry-run path: simulate each step, compute the ComfyUI URL from a fake
+        port map, and store it on self._comfy_base_url so render_batch's
+        mocked path can still echo realistic URLs.
+        """
         banner("Phase 3 — instance setup (models + ComfyUI)")
         log(f"  Target: ssh {instance.get('ssh_host')} :{instance.get('ssh_port')}")
-        for m in self.config["model_files"]:
-            log(f"  Ensure model: {m['name']} -> {m['dest']}")
-        log(f"  Start ComfyUI on port {self.config['comfyui']['port']} (background)")
-        log(f"  Upload workflow template: {WORKFLOW_PATH.name}")
+        comfy_port = int(self.config["comfyui"]["port"])
+
         if self.dry_run:
-            log("  DRY-RUN: setup simulated — no SSH, no downloads")
+            for m in self.config["model_files"]:
+                log(f"  DRY-RUN ensure model: wget -c {m['url']} -> {m['dest']}")
+            log("  DRY-RUN start ComfyUI: nohup python3 /workspace/ComfyUI/main.py "
+                f"--listen 0.0.0.0 --port {comfy_port} &")
+            log("  DRY-RUN poll GET http://<ip>:{0}/queue until 200".format(comfy_port))
+            self._comfy_base_url = "http://dry-run.local:{0}".format(comfy_port)
+            log(f"  DRY-RUN setup complete — mock base URL {self._comfy_base_url}")
             return
-        # Production wiring — see master doc Phase 3:
-        #   SSH in via paramiko / fabric using VAST_SSH_PUBLIC_KEY_PATH private pair.
-        #   For each m in model_files: wget -c <url> -O <dest> (skip if present).
-        #   nohup python3 /workspace/ComfyUI/main.py --listen 0.0.0.0 --port 8188 &
-        #   Verify http://<instance>:8188/queue responds 200.
-        #   scp scripts/voidexa_sdxl_workflow.json -> /workspace/workflow.json
-        log("  NOTE: production SSH/model-download wiring deferred to render-time sprint.")
+
+        ssh = self._ssh_connect(instance)
+        try:
+            self._ssh_exec(
+                ssh,
+                "mkdir -p /workspace/ComfyUI/models/checkpoints "
+                "/workspace/ComfyUI/models/vae /workspace/output",
+            )
+            for m in self.config["model_files"]:
+                # -c resumes partial downloads, -nv is less-verbose, --tries retries on transient errors
+                cmd = (
+                    f"test -s {shlex.quote(m['dest'])} "
+                    "|| ("
+                    f"wget -c -nv --tries={self.config['retry']['per_prompt_max_attempts']} "
+                    f"{shlex.quote(m['url'])} -O {shlex.quote(m['dest'])}"
+                    ")"
+                )
+                log(f"  ensure model: {m['name']}")
+                self._ssh_exec(ssh, cmd, timeout=1800)  # up to 30min per model
+
+            # Start ComfyUI in background (nohup so it survives SSH disconnect)
+            launch_cmd = (
+                "pkill -f 'ComfyUI/main.py' || true; "
+                f"cd /workspace/ComfyUI && nohup python3 main.py "
+                f"--listen 0.0.0.0 --port {comfy_port} "
+                "> /tmp/comfy.log 2>&1 &"
+            )
+            log(f"  start ComfyUI on :{comfy_port} (background)")
+            self._ssh_exec(ssh, launch_cmd, timeout=30)
+        finally:
+            try:
+                ssh.close()
+            except Exception:
+                pass
+
+        # Resolve public URL + port (vast maps inner port to a public host port)
+        base_url = self._resolve_comfy_base_url(instance, comfy_port)
+        self._comfy_base_url = base_url
+        log(f"  ComfyUI HTTP base: {base_url}")
+
+        # Poll /queue until ready
+        ready_timeout = int(self.config.get("comfyui", {}).get(
+            "ready_timeout_seconds", 300
+        ))
+        self._wait_comfy_ready(base_url, ready_timeout)
+        log("  ComfyUI ready — setup complete")
+
+    # ---------- SSH helpers (paramiko) ----------
+
+    def _resolve_ssh_private_key(self) -> pathlib.Path:
+        """Derive private key path from VAST_SSH_PUBLIC_KEY_PATH (strip .pub)."""
+        pub = os.environ.get("VAST_SSH_PUBLIC_KEY_PATH", "~/.ssh/id_ed25519.pub")
+        pub_expanded = pathlib.Path(os.path.expanduser(pub))
+        if pub_expanded.suffix == ".pub":
+            priv = pub_expanded.with_suffix("")
+        else:
+            priv = pub_expanded
+        if not priv.exists():
+            raise FileNotFoundError(
+                f"SSH private key not found at {priv} "
+                "(derived from VAST_SSH_PUBLIC_KEY_PATH by stripping .pub)"
+            )
+        return priv
+
+    def _ssh_connect(self, instance: dict) -> Any:
+        import paramiko  # imported lazily so dry-run doesn't require it
+
+        host = instance.get("ssh_host") or instance.get("public_ipaddr")
+        port = int(instance.get("ssh_port") or 22)
+        priv_key = self._resolve_ssh_private_key()
+
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        log(f"  ssh connect root@{host}:{port} key={priv_key.name}")
+        ssh.connect(
+            hostname=host,
+            port=port,
+            username="root",
+            key_filename=str(priv_key),
+            timeout=60,
+            banner_timeout=60,
+            auth_timeout=60,
+            allow_agent=False,
+            look_for_keys=False,
+        )
+        return ssh
+
+    def _ssh_exec(self, ssh: Any, cmd: str, timeout: int = 120) -> tuple[str, str, int]:
+        stdin, stdout, stderr = ssh.exec_command(cmd, timeout=timeout)
+        exit_code = stdout.channel.recv_exit_status()
+        out = stdout.read().decode("utf-8", errors="replace")
+        err = stderr.read().decode("utf-8", errors="replace")
+        if exit_code != 0:
+            raise RuntimeError(
+                f"remote command failed (exit {exit_code}): {cmd[:120]}...\n"
+                f"stderr: {err[:300]}"
+            )
+        return out, err, exit_code
+
+    # ---------- ComfyUI HTTP helpers ----------
+
+    def _resolve_comfy_base_url(self, instance: dict, inner_port: int) -> str:
+        """Figure out the public URL Vast.ai exposes for ComfyUI.
+
+        Vast maps container ports to host ports. Look for `ports` in the
+        show_instance payload; fall back to public_ipaddr + inner_port.
+        """
+        public_host = instance.get("public_ipaddr") or instance.get("ssh_host")
+        ports = instance.get("ports") or (instance.get("raw", {}) or {}).get("ports") or {}
+        key = f"{inner_port}/tcp"
+        mapping = ports.get(key) if isinstance(ports, dict) else None
+        if mapping and isinstance(mapping, list) and mapping:
+            host_port = mapping[0].get("HostPort")
+            if host_port:
+                return f"http://{public_host}:{host_port}"
+        return f"http://{public_host}:{inner_port}"
+
+    def _wait_comfy_ready(self, base_url: str, timeout_seconds: int) -> None:
+        import requests
+
+        deadline = time.monotonic() + timeout_seconds
+        poll_gap = 3
+        last_err: str | None = None
+        while time.monotonic() < deadline:
+            try:
+                r = requests.get(f"{base_url}/queue", timeout=10)
+                if r.status_code == 200:
+                    return
+                last_err = f"HTTP {r.status_code}"
+            except Exception as exc:
+                last_err = str(exc)[:120]
+            time.sleep(poll_gap)
+        raise RuntimeError(
+            f"ComfyUI did not become ready at {base_url} within {timeout_seconds}s "
+            f"(last error: {last_err})"
+        )
 
     # ---------------- Phase 4: render ----------------
 
@@ -443,13 +616,10 @@ class Orchestrator:
                 log(
                     f"  [{idx}/{total}] render {item_id} (attempt {attempt + 1}, seed {seed}, {canvas})"
                 )
-                if self.dry_run:
-                    success = self._simulated_render_result(src, prompt, instance, seed)
-                    break
                 try:
                     success = self._submit_comfyui_job(prompt, instance, seed, canvas)
                     break
-                except Exception as exc:  # pragma: no cover - network path
+                except Exception as exc:
                     attempt_err = str(exc)
                     log(f"    attempt failed: {exc}")
 
@@ -487,32 +657,13 @@ class Orchestrator:
         log(f"  Rendered {len(results)} / {total} (failed {len(state.failed)})")
         return results
 
-    def _simulated_render_result(
-        self, src: str, prompt: dict, instance: dict, seed: int
-    ) -> dict:
-        item_id = prompt["item_id"] if src == "shop" else prompt["card_id"]
-        return {
-            "source": src,
-            "item_id": item_id,
-            "asset_type": self.config["sources"][src]["asset_type"],
-            "seed": seed,
-            "render_seconds": 1.2,
-            "canvas": prompt.get("canvas", "768x1024"),
-            "rarity": prompt.get("rarity", "common"),
-            "local_path": f"(dry-run) /tmp/voidexa/{item_id}.png",
-            "style_anchor": prompt.get("style_anchor"),
-            "render_source": f"dry-run/{self.gpu_profile['gpu_name']}",
-            "instance_id": instance.get("instance_id"),
-        }
-
-    def _submit_comfyui_job(
-        self, prompt: dict, instance: dict, seed: int, canvas: str
-    ) -> dict:  # pragma: no cover - network path
-        # Build the workflow payload from the template by substituting inputs.
+    def _build_comfy_workflow(self, prompt: dict, seed: int, canvas: str) -> dict:
+        """Deep-copy the workflow template and inject inputs."""
         wf = json.loads(json.dumps(self.workflow))  # deep copy
-        width, _, height = canvas.partition("x")
-        wf["5"]["inputs"]["width"] = int(width)
-        wf["5"]["inputs"]["height"] = int(height)
+        wf.pop("_comment", None)
+        width_s, _, height_s = canvas.partition("x")
+        wf["5"]["inputs"]["width"] = int(width_s)
+        wf["5"]["inputs"]["height"] = int(height_s)
         wf["6"]["inputs"]["text"] = prompt["prompt_positive"]
         wf["7"]["inputs"]["text"] = prompt["prompt_negative"]
         wf["3"]["inputs"]["seed"] = int(seed)
@@ -521,14 +672,122 @@ class Orchestrator:
         wf["3"]["inputs"]["sampler_name"] = self.config["comfyui"]["sampler_name"]
         wf["3"]["inputs"]["scheduler"] = self.config["comfyui"]["scheduler"]
         wf["4"]["inputs"]["ckpt_name"] = self.config["comfyui"]["checkpoint"]
+        # filename prefix helps us find the output in /history
+        item_id = prompt.get("card_id") or prompt.get("item_id") or "voidexa"
+        wf["9"]["inputs"]["filename_prefix"] = f"voidexa_{item_id}"
+        return wf
 
-        # Production wiring (deferred): POST {prompt: wf} to
-        #   http://<instance-ip>:<comfy-port>/prompt
-        # Poll /history/<prompt_id> until done, then GET the output PNG via
-        # /view?filename=...&type=output&subfolder=... and write it locally.
-        raise NotImplementedError(
-            "ComfyUI HTTP path not wired — render-time sprint will enable this"
+    def _submit_comfyui_job(
+        self, prompt: dict, instance: dict, seed: int, canvas: str
+    ) -> dict:
+        """POST workflow to ComfyUI, poll /history, download result PNG."""
+        started = time.monotonic()
+        item_id = prompt.get("card_id") or prompt.get("item_id") or "voidexa"
+        asset_type = (
+            "shop" if "item_id" in prompt and "card_id" not in prompt else "card"
         )
+        local_dir = self._image_tmp_dir / asset_type
+        local_dir.mkdir(parents=True, exist_ok=True)
+        local_path = local_dir / f"{item_id}.png"
+
+        workflow = self._build_comfy_workflow(prompt, seed, canvas)
+
+        if self.dry_run:
+            # Exercise the workflow-build path with a mock response. No HTTP.
+            base = self._comfy_base_url or "http://dry-run.local:8188"
+            log(f"    [dry-run] POST {base}/prompt (workflow nodes: {sorted(workflow.keys())})")
+            log(f"    [dry-run] poll /history simulated, output /view -> {local_path.name}")
+            return {
+                "source": asset_type,
+                "item_id": item_id,
+                "asset_type": asset_type,
+                "seed": seed,
+                "render_seconds": round(time.monotonic() - started, 3) + 1.2,
+                "canvas": canvas,
+                "rarity": prompt.get("rarity", "common"),
+                "local_path": f"(dry-run) {local_path}",
+                "style_anchor": prompt.get("style_anchor"),
+                "render_source": f"dry-run/{self.gpu_profile['gpu_name']}",
+                "instance_id": instance.get("instance_id"),
+            }
+
+        import requests
+
+        base = self._comfy_base_url
+        if not base:
+            raise RuntimeError("ComfyUI base URL not set — setup_instance must run first")
+
+        # 1. POST the prompt
+        payload = {"prompt": workflow, "client_id": self.client_id}
+        resp = requests.post(f"{base}/prompt", json=payload, timeout=30)
+        if resp.status_code != 200:
+            raise RuntimeError(
+                f"ComfyUI /prompt returned {resp.status_code}: {resp.text[:200]}"
+            )
+        prompt_id = resp.json().get("prompt_id")
+        if not prompt_id:
+            raise RuntimeError(f"ComfyUI /prompt missing prompt_id: {resp.text[:200]}")
+
+        # 2. Poll /history/<id> until done
+        poll_gap = int(self.config["comfyui"].get("poll_seconds", 2))
+        timeout = int(self.config["comfyui"].get("job_timeout_seconds", 120))
+        deadline = time.monotonic() + timeout
+        history: dict = {}
+        while time.monotonic() < deadline:
+            h = requests.get(f"{base}/history/{prompt_id}", timeout=15)
+            if h.status_code == 200:
+                data = h.json() or {}
+                if prompt_id in data:
+                    history = data[prompt_id]
+                    status = (history.get("status") or {}).get("completed")
+                    if status is True:
+                        break
+                    # ComfyUI marks status.completed=False if errored
+                    if status is False and history.get("status", {}).get("status_str") == "error":
+                        raise RuntimeError(
+                            f"ComfyUI reported error for {prompt_id}: "
+                            f"{(history.get('status') or {}).get('messages')}"
+                        )
+            time.sleep(poll_gap)
+        else:
+            raise RuntimeError(f"ComfyUI job {prompt_id} timed out after {timeout}s")
+
+        # 3. Locate SaveImage output, GET /view, write to disk
+        outputs = history.get("outputs") or {}
+        image_meta = None
+        for _node_id, node_output in outputs.items():
+            images = node_output.get("images") or []
+            if images:
+                image_meta = images[0]
+                break
+        if not image_meta:
+            raise RuntimeError(f"ComfyUI history {prompt_id} has no images: {outputs}")
+
+        params = {
+            "filename": image_meta["filename"],
+            "subfolder": image_meta.get("subfolder", ""),
+            "type": image_meta.get("type", "output"),
+        }
+        v = requests.get(f"{base}/view", params=params, timeout=60)
+        if v.status_code != 200:
+            raise RuntimeError(
+                f"ComfyUI /view {image_meta['filename']} returned {v.status_code}"
+            )
+        local_path.write_bytes(v.content)
+
+        return {
+            "source": asset_type,
+            "item_id": item_id,
+            "asset_type": asset_type,
+            "seed": seed,
+            "render_seconds": round(time.monotonic() - started, 3),
+            "canvas": canvas,
+            "rarity": prompt.get("rarity", "common"),
+            "local_path": str(local_path),
+            "style_anchor": prompt.get("style_anchor"),
+            "render_source": f"{self.gpu_profile['gpu_name']}/{instance.get('instance_id')}",
+            "instance_id": instance.get("instance_id"),
+        }
 
     # ---------------- Phase 5: upload ----------------
 

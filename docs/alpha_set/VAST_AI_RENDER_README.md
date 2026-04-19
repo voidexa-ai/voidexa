@@ -25,7 +25,7 @@ cp .env.local.example .env.local
 cat supabase/migrations/asset_renders_table.sql
 
 # 4. Verify Python deps
-pip install vastai-sdk supabase python-dotenv pillow tqdm pyyaml
+pip install vastai-sdk supabase python-dotenv pillow tqdm pyyaml paramiko requests
 ```
 
 ## 1. Dry-run (no API calls, always safe)
@@ -130,14 +130,21 @@ dashboard is ground truth.
   state. Render-time sprint wires the HTTP submit+poll against the running
   instance.
 
-## Hooks the render-time sprint will fill in
+## Render-time paths now wired
 
-Marked inline in `scripts/vast_render.py` with `# Production wiring`:
+- `setup_instance` — SSHes in via paramiko with the key derived from
+  `VAST_SSH_PUBLIC_KEY_PATH`, `wget -c`s SDXL + Juggernaut XL + VAE into
+  `/workspace/ComfyUI/models/`, launches ComfyUI with `nohup` on port 8188,
+  and polls `GET /queue` until 200 OK (or 5-min timeout).
+- `_submit_comfyui_job` — deep-copies the workflow template, injects the
+  prompt/seed/canvas/checkpoint, POSTs `/prompt` with a per-run `client_id`,
+  polls `/history/{prompt_id}` every 2 s, and downloads the PNG via
+  `/view` into `scripts/.voidexa_render_cache/{shop,card}/`.
+- `upload_results` — `supabase-py` path, uploads each PNG to
+  `voidexa-assets/{shop-art,card-art}/<rarity>/<id>.png` and captures the
+  public URL for the manifest.
+- `teardown` — `VastAI.destroy_instance` on both success and failure.
 
-- `setup_instance` — SSH into the leased box, download SDXL + Juggernaut XL,
-  launch ComfyUI on port 8188, scp the workflow JSON.
-- `_submit_comfyui_job` — POST `/prompt` with the populated workflow, poll
-  `/history/<prompt_id>`, download the PNG via `/view`.
-- `upload_results` — already implemented via `supabase-py` (no-op under
-  dry-run).
-- `teardown` — already implemented via `VastAI.destroy_instance`.
+Dry-run short-circuits every network call. `--dry-run` still walks the
+workflow-build step inside `_submit_comfyui_job` so the JSON template path
+gets exercised without touching HTTP or SSH.
