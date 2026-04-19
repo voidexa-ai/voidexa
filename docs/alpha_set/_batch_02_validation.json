@@ -1,0 +1,67 @@
+{
+  "batch": "02",
+  "errors": [],
+  "warnings": [
+    "archetype 'aggro': 4 vs target 20 (Rule 8)",
+    "archetype 'control': 50 vs target 20 (Rule 8)"
+  ],
+  "distributions": {
+    "card_count": 100,
+    "rarity": {
+      "common": 100
+    },
+    "type": {
+      "Defense": 55,
+      "Maneuver": 45
+    },
+    "cost": {
+      "0": 8,
+      "1": 18,
+      "2": 25,
+      "3": 24,
+      "4": 14,
+      "5": 8,
+      "6": 3
+    },
+    "archetype": {
+      "control": 50,
+      "midrange": 17,
+      "ramp": 5,
+      "utility": 13,
+      "combo": 11,
+      "aggro": 4
+    },
+    "keyword_usage": {
+      "evade": 7,
+      "reactive": 6,
+      "interceptor": 6,
+      "ablative_plating": 5,
+      "auto_repair": 4,
+      "priority_fire": 4,
+      "reinforced_hull": 3,
+      "countermeasure": 3,
+      "gain_stealth": 3,
+      "scrap": 2,
+      "critical_breach": 2,
+      "tracking_array": 2,
+      "emergency_reboot": 2,
+      "phase_drive": 2,
+      "deep_scan": 2,
+      "negate": 2,
+      "signal_jammer": 1,
+      "cloaked_entry": 1,
+      "disable": 1,
+      "flanking_fire": 1,
+      "skyward_maneuver": 1,
+      "probe": 1,
+      "cycling_protocol": 1,
+      "rapid_launch": 1,
+      "bounce": 1,
+      "tactical_draw": 1,
+      "archive_recall": 1,
+      "tracking_lock": 1,
+      "overcharge": 1,
+      "alpha_strike": 1
+    }
+  }
+}

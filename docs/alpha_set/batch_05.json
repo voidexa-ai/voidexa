@@ -1,0 +1,2004 @@
+[
+  {
+    "id": "quick_laser_uc",
+    "name": "Quick Laser",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 4,
+    "defense": 0,
+    "effect_text": "Hot Deploy. Deal 4 damage; enters ready to attack this turn.",
+    "keywords": [
+      "hot_deploy"
+    ],
+    "flavor_text": "Out of the rack, into the muzzle, into the enemy, all on the same breath.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "twin_pistol",
+    "name": "Twin Pistol",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 3,
+    "defense": 0,
+    "effect_text": "Alpha Strike. Deal 2 damage twice to target.",
+    "keywords": [
+      "alpha_strike"
+    ],
+    "flavor_text": "Left hand shoots first. Right hand shoots better. Both hands shoot finished.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "recon_gun",
+    "name": "Recon Gun",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 3,
+    "defense": 0,
+    "effect_text": "Recon Beacon. Deal 3 damage; heal your ship 2 when this attacks.",
+    "keywords": [
+      "recon_beacon",
+      "deploy_burst"
+    ],
+    "flavor_text": "Fires and then tells you what you just saw. Usually useful. Sometimes too late.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ice_beam",
+    "name": "Ice Beam",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 3,
+    "defense": 0,
+    "effect_text": "Disable. Deal 3 damage; target cannot activate abilities next turn.",
+    "keywords": [
+      "disable"
+    ],
+    "flavor_text": "Cold enough to seize the control cables. Nothing moves. Nothing argues.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "stealth_laser",
+    "name": "Stealth Laser",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 3,
+    "defense": 0,
+    "effect_text": "Cloaked Entry. Deal 3 damage; cannot be attacked the turn deployed.",
+    "keywords": [
+      "cloaked_entry"
+    ],
+    "flavor_text": "Arrives as shadow. Fires as sound. Leaves, eventually, as myth.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "burst_cannon_uc",
+    "name": "Burst Cannon",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 6,
+    "defense": 0,
+    "effect_text": "Alpha Strike. Deal 3 damage twice to target.",
+    "keywords": [
+      "alpha_strike"
+    ],
+    "flavor_text": "Pulls the trigger once. The mechanism pulls the trigger again, more thoroughly.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "plasma_sniper",
+    "name": "Plasma Sniper",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 6,
+    "defense": 0,
+    "effect_text": "Priority Fire. Critical Strike. Deal 6 damage.",
+    "keywords": [
+      "priority_fire",
+      "critical_strike"
+    ],
+    "flavor_text": "One shot lands before the other gun arrives. The other gun is not needed anymore.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "dual_pulse",
+    "name": "Dual Pulse",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 5,
+    "defense": 0,
+    "effect_text": "Priority Fire. Overclock. Deal 5 damage.",
+    "keywords": [
+      "priority_fire",
+      "overclock"
+    ],
+    "flavor_text": "Two coils. One trigger. The second coil finishes what the first could not.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phase_laser",
+    "name": "Phase Laser",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 5,
+    "defense": 0,
+    "effect_text": "Phase Drive. Quick Strike. Deal 5 damage.",
+    "keywords": [
+      "phase_drive",
+      "quick_strike"
+    ],
+    "flavor_text": "Enters from a dimension where the enemy already lost. Delivers the same outcome here.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "plasma_burst",
+    "name": "Plasma Burst",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 6,
+    "defense": 0,
+    "effect_text": "Hot Deploy. Breach Cascade. Deal 6 damage; adjacent units take 2.",
+    "keywords": [
+      "hot_deploy",
+      "breach_cascade"
+    ],
+    "flavor_text": "Lights up the whole section of sky. Everybody nearby takes notes or damage.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "salvo_launcher",
+    "name": "Salvo Launcher",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 5,
+    "defense": 0,
+    "effect_text": "Rapid Launch. Flanking Fire. Deal 5 damage.",
+    "keywords": [
+      "rapid_launch",
+      "flanking_fire"
+    ],
+    "flavor_text": "Launches a brace of small problems. The enemy sorts them out one at a time.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ion_sniper",
+    "name": "Ion Sniper",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 6,
+    "defense": 0,
+    "effect_text": "Tracking Lock. Deal 6 damage and apply Tracking Lock to target.",
+    "keywords": [
+      "tracking_lock"
+    ],
+    "flavor_text": "Marks the target. Fires at the mark. Collects the mark for the next shot.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ghost_round",
+    "name": "Ghost Round",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 5,
+    "defense": 0,
+    "effect_text": "Gain Stealth. Cloaked Entry. Deal 5 damage.",
+    "keywords": [
+      "gain_stealth",
+      "cloaked_entry"
+    ],
+    "flavor_text": "Leaves no muzzle flash. Leaves a small crater. Leaves a reputation unattached to a name.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "heavy_burst",
+    "name": "Heavy Burst",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Alpha Strike. Deal 4 damage twice to target.",
+    "keywords": [
+      "alpha_strike"
+    ],
+    "flavor_text": "Larger coil, same rhythm. The enemy still gets the same verdict, twice.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "master_sniper",
+    "name": "Master Sniper",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Tracking Lock. Critical Strike. Deal 8 damage.",
+    "keywords": [
+      "tracking_lock",
+      "critical_strike"
+    ],
+    "flavor_text": "Points at a face. The face takes a long time to recover. Usually permanently.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phantom_beam",
+    "name": "Phantom Beam",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Phase Drive. Gain Stealth. Deal 7 damage.",
+    "keywords": [
+      "phase_drive",
+      "gain_stealth"
+    ],
+    "flavor_text": "Nobody sees it. Nobody hears it. The hull finds out, once, in silence.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "warhead_salvo",
+    "name": "Warhead Salvo",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 9,
+    "defense": 0,
+    "effect_text": "Rapid Launch. Priority Fire. Deal 9 damage.",
+    "keywords": [
+      "rapid_launch",
+      "priority_fire"
+    ],
+    "flavor_text": "All racks empty. All racks warmed. All racks reloaded by different hands elsewhere.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "chain_lance",
+    "name": "Chain Lance",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Breach Cascade. Chain Catalyst. Deal 7; adjacent take 2; next non-unit card +2 damage.",
+    "keywords": [
+      "breach_cascade",
+      "chain_catalyst"
+    ],
+    "flavor_text": "The arc hunts the crowd. Each hop is politely measured. Each hop lands.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "fusion_torpedo",
+    "name": "Fusion Torpedo",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 9,
+    "defense": 0,
+    "effect_text": "Cold Boot 1. Overflow Fire. Deal 9 damage; excess hits ship directly.",
+    "keywords": [
+      "cold_boot",
+      "overflow_fire"
+    ],
+    "flavor_text": "Arms slowly. Detonates completely. The arithmetic makes the slow part worth it.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "tactical_cannon",
+    "name": "Tactical Cannon",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Manual Fire. Priority Fire. Once per turn, pay 1 to deal 8 damage.",
+    "keywords": [
+      "manual_fire",
+      "priority_fire"
+    ],
+    "flavor_text": "Reloads on a schedule. The schedule is the pilot. The schedule is picky.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "siege_rifle",
+    "name": "Siege Rifle",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Tracking Lock. Apply Lock. Deal 8 damage; target skips next refresh.",
+    "keywords": [
+      "tracking_lock",
+      "apply_lock"
+    ],
+    "flavor_text": "Patient weapon. Patient pilot. Patient enemy, at least until the fourth second.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "cascade_gun",
+    "name": "Cascade Gun",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Cascading Power. Deal 8 damage, +1 per non-unit card played this turn.",
+    "keywords": [
+      "cascading_power"
+    ],
+    "flavor_text": "Waits for the other cards to speak first. Delivers the compiled summary.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "cluster_bomb",
+    "name": "Cluster Bomb",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 8,
+    "defense": 0,
+    "effect_text": "Breach Cascade. Apply Lock. Deal 7; adjacent take 2; target skips next refresh.",
+    "keywords": [
+      "breach_cascade",
+      "apply_lock"
+    ],
+    "flavor_text": "Not one problem. Several small, related problems, delivered at the same address.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "heavy_lance_uc",
+    "name": "Heavy Lance (Field Model)",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Priority Fire. Flanking Fire. Deal 12 damage.",
+    "keywords": [
+      "priority_fire",
+      "flanking_fire"
+    ],
+    "flavor_text": "Field model. Shipped without ceremony. Arrives with consequences anyway.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "assault_cannon",
+    "name": "Assault Cannon",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Rapid Launch. Hot Activation. Deal 11 damage; may use Manual Fire the turn deployed.",
+    "keywords": [
+      "rapid_launch",
+      "hot_activation"
+    ],
+    "flavor_text": "Comes with the pilot's name on the grip. The target's name comes later.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "void_sniper",
+    "name": "Void Sniper",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Critical Strike. Phase Drive. Deal 10 damage; bypasses most blockers.",
+    "keywords": [
+      "critical_strike",
+      "phase_drive"
+    ],
+    "flavor_text": "A round that has already decided on its conclusion. The target is only a witness.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "dual_barrel",
+    "name": "Dual Barrel",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Alpha Strike. Priority Fire. Deal 6 damage twice.",
+    "keywords": [
+      "alpha_strike",
+      "priority_fire"
+    ],
+    "flavor_text": "Both barrels fire first. Everything else in the fight files a complaint.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "rift_torpedo",
+    "name": "Rift Torpedo",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Overflow Fire. Radiation Leak. Deal 12; excess to ship; apply 3 over 3 turns.",
+    "keywords": [
+      "overflow_fire",
+      "radiation_leak"
+    ],
+    "flavor_text": "Opens a small tear in space. Closes it on the enemy, slowly, patiently, completely.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "sabotage_cannon",
+    "name": "Sabotage Cannon",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Sabotage Charge. Disable. Deal 11; plant a charge that triggers when target uses ability.",
+    "keywords": [
+      "sabotage_charge",
+      "disable"
+    ],
+    "flavor_text": "Small switch sits inside the enemy ship. Waits. Waits. Thinks about it once. Acts.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phantom_torpedo",
+    "name": "Phantom Torpedo",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Gain Stealth. Rapid Launch. Deal 10 damage; enters unseen.",
+    "keywords": [
+      "gain_stealth",
+      "rapid_launch"
+    ],
+    "flavor_text": "Launches on no sensor. Lands on every one. Writes itself a short obituary after.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "kinetic_storm",
+    "name": "Kinetic Storm",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Alpha Strike. Deal 6 damage twice to target.",
+    "keywords": [
+      "alpha_strike"
+    ],
+    "flavor_text": "Every round finds the next round funny. The enemy does not share the joke.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "scorch_cannon",
+    "name": "Scorch Cannon",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 12,
+    "defense": 0,
+    "effect_text": "Radiation Leak. Breach Cascade. Deal 11; adjacent take 2; 3 radiation over 3 turns.",
+    "keywords": [
+      "radiation_leak",
+      "breach_cascade"
+    ],
+    "flavor_text": "Leaves a trail of consequences. The consequences never agree on whose fault it was.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "pulse_cannon_uc",
+    "name": "Pulse Cannon (Overclocked)",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 13,
+    "defense": 0,
+    "effect_text": "Overclock. Deal 13 damage; adds 1 heat.",
+    "keywords": [
+      "overclock"
+    ],
+    "flavor_text": "The coil runs past the gauge. The gauge decides it was mistaken about the maximum.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "master_cannon",
+    "name": "Master Cannon",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 16,
+    "defense": 0,
+    "effect_text": "Priority Fire. Critical Strike. Deal 15 damage.",
+    "keywords": [
+      "priority_fire",
+      "critical_strike"
+    ],
+    "flavor_text": "The weapon the fleet gives to pilots they want to keep. The pilots keep winning.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "siege_rocket",
+    "name": "Siege Rocket",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 16,
+    "defense": 0,
+    "effect_text": "Overflow Fire. Radiation Leak. Deal 16; excess to ship; 3 radiation over 3 turns.",
+    "keywords": [
+      "overflow_fire",
+      "radiation_leak"
+    ],
+    "flavor_text": "The siege goes home to brag. The target does not go home.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ghost_lance",
+    "name": "Ghost Lance",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 16,
+    "defense": 0,
+    "effect_text": "Phase Drive. Gain Stealth. Critical Strike. Deal 14 damage.",
+    "keywords": [
+      "phase_drive",
+      "gain_stealth",
+      "critical_strike"
+    ],
+    "flavor_text": "Nobody sees it coming. Nobody sees it leave. Only the enemy writes up the difference.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "cluster_strike",
+    "name": "Cluster Strike",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 16,
+    "defense": 0,
+    "effect_text": "Priority Fire. Breach Cascade. Alpha Strike. Deal 13; adjacent take 3; fires twice.",
+    "keywords": [
+      "priority_fire",
+      "breach_cascade",
+      "alpha_strike"
+    ],
+    "flavor_text": "First volley speaks. Second volley agrees with the first. The neighborhood agrees quietly.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ionic_bomber",
+    "name": "Ionic Bomber",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 16,
+    "defense": 0,
+    "effect_text": "Critical Strike. Radiation Leak. Deal 14; 2 radiation over 3 turns.",
+    "keywords": [
+      "critical_strike",
+      "radiation_leak"
+    ],
+    "flavor_text": "A slow-burning weapon. Damage arrives on a schedule the target refuses to read.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "heavy_orbital",
+    "name": "Heavy Orbital",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 6,
+    "attack": 20,
+    "defense": 0,
+    "effect_text": "Priority Fire. Rapid Launch. Deal 18 damage.",
+    "keywords": [
+      "priority_fire",
+      "rapid_launch"
+    ],
+    "flavor_text": "Spoken from high up. The answer is not written anywhere but the crater.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "void_annihilator",
+    "name": "Void Annihilator",
+    "type": "Weapon",
+    "rarity": "uncommon",
+    "energy_cost": 6,
+    "attack": 20,
+    "defense": 0,
+    "effect_text": "Critical Strike. Phase Drive. Deal 18 damage.",
+    "keywords": [
+      "critical_strike",
+      "phase_drive"
+    ],
+    "flavor_text": "A gun not meant for polite use. The tribunal has never even heard of it.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "raptor_drone",
+    "name": "Raptor Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 4,
+    "defense": 2,
+    "effect_text": "Rapid Launch. Priority Fire. Enters ready to attack.",
+    "keywords": [
+      "rapid_launch",
+      "priority_fire"
+    ],
+    "flavor_text": "Predator-cut chassis. Predator-cut pilot. Predator-cut conclusion on every mission brief.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "stalker_drone",
+    "name": "Stalker Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 3,
+    "defense": 3,
+    "effect_text": "Cloaked Entry. Gain Stealth.",
+    "keywords": [
+      "cloaked_entry",
+      "gain_stealth"
+    ],
+    "flavor_text": "Hangs behind the signal, reads the signal, answers the signal on its own preferred day.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "medic_unit",
+    "name": "Medic Unit",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 2,
+    "defense": 4,
+    "effect_text": "Auto-Repair 1. Hull Drain. Damage dealt heals your ship for that amount.",
+    "keywords": [
+      "auto_repair",
+      "hull_drain"
+    ],
+    "flavor_text": "Bites the enemy. Carries the enemy's blood home. Keeps the ship alive afterwards.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "saboteur_drone",
+    "name": "Saboteur Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 3,
+    "defense": 3,
+    "effect_text": "Deploy Burst: Disable target enemy unit's abilities next turn.",
+    "keywords": [
+      "deploy_burst",
+      "disable"
+    ],
+    "flavor_text": "Arrives with a small screwdriver. Leaves with most of the enemy's ideas.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "hunter_drone",
+    "name": "Hunter Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 3,
+    "defense": 3,
+    "effect_text": "Critical Strike. Any damage destroys target Drone or Weapon.",
+    "keywords": [
+      "critical_strike"
+    ],
+    "flavor_text": "Short legs. Short patience. Short funeral service for whatever it locked onto.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "scout_elite",
+    "name": "Scout Elite",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 2,
+    "defense": 3,
+    "effect_text": "Deploy Burst: Probe 1 and Recon Beacon 2.",
+    "keywords": [
+      "deploy_burst",
+      "probe",
+      "recon_beacon"
+    ],
+    "flavor_text": "Rated for three things: watch, report, survive. Excels at the first two most days.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "falcon_strike",
+    "name": "Falcon Strike",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 5,
+    "defense": 3,
+    "effect_text": "Rapid Launch. Alpha Strike. Enters ready; attack triggers twice.",
+    "keywords": [
+      "rapid_launch",
+      "alpha_strike"
+    ],
+    "flavor_text": "One dive. Two hits. One pilot. Two stories the enemy will never tell.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ghost_raider",
+    "name": "Ghost Raider",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 4,
+    "defense": 4,
+    "effect_text": "Phase Drive. Cloaked Entry.",
+    "keywords": [
+      "phase_drive",
+      "cloaked_entry"
+    ],
+    "flavor_text": "Not on the radar. Not on the roster. Still collecting hazard pay somewhere.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "veteran_fighter",
+    "name": "Veteran Fighter",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 4,
+    "defense": 5,
+    "effect_text": "Battle Hardened. Outrider. Grows stronger from damage and first attack is free.",
+    "keywords": [
+      "battle_hardened",
+      "outrider"
+    ],
+    "flavor_text": "Older than the squadron. Quieter than the rookies. Still the one that comes back.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "spook_drone",
+    "name": "Spook Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 3,
+    "defense": 5,
+    "effect_text": "Gain Stealth. Emergency Reboot. First time destroyed, revive with 1 HP.",
+    "keywords": [
+      "gain_stealth",
+      "emergency_reboot"
+    ],
+    "flavor_text": "Never quite there. Never quite gone. The enemy pilot writes both sentences in the log.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "trap_drone",
+    "name": "Trap Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 3,
+    "defense": 5,
+    "effect_text": "Tracking Array. Apply Lock. Can block Skyward Maneuver units.",
+    "keywords": [
+      "tracking_array",
+      "apply_lock"
+    ],
+    "flavor_text": "Small eyes on wide arcs. A quiet hand closing on the doorframe from outside.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "bomber_wing",
+    "name": "Bomber Wing",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 5,
+    "defense": 3,
+    "effect_text": "Rapid Launch. Critical Breach: deal 4 damage to the unit that destroyed this.",
+    "keywords": [
+      "rapid_launch",
+      "critical_breach"
+    ],
+    "flavor_text": "Rolls the bomb off the rack. Rolls itself onto the hull shortly after, without regret.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "guardian_drone",
+    "name": "Guardian Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 3,
+    "defense": 6,
+    "effect_text": "Interceptor. Auto-Repair 1.",
+    "keywords": [
+      "interceptor",
+      "auto_repair"
+    ],
+    "flavor_text": "Older model, newer patience. Takes every hit and then calmly asks for the next.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "assault_wing",
+    "name": "Assault Wing",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 6,
+    "defense": 3,
+    "effect_text": "Alpha Strike. Priority Fire. Attack triggers twice.",
+    "keywords": [
+      "alpha_strike",
+      "priority_fire"
+    ],
+    "flavor_text": "Paints the enemy's afternoon in two coats. The second arrives before the first dries.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "swarm_leader",
+    "name": "Swarm Leader",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 4,
+    "defense": 4,
+    "effect_text": "Rapid Launch. Battle Hardened. Grows with each hit taken.",
+    "keywords": [
+      "rapid_launch",
+      "battle_hardened"
+    ],
+    "flavor_text": "Runs at the front. Takes the first hit for the swarm. The swarm gets bigger.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "jammer_drone",
+    "name": "Jammer Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 3,
+    "defense": 5,
+    "effect_text": "Signal Jammer. Signal Jamming. Negates first spell; opponent cannot play Maneuvers next turn.",
+    "keywords": [
+      "signal_jammer",
+      "signal_jamming"
+    ],
+    "flavor_text": "A nest of small antennas. Every message leaving the area comes back wrong.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "heavy_striker",
+    "name": "Heavy Striker",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 7,
+    "defense": 5,
+    "effect_text": "Priority Fire. Rapid Launch.",
+    "keywords": [
+      "priority_fire",
+      "rapid_launch"
+    ],
+    "flavor_text": "Heavier frame. Patient pilot. Deliberate ending for whatever lines up in the crosshairs.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "shadow_operative",
+    "name": "Shadow Operative",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 6,
+    "defense": 6,
+    "effect_text": "Gain Stealth. Cloaked Entry. Priority Fire.",
+    "keywords": [
+      "gain_stealth",
+      "cloaked_entry",
+      "priority_fire"
+    ],
+    "flavor_text": "Nobody invited it. Nobody stopped it. Nobody keeps the right records afterward.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "bomber_heavy",
+    "name": "Bomber Heavy",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 8,
+    "defense": 5,
+    "effect_text": "Critical Breach: deal 5 damage when destroyed. Hot Deploy.",
+    "keywords": [
+      "critical_breach",
+      "hot_deploy"
+    ],
+    "flavor_text": "Launches loud. Detonates louder. Files its last postcard on the way down, calmly.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "interceptor_heavy",
+    "name": "Interceptor Heavy",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 4,
+    "defense": 10,
+    "effect_text": "Interceptor. Emergency Reboot. Auto-Repair 2.",
+    "keywords": [
+      "interceptor",
+      "emergency_reboot",
+      "auto_repair"
+    ],
+    "flavor_text": "Always the first wall up. Usually the last wall down. Hardly ever in a hurry.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "carrier_drone",
+    "name": "Carrier Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 5,
+    "defense": 7,
+    "effect_text": "Crew Pooling. Auto-Repair 1.",
+    "keywords": [
+      "crew_pooling",
+      "auto_repair"
+    ],
+    "flavor_text": "Carries pieces of everyone home. Carries the bills back, too, signed.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "scavenger_drone",
+    "name": "Scavenger Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 5,
+    "defense": 7,
+    "effect_text": "Fuel Scavenge. Hull Drain. Gain 1 energy when an enemy is destroyed.",
+    "keywords": [
+      "fuel_scavenge",
+      "hull_drain"
+    ],
+    "flavor_text": "Follows the fleet after the battle. Eats anything the fleet did not want to remember.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "recon_elite",
+    "name": "Recon Elite",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 3,
+    "defense": 9,
+    "effect_text": "Deploy Burst: Probe 2 and Deep Scan.",
+    "keywords": [
+      "deploy_burst",
+      "probe",
+      "deep_scan"
+    ],
+    "flavor_text": "Reads the battlefield. Reads it again. Writes a short sentence the pilot trusts.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "combat_spec",
+    "name": "Combat Spec",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 6,
+    "defense": 6,
+    "effect_text": "Battle Hardened. Critical Strike.",
+    "keywords": [
+      "battle_hardened",
+      "critical_strike"
+    ],
+    "flavor_text": "Puts its time into its craft. The craft puts its time into the enemy quietly.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "siege_unit",
+    "name": "Siege Unit",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 8,
+    "defense": 5,
+    "effect_text": "Cold Boot 1. Critical Strike.",
+    "keywords": [
+      "cold_boot",
+      "critical_strike"
+    ],
+    "flavor_text": "Arrives, thinks, waits, then writes. The letters are large. The letters are final.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "elite_striker",
+    "name": "Elite Striker",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 9,
+    "defense": 7,
+    "effect_text": "Alpha Strike. Priority Fire. Attacks twice first.",
+    "keywords": [
+      "alpha_strike",
+      "priority_fire"
+    ],
+    "flavor_text": "Hand-picked chassis. Hand-picked pilot. Hand-picked funeral, if the funeral is necessary.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "master_medic",
+    "name": "Master Medic",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 4,
+    "defense": 12,
+    "effect_text": "Auto-Repair 3. Hull Drain. Emergency Reboot.",
+    "keywords": [
+      "auto_repair",
+      "hull_drain",
+      "emergency_reboot"
+    ],
+    "flavor_text": "Carries the ship back from every bad afternoon it could have had but did not.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phantom_hunter",
+    "name": "Phantom Hunter",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 8,
+    "defense": 8,
+    "effect_text": "Gain Stealth. Critical Strike. Tracking Lock.",
+    "keywords": [
+      "gain_stealth",
+      "critical_strike",
+      "tracking_lock"
+    ],
+    "flavor_text": "Names the target. Paints the target. Arrives on a schedule no one else knows.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "heavy_bulwark_drone",
+    "name": "Heavy Bulwark Drone",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 6,
+    "defense": 11,
+    "effect_text": "Interceptor. Reinforced Hull.",
+    "keywords": [
+      "interceptor",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Walks at the front. Waits at the front. Falls at the front, usually, not often.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "capital_fighter",
+    "name": "Capital Fighter",
+    "type": "Drone",
+    "rarity": "uncommon",
+    "energy_cost": 6,
+    "attack": 11,
+    "defense": 10,
+    "effect_text": "Priority Fire. Hot Deploy.",
+    "keywords": [
+      "priority_fire",
+      "hot_deploy"
+    ],
+    "flavor_text": "Takes the room. Takes the hall. Takes the corridor the enemy thought was safe.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ablative_mesh",
+    "name": "Ablative Mesh",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 0,
+    "defense": 5,
+    "effect_text": "Reactive. Ablative Plating 1. Damage reduced by 1 before hitting HP.",
+    "keywords": [
+      "reactive",
+      "ablative_plating"
+    ],
+    "flavor_text": "Thin. Light. Patient. Gives up its material to keep the hull polite.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "overclocked_barrier",
+    "name": "Overclocked Barrier",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 0,
+    "defense": 4,
+    "effect_text": "Deploy Burst: Overclock. Enters with extra power for a turn.",
+    "keywords": [
+      "deploy_burst",
+      "overclock"
+    ],
+    "flavor_text": "Runs the shield coil hot for the first hour, then settles into quiet routine.",
+    "archetype": "combo",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "decoy_hologram",
+    "name": "Decoy Hologram",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 1,
+    "attack": 0,
+    "defense": 4,
+    "effect_text": "Cloaked Entry. Gain Stealth.",
+    "keywords": [
+      "cloaked_entry",
+      "gain_stealth"
+    ],
+    "flavor_text": "A little bright. A little loud. A little everywhere the real ship is not.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "reactive_grid",
+    "name": "Reactive Grid",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 7,
+    "effect_text": "System Shielding. Critical Breach: deal 3 damage when destroyed.",
+    "keywords": [
+      "system_shielding",
+      "critical_breach"
+    ],
+    "flavor_text": "Eats the first shot. Writes a letter of complaint in the second. Dies nicely.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ablative_lattice",
+    "name": "Ablative Lattice",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 7,
+    "effect_text": "Ablative Plating 2. Auto-Repair 1.",
+    "keywords": [
+      "ablative_plating",
+      "auto_repair"
+    ],
+    "flavor_text": "Wears down. Knits up. Wears down again. Each shift smaller, each shift still enough.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "signal_baffles",
+    "name": "Signal Baffles",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 6,
+    "effect_text": "Signal Jammer. Gain Stealth.",
+    "keywords": [
+      "signal_jammer",
+      "gain_stealth"
+    ],
+    "flavor_text": "Scatters the wavelength, scatters the sight, scatters the enemy's best comm ideas.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "adaptive_plating",
+    "name": "Adaptive Plating",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 6,
+    "effect_text": "Adaptive Learning. Ablative Plating. Grows tougher per distinct card type played.",
+    "keywords": [
+      "adaptive_learning",
+      "ablative_plating"
+    ],
+    "flavor_text": "Hears the fight. Thickens quietly in the places the fight prefers to hit.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "hover_dome",
+    "name": "Hover Dome",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 7,
+    "effect_text": "Interceptor. Evade 30%.",
+    "keywords": [
+      "interceptor",
+      "evade"
+    ],
+    "flavor_text": "A polite umbrella in an impolite weather pattern. Mostly opens. Mostly stays up.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "reflex_barrier",
+    "name": "Reflex Barrier",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 6,
+    "effect_text": "Reactive. Evade 40%.",
+    "keywords": [
+      "reactive",
+      "evade"
+    ],
+    "flavor_text": "The shield flicks sideways faster than the round it dodges. Usually. Not always.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "tracking_dome",
+    "name": "Tracking Dome",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 2,
+    "attack": 0,
+    "defense": 7,
+    "effect_text": "Tracking Array. Signal Jammer.",
+    "keywords": [
+      "tracking_array",
+      "signal_jammer"
+    ],
+    "flavor_text": "Watches the sky. Tells the sky to be quiet. The sky reluctantly obeys.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "fortress_mesh",
+    "name": "Fortress Mesh",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 10,
+    "effect_text": "Interceptor. Ablative Plating 1.",
+    "keywords": [
+      "interceptor",
+      "ablative_plating"
+    ],
+    "flavor_text": "Woven metal, woven habit. The hull sleeps better with a row of them standing guard.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "stealth_bulkhead",
+    "name": "Stealth Bulkhead",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 9,
+    "effect_text": "Gain Stealth. Reinforced Hull.",
+    "keywords": [
+      "gain_stealth",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Invisible enough to be ignored. Thick enough to be remembered, after.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "rebooting_plating",
+    "name": "Rebooting Plating",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 9,
+    "effect_text": "Emergency Reboot. Auto-Repair 2.",
+    "keywords": [
+      "emergency_reboot",
+      "auto_repair"
+    ],
+    "flavor_text": "Dies, wakes up, dies, wakes up again. The pilot stopped counting on day two.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "reactive_mesh",
+    "name": "Reactive Mesh",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 9,
+    "effect_text": "System Shielding. Critical Breach: deal 3 damage. Ablative Plating 1.",
+    "keywords": [
+      "system_shielding",
+      "critical_breach",
+      "ablative_plating"
+    ],
+    "flavor_text": "Three separate habits, bolted into one frame, still arguing amongst themselves politely.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "countered_barrier",
+    "name": "Countered Barrier",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 8,
+    "effect_text": "Countermeasure 2. Interceptor.",
+    "keywords": [
+      "countermeasure",
+      "interceptor"
+    ],
+    "flavor_text": "Costs the enemy a little extra for every polite question they send its way.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "regen_bulkhead",
+    "name": "Regen Bulkhead",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 9,
+    "effect_text": "Auto-Repair 2. Reinforced Hull.",
+    "keywords": [
+      "auto_repair",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Heals while standing. Stands while healing. The pilot approves of the split shift.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phase_grid",
+    "name": "Phase Grid",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 9,
+    "effect_text": "Phase Drive. Evade 30%.",
+    "keywords": [
+      "phase_drive",
+      "evade"
+    ],
+    "flavor_text": "Half of it is somewhere else. The enemy aims at where it was. Misses. Again.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "sentinel_wall",
+    "name": "Sentinel Wall",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 1,
+    "defense": 9,
+    "effect_text": "Interceptor. Battle Hardened. Gains power per damage taken.",
+    "keywords": [
+      "interceptor",
+      "battle_hardened"
+    ],
+    "flavor_text": "Stands at the gap. Gains weight with every hit. Eventually leaves its own crater.",
+    "archetype": "aggro",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "aegis_mesh",
+    "name": "Aegis Mesh",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 3,
+    "attack": 0,
+    "defense": 9,
+    "effect_text": "Ablative Plating 2. Interceptor.",
+    "keywords": [
+      "ablative_plating",
+      "interceptor"
+    ],
+    "flavor_text": "A lighter version of the old fortress pattern. Still gets the job done, usually first.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "heavy_aegis",
+    "name": "Heavy Aegis",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 0,
+    "defense": 13,
+    "effect_text": "Ablative Plating 3. Interceptor. Reinforced Hull.",
+    "keywords": [
+      "ablative_plating",
+      "interceptor",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Three patterns stitched together. Every line of ancestry. Still holds the one promise.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "master_shield",
+    "name": "Master Shield",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 0,
+    "defense": 14,
+    "effect_text": "Auto-Repair 2. System Shielding.",
+    "keywords": [
+      "auto_repair",
+      "system_shielding"
+    ],
+    "flavor_text": "The shield the other pilots recommend. The shield the engineers refuse to complain about.",
+    "archetype": "ramp",
+    "subsystem_target": "shield",
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phantom_wall",
+    "name": "Phantom Wall",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 0,
+    "defense": 13,
+    "effect_text": "Gain Stealth. Cloaked Entry. Evade 30%.",
+    "keywords": [
+      "gain_stealth",
+      "cloaked_entry",
+      "evade"
+    ],
+    "flavor_text": "Nobody can target it. Nobody can see it. Nobody writes home about it either.",
+    "archetype": "utility",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "fortress_lattice",
+    "name": "Fortress Lattice",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 1,
+    "defense": 13,
+    "effect_text": "Interceptor. Reinforced Hull.",
+    "keywords": [
+      "interceptor",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Built from old panels. New welds, old pattern, the same patience as the original fortress.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "reboot_fortress",
+    "name": "Reboot Fortress",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 0,
+    "defense": 12,
+    "effect_text": "Emergency Reboot. Reinforced Hull.",
+    "keywords": [
+      "emergency_reboot",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Goes down. Comes back. Stays up. The pilot keeps notes out of sheer habit.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "counterfield",
+    "name": "Counterfield",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 0,
+    "defense": 12,
+    "effect_text": "Countermeasure 2. Negate. Cancels the first enemy ability targeting this.",
+    "keywords": [
+      "countermeasure",
+      "negate"
+    ],
+    "flavor_text": "A small taxing jurisdiction. Writes polite refusal letters to anything the enemy points at it.",
+    "archetype": "control",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "ablative_fortress",
+    "name": "Ablative Fortress",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 4,
+    "attack": 0,
+    "defense": 13,
+    "effect_text": "Ablative Plating 3. Auto-Repair 2.",
+    "keywords": [
+      "ablative_plating",
+      "auto_repair"
+    ],
+    "flavor_text": "Wears down steadily. Knits up steadily. A careful accounting in metal, signed off every dawn.",
+    "archetype": "ramp",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "master_bulwark",
+    "name": "Master Bulwark",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 2,
+    "defense": 15,
+    "effect_text": "Interceptor. Reinforced Hull. Ablative Plating 2.",
+    "keywords": [
+      "interceptor",
+      "reinforced_hull",
+      "ablative_plating"
+    ],
+    "flavor_text": "The kind of wall pilots argue is too expensive until the morning it saves them.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "phase_fortress",
+    "name": "Phase Fortress",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 0,
+    "defense": 16,
+    "effect_text": "Phase Drive. Reinforced Hull.",
+    "keywords": [
+      "phase_drive",
+      "reinforced_hull"
+    ],
+    "flavor_text": "Half the wall is here. The other half argues with the next universe over.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "titanic_aegis",
+    "name": "Titanic Aegis",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 5,
+    "attack": 0,
+    "defense": 17,
+    "effect_text": "Ablative Plating 4. Emergency Reboot.",
+    "keywords": [
+      "ablative_plating",
+      "emergency_reboot"
+    ],
+    "flavor_text": "Four layers of slow refusal. When the last one gives, the whole panel politely restarts.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  },
+  {
+    "id": "grand_fortress",
+    "name": "Grand Fortress",
+    "type": "Defense",
+    "rarity": "uncommon",
+    "energy_cost": 6,
+    "attack": 3,
+    "defense": 18,
+    "effect_text": "Interceptor. Reinforced Hull. Auto-Repair 2.",
+    "keywords": [
+      "interceptor",
+      "reinforced_hull",
+      "auto_repair"
+    ],
+    "flavor_text": "The grand name is not bragging. It is the fleet's polite enemy warning.",
+    "archetype": "midrange",
+    "subsystem_target": null,
+    "escalation": false,
+    "dual_identity": false,
+    "cargo": false
+  }
+]

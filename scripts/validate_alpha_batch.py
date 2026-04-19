@@ -131,6 +131,18 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
             warnings.append(
                 f"batch 01 focus is Weapons+Drones; unexpected types: {unexpected}"
             )
+    if batch_num == "02":
+        unexpected = set(type_ct.keys()) - {"Defense", "Maneuver"}
+        if unexpected:
+            warnings.append(
+                f"batch 02 focus is Defense+Maneuvers; unexpected types: {unexpected}"
+            )
+    if batch_num == "03":
+        unexpected = set(type_ct.keys()) - {"AI Routine", "Module"}
+        if unexpected:
+            warnings.append(
+                f"batch 03 focus is AI Routines+Modules; unexpected types: {unexpected}"
+            )
 
     # Check 5: cost curve per Part 7 (soft tolerance)
     cost_ct = Counter(c.get("energy_cost") for c in cards)
@@ -141,12 +153,16 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
                 f"cost {cost}: {actual} cards vs target {target}"
             )
 
-    # Check 6: 0-cost discipline
+    # Check 6: 0-cost discipline. Ship Core cards are always cost 0 per
+    # Part 3 (one per deck, placed at game start, not played from hand) and
+    # are exempt from Rule 4's 0-cost tradeoff requirement.
     for c in cards:
-        if c.get("energy_cost") == 0:
+        if c.get("energy_cost") == 0 and c.get("type") != "Ship Core":
             effect = (c.get("effect_text") or "").lower()
             kws = c.get("keywords") or []
             ok = ("reactive" in kws
+                  or "scrap" in kws  # scrap keyword is a sacrifice tradeoff
+                  or "scrap a" in effect  # body-text scrap also counts
                   or "only if" in effect
                   or "once per" in effect
                   or "lose" in effect
@@ -157,8 +173,16 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
                     f"tradeoff/single-use marker"
                 )
 
-    # Check 7: A+D bands (Rule 1)
+    # Check 7: A+D bands (Rule 1). Effect-only card types have no permanent
+    # board-state stats, so A+D is always 0 by type — exempt them from the
+    # band. Per Part 3: Maneuvers are instants, Modules are consumed after
+    # use, Equipment attaches to a host, Fields are ambient protocols, and
+    # Ship Cores are passive modifiers. Only Weapon/Defense/Drone/AI Routine
+    # have meaningful A+D bodies.
+    AD_EXEMPT_TYPES = {"Maneuver", "Module", "Equipment", "Field", "Ship Core"}
     for c in cards:
+        if c.get("type") in AD_EXEMPT_TYPES:
+            continue
         cost = c.get("energy_cost", 0)
         a = c.get("attack", 0) or 0
         d = c.get("defense", 0) or 0

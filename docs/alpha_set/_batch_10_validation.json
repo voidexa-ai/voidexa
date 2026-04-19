@@ -1,0 +1,82 @@
+{
+  "batch": "10",
+  "errors": [],
+  "warnings": [
+    "cost 2: 40 cards vs target 20",
+    "cost 5: 2 cards vs target 10"
+  ],
+  "distributions": {
+    "card_count": 100,
+    "rarity": {
+      "mythic": 20,
+      "rare": 8,
+      "uncommon": 47,
+      "common": 25
+    },
+    "type": {
+      "Maneuver": 7,
+      "Module": 11,
+      "Ship Core": 2,
+      "Weapon": 12,
+      "AI Routine": 16,
+      "Drone": 34,
+      "Field": 4,
+      "Defense": 9,
+      "Equipment": 5
+    },
+    "cost": {
+      "0": 2,
+      "1": 15,
+      "2": 40,
+      "3": 19,
+      "4": 5,
+      "5": 2,
+      "6": 2,
+      "7": 6,
+      "8": 9
+    },
+    "archetype": {
+      "combo": 19,
+      "control": 7,
+      "aggro": 13,
+      "midrange": 29,
+      "ramp": 15,
+      "utility": 17
+    },
+    "keyword_usage": {
+      "persistent_field": 19,
+      "priority_fire": 11,
+      "cold_boot": 10,
+      "critical_strike": 7,
+      "end_cycle": 7,
+      "auto_repair": 5,
+      "probe": 5,
+      "phase_drive": 4,
+      "gain_stealth": 4,
+      "deploy_burst": 4,
+      "alpha_strike": 3,
+      "breach_cascade": 3,
+      "overflow_fire": 3,
+      "radiation_leak": 3,
+      "rapid_launch": 3,
+      "emergency_reboot": 3,
+      "adaptive_learning": 2,
+      "cascading_power": 2,
+      "interceptor": 2,
+      "critical_breach": 2,
+      "battle_hardened": 2,
+      "cloaked_entry": 2,
+      "manual_fire": 2,
+      "chain_catalyst": 1,
+      "linked_fire": 1,
+      "endgame_protocol": 1,
+      "reinforced_hull": 1,
+      "ablative_plating": 1,
+      "tracking_lock": 1,
+      "fuel_scavenge": 1,
+      "skyward_maneuver": 1,
+      "evade": 1,
+      "reactive": 1
+    }
+  }
+}
