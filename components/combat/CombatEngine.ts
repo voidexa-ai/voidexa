@@ -168,6 +168,7 @@ export function defaultDeckFor(catalogue: Readonly<Record<string, Card>>): strin
     [CardRarity.Rare]: [],
     [CardRarity.Epic]: [],
     [CardRarity.Legendary]: [],
+    [CardRarity.Mythic]: [],
   }
   for (const c of Object.values(catalogue)) byRarity[c.rarity].push(c)
   const pick = (rarity: CardRarity, n: number): Card[] => byRarity[rarity].slice(0, n)

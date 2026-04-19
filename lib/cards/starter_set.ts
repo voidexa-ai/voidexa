@@ -472,6 +472,7 @@ export function countByRarity(): Record<CardRarity, number> {
     [CardRarity.Rare]: 0,
     [CardRarity.Epic]: 0,
     [CardRarity.Legendary]: 0,
+    [CardRarity.Mythic]: 0,
   };
   for (const c of STARTER_CARDS) out[c.rarity]++;
   return out;

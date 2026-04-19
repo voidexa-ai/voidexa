@@ -26,13 +26,14 @@ const sample = (over: Partial<Card> = {}): Card => ({
 });
 
 describe("constants", () => {
-  it("rarity ladder is low → high", () => {
+  it("rarity ladder is low → high (6 tiers, Mythic added in sprint 14h)", () => {
     expect(RARITY_ORDER).toEqual([
       CardRarity.Common,
       CardRarity.Uncommon,
       CardRarity.Rare,
       CardRarity.Epic,
       CardRarity.Legendary,
+      CardRarity.Mythic,
     ]);
   });
 
@@ -70,9 +71,15 @@ describe("canFuse", () => {
     expect(canFuse(a, b)).toBe(false);
   });
 
-  it("false when both are Legendary (no next tier)", () => {
+  it("false when both are Legendary (Legendary is the fusion ceiling)", () => {
     const a = sample({ id: "a", rarity: CardRarity.Legendary, energyCost: 6 });
     const b = sample({ id: "b", rarity: CardRarity.Legendary, energyCost: 6 });
+    expect(canFuse(a, b)).toBe(false);
+  });
+
+  it("false when both are Mythic (no higher tier)", () => {
+    const a = sample({ id: "a", rarity: CardRarity.Mythic, energyCost: 7 });
+    const b = sample({ id: "b", rarity: CardRarity.Mythic, energyCost: 7 });
     expect(canFuse(a, b)).toBe(false);
   });
 });
@@ -81,18 +88,20 @@ describe("nextRarity", () => {
   it("returns the next rarity up", () => {
     expect(nextRarity(CardRarity.Common)).toBe(CardRarity.Uncommon);
     expect(nextRarity(CardRarity.Epic)).toBe(CardRarity.Legendary);
+    expect(nextRarity(CardRarity.Legendary)).toBe(CardRarity.Mythic);
   });
 
-  it("returns null for Legendary", () => {
-    expect(nextRarity(CardRarity.Legendary)).toBeNull();
+  it("returns null for Mythic (top of the ladder)", () => {
+    expect(nextRarity(CardRarity.Mythic)).toBeNull();
   });
 });
 
 describe("maxCopiesInDeck", () => {
-  it("is 2 for normal rarities and 1 for Legendary", () => {
+  it("is 2 for normal rarities and 1 for Legendary / Mythic", () => {
     expect(maxCopiesInDeck(CardRarity.Common)).toBe(2);
     expect(maxCopiesInDeck(CardRarity.Epic)).toBe(2);
     expect(maxCopiesInDeck(CardRarity.Legendary)).toBe(1);
+    expect(maxCopiesInDeck(CardRarity.Mythic)).toBe(1);
   });
 });
 

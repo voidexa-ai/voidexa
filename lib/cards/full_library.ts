@@ -49,10 +49,10 @@ const RARITY_MAP: Readonly<Record<string, CardRarity>> = {
   common: CardRarity.Common,
   uncommon: CardRarity.Uncommon,
   rare: CardRarity.Rare,
-  // No `epic` tier in the library; map legendary → Epic so mythic owns the gold slot.
-  legendary: CardRarity.Epic,
-  mythic: CardRarity.Legendary,
-  // Defensive fallbacks.
+  epic: CardRarity.Epic,
+  legendary: CardRarity.Legendary,
+  mythic: CardRarity.Mythic,
+  // Defensive fallback: pioneer-tier cards are treated as Legendary for visuals.
   pioneer: CardRarity.Legendary,
 }
 

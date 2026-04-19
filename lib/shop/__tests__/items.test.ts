@@ -39,9 +39,10 @@ describe("STARTER_SHOP_ITEMS", () => {
     }
   });
 
-  it("covers all 5 rarities", () => {
+  it("covers the 5 non-Mythic starter rarities (Mythic added sprint 14h is drop-only)", () => {
     const rarities = new Set(STARTER_SHOP_ITEMS.map((i) => i.rarity));
     for (const r of Object.values(CardRarity)) {
+      if (r === CardRarity.Mythic) continue;
       expect(rarities.has(r)).toBe(true);
     }
   });

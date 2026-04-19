@@ -25,6 +25,7 @@ const RARITY_COLOR: Record<CardRarity, string> = {
   [CardRarity.Rare]:      '#3b82f6',
   [CardRarity.Epic]:      '#a855f7',
   [CardRarity.Legendary]: '#f59e0b',
+  [CardRarity.Mythic]:    '#ec4899',
 }
 
 const rarityLabel = (t: Dict, r: CardRarity): string => {
@@ -555,11 +556,12 @@ export default function ShopPage() {
   const allItems = useMemo(() => {
     const featuredIds = new Set(daily.map(i => i.id))
     const rarityRank: Record<CardRarity, number> = {
-      [CardRarity.Legendary]: 0,
-      [CardRarity.Epic]:      1,
-      [CardRarity.Rare]:      2,
-      [CardRarity.Uncommon]:  3,
-      [CardRarity.Common]:    4,
+      [CardRarity.Mythic]:    0,
+      [CardRarity.Legendary]: 1,
+      [CardRarity.Epic]:      2,
+      [CardRarity.Rare]:      3,
+      [CardRarity.Uncommon]:  4,
+      [CardRarity.Common]:    5,
     }
     const items = [...STARTER_SHOP_ITEMS]
     return items.sort((a, b) => {

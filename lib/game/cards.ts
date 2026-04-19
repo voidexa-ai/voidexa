@@ -18,6 +18,7 @@ export enum CardRarity {
   Rare = "Rare",
   Epic = "Epic",
   Legendary = "Legendary",
+  Mythic = "Mythic",
 }
 
 export enum CardCategory {
@@ -35,6 +36,7 @@ export const RARITY_ORDER: readonly CardRarity[] = [
   CardRarity.Rare,
   CardRarity.Epic,
   CardRarity.Legendary,
+  CardRarity.Mythic,
 ];
 
 export interface Card {
@@ -63,6 +65,7 @@ export const DUST_VALUES: Readonly<Record<CardRarity, number>> = {
   [CardRarity.Rare]: 100,
   [CardRarity.Epic]: 400,
   [CardRarity.Legendary]: 1600,
+  [CardRarity.Mythic]: 3200,
 };
 
 /**
@@ -75,6 +78,7 @@ export const CRAFT_COSTS: Readonly<Record<CardRarity, number>> = {
   [CardRarity.Rare]: 400,
   [CardRarity.Epic]: 1600,
   [CardRarity.Legendary]: 6400,
+  [CardRarity.Mythic]: 12800,
 };
 
 /**
@@ -87,6 +91,7 @@ export const ENERGY_COST_RANGE: Readonly<Record<CardRarity, { min: number; max: 
   [CardRarity.Rare]:      { min: 3, max: 4 },
   [CardRarity.Epic]:      { min: 4, max: 5 },
   [CardRarity.Legendary]: { min: 5, max: 7 },
+  [CardRarity.Mythic]:    { min: 6, max: 10 },
 };
 
 /**
@@ -94,7 +99,8 @@ export const ENERGY_COST_RANGE: Readonly<Record<CardRarity, { min: number; max: 
  * Max 2 copies of a normal card. Legendary cards cap at 1.
  */
 export function maxCopiesInDeck(rarity: CardRarity): number {
-  return rarity === CardRarity.Legendary ? 1 : 2;
+  if (rarity === CardRarity.Legendary || rarity === CardRarity.Mythic) return 1;
+  return 2;
 }
 
 /** Returns the disenchant dust value for the card's rarity. */
@@ -108,7 +114,10 @@ export function calculateDust(rarity: CardRarity): number {
  */
 export function canFuse(card1: Card, card2: Card): boolean {
   if (card1.rarity !== card2.rarity) return false;
+  // Legendary is the crafting ceiling (no fusion into Mythic — Mythic is
+  // library-only / drop-only). Mythic itself has no higher tier.
   if (card1.rarity === CardRarity.Legendary) return false;
+  if (card1.rarity === CardRarity.Mythic) return false;
   return true;
 }
 

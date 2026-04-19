@@ -28,6 +28,7 @@ describe("STARTER_CARDS composition", () => {
       [CardRarity.Rare]: 8,
       [CardRarity.Epic]: 5,
       [CardRarity.Legendary]: 2,
+      [CardRarity.Mythic]: 0,
     });
   });
 

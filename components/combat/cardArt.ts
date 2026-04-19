@@ -1,16 +1,20 @@
 /**
  * components/combat/cardArt.ts
  *
- * Sprint 14g — card art now loads from `/cards/rendered/<id>.png` (257 files
- * matching every id in the full 257-card library). The legacy `CARD_ART`
- * map below only covers the 40-card starter set and is retained as a
- * fallback for any consumer still rendering starter cards.
+ * Sprint 14h — card art loads from `/cards/composed/<id>.png` (the pre-framed
+ * 1024×1536 composites produced by scripts/render_cards_v3.py). Legacy paths
+ * are kept for the original 40-card starter set.
  */
 
 import { CardRarity } from '@/lib/game/cards'
 
-/** Returns the render path for a card id. Falls back to the legacy 40-card map. */
+/** Returns the composed-card path (frame + art + text baked in). */
 export function cardArtPath(cardId: string): string | null {
+  return `/cards/composed/${cardId}.png`
+}
+
+/** Raw 3D render without a frame — used by any surface that wants to composite its own. */
+export function cardRawRenderPath(cardId: string): string | null {
   return `/cards/rendered/${cardId}.png`
 }
 
@@ -26,6 +30,7 @@ export const RARITY_GLOW: Readonly<Record<CardRarity, string>> = {
   [CardRarity.Rare]:      '#3b82f6', // blue
   [CardRarity.Epic]:      '#a855f7', // purple
   [CardRarity.Legendary]: '#f59e0b', // gold
+  [CardRarity.Mythic]:    '#ec4899', // magenta
 }
 
 /** Per-category accent color (used on icon + tag chip). */
