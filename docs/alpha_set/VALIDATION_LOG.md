@@ -480,3 +480,74 @@ B10 mythics + dual-identity + escalation cards = 300 cards) will
 focus on signature-named cards, complex keyword blends, and the
 Part 10 unique mechanics (flip cards, escalation, sacrifice,
 stacked attacks, cargo).
+
+---
+
+## Batch 08 — Epics + Remaining Equipment/Field
+
+**Ran:** 10 validation checks.
+**Result:** 0 errors * 5 warnings (all accepted: cost-curve clustering).
+
+### Warnings (all cost-curve, accepted)
+
+Batch 08 is 90 percent epic. Rule 2 ("Epic: 3-4 keywords or complex
+conditional") concentrates epics at cost 4-7 where their keyword
+density and mechanical complexity fit. Low-cost epics compress too
+much value into the early game.
+
+Accepted warnings:
+1. Cost 1: 0 vs target 17 — no epic 1-drops.
+2. Cost 2: 3 vs target 20 — only 3 fillers at cost 2.
+3. Cost 5: 30 vs target 10 — epic sweet spot.
+4. Cost 6: 20 vs target 7 — heavy epic finishers.
+5. Cost 7: 12 vs target 4 — late-game epic plays.
+
+Balanced across the 1000-card set by common-heavy early batches.
+
+### Fixes applied before finalization
+
+- **35 flavor-text 16-19 word trims** into the 8-15 band. All 800
+  flavors unique across the alpha set so far.
+
+### Epic signature 4-keyword loadouts
+
+Per Rule 2, epics get 3-4 keywords. Every Epic AI Routine in this
+batch carries a 4-keyword loadout anchored on `persistent_field`.
+Every Epic Defense carries 4 defensive keywords. Epic Weapons and
+Drones use 3 keywords for tempo clarity.
+
+### Cumulative keyword usage (800/1000 cards)
+
+All 78 Part-9 abilities seeded. Top 15:
+- persistent_field: 123
+- priority_fire: 104
+- critical_strike: 61
+- auto_repair: 56
+- interceptor: 53
+- rapid_launch: 49
+- gain_stealth: 42
+- ablative_plating: 41
+- phase_drive: 44
+- reinforced_hull: 39
+- emergency_reboot: 27
+- probe: 26
+- alpha_strike: 33
+- radiation_leak: 31
+- cloaked_entry: 23
+
+### Remaining for B09 (legendaries + ship cores) and B10 (mythics +
+### dual-identity + escalation)
+
+- 50 legendary cards
+- ~40 more ship cores (above B04 commons and B08 epic)
+- 20 mythic cards
+- 40 dual-identity flip cards (per Part 10A)
+- 30 escalation cards (Part 10B)
+- 25 sacrifice cards (Part 10C)
+- 15 stacked-attack cards (Part 10D)
+- 30 cargo cards (Part 10E)
+- 15 environmental field cards (Part 10F) [many already seeded]
+
+Some of these overlap (a legendary can be dual-identity, an epic can
+be escalation). B09 and B10 will unify these design families into
+the remaining 200 slots.

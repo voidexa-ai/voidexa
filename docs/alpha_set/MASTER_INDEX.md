@@ -13,19 +13,19 @@ Each batch's plan is derived from remaining budget ÷ remaining batches, not
 from the static Rule 8 per-batch average — so a batch that over-delivers on
 one archetype must be offset by the next.
 
-| Archetype | Target | B01 | B02 | B03 | B04 | B05 | B06 | B07 | Remaining | Batches left | Avg needed |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| Aggro    | 200 | 51 | 55  | 68  |  92 | 111 | 127 | 145 |  55 | 3 | 18.3 |
-| Control  | 200 | 18 | 68  | 82  | 100 | 120 | 143 | 156 |  44 | 3 | 14.7 |
-| Midrange | 250 | 21 | 38  | 69  |  94 | 120 | 142 | 169 |  81 | 3 | 27.0 |
-| Combo    | 150 |  5 | 16  | 36  |  51 |  66 |  86 | 104 |  46 | 3 | 15.3 |
-| Ramp     |  80 |  0 |  5  | 15  |  22 |  30 |  39 |  51 |  29 | 3 |  9.7 |
-| Utility  | 120 |  5 | 18  | 30  |  41 |  53 |  63 |  75 |  45 | 3 | 15.0 |
+| Archetype | Target | B01 | B02 | B03 | B04 | B05 | B06 | B07 | B08 | Remaining | Batches left | Avg needed |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Aggro    | 200 | 51 | 55  | 68  |  92 | 111 | 127 | 145 | 163 |  37 | 2 | 18.5 |
+| Control  | 200 | 18 | 68  | 82  | 100 | 120 | 143 | 156 | 172 |  28 | 2 | 14.0 |
+| Midrange | 250 | 21 | 38  | 69  |  94 | 120 | 142 | 169 | 196 |  54 | 2 | 27.0 |
+| Combo    | 150 |  5 | 16  | 36  |  51 |  66 |  86 | 104 | 123 |  27 | 2 | 13.5 |
+| Ramp     |  80 |  0 |  5  | 15  |  22 |  30 |  39 |  51 |  60 |  20 | 2 | 10.0 |
+| Utility  | 120 |  5 | 18  | 30  |  41 |  53 |  63 |  75 |  86 |  34 | 2 | 17.0 |
 
-Status after B07 (700/1000 cards): Batches 08-10 = 90 epic + 50
-legendary + 20 mythic + leftover rares/equipment = 300 cards total.
-Midrange remains the heaviest commitment at 27/batch. All other
-archetypes tracking within 1 card/batch of the 1000-card target.
+Status after B08 (800/1000 cards): Midrange still on the 27/batch
+line for the final two batches. Utility needs a slight lean in B09-B10.
+Legendaries (B09) will lean combo/midrange signature plays; mythics
+(B10) are 1-of-a-kind top plays with flexible variance.
 
 ---
 
@@ -844,3 +844,119 @@ Distribution:
 | 698 | defensive_zone | Defensive Zone | Field | 4 | 0/0 | midrange | persistent_field, interceptor, ablative_plating |
 | 699 | chaos_zone | Chaos Zone | Field | 5 | 0/0 | aggro | persistent_field, breach_cascade |
 | 700 | deferred_zone | Deferred Zone | Field | 6 | 0/0 | utility | persistent_field, deferred_deployment |
+
+## Batch 08 — Epics + Remaining Equipment/Field
+
+**Cards:** 100 * **File:** `batch_08.json`
+
+Distribution:
+- Rarity: 90 epic * 8 uncommon * 2 rare
+- Types: Weapon 17 * Drone 13 * AI Routine 13 * Defense 12 * Module 11 * Maneuver 9 * Equipment 14 * Field 10 * Ship Core 1
+- Cost: 1x 0 * 3x 2 * 7x 3 * 22x 4 * 30x 5 * 20x 6 * 12x 7 * 5x 8
+- Archetype: 27 midrange * 19 combo * 18 aggro * 16 control * 11 utility * 9 ramp
+- Epic rule 2 applied: 3-4 keywords per epic. AI Routines and Defense carry 4-keyword signature loadouts; others 3 keywords each.
+
+### Cards
+
+| # | id | name | type | rarity | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|---|
+| 701 | plasma_reaper | Plasma Reaper | Weapon | E | 4 | 13/0 | combo | priority_fire, overclock, critical_strike |
+| 702 | chrono_cannon | Chrono Cannon | Weapon | E | 4 | 12/0 | aggro | phase_drive, quick_strike, priority_fire |
+| 703 | twin_fusion | Twin Fusion | Weapon | E | 4 | 13/0 | aggro | alpha_strike, linked_fire, priority_fire |
+| 704 | arc_storm | Arc Storm | Weapon | E | 4 | 12/0 | combo | breach_cascade, chain_catalyst, overclock |
+| 705 | shadowbeam | Shadowbeam | Weapon | E | 5 | 16/0 | control | gain_stealth, phase_drive, critical_strike |
+| 706 | quad_salvo | Quad Salvo | Weapon | E | 5 | 16/0 | midrange | rapid_launch, alpha_strike, priority_fire |
+| 707 | ion_destroyer | Ion Destroyer | Weapon | E | 5 | 16/0 | control | critical_strike, radiation_leak, priority_fire |
+| 708 | siege_spike | Siege Spike | Weapon | E | 5 | 16/0 | midrange | cold_boot, critical_strike, overflow_fire |
+| 709 | nova_cannon | Nova Cannon | Weapon | E | 5 | 16/0 | aggro | breach_cascade, overflow_fire, radiation_leak |
+| 710 | reaper_lance | Reaper Lance | Weapon | E | 6 | 20/0 | combo | priority_fire, critical_strike, overclock |
+| 711 | void_breaker | Void Breaker | Weapon | E | 6 | 20/0 | control | phase_drive, overflow_fire, radiation_leak |
+| 712 | apocalypse_gun | Apocalypse Gun | Weapon | E | 6 | 20/0 | combo | breach_cascade, alpha_strike, priority_fire |
+| 713 | siege_master | Siege Master | Weapon | E | 6 | 20/0 | midrange | cold_boot, cascading_power, critical_strike |
+| 714 | hyper_cannon | Hyper Cannon | Weapon | E | 7 | 24/0 | combo | priority_fire, alpha_strike, critical_strike |
+| 715 | void_storm | Void Storm | Weapon | E | 7 | 24/0 | aggro | breach_cascade, radiation_leak, overflow_fire |
+| 716 | stellar_spike | Stellar Spike | Weapon | E | 7 | 24/0 | control | critical_strike, phase_drive, overflow_fire |
+| 717 | planetary_cannon | Planetary Cannon | Weapon | E | 8 | 28/0 | midrange | priority_fire, overflow_fire, radiation_leak |
+| 718 | sky_reaver | Sky Reaver | Drone | E | 4 | 7/5 | midrange | rapid_launch, skyward_maneuver, priority_fire |
+| 719 | phantom_elite | Phantom Elite | Drone | E | 4 | 6/6 | utility | gain_stealth, cloaked_entry, phase_drive |
+| 720 | terror_bomber | Terror Bomber | Drone | E | 4 | 8/5 | midrange | critical_breach, hot_deploy, rapid_launch |
+| 721 | guardian_elite | Guardian Elite | Drone | E | 5 | 5/12 | midrange | interceptor, reinforced_hull, auto_repair |
+| 722 | bomber_overlord | Bomber Overlord | Drone | E | 5 | 10/6 | midrange | rapid_launch, critical_breach, alpha_strike |
+| 723 | phantom_siege | Phantom Siege | Drone | E | 5 | 9/8 | control | gain_stealth, critical_strike, phase_drive |
+| 724 | warchief | Warchief | Drone | E | 5 | 8/9 | midrange | battle_hardened, priority_fire, outrider |
+| 725 | siege_overlord | Siege Overlord | Drone | E | 6 | 12/8 | midrange | priority_fire, cold_boot, alpha_strike |
+| 726 | phantom_overlord | Phantom Overlord | Drone | E | 6 | 10/10 | utility | gain_stealth, cloaked_entry, critical_strike |
+| 727 | guardian_overlord | Guardian Overlord | Drone | E | 6 | 6/15 | midrange | interceptor, reinforced_hull, emergency_reboot |
+| 728 | fleet_admiral | Fleet Admiral | Drone | E | 7 | 13/13 | midrange | priority_fire, alpha_strike, rapid_launch |
+| 729 | capital_terror | Capital Terror | Drone | E | 7 | 15/11 | midrange | rapid_launch, critical_breach, cold_boot |
+| 730 | apex_destroyer | Apex Destroyer | Drone | E | 8 | 16/14 | aggro | priority_fire, alpha_strike, critical_strike |
+| 731 | prime_command | Prime Command | AI Routine | E | 4 | 0/13 | combo | persistent_field, priority_fire, overclock, chain_catalyst |
+| 732 | master_scanner_e | Master Scanner (Epic) | AI Routine | E | 4 | 0/12 | utility | persistent_field, probe, deep_scan, tactical_draw |
+| 733 | prime_fortress | Prime Fortress | AI Routine | E | 4 | 0/14 | midrange | persistent_field, interceptor, reinforced_hull, ablative_plating |
+| 734 | master_uplink | Master Uplink | AI Routine | E | 5 | 0/16 | midrange | persistent_field, cascading_power, linked_fire, chain_catalyst |
+| 735 | prime_shield_e | Prime Shield (Epic) | AI Routine | E | 5 | 0/17 | ramp | persistent_field, auto_repair, emergency_reboot, adaptive_learning |
+| 736 | ghost_overmind | Ghost Overmind | AI Routine | E | 5 | 0/16 | utility | persistent_field, gain_stealth, cloaked_entry, phase_drive |
+| 737 | commander_elite | Commander Elite | AI Routine | E | 5 | 0/16 | aggro | persistent_field, priority_fire, rapid_launch, critical_strike |
+| 738 | supreme_heat | Supreme Heat | AI Routine | E | 6 | 0/20 | combo | persistent_field, overclock, efficiency_protocol, cascading_power |
+| 739 | prime_hunter | Prime Hunter | AI Routine | E | 6 | 0/20 | combo | persistent_field, tracking_lock, priority_fire, critical_strike |
+| 740 | apex_master | Apex Master | AI Routine | E | 6 | 0/21 | ramp | persistent_field, adaptive_learning, efficiency_protocol, chain_catalyst |
+| 741 | ultimate_commander | Ultimate Commander | AI Routine | E | 7 | 0/25 | aggro | persistent_field, priority_fire, rapid_launch, alpha_strike |
+| 742 | prime_overmind | Prime Overmind | AI Routine | E | 7 | 0/24 | combo | persistent_field, cascading_power, chain_catalyst, linked_fire |
+| 743 | grand_supreme | Grand Supreme | AI Routine | E | 8 | 0/30 | combo | persistent_field, priority_fire, overclock, cascading_power |
+| 744 | master_fortress_e | Master Fortress (Epic) | Defense | E | 4 | 0/14 | midrange | interceptor, reinforced_hull, ablative_plating, auto_repair |
+| 745 | aegis_lord | Aegis Lord | Defense | E | 4 | 0/14 | midrange | ablative_plating, emergency_reboot, reinforced_hull, system_shielding |
+| 746 | phase_master | Phase Master | Defense | E | 5 | 0/16 | control | phase_drive, gain_stealth, reinforced_hull, evade |
+| 747 | apex_barrier | Apex Barrier | Defense | E | 5 | 0/17 | ramp | interceptor, ablative_plating, auto_repair, emergency_reboot |
+| 748 | stealth_master | Stealth Master | Defense | E | 5 | 0/17 | control | gain_stealth, cloaked_entry, evade, reinforced_hull |
+| 749 | grand_fortress_e | Grand Fortress (Epic) | Defense | E | 5 | 2/16 | midrange | interceptor, reinforced_hull, battle_hardened |
+| 750 | titanic_lord | Titanic Lord | Defense | E | 6 | 0/21 | ramp | ablative_plating, reinforced_hull, emergency_reboot, auto_repair |
+| 751 | fortress_supreme | Fortress Supreme | Defense | E | 6 | 3/20 | midrange | interceptor, reinforced_hull, ablative_plating, auto_repair |
+| 752 | phase_supreme | Phase Supreme | Defense | E | 6 | 0/22 | control | phase_drive, reinforced_hull, emergency_reboot |
+| 753 | aegis_supreme | Aegis Supreme | Defense | E | 7 | 0/25 | ramp | ablative_plating, auto_repair, emergency_reboot, reinforced_hull |
+| 754 | citadel_lord | Citadel Lord | Defense | E | 7 | 3/24 | midrange | interceptor, reinforced_hull, auto_repair |
+| 755 | primordial_bastion | Primordial Bastion | Defense | E | 8 | 0/30 | midrange | interceptor, reinforced_hull, ablative_plating, emergency_reboot |
+| 756 | master_warhead_e | Master Warhead (Epic) | Module | E | 4 | 0/0 | aggro | breach_cascade, overflow_fire, radiation_leak |
+| 757 | disruption_master | Disruption Master | Module | E | 4 | 0/0 | control | signal_jamming, disable, data_wipe |
+| 758 | stasis_lock | Stasis Lock | Module | E | 4 | 0/0 | control | tractor_beam_hold, disable, apply_lock |
+| 759 | overmind_bomb | Overmind Bomb | Module | E | 5 | 0/0 | midrange | breach_cascade, overflow_fire, phase_drive |
+| 760 | quantum_storm | Quantum Storm | Module | E | 5 | 0/0 | aggro | phase_drive, radiation_leak, critical_strike |
+| 761 | master_override_e | Master Override (Epic) | Module | E | 5 | 0/0 | control | hack_corrupt, transform_overhaul, disable |
+| 762 | nano_master | Nano Master | Module | E | 5 | 0/0 | ramp | auto_repair, emergency_reboot |
+| 763 | reality_warp | Reality Warp | Module | E | 6 | 0/0 | aggro | phase_drive, critical_strike, overflow_fire |
+| 764 | nuclear_master | Nuclear Master | Module | E | 6 | 0/0 | midrange | breach_cascade, radiation_leak, overflow_fire |
+| 765 | temporal_bomb | Temporal Bomb | Module | E | 7 | 0/0 | aggro | phase_drive, radiation_leak, breach_cascade |
+| 766 | grand_nuke | Grand Nuke | Module | E | 8 | 0/0 | aggro | priority_fire, breach_cascade, radiation_leak, overflow_fire |
+| 767 | master_priority | Master Priority | Maneuver | E | 3 | 0/0 | combo | priority_fire, alpha_strike |
+| 768 | phantom_strike_e | Phantom Strike (Epic) | Maneuver | E | 4 | 0/0 | control | phantom_echo, gain_stealth |
+| 769 | chaos_warp | Chaos Warp | Maneuver | E | 4 | 0/0 | control | transform_overhaul, ai_takeover |
+| 770 | master_defense | Master Defense | Maneuver | E | 4 | 0/0 | control |  |
+| 771 | apex_strike | Apex Strike | Maneuver | E | 5 | 0/0 | combo | critical_strike, overclock, priority_fire |
+| 772 | master_warp | Master Warp | Maneuver | E | 5 | 0/0 | utility | phase_drive, evade |
+| 773 | total_charge | Total Charge | Maneuver | E | 6 | 0/0 | combo | priority_fire, alpha_strike, critical_strike |
+| 774 | grand_defense | Grand Defense | Maneuver | E | 6 | 0/0 | control |  |
+| 775 | supreme_strike | Supreme Strike | Maneuver | E | 7 | 0/0 | combo | priority_fire, alpha_strike, critical_strike |
+| 776 | master_scope_e | Master Scope (Epic) | Equipment | E | 3 | 0/0 | combo | priority_fire, critical_strike, tracking_lock, alpha_strike |
+| 777 | elite_cloak | Elite Cloak | Equipment | E | 4 | 0/0 | utility | gain_stealth, cloaked_entry, evade, phase_drive |
+| 778 | master_plating | Master Plating | Equipment | E | 4 | 0/0 | midrange | reinforced_hull, ablative_plating, auto_repair |
+| 779 | fleet_network | Fleet Network | Equipment | E | 5 | 0/0 | ramp | crew_pooling, cascading_power, efficiency_protocol |
+| 780 | supreme_targeting | Supreme Targeting | Equipment | E | 5 | 0/0 | combo | priority_fire, critical_strike, alpha_strike, tracking_lock |
+| 781 | phantom_rig | Phantom Rig | Equipment | E | 5 | 0/0 | utility | gain_stealth, cloaked_entry, phase_drive, evade |
+| 782 | apex_armor | Apex Armor | Equipment | E | 6 | 0/0 | midrange | reinforced_hull, ablative_plating, auto_repair |
+| 783 | grand_uplink | Grand Uplink | Equipment | E | 6 | 0/0 | aggro | priority_fire, rapid_launch, cascading_power |
+| 784 | apex_zone | Apex Zone | Field | E | 4 | 0/0 | aggro | persistent_field, priority_fire, rapid_launch |
+| 785 | chaos_storm | Chaos Storm | Field | E | 5 | 0/0 | aggro | persistent_field, breach_cascade, radiation_leak |
+| 786 | phase_region | Phase Region | Field | E | 5 | 0/0 | utility | persistent_field, phase_drive, gain_stealth |
+| 787 | fortress_region | Fortress Region | Field | E | 5 | 0/0 | midrange | persistent_field, interceptor, ablative_plating, auto_repair |
+| 788 | supreme_battleground | Supreme Battleground | Field | E | 6 | 0/0 | combo | persistent_field, priority_fire, alpha_strike |
+| 789 | chrono_field | Chrono Field | Field | E | 7 | 0/0 | utility | persistent_field, deferred_deployment, reactive, phase_drive |
+| 790 | elite_fighter_core | Elite Fighter Core | Ship Core | E | 0 | 0/0 | aggro |  |
+| 791 | sniper_mount | Sniper Mount | Equipment | U | 2 | 0/0 | combo | critical_strike, priority_fire |
+| 792 | stabilizer_plate | Stabilizer Plate | Equipment | U | 2 | 0/0 | midrange | reinforced_hull, auto_repair |
+| 793 | phase_rig | Phase Rig | Equipment | U | 3 | 0/0 | utility | phase_drive, gain_stealth |
+| 794 | battle_harness | Battle Harness | Equipment | U | 3 | 0/0 | aggro | battle_hardened, rapid_launch |
+| 795 | energy_matrix | Energy Matrix | Equipment | U | 3 | 0/0 | ramp | overclock, efficiency_protocol |
+| 796 | fleet_formation | Fleet Formation | Field | U | 2 | 0/0 | aggro | persistent_field |
+| 797 | targeting_field | Targeting Field | Field | U | 3 | 0/0 | combo | persistent_field, priority_fire |
+| 798 | recon_region | Recon Region | Field | U | 3 | 0/0 | utility | persistent_field, probe |
+| 799 | master_conduit | Master Conduit | Equipment | R | 4 | 0/0 | ramp | crew_pooling, cascading_power, efficiency_protocol |
+| 800 | stealth_region | Stealth Region | Field | R | 5 | 0/0 | control | persistent_field, gain_stealth, cloaked_entry |
