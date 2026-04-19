@@ -38,7 +38,8 @@ offer_filters:
   instance_type: "on-demand"   # never Interruptible per Part 16 rule 4
   lease_retries: 3
   lease_poll_seconds: 10
-  lease_timeout_seconds: 300
+  lease_timeout_seconds: 900         # 15 min — large image pulls on fresh hosts take 5-12 min
+  lease_status_log_seconds: 30       # every N seconds log actual_status + status_msg while waiting
 
 # Docker image + model set (Part 4)
 docker_image: "runpod/stable-diffusion:comfyui-latest"

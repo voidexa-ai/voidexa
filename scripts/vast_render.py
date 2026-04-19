@@ -43,6 +43,10 @@ def load_env() -> None:
     env_file = ROOT / ".env.local"
     if env_file.exists():
         load_dotenv(env_file)
+    # Accept the standard Next.js naming for the URL (service-role key is
+    # always server-only so it keeps its un-prefixed name).
+    if not os.environ.get("SUPABASE_URL") and os.environ.get("NEXT_PUBLIC_SUPABASE_URL"):
+        os.environ["SUPABASE_URL"] = os.environ["NEXT_PUBLIC_SUPABASE_URL"]
 
 
 def load_config() -> dict:
@@ -410,17 +414,42 @@ class Orchestrator:
     def _wait_running(self, client: Any, instance_id: int) -> bool:
         timeout = self.config["offer_filters"]["lease_timeout_seconds"]
         poll = self.config["offer_filters"]["lease_poll_seconds"]
-        deadline = time.monotonic() + timeout
+        status_log_gap = int(
+            self.config["offer_filters"].get("lease_status_log_seconds", 30)
+        )
+        start = time.monotonic()
+        deadline = start + timeout
+        next_log = start  # log immediately on first poll so we see the starting state
+        last_status: str | None = None
+        log(f"  Waiting up to {timeout}s for instance {instance_id} to become ready...")
         while time.monotonic() < deadline:
-            info = client.show_instance(id=instance_id)
-            if info.get("actual_status") == "running":
+            info = client.show_instance(id=instance_id) or {}
+            status = info.get("actual_status") or info.get("status") or "unknown"
+            status_msg = info.get("status_msg") or ""
+            cur_state = info.get("cur_state") or info.get("intended_status") or ""
+            elapsed = int(time.monotonic() - start)
+
+            # Log on status change OR every status_log_gap seconds
+            if status != last_status or time.monotonic() >= next_log:
+                extras = []
+                if cur_state and cur_state != status:
+                    extras.append(f"cur_state={cur_state}")
+                if status_msg:
+                    extras.append(f"msg={status_msg.strip()[:160]}")
+                extra_str = (" " + " ".join(extras)) if extras else ""
+                log(f"  [+{elapsed:>3}s] instance {instance_id} status={status}{extra_str}")
+                last_status = status
+                next_log = time.monotonic() + status_log_gap
+
+            if status == "running":
                 return True
             time.sleep(poll)
+
         log(f"  Lease timed out after {timeout}s on instance {instance_id}, destroying...")
         try:
             client.destroy_instance(id=instance_id)
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"  WARN: destroy_instance failed: {exc}")
         return False
 
     # ---------------- Phase 3: setup ----------------
