@@ -39,7 +39,7 @@ except ImportError:
 REPO = Path(__file__).resolve().parent.parent
 LIB_DIR = REPO / "lib" / "game" / "cards"
 RENDERED_DIR = REPO / "public" / "cards" / "rendered"
-FRAMES_DIR = REPO / "public" / "card-frames"
+FRAMES_DIR = REPO / "public" / "card-frames-clean"
 OUT_DIR = REPO / "public" / "cards" / "composed"
 DEBUG_DIR = REPO / "public" / "cards" / "_debug"
 FONTS_DIR = REPO / "public" / "fonts"
@@ -60,83 +60,44 @@ CANVAS = (1024, 1536)
 # cost 0, ABILITY TEXT, TYPE / KEYWORD, 2 / 3). Text positions place dynamic
 # values where the placeholder sat. Sampled by scanning each frame PNG.
 FRAME_LAYOUT = {
+    # Text anchor centres and ability-body start y are calibrated against the
+    # frames cleaned by scripts/clean_frames.py — so they sit in the middle
+    # of each now-empty inlay zone.
     "common": {
-        "panels": {
-            "name":    (155, 60, 835, 225),
-            "cost":    (855, 130, 990, 235),
-            "ability": (245, 1065, 790, 1165),
-            "left":    (65, 1395, 670, 1460),
-            "right":   (660, 1395, 975, 1460),
-        },
-        "name_pos":       (500, 115),
-        "cost_pos":       (925, 185),
-        "ability_body_y": 1175,
-        "bottom_y":       1425,
+        "name_pos":       (495, 185),
+        "cost_pos":       (905, 180),
+        "ability_body_y": 1122,
+        "bottom_y":       1427,
     },
     "uncommon": {
-        "panels": {
-            "name":    (155, 60, 835, 225),
-            "cost":    (855, 130, 990, 235),
-            "ability": (245, 1065, 790, 1165),
-            "left":    (65, 1395, 670, 1460),
-            "right":   (660, 1395, 975, 1460),
-        },
-        "name_pos":       (500, 115),
-        "cost_pos":       (925, 185),
-        "ability_body_y": 1175,
-        "bottom_y":       1425,
+        "name_pos":       (495, 185),
+        "cost_pos":       (905, 180),
+        "ability_body_y": 1122,
+        "bottom_y":       1427,
     },
     "rare": {
-        "panels": {
-            "name":    (155, 45, 835, 200),
-            "cost":    (855, 35, 990, 235),
-            "ability": (245, 1080, 790, 1200),
-            "left":    (65, 1390, 670, 1520),
-            "right":   (660, 1390, 975, 1520),
-        },
-        "name_pos":       (500, 110),
-        "cost_pos":       (925, 175),
-        "ability_body_y": 1220,
-        "bottom_y":       1460,
+        "name_pos":       (495, 143),
+        "cost_pos":       (905, 140),
+        "ability_body_y": 1165,
+        "bottom_y":       1487,
     },
     "epic": {
-        "panels": {
-            "name":    (155, 75, 835, 215),
-            "cost":    (855, 130, 990, 235),
-            "ability": (245, 1055, 790, 1155),
-            "left":    (65, 1300, 670, 1460),
-            "right":   (660, 1300, 975, 1460),
-        },
-        "name_pos":       (500, 145),
-        "cost_pos":       (925, 180),
-        "ability_body_y": 1180,
-        "bottom_y":       1380,
+        "name_pos":       (495, 185),
+        "cost_pos":       (905, 170),
+        "ability_body_y": 1120,
+        "bottom_y":       1390,
     },
     "legendary": {
-        "panels": {
-            "name":    (155, 75, 835, 225),
-            "cost":    (855, 80, 990, 235),
-            "ability": (245, 1040, 790, 1135),
-            "left":    (65, 1295, 670, 1445),
-            "right":   (660, 1295, 975, 1445),
-        },
-        "name_pos":       (500, 150),
-        "cost_pos":       (925, 170),
-        "ability_body_y": 1160,
+        "name_pos":       (495, 180),
+        "cost_pos":       (905, 160),
+        "ability_body_y": 1100,
         "bottom_y":       1370,
     },
     "mythic": {
-        "panels": {
-            "name":    (155, 75, 835, 225),
-            "cost":    (855, 80, 990, 235),
-            "ability": (245, 1040, 790, 1140),
-            "left":    (65, 1295, 670, 1445),
-            "right":   (660, 1295, 975, 1445),
-        },
-        "name_pos":       (500, 150),
-        "cost_pos":       (925, 170),
-        "ability_body_y": 1165,
-        "bottom_y":       1370,
+        "name_pos":       (495, 185),
+        "cost_pos":       (905, 180),
+        "ability_body_y": 1108,
+        "bottom_y":       1375,
     },
 }
 
@@ -302,10 +263,8 @@ def compose_card(card, frame_img, window, rarity, fonts):
 
     draw = ImageDraw.Draw(base)
 
-    # Opaque patches over the frame's baked placeholder text.
-    panel = (10, 12, 18)
-    for bbox in layout["panels"].values():
-        draw.rectangle(bbox, fill=panel)
+    # Frames are pre-cleaned by scripts/clean_frames.py — no mask rectangles
+    # needed. The dark recessed inlays are empty and ready for dynamic text.
 
     # Name — top banner
     name = card.get("name", card["id"]).upper()
