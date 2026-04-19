@@ -1,0 +1,115 @@
+# Vast.ai render orchestration config — voidexa
+# See docs/VOIDEXA_VAST_AI_RENDER_MASTER.md Parts 5, 10, 11, 12.
+
+gpu_profiles:
+  H100_SXM:
+    gpu_name: "H100_SXM"
+    min_vram_gb: 80
+    max_price_per_hour: 3.00
+  H100:
+    gpu_name: "H100"
+    min_vram_gb: 80
+    max_price_per_hour: 3.00
+  RTX_4090:
+    gpu_name: "RTX_4090"
+    min_vram_gb: 24
+    max_price_per_hour: 0.80
+  RTX_3090:
+    gpu_name: "RTX_3090"
+    min_vram_gb: 24
+    max_price_per_hour: 0.40
+
+default_gpu: "H100_SXM"
+fallback_gpu_order:
+  - "H100_SXM"
+  - "H100"
+  - "RTX_4090"
+  - "RTX_3090"
+
+# Vast.ai offer filters
+offer_filters:
+  min_reliability: 0.95
+  min_bandwidth_mbps: 500
+  rentable: true
+  rented: false
+  inet_down_billed: false
+  inet_up_billed: false
+  dph_max: 3.00     # $/hour ceiling per Part 5
+  instance_type: "on-demand"   # never Interruptible per Part 16 rule 4
+  lease_retries: 3
+  lease_poll_seconds: 10
+  lease_timeout_seconds: 300
+
+# Docker image + model set (Part 4)
+docker_image: "runpod/stable-diffusion:comfyui-latest"
+model_files:
+  - name: "sd_xl_base_1.0.safetensors"
+    url: "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
+    dest: "/workspace/ComfyUI/models/checkpoints/sd_xl_base_1.0.safetensors"
+  - name: "juggernautXL_v9.safetensors"
+    url: "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/main/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"
+    dest: "/workspace/ComfyUI/models/checkpoints/juggernautXL_v9.safetensors"
+  - name: "sdxl_vae.safetensors"
+    url: "https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors"
+    dest: "/workspace/ComfyUI/models/vae/sdxl_vae.safetensors"
+
+# ComfyUI sampler defaults (Part 7)
+comfyui:
+  port: 8188
+  workflow_template: "scripts/voidexa_sdxl_workflow.json"
+  checkpoint: "juggernautXL_v9.safetensors"
+  vae: "sdxl_vae.safetensors"
+  sampler_name: "dpmpp_2m"
+  scheduler: "karras"
+  steps: 30
+  cfg: 5.0
+  output_dir: "/workspace/output"
+  poll_seconds: 2
+  job_timeout_seconds: 120
+
+# Part 10 — retry + resumability
+retry:
+  per_prompt_max_attempts: 3
+  seed_offset_on_attempt: [0, 0, 1]     # first retry same seed, second retry seed+1
+  consecutive_failure_halt: 10
+  comfyui_unresponsive_seconds: 300
+  ping_interval_seconds: 60
+
+# Part 12 — cost + duration guard rails
+limits:
+  max_budget_usd: 15.00
+  max_duration_hours: 4.0
+  cost_log_interval_seconds: 300
+
+# Resumability state
+state:
+  path: "scripts/.render_state.json"
+
+# Supabase storage (Part 9)
+supabase:
+  bucket: "voidexa-assets"
+  shop_prefix: "shop-art"
+  card_prefix: "card-art"
+  public_read: true
+
+# Prompt sources (Parts 6, 8)
+sources:
+  shop:
+    prompts_path: "docs/shop_alpha/shop_art_prompts.json"
+    manifest_path: "docs/shop_alpha/shop_render_manifest.json"
+    id_field: "item_id"
+    asset_type: "shop"
+  cards:
+    prompts_path: "docs/alpha_set/card_art_prompts.json"
+    manifest_path: "docs/alpha_set/card_render_manifest.json"
+    id_field: "card_id"
+    asset_type: "card"
+
+# Test batch selection policy (Part 8)
+test_batch:
+  shop:
+    rarity_counts: {common: 2, uncommon: 2, rare: 2, epic: 2, legendary: 1, mythic: 1}
+    diversify_by: "category"
+  cards:
+    rarity_counts: {common: 2, uncommon: 2, rare: 2, epic: 2, legendary: 1, mythic: 1}
+    must_include_types: ["Ship Core", "AI Routine", "Field"]

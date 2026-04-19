@@ -1,0 +1,60 @@
+{
+  "_comment": "voidexa SDXL workflow — 7-node pipeline per VOIDEXA_VAST_AI_RENDER_MASTER.md Part 7. Orchestrator substitutes inputs.4 (ckpt), inputs.6/7 (prompts), inputs.5 (canvas), inputs.3 (seed).",
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 0,
+      "steps": 30,
+      "cfg": 5.0,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0,
+      "model": ["4", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["5", 0]
+    }
+  },
+  "4": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "juggernautXL_v9.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 768,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "__POSITIVE_PROMPT__",
+      "clip": ["4", 1]
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "__NEGATIVE_PROMPT__",
+      "clip": ["4", 1]
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["4", 2]
+    }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["8", 0],
+      "filename_prefix": "voidexa"
+    }
+  }
+}
