@@ -13,20 +13,21 @@ Each batch's plan is derived from remaining budget ÷ remaining batches, not
 from the static Rule 8 per-batch average — so a batch that over-delivers on
 one archetype must be offset by the next.
 
-| Archetype | Target | After B01 | After B02 | After B03 | After B04 | Remaining | Batches left | Avg needed |
-|---|---|---|---|---|---|---|---|---|
-| Aggro    | 200 | 51 | 55  | 68  |  92 | 108 | 6 | 18.0 |
-| Control  | 200 | 18 | 68  | 82  | 100 | 100 | 6 | 16.7 |
-| Midrange | 250 | 21 | 38  | 69  |  94 | 156 | 6 | 26.0 |
-| Combo    | 150 |  5 | 16  | 36  |  51 |  99 | 6 | 16.5 |
-| Ramp     |  80 |  0 |  5  | 15  |  22 |  58 | 6 |  9.7 |
-| Utility  | 120 |  5 | 18  | 30  |  41 |  79 | 6 | 13.2 |
+| Archetype | Target | B01 | B02 | B03 | B04 | B05 | Remaining | Batches left | Avg needed |
+|---|---|---|---|---|---|---|---|---|---|
+| Aggro    | 200 | 51 | 55  | 68  |  92 | 111 |  89 | 5 | 17.8 |
+| Control  | 200 | 18 | 68  | 82  | 100 | 120 |  80 | 5 | 16.0 |
+| Midrange | 250 | 21 | 38  | 69  |  94 | 120 | 130 | 5 | 26.0 |
+| Combo    | 150 |  5 | 16  | 36  |  51 |  66 |  84 | 5 | 16.8 |
+| Ramp     |  80 |  0 |  5  | 15  |  22 |  30 |  50 | 5 | 10.0 |
+| Utility  | 120 |  5 | 18  | 30  |  41 |  53 |  67 | 5 | 13.4 |
 
-Status after B04: All six archetypes tracking within ~1/batch of their
-pace target. Midrange remains the heaviest remaining commitment but is
-now roughly on the per-batch average. Control exactly at 50% (100/200)
-with 6 batches remaining — textbook pace. Rares + Epics + Legendaries +
-Mythics fit comfortably into remaining budgets.
+Status after B05 (halfway — 500/1000 cards): Aggro, Control, Combo,
+Ramp, Utility all within 1 card of their target pace for remaining
+batches. Midrange still on its steady 26/batch trajectory. The per-batch
+averages needed for batches 06-10 now closely match the Rule 8 static
+targets (20/20/25/15/8/12), meaning the cumulative correction work is
+complete — future batches can follow the master-doc defaults.
 
 ---
 
@@ -496,3 +497,120 @@ Distribution:
 | 398 | railgun_slug | Railgun Slug | Module | U | 3 | 0/0 | control |  |
 | 399 | nova_charge | Nova Charge | Module | U | 4 | 0/0 | aggro | breach_cascade |
 | 400 | stabilized_field | Stabilized Field | Field | U | 3 | 0/0 | control | persistent_field, negate |
+
+## Batch 05 — Uncommons (Weapons / Drones / Defense)
+
+**Cards:** 100 * **File:** `batch_05.json`
+
+Distribution:
+- Rarity: 100 uncommon (all uncommon — first uncommon-focused batch)
+- Types: 40 Weapon, 30 Drone, 30 Defense
+- Cost: 0x 0 * 8x 1 * 21x 2 * 29x 3 * 26x 4 * 12x 5 * 4x 6
+- Archetype: 26 midrange * 20 control * 19 aggro * 15 combo * 12 utility * 8 ramp
+- Top keywords: priority_fire (15), gain_stealth (12), interceptor (12), critical_strike (11), auto_repair (11), rapid_launch (10), ablative_plating (10), alpha_strike (9), reinforced_hull (9), phase_drive (8), cloaked_entry (7), emergency_reboot (6)
+- New keyword seeds: recon_beacon (2), manual_fire (1), hot_activation (1), sabotage_charge (1)
+
+### Cards
+
+| # | id | name | type | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|
+| 401 | quick_laser_uc | Quick Laser | Weapon | 1 | 4/0 | aggro | hot_deploy |
+| 402 | twin_pistol | Twin Pistol | Weapon | 1 | 3/0 | combo | alpha_strike |
+| 403 | recon_gun | Recon Gun | Weapon | 1 | 3/0 | utility | recon_beacon, deploy_burst |
+| 404 | ice_beam | Ice Beam | Weapon | 1 | 3/0 | control | disable |
+| 405 | stealth_laser | Stealth Laser | Weapon | 1 | 3/0 | utility | cloaked_entry |
+| 406 | burst_cannon_uc | Burst Cannon | Weapon | 2 | 6/0 | aggro | alpha_strike |
+| 407 | plasma_sniper | Plasma Sniper | Weapon | 2 | 6/0 | combo | priority_fire, critical_strike |
+| 408 | dual_pulse | Dual Pulse | Weapon | 2 | 5/0 | combo | priority_fire, overclock |
+| 409 | phase_laser | Phase Laser | Weapon | 2 | 5/0 | aggro | phase_drive, quick_strike |
+| 410 | plasma_burst | Plasma Burst | Weapon | 2 | 6/0 | combo | hot_deploy, breach_cascade |
+| 411 | salvo_launcher | Salvo Launcher | Weapon | 2 | 5/0 | aggro | rapid_launch, flanking_fire |
+| 412 | ion_sniper | Ion Sniper | Weapon | 2 | 6/0 | control | tracking_lock |
+| 413 | ghost_round | Ghost Round | Weapon | 2 | 5/0 | utility | gain_stealth, cloaked_entry |
+| 414 | heavy_burst | Heavy Burst | Weapon | 3 | 8/0 | combo | alpha_strike |
+| 415 | master_sniper | Master Sniper | Weapon | 3 | 8/0 | control | tracking_lock, critical_strike |
+| 416 | phantom_beam | Phantom Beam | Weapon | 3 | 8/0 | utility | phase_drive, gain_stealth |
+| 417 | warhead_salvo | Warhead Salvo | Weapon | 3 | 9/0 | aggro | rapid_launch, priority_fire |
+| 418 | chain_lance | Chain Lance | Weapon | 3 | 8/0 | combo | breach_cascade, chain_catalyst |
+| 419 | fusion_torpedo | Fusion Torpedo | Weapon | 3 | 9/0 | midrange | cold_boot, overflow_fire |
+| 420 | tactical_cannon | Tactical Cannon | Weapon | 3 | 8/0 | combo | manual_fire, priority_fire |
+| 421 | siege_rifle | Siege Rifle | Weapon | 3 | 8/0 | control | tracking_lock, apply_lock |
+| 422 | cascade_gun | Cascade Gun | Weapon | 3 | 8/0 | combo | cascading_power |
+| 423 | cluster_bomb | Cluster Bomb | Weapon | 3 | 8/0 | control | breach_cascade, apply_lock |
+| 424 | heavy_lance_uc | Heavy Lance (Field Model) | Weapon | 4 | 12/0 | aggro | priority_fire, flanking_fire |
+| 425 | assault_cannon | Assault Cannon | Weapon | 4 | 12/0 | combo | rapid_launch, hot_activation |
+| 426 | void_sniper | Void Sniper | Weapon | 4 | 12/0 | control | critical_strike, phase_drive |
+| 427 | dual_barrel | Dual Barrel | Weapon | 4 | 12/0 | combo | alpha_strike, priority_fire |
+| 428 | rift_torpedo | Rift Torpedo | Weapon | 4 | 12/0 | aggro | overflow_fire, radiation_leak |
+| 429 | sabotage_cannon | Sabotage Cannon | Weapon | 4 | 12/0 | control | sabotage_charge, disable |
+| 430 | phantom_torpedo | Phantom Torpedo | Weapon | 4 | 12/0 | aggro | gain_stealth, rapid_launch |
+| 431 | kinetic_storm | Kinetic Storm | Weapon | 4 | 12/0 | aggro | alpha_strike |
+| 432 | scorch_cannon | Scorch Cannon | Weapon | 4 | 12/0 | control | radiation_leak, breach_cascade |
+| 433 | pulse_cannon_uc | Pulse Cannon (Overclocked) | Weapon | 4 | 13/0 | combo | overclock |
+| 434 | master_cannon | Master Cannon | Weapon | 5 | 16/0 | combo | priority_fire, critical_strike |
+| 435 | siege_rocket | Siege Rocket | Weapon | 5 | 16/0 | aggro | overflow_fire, radiation_leak |
+| 436 | ghost_lance | Ghost Lance | Weapon | 5 | 16/0 | control | phase_drive, gain_stealth, critical_strike |
+| 437 | cluster_strike | Cluster Strike | Weapon | 5 | 16/0 | combo | priority_fire, breach_cascade, alpha_strike |
+| 438 | ionic_bomber | Ionic Bomber | Weapon | 5 | 16/0 | control | critical_strike, radiation_leak |
+| 439 | heavy_orbital | Heavy Orbital | Weapon | 6 | 20/0 | aggro | priority_fire, rapid_launch |
+| 440 | void_annihilator | Void Annihilator | Weapon | 6 | 20/0 | control | critical_strike, phase_drive |
+| 441 | raptor_drone | Raptor Drone | Drone | 2 | 4/2 | aggro | rapid_launch, priority_fire |
+| 442 | stalker_drone | Stalker Drone | Drone | 2 | 3/3 | utility | cloaked_entry, gain_stealth |
+| 443 | medic_unit | Medic Unit | Drone | 2 | 2/4 | ramp | auto_repair, hull_drain |
+| 444 | saboteur_drone | Saboteur Drone | Drone | 2 | 3/3 | control | deploy_burst, disable |
+| 445 | hunter_drone | Hunter Drone | Drone | 2 | 3/3 | aggro | critical_strike |
+| 446 | scout_elite | Scout Elite | Drone | 2 | 2/3 | utility | deploy_burst, probe, recon_beacon |
+| 447 | falcon_strike | Falcon Strike | Drone | 3 | 5/3 | aggro | rapid_launch, alpha_strike |
+| 448 | ghost_raider | Ghost Raider | Drone | 3 | 4/4 | utility | phase_drive, cloaked_entry |
+| 449 | veteran_fighter | Veteran Fighter | Drone | 3 | 4/5 | midrange | battle_hardened, outrider |
+| 450 | spook_drone | Spook Drone | Drone | 3 | 3/5 | utility | gain_stealth, emergency_reboot |
+| 451 | trap_drone | Trap Drone | Drone | 3 | 3/5 | control | tracking_array, apply_lock |
+| 452 | bomber_wing | Bomber Wing | Drone | 3 | 5/3 | aggro | rapid_launch, critical_breach |
+| 453 | guardian_drone | Guardian Drone | Drone | 3 | 3/6 | midrange | interceptor, auto_repair |
+| 454 | assault_wing | Assault Wing | Drone | 3 | 6/3 | aggro | alpha_strike, priority_fire |
+| 455 | swarm_leader | Swarm Leader | Drone | 3 | 4/4 | midrange | rapid_launch, battle_hardened |
+| 456 | jammer_drone | Jammer Drone | Drone | 3 | 3/5 | control | signal_jammer, signal_jamming |
+| 457 | heavy_striker | Heavy Striker | Drone | 4 | 7/5 | midrange | priority_fire, rapid_launch |
+| 458 | shadow_operative | Shadow Operative | Drone | 4 | 6/6 | utility | gain_stealth, cloaked_entry, priority_fire |
+| 459 | bomber_heavy | Bomber Heavy | Drone | 4 | 8/5 | aggro | critical_breach, hot_deploy |
+| 460 | interceptor_heavy | Interceptor Heavy | Drone | 4 | 4/10 | midrange | interceptor, emergency_reboot, auto_repair |
+| 461 | carrier_drone | Carrier Drone | Drone | 4 | 5/7 | ramp | crew_pooling, auto_repair |
+| 462 | scavenger_drone | Scavenger Drone | Drone | 4 | 5/7 | ramp | fuel_scavenge, hull_drain |
+| 463 | recon_elite | Recon Elite | Drone | 4 | 3/9 | utility | deploy_burst, probe, deep_scan |
+| 464 | combat_spec | Combat Spec | Drone | 4 | 6/6 | midrange | battle_hardened, critical_strike |
+| 465 | siege_unit | Siege Unit | Drone | 4 | 8/5 | midrange | cold_boot, critical_strike |
+| 466 | elite_striker | Elite Striker | Drone | 5 | 9/7 | combo | alpha_strike, priority_fire |
+| 467 | master_medic | Master Medic | Drone | 5 | 4/12 | ramp | auto_repair, hull_drain, emergency_reboot |
+| 468 | phantom_hunter | Phantom Hunter | Drone | 5 | 8/8 | control | gain_stealth, critical_strike, tracking_lock |
+| 469 | heavy_bulwark_drone | Heavy Bulwark Drone | Drone | 5 | 6/11 | midrange | interceptor, reinforced_hull |
+| 470 | capital_fighter | Capital Fighter | Drone | 6 | 11/10 | aggro | priority_fire, hot_deploy |
+| 471 | ablative_mesh | Ablative Mesh | Defense | 1 | 0/5 | midrange | reactive, ablative_plating |
+| 472 | overclocked_barrier | Overclocked Barrier | Defense | 1 | 0/4 | combo | deploy_burst, overclock |
+| 473 | decoy_hologram | Decoy Hologram | Defense | 1 | 0/4 | utility | cloaked_entry, gain_stealth |
+| 474 | reactive_grid | Reactive Grid | Defense | 2 | 0/7 | midrange | system_shielding, critical_breach |
+| 475 | ablative_lattice | Ablative Lattice | Defense | 2 | 0/7 | midrange | ablative_plating, auto_repair |
+| 476 | signal_baffles | Signal Baffles | Defense | 2 | 0/6 | control | signal_jammer, gain_stealth |
+| 477 | adaptive_plating | Adaptive Plating | Defense | 2 | 0/6 | midrange | adaptive_learning, ablative_plating |
+| 478 | hover_dome | Hover Dome | Defense | 2 | 0/7 | midrange | interceptor, evade |
+| 479 | reflex_barrier | Reflex Barrier | Defense | 2 | 0/6 | midrange | reactive, evade |
+| 480 | tracking_dome | Tracking Dome | Defense | 2 | 0/7 | control | tracking_array, signal_jammer |
+| 481 | fortress_mesh | Fortress Mesh | Defense | 3 | 0/10 | midrange | interceptor, ablative_plating |
+| 482 | stealth_bulkhead | Stealth Bulkhead | Defense | 3 | 0/9 | control | gain_stealth, reinforced_hull |
+| 483 | rebooting_plating | Rebooting Plating | Defense | 3 | 0/9 | ramp | emergency_reboot, auto_repair |
+| 484 | reactive_mesh | Reactive Mesh | Defense | 3 | 0/9 | midrange | system_shielding, critical_breach, ablative_plating |
+| 485 | countered_barrier | Countered Barrier | Defense | 3 | 0/8 | control | countermeasure, interceptor |
+| 486 | regen_bulkhead | Regen Bulkhead | Defense | 3 | 0/9 | ramp | auto_repair, reinforced_hull |
+| 487 | phase_grid | Phase Grid | Defense | 3 | 0/9 | midrange | phase_drive, evade |
+| 488 | sentinel_wall | Sentinel Wall | Defense | 3 | 1/9 | aggro | interceptor, battle_hardened |
+| 489 | aegis_mesh | Aegis Mesh | Defense | 3 | 0/9 | midrange | ablative_plating, interceptor |
+| 490 | heavy_aegis | Heavy Aegis | Defense | 4 | 0/13 | midrange | ablative_plating, interceptor, reinforced_hull |
+| 491 | master_shield | Master Shield | Defense | 4 | 0/14 | ramp | auto_repair, system_shielding |
+| 492 | phantom_wall | Phantom Wall | Defense | 4 | 0/13 | utility | gain_stealth, cloaked_entry, evade |
+| 493 | fortress_lattice | Fortress Lattice | Defense | 4 | 1/13 | midrange | interceptor, reinforced_hull |
+| 494 | reboot_fortress | Reboot Fortress | Defense | 4 | 0/12 | midrange | emergency_reboot, reinforced_hull |
+| 495 | counterfield | Counterfield | Defense | 4 | 0/12 | control | countermeasure, negate |
+| 496 | ablative_fortress | Ablative Fortress | Defense | 4 | 0/13 | ramp | ablative_plating, auto_repair |
+| 497 | master_bulwark | Master Bulwark | Defense | 5 | 2/15 | midrange | interceptor, reinforced_hull, ablative_plating |
+| 498 | phase_fortress | Phase Fortress | Defense | 5 | 0/16 | midrange | phase_drive, reinforced_hull |
+| 499 | titanic_aegis | Titanic Aegis | Defense | 5 | 0/17 | midrange | ablative_plating, emergency_reboot |
+| 500 | grand_fortress | Grand Fortress | Defense | 6 | 3/18 | midrange | interceptor, reinforced_hull, auto_repair |

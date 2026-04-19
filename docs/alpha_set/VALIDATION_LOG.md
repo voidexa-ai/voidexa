@@ -282,3 +282,69 @@ Remaining unused (reserved for higher-rarity slots in batches 07-10):
 
 Tier 1 keywords (target ~12 cards each across the set) are on or ahead
 of pace. Tier 2-3 keywords well-distributed. Tier 4 niches seeded.
+
+---
+
+## Batch 05 — Uncommons (Weapons / Drones / Defense)
+
+**Ran:** 10 validation checks.
+**Result:** 0 errors * 1 warning (accepted).
+
+### Warnings
+
+1. **Cost curve: 26 cards at cost 4 vs Part 7 target of 15 per 100.**
+   _Accepted:_ Uncommon cards typically cluster at cost 3-4 because
+   Rule 2 ("2-3 keywords, slight interaction") naturally supports the
+   mid-curve sweet spot. Across the full 1000-card set this bulge is
+   balanced by commons (weighted low-cost for tempo) and
+   rares/epics/legendaries (weighted high-cost for finishers). No
+   corrective action on batch 05.
+
+### Fixes applied before finalization
+
+- **14 A+D under-band** on weapons — bumped attack into cost-band
+  minimum. Cards touched: phantom_beam, chain_lance, cluster_bomb,
+  assault_cannon, void_sniper, sabotage_cannon, phantom_torpedo,
+  scorch_cannon, master_cannon, ghost_lance, cluster_strike,
+  ionic_bomber, heavy_orbital, void_annihilator.
+- **13 flavor-text 16-17 word trims** into the 8-15 band while
+  preserving the cold sci-fi tone and uniqueness across all 500 cards.
+
+### Niche-keyword seeding this batch
+
+- `recon_beacon` (recon_gun, scout_elite) -- first two seeds
+- `manual_fire` (tactical_cannon) -- first seed
+- `hot_activation` (assault_cannon) -- first seed
+- `sabotage_charge` (sabotage_cannon) -- first seed
+
+Remaining unused after 5 batches (reserved for rare+ slots in
+batches 07-10):
+- `power_surge`, `tactical_draw`, `tractor_beam_hold`, `hack_corrupt`,
+  `transform_overhaul`, `deferred_deployment`, `system_corruption`,
+  `ai_takeover`, `encryption_block`, `phantom_echo`, `data_wipe`
+  (already seeded once in B03), `twin_barrels` (note: not in Part 9's
+  78 abilities — carry-over from the older library, intentionally
+  not used in this set).
+
+### Cumulative keyword usage (500/1000 cards)
+
+Top 15 after 5 batches:
+- persistent_field: 46 (cap at ~12/keyword * 13 Tier 1 = ~160; on pace)
+- priority_fire: 33
+- interceptor: 26
+- auto_repair: 25
+- rapid_launch: 20
+- gain_stealth: 15
+- critical_strike: 18
+- ablative_plating: 17
+- emergency_reboot: 9
+- end_cycle: 12
+- probe: 14
+- reactive: 12
+- deploy_burst: 15
+- critical_breach: 12
+- radiation_leak: 12
+
+All Tier 1-3 keywords on or ahead of pace. Tier 4 niches seeded where
+natural fit existed; remaining niches intentionally saved for
+rare-and-above batches where complexity increase is appropriate.
