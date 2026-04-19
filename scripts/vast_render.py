@@ -341,7 +341,11 @@ class Orchestrator:
         client = VastAI(api_key=os.environ["VAST_API_KEY"])
         query = self._build_vast_query()
         log(f"  Vast.ai query: {query}")
-        offers = client.search_offers(query=query, limit=20)
+        # Order by dph_total so cheapest rentable offers come first. Default 'score-'
+        # sometimes surfaces stale/broken listings at the top.
+        offers = client.search_offers(
+            query=query, type="on-demand", order="dph_total", limit=20
+        )
         if not offers:
             raise RuntimeError("no Vast.ai offers matched — widen filters or try later")
 
@@ -354,7 +358,7 @@ class Orchestrator:
             image_name = image_spec["name"]
             log(f"  trying image: {image_name}")
             onstart = self._build_onstart(image_spec)
-            env_flags = image_spec.get("env_flags", "")
+            env_dict = dict(image_spec.get("env") or {})
             disk_gb = int(image_spec.get("min_disk_gb", 40))
 
             attempts = 0
@@ -370,13 +374,21 @@ class Orchestrator:
                         image=image_name,
                         disk=disk_gb,
                         onstart_cmd=onstart,
-                        env=env_flags,
+                        env=env_dict,
                         runtype="ssh",
                         label="voidexa-vast_render",
                     )
                 except Exception as exc:
-                    last_exc = f"{image_name}: create_instance failed: {exc}"
-                    log(f"  create_instance failed: {exc}")
+                    # Surface response body for real diagnostics, not just the status code
+                    body = ""
+                    resp = getattr(exc, "response", None)
+                    if resp is not None:
+                        try:
+                            body = resp.text[:300]
+                        except Exception:
+                            body = ""
+                    last_exc = f"{image_name}: create_instance failed: {exc} {body}"
+                    log(f"  create_instance failed: {exc} {body}")
                     continue
 
                 instance_id = (

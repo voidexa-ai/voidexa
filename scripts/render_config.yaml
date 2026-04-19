@@ -47,11 +47,18 @@ offer_filters:
 docker_images:
   - name: "aidockorg/comfyui-cuda:latest"
     init_cmd: "/opt/ai-dock/bin/init.sh"
-    env_flags: "-e WEB_ENABLE_AUTH=false -e WEB_ENABLE_HTTPS=false -e AUTO_UPDATE=false -e JUPYTER_PASSWORD=voidexa -p 8188:8188"
+    # env MUST be a dict (Vast.ai API rejects strings with "invalid env type").
+    # Port maps use the `"-p PORT:PORT": "1"` key convention per vastai CLI parse_env.
+    env:
+      WEB_ENABLE_AUTH: "false"
+      WEB_ENABLE_HTTPS: "false"
+      AUTO_UPDATE: "false"
+      "-p 8188:8188": "1"
     min_disk_gb: 40
   - name: "yanwk/comfyui-boot:cu124-megapak"
     init_cmd: "/docker/entrypoint.sh"
-    env_flags: "-p 8188:8188"
+    env:
+      "-p 8188:8188": "1"
     min_disk_gb: 40
 
 model_files:
