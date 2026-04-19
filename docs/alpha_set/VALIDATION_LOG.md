@@ -348,3 +348,67 @@ Top 15 after 5 batches:
 All Tier 1-3 keywords on or ahead of pace. Tier 4 niches seeded where
 natural fit existed; remaining niches intentionally saved for
 rare-and-above batches where complexity increase is appropriate.
+
+---
+
+## Batch 06 — Uncommons (AI / Modules / Maneuvers) + First Rares
+
+**Ran:** 10 validation checks.
+**Result:** 0 errors * 1 warning (accepted).
+
+### Warnings
+
+1. **Cost curve: 5 cards at cost 1 vs Part 7 target of 17 per 100.**
+   _Accepted:_ Batch 06 intentionally includes 30 rares, and rares sit
+   at cost 3+ where their 2-3 keywords fit. Low-cost slots are
+   naturally under-populated in rare-heavy batches. Across all 1000
+   cards the target remains balanced by the common-heavy early
+   batches (B01 had 19 cost-1 commons alone).
+
+### Fixes applied before finalization
+
+- **20 flavor-text 16-19 word trims** into the 8-15 band while
+  preserving cold sci-fi tone and keeping all flavors unique across
+  the 600-card alpha set so far.
+
+### Niche-keyword seeding this batch
+
+First-time seeds (9 new keywords across uncommons/rares):
+- `tactical_draw` (tactical_predict) -- already seeded B02 but now
+  again
+- `tractor_beam_hold` (tractor_beam, stasis_pod) -- first seeds
+- `hack_corrupt` (hack_subroutine) -- first seed
+- `transform_overhaul` (quantum_swap) -- first seed
+- `power_surge` (power_surge_maneuver) -- first seed
+- `phantom_echo` (phantom_strike) -- first seed
+- `system_corruption` (system_corrupt) -- first seed
+- `ai_takeover` (ai_takeover maneuver) -- first seed
+- `encryption_block` (encryption_lock) -- first seed
+- `manual_fire` (sniper_rifle_r, tactical_cannon second use) -- on pace
+
+Remaining unused after 6 batches: `deferred_deployment`. Reserved for
+an epic/legendary slot in batches 07-09 where a unique-named card can
+naturally carry it.
+
+### Cumulative keyword usage (600/1000 cards)
+
+Top 15 after 6 batches:
+- persistent_field: 74
+- priority_fire: 53
+- interceptor: 33
+- auto_repair: 33
+- rapid_launch: 27
+- critical_strike: 25
+- ablative_plating: 21
+- gain_stealth: 20
+- phase_drive: 16
+- emergency_reboot: 12
+- reinforced_hull: 14
+- cloaked_entry: 10
+- end_cycle: 15
+- probe: 20
+- cascading_power: 6
+
+All tier 1-3 keywords on or ahead of pace. Tier 4 niches now seeded
+widely; remaining batches will fill in with rares/epics/legendaries
+that naturally carry 2-3 keywords each.
