@@ -4,6 +4,30 @@ Rolling summary of generated batches. One line per card. Appended per batch; nev
 
 ---
 
+## Cumulative archetype tracker (updated after every batch)
+
+Target distribution across all 1000 cards (Part 8):
+Aggro 200 · Control 200 · Midrange 250 · Combo 150 · Ramp 80 · Utility 120.
+
+Each batch's plan is derived from remaining budget ÷ remaining batches, not
+from the static Rule 8 per-batch average — so a batch that over-delivers on
+one archetype must be offset by the next.
+
+| Archetype | Target | After B01 | After B02 | Remaining | Batches left | Avg needed |
+|---|---|---|---|---|---|---|
+| Aggro    | 200 | 51 | 55  | 145 | 8 | 18.1 |
+| Control  | 200 | 18 | 68  | 132 | 8 | 16.5 |
+| Midrange | 250 | 21 | 38  | 212 | 8 | 26.5 |
+| Combo    | 150 |  5 | 16  | 134 | 8 | 16.8 |
+| Ramp     |  80 |  0 |  5  |  75 | 8 |  9.4 |
+| Utility  | 120 |  5 | 18  | 102 | 8 | 12.8 |
+
+Status after B02: Aggro ahead of pace (need less than 20/batch going
+forward). Control slightly ahead. Midrange behind — future batches must
+lean midrange-heavy. Ramp+Utility on pace. Combo on pace.
+
+---
+
 ## Batch 01 — Common Weapons + Common Drones (Aggro Core)
 
 **Cards:** 100 · **File:** `batch_01.json`
@@ -119,3 +143,120 @@ Distribution:
 | 098 | siege_bomber | Siege Bomber | Drone | 5 | 10/6 | aggro | rapid_launch |
 | 099 | heavy_interceptor | Heavy Interceptor | Drone | 5 | 6/12 | control | interceptor, cold_boot |
 | 100 | capital_drone | Capital Drone | Drone | 6 | 10/10 | midrange | rapid_launch, cold_boot |
+
+## Batch 02 — Common Defense + Common Maneuvers
+
+**Cards:** 100 · **File:** `batch_02.json`
+
+Distribution:
+- Rarity: 100 common
+- Types: 55 Defense, 45 Maneuver
+- Cost: 8x 0 · 18x 1 · 25x 2 · 24x 3 · 14x 4 · 8x 5 · 3x 6
+- Archetype: 50 control · 17 midrange · 13 utility · 11 combo · 5 ramp · 4 aggro
+  (intentional: offsets Batch 01's aggro surplus per cumulative plan)
+- Keywords used: evade (7), reactive (6), interceptor (6), ablative_plating (5), auto_repair (4), priority_fire (4), reinforced_hull (3), countermeasure (3), gain_stealth (3), scrap (2), critical_breach (2), tracking_array (2), emergency_reboot (2), phase_drive (2), deep_scan (2), negate (2), signal_jammer (1), cloaked_entry (1), disable (1), flanking_fire (1), skyward_maneuver (1), probe (1), cycling_protocol (1), rapid_launch (1), bounce (1), tactical_draw (1), archive_recall (1), tracking_lock (1), overcharge (1), alpha_strike (1)
+
+### Cards
+
+| # | id | name | type | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|
+| 101 | basic_deflector | Basic Deflector | Defense | 0 | 0/3 | control | reactive |
+| 102 | emergency_shield | Emergency Shield | Defense | 0 | 0/3 | control |  |
+| 103 | panic_plating | Panic Plating | Defense | 0 | 0/3 | control | reactive, scrap |
+| 104 | light_shield | Light Shield | Defense | 1 | 0/5 | midrange |  |
+| 105 | deflector_plate | Deflector Plate | Defense | 1 | 0/4 | control | ablative_plating |
+| 106 | point_barrier | Point Barrier | Defense | 1 | 0/3 | ramp | auto_repair |
+| 107 | reactive_plate | Reactive Plate | Defense | 1 | 0/4 | control | critical_breach |
+| 108 | combat_shield | Combat Shield | Defense | 1 | 1/4 | midrange |  |
+| 109 | interceptor_wall | Interceptor Wall | Defense | 1 | 0/4 | control | interceptor |
+| 110 | armor_strip | Armor Strip | Defense | 1 | 0/5 | midrange |  |
+| 111 | cover_panel | Cover Panel | Defense | 1 | 0/4 | midrange |  |
+| 112 | medium_shield | Medium Shield | Defense | 2 | 0/8 | midrange |  |
+| 113 | ablative_hull | Ablative Hull | Defense | 2 | 0/7 | control | ablative_plating |
+| 114 | defense_drone_wall | Defense Drone Wall | Defense | 2 | 0/6 | control | interceptor |
+| 115 | repair_nanites | Repair Nanites | Defense | 2 | 0/6 | ramp | auto_repair |
+| 116 | mirror_panel | Mirror Panel | Defense | 2 | 0/6 | control |  |
+| 117 | emergency_bulkhead | Emergency Bulkhead | Defense | 2 | 0/7 | control | reinforced_hull |
+| 118 | phase_barrier | Phase Barrier | Defense | 2 | 0/6 | control | evade |
+| 119 | countermeasure_grid | Countermeasure Grid | Defense | 2 | 0/6 | control | countermeasure |
+| 120 | signal_jammer_field | Signal Jammer Field | Defense | 2 | 0/5 | control | signal_jammer |
+| 121 | tracking_shield | Tracking Shield | Defense | 2 | 0/6 | control | tracking_array |
+| 122 | cloaked_barrier | Cloaked Barrier | Defense | 2 | 0/6 | control | cloaked_entry |
+| 123 | reboot_plate | Reboot Plate | Defense | 2 | 0/5 | control | emergency_reboot |
+| 124 | defense_drone_turret | Defense Drone Turret | Defense | 2 | 1/6 | midrange |  |
+| 125 | heavy_shield | Heavy Shield | Defense | 3 | 0/10 | midrange |  |
+| 126 | reinforced_bulwark | Reinforced Bulwark | Defense | 3 | 1/9 | control | interceptor |
+| 127 | fortress_plate | Fortress Plate | Defense | 3 | 0/11 | midrange |  |
+| 128 | regen_armor | Regen Armor | Defense | 3 | 0/9 | ramp | auto_repair |
+| 129 | adaptive_hull | Adaptive Hull | Defense | 3 | 0/8 | control | ablative_plating |
+| 130 | last_stand_plate | Last Stand Plate | Defense | 3 | 0/8 | control | reinforced_hull |
+| 131 | stealth_field | Stealth Field | Defense | 3 | 0/8 | control | gain_stealth |
+| 132 | dodge_field | Dodge Field | Defense | 3 | 0/8 | control | evade |
+| 133 | energy_sink | Energy Sink | Defense | 3 | 0/8 | control | countermeasure |
+| 134 | tracking_grid | Tracking Grid | Defense | 3 | 0/8 | control | tracking_array |
+| 135 | deflector_dome | Deflector Dome | Defense | 3 | 1/9 | midrange |  |
+| 136 | shield_node | Shield Node | Defense | 3 | 0/10 | midrange |  |
+| 137 | reinforce_wall | Reinforce Wall | Defense | 3 | 0/9 | control | critical_breach |
+| 138 | auxiliary_bulkhead | Auxiliary Bulkhead | Defense | 3 | 0/10 | midrange |  |
+| 139 | reinforced_plating | Reinforced Plating | Defense | 4 | 0/14 | midrange |  |
+| 140 | heavy_bulwark | Heavy Bulwark | Defense | 4 | 2/12 | control | interceptor |
+| 141 | fortress_wall | Fortress Wall | Defense | 4 | 0/15 | midrange |  |
+| 142 | aegis_barrier | Aegis Barrier | Defense | 4 | 0/13 | control | ablative_plating |
+| 143 | hull_reinforcement | Hull Reinforcement | Defense | 4 | 0/14 | ramp | auto_repair |
+| 144 | stealth_barrier | Stealth Barrier | Defense | 4 | 0/13 | control | gain_stealth |
+| 145 | phase_wall | Phase Wall | Defense | 4 | 0/13 | control | evade |
+| 146 | reboot_bulwark | Reboot Bulwark | Defense | 4 | 0/12 | control | emergency_reboot |
+| 147 | countermeasure_array | Countermeasure Array | Defense | 4 | 0/12 | control | countermeasure |
+| 148 | heavy_fortress | Heavy Fortress | Defense | 5 | 2/16 | midrange |  |
+| 149 | mega_shield | Mega Shield | Defense | 5 | 0/18 | midrange |  |
+| 150 | battle_bulwark | Battle Bulwark | Defense | 5 | 3/15 | control | interceptor |
+| 151 | titanic_plating | Titanic Plating | Defense | 5 | 0/17 | control | reinforced_hull |
+| 152 | aegis_fortress | Aegis Fortress | Defense | 5 | 0/16 | control | ablative_plating |
+| 153 | orbital_fortress | Orbital Fortress | Defense | 6 | 3/18 | midrange |  |
+| 154 | citadel_plating | Citadel Plating | Defense | 6 | 0/22 | midrange |  |
+| 155 | capital_bulwark | Capital Bulwark | Defense | 6 | 5/16 | control | interceptor |
+| 156 | evasive_swerve | Evasive Swerve | Maneuver | 0 | 0/0 | control | reactive |
+| 157 | barrel_roll | Barrel Roll | Maneuver | 0 | 0/0 | utility |  |
+| 158 | emergency_brake | Emergency Brake | Maneuver | 0 | 0/0 | control |  |
+| 159 | skip_frame | Skip Frame | Maneuver | 0 | 0/0 | control | scrap |
+| 160 | panic_eject | Panic Eject | Maneuver | 0 | 0/0 | control | reactive |
+| 161 | dive | Dive | Maneuver | 1 | 0/0 | combo | priority_fire |
+| 162 | weave | Weave | Maneuver | 1 | 0/0 | utility | evade |
+| 163 | pivot | Pivot | Maneuver | 1 | 0/0 | combo | priority_fire |
+| 164 | feint | Feint | Maneuver | 1 | 0/0 | control |  |
+| 165 | combat_roll | Combat Roll | Maneuver | 1 | 0/0 | utility |  |
+| 166 | flare | Flare | Maneuver | 1 | 0/0 | control | disable |
+| 167 | chaff_dump | Chaff Dump | Maneuver | 1 | 0/0 | control |  |
+| 168 | overthrust | Overthrust | Maneuver | 1 | 0/0 | combo |  |
+| 169 | break_line | Break Line | Maneuver | 1 | 0/0 | utility |  |
+| 170 | sidewinder | Sidewinder | Maneuver | 1 | 0/0 | combo | flanking_fire |
+| 171 | hard_brake | Hard Brake | Maneuver | 2 | 0/0 | control | reactive |
+| 172 | inverted_dive | Inverted Dive | Maneuver | 2 | 0/0 | combo | phase_drive |
+| 173 | evasive_pattern | Evasive Pattern | Maneuver | 2 | 0/0 | utility | evade |
+| 174 | skyward_burst | Skyward Burst | Maneuver | 2 | 0/0 | combo | skyward_maneuver |
+| 175 | probe_scan | Probe Scan | Maneuver | 2 | 0/0 | utility | probe |
+| 176 | tactical_sweep | Tactical Sweep | Maneuver | 2 | 0/0 | utility | deep_scan |
+| 177 | cycle_routine | Cycle Routine | Maneuver | 2 | 0/0 | utility | cycling_protocol |
+| 178 | adrenal_surge | Adrenal Surge | Maneuver | 2 | 0/0 | combo |  |
+| 179 | evasive_split | Evasive Split | Maneuver | 2 | 0/0 | utility | evade |
+| 180 | counter_flare | Counter Flare | Maneuver | 2 | 0/0 | control | negate |
+| 181 | combat_reroute | Combat Reroute | Maneuver | 2 | 0/0 | control |  |
+| 182 | vector_cut | Vector Cut | Maneuver | 2 | 0/0 | combo | priority_fire |
+| 183 | full_evasion | Full Evasion | Maneuver | 3 | 0/0 | control | gain_stealth |
+| 184 | deep_maneuver | Deep Maneuver | Maneuver | 3 | 0/0 | utility | evade |
+| 185 | swarm_pattern | Swarm Pattern | Maneuver | 3 | 0/0 | aggro | rapid_launch |
+| 186 | tactical_reposition | Tactical Reposition | Maneuver | 3 | 0/0 | utility | bounce |
+| 187 | force_dodge | Force Dodge | Maneuver | 3 | 0/0 | control |  |
+| 188 | ion_dive | Ion Dive | Maneuver | 3 | 0/0 | utility | phase_drive |
+| 189 | snap_draw | Snap Draw | Maneuver | 3 | 0/0 | utility | tactical_draw |
+| 190 | archive_pull | Archive Pull | Maneuver | 3 | 0/0 | combo | archive_recall |
+| 191 | counter_maneuver | Counter Maneuver | Maneuver | 3 | 0/0 | control | negate |
+| 192 | combat_vectoring | Combat Vectoring | Maneuver | 3 | 0/0 | combo | priority_fire |
+| 193 | all_out_charge | All-Out Charge | Maneuver | 4 | 0/0 | aggro |  |
+| 194 | perfect_evasion | Perfect Evasion | Maneuver | 4 | 0/0 | control |  |
+| 195 | deep_scan_lock | Deep Scan Lock | Maneuver | 4 | 0/0 | combo | deep_scan, tracking_lock |
+| 196 | tactical_overdrive | Tactical Overdrive | Maneuver | 4 | 0/0 | ramp | overcharge |
+| 197 | last_stand_maneuver | Last Stand Maneuver | Maneuver | 4 | 0/0 | aggro |  |
+| 198 | full_alpha_strike | Full Alpha Strike | Maneuver | 5 | 0/0 | aggro | alpha_strike |
+| 199 | battle_warp | Battle Warp | Maneuver | 5 | 0/0 | control | reactive |
+| 200 | heroic_dive | Heroic Dive | Maneuver | 5 | 0/0 | control |  |

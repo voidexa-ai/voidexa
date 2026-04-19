@@ -64,3 +64,63 @@ Future batches should continue seeding Tier 1 keywords (each needs ~12
 cards total) and broaden into the Tier 4 niche keywords that are still
 unused (`adaptive_learning`, `efficiency_protocol`,
 `deferred_deployment`, `signal_jamming`, `system_corruption`, etc.).
+
+---
+
+## Batch 02 — Common Defense + Common Maneuvers
+
+**Ran:** 10 validation checks from Part 14 of master doc (validator updated
+to exempt Maneuver type from A+D band check + accept `scrap` keyword as a
+tradeoff marker for 0-cost discipline).
+**Result:** 0 errors · 2 warnings (both intentional per cumulative plan).
+
+### Warnings
+
+1. **Archetype — `aggro`: 4 vs Rule 8 per-batch target of 20.**
+   _Accepted:_ batch 01 over-delivered aggro (51 vs 20). Cumulative plan
+   calls for batches 02-10 to average ~16.6 aggro to hit the 200-total
+   target. Delivering 4 here pulls cumulative to 55/200, very close to
+   pace for the remaining 8 batches (145 needed ÷ 8 = 18.1/batch).
+
+2. **Archetype — `control`: 50 vs per-batch target of 20.**
+   _Accepted:_ Defense-type cards naturally lean control; this batch was
+   planned to front-load the control budget since it was already the
+   Defense+Maneuver slot. Cumulative after B02: 68/200 (34%). Future
+   batches must ease back to ~16.5/batch on average.
+
+### Fixes applied before finalization
+
+- **2 short flavor texts** (`deflector_plate`, `medium_shield`) extended
+  from 6-7 words into the 8-15 word band.
+
+### Validator updates (Part 14 Check 7 refinement)
+
+- Maneuver cards are exempt from Rule 1 A+D band. Rationale: Part 3
+  defines Maneuvers as "Instant, discarded after use" — they have no
+  permanent board presence, so A+D is always 0 by type. The band check
+  is only meaningful for permanent-body card types (Weapon, Defense,
+  Drone, AI Routine, Equipment, Ship Core).
+- `scrap` keyword now counts as a valid tradeoff marker for the 0-cost
+  discipline (Rule 4), alongside reactive / only-if / once-per /
+  lose / discard. Scrap is a literal sacrifice cost per Part 9 #62.
+
+### Keyword budget status (cumulative, 200 of 1000 cards generated)
+
+Now used across the set (running totals, top 10):
+- rapid_launch: 7+1 = 8
+- priority_fire: 6+4 = 10
+- interceptor: 4+6 = 10
+- deploy_burst: 6+0 = 6
+- evade: 0+7 = 7
+- reactive: 2+6 = 8
+- auto_repair: 3+4 = 7
+- ablative_plating: 0+5 = 5
+- breach_cascade: 4+0 = 4
+- cold_boot: 5+0 = 5
+
+All Tier 1/2 keywords on pace for their ~12 and ~8 card budgets.
+Tier 4 niches still under-seeded (`adaptive_learning`,
+`efficiency_protocol`, `deferred_deployment`, `signal_jamming`,
+`system_corruption`, `ai_takeover`, `encryption_block`, `phantom_echo`,
+`data_wipe`, `sabotage_charge`, `power_surge`) — reserve these for
+Rares/Epics in batches 06-08.

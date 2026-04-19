@@ -131,6 +131,12 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
             warnings.append(
                 f"batch 01 focus is Weapons+Drones; unexpected types: {unexpected}"
             )
+    if batch_num == "02":
+        unexpected = set(type_ct.keys()) - {"Defense", "Maneuver"}
+        if unexpected:
+            warnings.append(
+                f"batch 02 focus is Defense+Maneuvers; unexpected types: {unexpected}"
+            )
 
     # Check 5: cost curve per Part 7 (soft tolerance)
     cost_ct = Counter(c.get("energy_cost") for c in cards)
@@ -147,6 +153,8 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
             effect = (c.get("effect_text") or "").lower()
             kws = c.get("keywords") or []
             ok = ("reactive" in kws
+                  or "scrap" in kws  # scrap keyword is a sacrifice tradeoff
+                  or "scrap a" in effect  # body-text scrap also counts
                   or "only if" in effect
                   or "once per" in effect
                   or "lose" in effect
@@ -157,8 +165,12 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
                     f"tradeoff/single-use marker"
                 )
 
-    # Check 7: A+D bands (Rule 1)
+    # Check 7: A+D bands (Rule 1). Maneuvers are "Instant, discarded after
+    # use" (Part 3) with no permanent board presence, so A+D is 0 by type.
+    # Exempt them from the band check.
     for c in cards:
+        if c.get("type") == "Maneuver":
+            continue
         cost = c.get("energy_cost", 0)
         a = c.get("attack", 0) or 0
         d = c.get("defense", 0) or 0
