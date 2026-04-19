@@ -1,0 +1,63 @@
+{
+  "batch": "01",
+  "errors": [],
+  "warnings": [
+    "archetype 'aggro': 51 vs target 20 (Rule 8)"
+  ],
+  "distributions": {
+    "card_count": 100,
+    "rarity": {
+      "common": 100
+    },
+    "type": {
+      "Weapon": 55,
+      "Drone": 45
+    },
+    "cost": {
+      "0": 2,
+      "1": 19,
+      "2": 30,
+      "3": 27,
+      "4": 14,
+      "5": 6,
+      "6": 2
+    },
+    "archetype": {
+      "aggro": 51,
+      "combo": 5,
+      "control": 18,
+      "midrange": 21,
+      "utility": 5
+    },
+    "keyword_usage": {
+      "rapid_launch": 7,
+      "priority_fire": 6,
+      "deploy_burst": 6,
+      "cold_boot": 5,
+      "breach_cascade": 4,
+      "radiation_leak": 4,
+      "interceptor": 4,
+      "critical_breach": 4,
+      "flanking_fire": 3,
+      "persistent_field": 3,
+      "auto_repair": 3,
+      "reactive": 2,
+      "critical_strike": 2,
+      "overclock": 2,
+      "phase_drive": 2,
+      "tracking_lock": 2,
+      "overflow_fire": 2,
+      "probe": 2,
+      "cloaked_entry": 2,
+      "alpha_strike": 1,
+      "disable": 1,
+      "quick_strike": 1,
+      "hot_deploy": 1,
+      "end_cycle": 1,
+      "apply_lock": 1,
+      "assault_protocol": 1,
+      "skyward_maneuver": 1,
+      "deep_scan": 1
+    }
+  }
+}
