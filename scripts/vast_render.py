@@ -438,21 +438,41 @@ class Orchestrator:
         raise RuntimeError(f"all lease retries exhausted — last: {last_exc}")
 
     def _build_onstart(self, image_spec: dict) -> str:
-        """Compose the container boot script: dirs + wget models + image init."""
+        """Compose the container boot script: dirs + wget models + image init.
+
+        Contract:
+        - Entire script traces to /var/log/voidexa-onstart.log (`set -x` +
+          append-redirect). Accessible via SSH if key lands, via ai-dock
+          portal, or by curl'ing the container's log endpoint if exposed.
+        - `;` (not `&&`) between sections so the image's init.sh ALWAYS runs
+          even if wget hangs or fails. The orchestrator's /queue poll is the
+          real readiness gate; if models didn't land, individual render jobs
+          will fail inside ComfyUI rather than stalling the boot.
+        - Each wget has --connect-timeout=30 + --timeout=900 + --tries=2 to
+          cap the hang window (prior instance sat 15+ min with no progress).
+        """
         init = image_spec.get("init_cmd", "/bin/true")
+        log_path = "/var/log/voidexa-onstart.log"
         parts = [
+            f"exec >> {log_path} 2>&1",
+            "set -x",
+            "date",
             "env >> /etc/environment",
             "mkdir -p /workspace/ComfyUI/models/checkpoints "
             "/workspace/ComfyUI/models/vae /workspace/output",
         ]
         for m in self.config["model_files"]:
-            # -c resumes, -nv = less-verbose, skip if target already non-empty
+            dest = shlex.quote(m["dest"])
+            url = shlex.quote(m["url"])
             parts.append(
-                f"[ -s {shlex.quote(m['dest'])} ] || "
-                f"wget -c -nv {shlex.quote(m['url'])} -O {shlex.quote(m['dest'])}"
+                f"[ -s {dest} ] || "
+                f"wget -c -nv --connect-timeout=30 --timeout=900 --tries=2 "
+                f"{url} -O {dest} || echo WGET_FAILED_{m['name']}"
             )
+        parts.append("date")
+        parts.append(f"echo handoff_to_{init}")
         parts.append(init)
-        return " && ".join(parts)
+        return "; ".join(parts)
 
     def _build_vast_query(self) -> str:
         filt = self.config["offer_filters"]
