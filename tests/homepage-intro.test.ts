@@ -114,8 +114,8 @@ describe('homepage intro — CTAs and timing constants', () => {
     expect(PRIMARY_CTA.label).toBe('Enter Free Flight')
   })
 
-  it('Enter Star Map CTA href is /starmap/voidexa', () => {
-    expect(SECONDARY_CTA.href).toBe('/starmap/voidexa')
+  it('Enter Star Map CTA href is /starmap (Sprint 15 Task 7: unified Level 1 entry)', () => {
+    expect(SECONDARY_CTA.href).toBe('/starmap')
     expect(SECONDARY_CTA.label).toBe('Enter Star Map')
   })
 

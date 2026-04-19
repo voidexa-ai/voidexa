@@ -25,13 +25,14 @@ describe('quick menu route — /?menu=true', () => {
     expect(HOME_SRC).toMatch(/searchParams\?\.get\(['"]menu['"]\)\s*===\s*['"]true['"]/)
   })
 
-  it('homepage initialises showOverlay + videoEnded to menuOnly so the overlay renders instantly', () => {
-    expect(HOME_SRC).toMatch(/useState\(menuOnly\)/)
+  it('homepage drives rendering from a typed stage state machine (Sprint 15 Task 11)', () => {
+    // Post-Sprint-15 the /?menu=true branch sets stage='menu' during the
+    // initial effect, so the menu paints without ever mounting IntroVideo.
+    expect(HOME_SRC).toMatch(/setStage\(['"]menu['"]\)/)
   })
 
-  it('homepage skips the <IntroVideo> element when menuOnly is true', () => {
-    // The !menuOnly guard before <IntroVideo ... must exist.
-    expect(HOME_SRC).toMatch(/!menuOnly[^\n]*!videoEnded[^\n]*VIDEO_URL/)
+  it('homepage only mounts <IntroVideo> while stage === "video"', () => {
+    expect(HOME_SRC).toMatch(/stage === ['"]video['"][^\n]*VIDEO_URL/)
   })
 
   it('homepage still renders the <QuickMenuOverlay> unconditionally', () => {

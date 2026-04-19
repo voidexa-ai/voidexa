@@ -14,7 +14,11 @@ export const QUICK_MENU_PANELS: QuickMenuPanel[] = [
 ]
 
 export const PRIMARY_CTA = { label: 'Enter Free Flight', href: '/freeflight' as const }
-export const SECONDARY_CTA = { label: 'Enter Star Map', href: '/starmap/voidexa' as const }
+// Sprint 15 Task 7: both CTAs now route to Level 1 Galaxy View. The Universe
+// panel already points at /starmap; unifying the secondary CTA here means
+// pilots always enter via the wide view and zoom into Level 2 by picking
+// the voidexa planet.
+export const SECONDARY_CTA = { label: 'Enter Star Map', href: '/starmap' as const }
 
 export const SKIP_BUTTON_THRESHOLD_SEC = 3
 export const OVERLAY_FADE_IN_DELAY_MS = 2000

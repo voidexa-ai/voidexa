@@ -16,10 +16,42 @@ const NORMAL_LIFE = 0.3
 const BOOST_LIFE = 0.5
 
 /**
- * Particle trail behind the ship. Each particle is spawned in WORLD space at
- * the engine emission point and drifts freely — we keep a separate position
- * buffer from the ship group so the trail is left behind instead of following.
+ * Sprint 15 Task 10 — the previous implementation used THREE.PointsMaterial
+ * with a uniform size and a per-particle size attribute, but PointsMaterial
+ * ignores attribute-driven sizes: it reads only its uniform. All particles
+ * therefore rendered at the same on-screen scale and the overlapping additive
+ * sprites fused into what looked like a solid cyan column.
+ *
+ * This version swaps in a custom ShaderMaterial that reads aSize (float) and
+ * aColor (vec3) so per-particle size and color actually affect the render.
+ * A soft radial falloff in the fragment shader gives the spray a proper
+ * particle look instead of hard squares.
  */
+const VERTEX_SHADER = /* glsl */ `
+  attribute float aSize;
+  attribute vec3 aColor;
+  varying vec3 vColor;
+  void main() {
+    vColor = aColor;
+    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = aSize * 120.0 / max(0.0001, -mvPos.z);
+    gl_Position = projectionMatrix * mvPos;
+  }
+`
+
+const FRAGMENT_SHADER = /* glsl */ `
+  varying vec3 vColor;
+  void main() {
+    vec2 uv = gl_PointCoord - 0.5;
+    float d = length(uv);
+    // Soft circular falloff — discard the outer corners so particles read as
+    // circular sprites, not squares.
+    if (d > 0.5) discard;
+    float alpha = smoothstep(0.5, 0.0, d);
+    gl_FragColor = vec4(vColor, alpha);
+  }
+`
+
 export default function BoostTrail({ ship, origin = [0, 0, 2] }: Props) {
   const pointsRef = useRef<THREE.Points>(null)
 
@@ -37,6 +69,15 @@ export default function BoostTrail({ ship, origin = [0, 0, 2] }: Props) {
 
   const colors = useMemo(() => new Float32Array(PARTICLE_COUNT * 3), [])
   const sizes = useMemo(() => new Float32Array(PARTICLE_COUNT), [])
+
+  const material = useMemo(() => new THREE.ShaderMaterial({
+    vertexShader: VERTEX_SHADER,
+    fragmentShader: FRAGMENT_SHADER,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    toneMapped: false,
+  }), [])
 
   const cursor = useRef(0)
   const tmpOrigin = useRef(new THREE.Vector3()).current
@@ -69,8 +110,10 @@ export default function BoostTrail({ ship, origin = [0, 0, 2] }: Props) {
       positions[i * 3] = tmpOrigin.x
       positions[i * 3 + 1] = tmpOrigin.y
       positions[i * 3 + 2] = tmpOrigin.z
-      // Random jitter perpendicular to motion
-      tmpJitter.set((Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)).multiplyScalar(boost ? 1.2 : 0.6)
+      // Wider spread during boost so the spray reads as a plume, not a beam.
+      tmpJitter
+        .set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5)
+        .multiplyScalar(boost ? 3.5 : 1.4)
       const baseSpeed = boost ? 48 : 18 + speedN * 20
       velocities[i * 3]     = tmpBack.x * baseSpeed + tmpJitter.x
       velocities[i * 3 + 1] = tmpBack.y * baseSpeed + tmpJitter.y
@@ -84,7 +127,6 @@ export default function BoostTrail({ ship, origin = [0, 0, 2] }: Props) {
       ages[i] += dt
       const life = lifes[i]
       if (ages[i] >= life) {
-        // keep position, fade to 0
         colors[i * 3] = 0
         colors[i * 3 + 1] = 0
         colors[i * 3 + 2] = 0
@@ -103,17 +145,18 @@ export default function BoostTrail({ ship, origin = [0, 0, 2] }: Props) {
       colors[i * 3]     = r * lifeT
       colors[i * 3 + 1] = g * lifeT
       colors[i * 3 + 2] = b * lifeT
-      sizes[i] = (isBoost ? 1.6 : 1.0) * (0.6 + lifeT * 0.8)
+      // World-space sprite size in units — larger near spawn, fades with life.
+      sizes[i] = (isBoost ? 0.9 : 0.55) * (0.35 + lifeT * 0.9)
     }
 
     const geom = pointsRef.current?.geometry
     if (geom) {
       const posAttr = geom.attributes.position as THREE.BufferAttribute
-      const colAttr = geom.attributes.color as THREE.BufferAttribute
-      const sizeAttr = geom.attributes.size as THREE.BufferAttribute
-      posAttr.needsUpdate = true
-      colAttr.needsUpdate = true
-      sizeAttr.needsUpdate = true
+      const colAttr = geom.attributes.aColor as THREE.BufferAttribute
+      const sizeAttr = geom.attributes.aSize as THREE.BufferAttribute
+      if (posAttr) posAttr.needsUpdate = true
+      if (colAttr) colAttr.needsUpdate = true
+      if (sizeAttr) sizeAttr.needsUpdate = true
     }
   })
 
@@ -128,30 +171,21 @@ export default function BoostTrail({ ship, origin = [0, 0, 2] }: Props) {
           args={[positions, 3]}
         />
         <bufferAttribute
-          attach="attributes-color"
+          attach="attributes-aColor"
           count={PARTICLE_COUNT}
           array={colors}
           itemSize={3}
           args={[colors, 3]}
         />
         <bufferAttribute
-          attach="attributes-size"
+          attach="attributes-aSize"
           count={PARTICLE_COUNT}
           array={sizes}
           itemSize={1}
           args={[sizes, 1]}
         />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.35}
-        vertexColors
-        transparent
-        opacity={1}
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-        sizeAttenuation
-        toneMapped={false}
-      />
+      <primitive object={material} attach="material" />
     </points>
   )
 }

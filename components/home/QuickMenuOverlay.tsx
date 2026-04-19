@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { setSkipIntro } from '@/lib/intro/preferences'
+import { setSkipIntroVideo, setSkipQuickMenu } from '@/lib/intro/preferences'
 import {
   PRIMARY_CTA,
   QUICK_MENU_PANELS,
@@ -46,16 +46,32 @@ const CARD_STYLE: React.CSSProperties = {
 
 interface Props {
   show: boolean
-  checkboxChecked: boolean
-  onCheckboxChange: (value: boolean) => void
+  checkboxSkipVideo: boolean
+  checkboxSkipMenu: boolean
+  onCheckboxSkipVideoChange: (value: boolean) => void
+  onCheckboxSkipMenuChange: (value: boolean) => void
   onWebsiteClick: () => void
+  onReplayVideo?: () => void
 }
 
-export default function QuickMenuOverlay({ show, checkboxChecked, onCheckboxChange, onWebsiteClick }: Props) {
+export default function QuickMenuOverlay({
+  show,
+  checkboxSkipVideo,
+  checkboxSkipMenu,
+  onCheckboxSkipVideoChange,
+  onCheckboxSkipMenuChange,
+  onWebsiteClick,
+  onReplayVideo,
+}: Props) {
   const router = useRouter()
 
+  function persistPreferencesBeforeLeave() {
+    if (checkboxSkipVideo) setSkipIntroVideo(true)
+    if (checkboxSkipMenu) setSkipQuickMenu(true)
+  }
+
   function handleNavigate(href: string) {
-    if (checkboxChecked) setSkipIntro(true)
+    persistPreferencesBeforeLeave()
     router.push(href)
   }
 
@@ -150,16 +166,49 @@ export default function QuickMenuOverlay({ show, checkboxChecked, onCheckboxChan
         >{SECONDARY_CTA.label}</button>
       </div>
 
-      <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'rgba(255,255,255,0.75)', letterSpacing: '0.02em' }}>
-        <input
-          type="checkbox"
-          data-testid="skip-checkbox"
-          checked={checkboxChecked}
-          onChange={(e) => onCheckboxChange(e.target.checked)}
-          style={{ width: 16, height: 16, cursor: 'pointer' }}
-        />
-        <span>Don&rsquo;t show quick menu next time</span>
-      </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.02em' }}>
+          <input
+            type="checkbox"
+            data-testid="skip-video-checkbox"
+            checked={checkboxSkipVideo}
+            onChange={(e) => onCheckboxSkipVideoChange(e.target.checked)}
+            style={{ width: 16, height: 16, cursor: 'pointer' }}
+          />
+          <span>Don&rsquo;t show intro video on future visits</span>
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.02em' }}>
+          <input
+            type="checkbox"
+            data-testid="skip-menu-checkbox"
+            checked={checkboxSkipMenu}
+            onChange={(e) => onCheckboxSkipMenuChange(e.target.checked)}
+            style={{ width: 16, height: 16, cursor: 'pointer' }}
+          />
+          <span>Skip quick menu on future visits (go directly to star map)</span>
+        </label>
+        {onReplayVideo && (
+          <button
+            type="button"
+            data-testid="replay-intro-link"
+            onClick={onReplayVideo}
+            style={{
+              marginTop: 4,
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              fontSize: 14,
+              color: 'rgba(127,216,255,0.75)',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            Replay intro video
+          </button>
+        )}
+      </div>
 
       <style jsx>{`
         .quickmenu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -6,6 +6,8 @@ interface Props {
   src: string
   onSkipAvailable?: () => void
   onEnded?: () => void
+  /** Sprint 15 Task 11: set by the audio-gate choice. */
+  initialMuted?: boolean
 }
 
 export interface IntroVideoHandle {
@@ -15,13 +17,13 @@ export interface IntroVideoHandle {
 const SKIP_THRESHOLD_SEC = 3
 
 const IntroVideo = forwardRef<IntroVideoHandle, Props>(function IntroVideo(
-  { src, onSkipAvailable, onEnded },
+  { src, onSkipAvailable, onEnded, initialMuted = true },
   ref,
 ) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const skipFiredRef = useRef(false)
-  const [muted, setMuted] = useState(true)
-  const [showTooltip, setShowTooltip] = useState(true)
+  const [muted, setMuted] = useState(initialMuted)
+  const [showTooltip, setShowTooltip] = useState(initialMuted)
 
   useImperativeHandle(ref, () => ({
     jumpToEnd: () => {

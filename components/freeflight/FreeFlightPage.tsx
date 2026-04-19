@@ -9,8 +9,10 @@ import ShipPicker from './ships/ShipPicker'
 import AchievementPanel from '@/components/achievements/AchievementPanel'
 import MissionOverlay from './MissionOverlay'
 import NPCDialogueBubble from './NPCDialogueBubble'
-import ExplorationChoiceModal from './ExplorationChoiceModal'
+import HUDCallPanel, { type HUDCall } from './hud/HUDCallPanel'
+import ControlsLegend from './ControlsLegend'
 import TutorialGuide from './TutorialGuide'
+import { useEscStack } from '@/lib/ui/escStack'
 import CardDropReveal from '@/components/ui/CardDropReveal'
 import HolographicMap from './HolographicMap'
 import DesktopOnlyNotice from '@/components/ui/DesktopOnlyNotice'
@@ -70,7 +72,8 @@ export default function FreeFlightPage() {
 
   const handleEncounterTrigger = (enc: ExplorationEncounter) => {
     if (resolvedEncounterIds.has(enc.id)) return
-    if (document.pointerLockElement) document.exitPointerLock()
+    // Sprint 15 Task 2: encounters arrive as non-blocking HUD calls, so we no
+    // longer release pointer lock here — the pilot keeps flying.
     setActiveEncounter(enc)
   }
 
@@ -275,14 +278,51 @@ export default function FreeFlightPage() {
     void questChain.recordEvent({ type: 'landmark_scan', target: nearLandmark.id })
   }
 
+  // Sprint 15 Task 9: register each overlay with the central ESC stack so ESC
+  // pops the topmost layer in priority order with a 150 ms debounce.
+  const escRegister = useEscStack((s) => s.register)
+  const escUnregister = useEscStack((s) => s.unregister)
+  const escPop = useEscStack((s) => s.pop)
+
+  useEffect(() => {
+    if (!lorePopup) return
+    escRegister({ id: 'freeflight-lore', priority: 'popup', onEscape: () => setLorePopup(null) })
+    return () => escUnregister('freeflight-lore')
+  }, [lorePopup, escRegister, escUnregister])
+
+  useEffect(() => {
+    if (!achievementsOpen) return
+    escRegister({ id: 'freeflight-achievements', priority: 'popup', onEscape: () => setAchievementsOpen(false) })
+    return () => escUnregister('freeflight-achievements')
+  }, [achievementsOpen, escRegister, escUnregister])
+
+  useEffect(() => {
+    if (!warp.state.mapOpen) return
+    escRegister({ id: 'freeflight-warp-map', priority: 'map', onEscape: () => warp.closeMap() })
+    return () => escUnregister('freeflight-warp-map')
+  }, [warp.state.mapOpen, escRegister, escUnregister, warp])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    escRegister({
+      id: 'freeflight-menu',
+      priority: 'menu',
+      onEscape: () => { setMenuOpen(false); setDockedAt(null) },
+    })
+    return () => escUnregister('freeflight-menu')
+  }, [menuOpen, escRegister, escUnregister])
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
-        if (lorePopup) { setLorePopup(null); return }
-        if (achievementsOpen) { setAchievementsOpen(false); return }
-        setMenuOpen(v => !v)
+        // Let the central ESC stack pop a registered layer first; only fall
+        // back to opening the flight menu when nothing is stacked.
+        const popped = escPop()
+        if (popped) return
+        setMenuOpen(true)
         setDockedAt(null)
         if (document.pointerLockElement) document.exitPointerLock()
+        return
       }
       if (e.code === 'KeyE' && dockStation && !menuOpen && !lorePopup) {
         handleDock()
@@ -296,14 +336,15 @@ export default function FreeFlightPage() {
       if (e.code === 'KeyG' && nearNPC && !npcHostile && !menuOpen && !lorePopup) {
         handleGreet()
       }
-      if (e.code === 'KeyW' && !menuOpen && !lorePopup && !activeEncounter && !warp.state.warping && !warp.state.mapOpen) {
-        // Open the warp map. Ship is at the nearest warp node by default (Sprint 4 uses 'voidexa_hub').
+      if ((e.code === 'KeyM' || e.code === 'Tab') && !menuOpen && !lorePopup && !warp.state.warping && !warp.state.mapOpen) {
+        // Sprint 15 Task 3: M + Tab open the warp map. W is reserved exclusively for thrust.
+        e.preventDefault()
         warp.openMap()
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [dockStation, nearDerelict, nearLandmark, nearNPC, npcHostile, menuOpen, lorePopup, achievementsOpen])
+  }, [dockStation, nearDerelict, nearLandmark, nearNPC, npcHostile, menuOpen, lorePopup, achievementsOpen, escPop, warp])
 
   const onShipState = (ref: React.MutableRefObject<ShipState>) => {
     shipRef.current = ref.current
@@ -420,22 +461,7 @@ export default function FreeFlightPage() {
       <CockpitHUD ship={shipRef} visible={firstPerson && !menuOpen && !lorePopup} />
 
       {!firstPerson && !menuOpen && !lorePopup && (
-        <div style={{
-          position: 'fixed', bottom: 20, left: 20, zIndex: 10,
-          color: '#6fe6ff', fontFamily: 'var(--font-space, monospace)',
-          fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase',
-          padding: '10px 14px',
-          background: 'rgba(0,18,30,0.3)',
-          border: '1px solid rgba(0,212,255,0.35)',
-          borderRadius: 6, backdropFilter: 'blur(6px)',
-          textShadow: '0 0 8px #00d4ff88',
-        }}>
-          <div>WASD · Thrust</div>
-          <div>Mouse · Look (click to lock)</div>
-          <div>RMB · Free Look · Scroll · Zoom</div>
-          <div>Shift · Boost · Space · Brake</div>
-          <div>V · Cockpit · E · Dock · F · Scan · ESC · Menu</div>
-        </div>
+        <ControlsLegend />
       )}
 
       {/* Dock prompt */}
@@ -479,13 +505,17 @@ export default function FreeFlightPage() {
         />
       )}
 
-      {/* Exploration encounter choice modal */}
+      {/* Sprint 15 Task 2: exploration encounter surfaces as a non-blocking
+          HUD call panel. No full-screen overlay, no backdrop-blur on the
+          canvas, FPS stays at baseline. */}
       {activeEncounter && (
-        <ExplorationChoiceModal
-          encounter={activeEncounter}
-          onChoose={choice => { void resolveEncounter(activeEncounter, choice) }}
-          onDismiss={() => setActiveEncounter(null)}
-        />
+        <HUDCallPanel call={encounterToHudCall(activeEncounter, {
+          onChoose: (choice) => {
+            void resolveEncounter(activeEncounter, choice)
+            setActiveEncounter(null)
+          },
+          onDismiss: () => setActiveEncounter(null),
+        })} />
       )}
 
       {/* First Day Real Sky tutorial panel */}
@@ -781,5 +811,30 @@ function btnStyle(color: string): React.CSSProperties {
     cursor: 'pointer',
     boxShadow: `0 0 18px ${color}44`,
     textShadow: `0 0 10px ${color}`,
+  }
+}
+
+function encounterToHudCall(
+  enc: ExplorationEncounter,
+  handlers: {
+    onChoose: (choice: import('@/lib/game/freeflight/explorationEncounters').EncounterChoice) => void
+    onDismiss: () => void
+  },
+): HUDCall {
+  return {
+    id: enc.id,
+    type: 'exploration',
+    subtitle: `Exploration · ${enc.zone}`,
+    title: enc.name,
+    flavor: enc.flavor,
+    body: enc.description,
+    choices: enc.choices.map((c, i) => ({
+      id: c.id,
+      label: c.label,
+      reward: c.outcomeKind === 'ghai' && c.reward ? `+${c.reward} GHAI` : undefined,
+      variant: i === 0 ? 'primary' : undefined,
+      onSelect: () => handlers.onChoose(c),
+    })),
+    onDismiss: handlers.onDismiss,
   }
 }

@@ -706,3 +706,72 @@ voidexa has two parallel wallet tables:
 - **Wallet dichotomy** — don't accidentally route mission payouts through `/api/wallet/topup`/`deduct` (those touch `user_wallets.balance_usd` which is the Quantum Chat USD wallet). Platform-GHAI goes through `creditGhai` or the new `/api/wallet/credit`. Both end up in `user_credits.ghai_balance_platform`.
 - **Shop price mapping is 1:1 cents→GHAI** because $1 = 100 GHAI = 100 cents. No rounding error. `formatCentsAsGhai(199)` = `"199 GHAI"`. Don't divide by 100 first.
 - **Icon not served as Next <Image>** — `GhaiBalance` uses a raw `<img>` for `/icons/ghai.svg` because the icon is a tiny inline SVG and doesn't need Next's image optimizer. The `eslint-disable-next-line @next/next/no-img-element` comment silences the lint rule.
+
+## Session 2026-04-19: Sprint 15 — Flight Foundation (HUD panel, roll/inertia, routing, audio gate)
+Skill spec: `docs/skills/sprint-15-flight-foundation.md`. Backup tag `backup/pre-sprint-15-20260419`, completion tag `sprint-15-complete`.
+
+### Task 1 — Non-blocking HUD call panel
+- `components/freeflight/hud/HUDCallPanel.tsx` (NEW, 234 lines) — top-left 320×140 glass pill, `backdropFilter: blur(4px)` only, cyan border + scan-line overlay, five call types (`exploration | npc | hostile | mission | system`) with per-type color + optional pulse. Accepts on Enter or primary-choice click, dismisses on ESC (via the central stack) or auto-timer, and logs missed transmissions.
+- `lib/ui/missedCalls.ts` (NEW) — Zustand `useMissedCalls` store, 20-entry ring buffer for dismissed/timed-out calls so future HUD can surface "replay" history.
+
+### Task 2 — Encounters no longer kill the frame
+- `FreeFlightPage.tsx` removed `<ExplorationChoiceModal>` usage and renders `<HUDCallPanel>` instead via a new `encounterToHudCall(enc, handlers)` adapter at the bottom of the file. Legacy modal file kept on disk (still referenced by nothing) so older commits that point at it still build.
+- `handleEncounterTrigger` no longer calls `document.exitPointerLock()` — the pilot keeps flying while the HUD panel blinks in the corner.
+
+### Task 3 — W is thrust only; M + Tab open the warp map
+- Removed the `e.code === 'KeyW'` branch that called `warp.openMap()` from `FreeFlightPage.tsx`. That branch was the only W→map handler in the repo — every other `KeyW` hit is thrust (`FlightControls`, `SpeedRunControls`, `DebrisFieldMinigame`, the assembly-editor fly controls).
+- New branch: `(e.code === 'KeyM' || e.code === 'Tab') && !menuOpen && !lorePopup && !warp.state.warping && !warp.state.mapOpen`. Calls `e.preventDefault()` on Tab so the browser doesn't steal focus.
+
+### Task 4 — Q / E roll, R / F ascend / descend
+- `components/freeflight/controls/FlightControls.tsx` fully rewritten:
+  - Q / E push `angularVelocity.current.z` instead of translating ship ± world-up.
+  - R / F now drive vertical thrust (`tmpUp` axis), matching legend.
+  - Euler order kept `YXZ` so roll rotates around ship-local forward after yaw / pitch.
+
+### Task 5 — Rotation inertia
+- Added `angularVelocity` Vector3 ref. Mouse pushes it (`movementX → y`, `movementY → x`); each frame the vector is clamped to ±3 rad/s, integrated into pitch/yaw/roll, then multiplied by `Math.pow(0.92, dt*60)` so damping is frame-rate-independent.
+- Pitch clamp (`±π/2.1`) zeros X-axis velocity on contact to avoid jitter at the limits.
+- `FLIGHT_CONTROLS_CONSTANTS` exported for tests — `MOUSE_SENSITIVITY=0.003`, `ANGULAR_DAMPING=0.92`, `MAX_ANGULAR_VELOCITY=3`.
+
+### Task 6 — Controls legend
+- `components/freeflight/ControlsLegend.tsx` (NEW). Nine lines: WASD, Q/E roll, R/F ascend/descend, Mouse, RMB free-look, Shift/Space, M/Tab warp map, V/E/F bindings, ESC menu. Exported `CONTROLS_LEGEND_LINES` so tests can assert the content without rendering.
+- `FreeFlightPage.tsx` replaced its inline legend markup with `<ControlsLegend />`.
+
+### Task 7 — Homepage CTA routing unified at Level 1
+- `lib/intro/panels.ts`: `SECONDARY_CTA.href` moved from `/starmap/voidexa` → `/starmap`. Both the "Enter Star Map" CTA and the Universe panel now land on Level 1; pilots reach Level 2 by clicking the voidexa planet.
+
+### Task 8 — Level 2 Enter Free Flight CTA
+- `app/starmap/voidexa/page.tsx` gained a bottom-center glowing pill CTA, identical styling to the Level 1 "Explore the Universe" button. Click disables the button, shows "Requisitioning your ship from docking bay…" for 2.2 s, then `router.push('/freeflight')`.
+
+### Task 9 — ESC stack with 150 ms debounce
+- `lib/ui/escStack.ts` (NEW) — Zustand `useEscStack` store + pure `resolveTopLayer` for tests. Priority order `hud-call > popup > map > lore > menu`. `pop()` returns false inside the debounce window so held ESC doesn't blow through multiple layers.
+- `FreeFlightPage.tsx` registers lore popup, achievements panel, holographic map, and flight menu with the stack. Central ESC handler calls `escPop()` first; only falls back to opening the flight menu when the stack is empty.
+- `HUDCallPanel` self-registers as `priority: 'hud-call'` and dismisses with a 220 ms fade + missed-call log when ESC fires.
+
+### Task 10 — BoostTrail rendering fix
+- `components/freeflight/ships/BoostTrail.tsx` — `THREE.PointsMaterial` was ignoring the per-particle `size` attribute (it reads only its uniform), so all particles rendered at the same on-screen scale and the overlapping additive sprites fused into a solid cyan column. Swapped for a custom `ShaderMaterial` with `attribute float aSize` + `attribute vec3 aColor`; fragment shader does a `smoothstep` radial falloff + `discard` beyond 0.5 for soft circular sprites. Boost-plume spread widened (`multiplyScalar(3.5)` boost / `1.4` cruise) so the trail reads as a plume. Attribute names renamed `position/color/size` → `position/aColor/aSize` to avoid colliding with built-in vertex attributes.
+
+### Task 11 — Audio gate + session-based video skip
+- `lib/intro/preferences.ts` rewritten with three orthogonal flags: `SKIP_VIDEO_KEY='voidexaSkipIntroVideo'`, `SKIP_QUICK_MENU_KEY='voidexaSkipQuickMenu'` (localStorage), and `SESSION_SEEN_KEY='hasSeenIntroThisSession'` (sessionStorage). Also `AUDIO_PREFERENCE_KEY='voidexaAudioPreference'` ('enabled' | 'muted'). Legacy `voidexa_skip_intro` + `shouldSkipIntro` / `setSkipIntro` retained for backwards-compat with Sprint-13c tests.
+- `computeIntroMode` is now a truth-table function over `{ menuOnly, skipVideo, skipQuickMenu, sessionSeen, skipIntro? }`. Returns `'menu-only' | 'video' | 'quick-menu' | 'redirect'`. Old one-flag callers still route to the legacy behavior because when only `skipIntro` is passed we mirror it to both new flags.
+- `components/home/AudioGatePopup.tsx` (NEW) — black 85%-opacity backdrop, 70vw × 50vh glass card, `<h1>` heading, green "YES" + red "NO" buttons ≥200×60px. Choice persists to `voidexaAudioPreference` and never re-prompts a returning pilot.
+- `components/home/IntroVideo.tsx` accepts a new `initialMuted` prop so the audio-gate choice actually affects playback from the first frame.
+- `app/page.tsx` rewritten around a `stage: 'loading' | 'audio-gate' | 'video' | 'menu' | 'redirect'` state machine. On mount it reads prefs, session flag, and `?menu=true` / `?replay=video` query params, then picks the stage via `computeIntroMode`. Video end → `markIntroSeenThisSession()` + 2 s → `stage='menu'`.
+- `components/home/QuickMenuOverlay.tsx` now exposes two independent checkboxes (`skip-video-checkbox`, `skip-menu-checkbox`) and a "Replay intro video" link. Parent owns state; persisting to localStorage happens only on navigate (so un-toggling before leaving doesn't write anything).
+
+### Tests
+- `tests/sprint-15-flight-foundation.test.ts` (NEW, 37 tests) — source-inspection for HUD panel shape, no fullscreen overlay, blur cap ≤4px, ESC stack resolver priority, flight control constants, boost-trail ShaderMaterial migration, Level 2 CTA, audio preference roundtrip, session-seen toggle, `computeIntroMode` truth table, and `resetOnboardingPreferences()`.
+- Updated `tests/homepage-intro.test.ts` `/starmap/voidexa` → `/starmap` assertion and `tests/quick-menu-route.test.ts` to match the new stage state machine.
+- Totals: 766/766 green across 61 suites (baseline 729 → +37 new).
+
+### Verification
+- `npm run build` — clean, only the pre-existing non-fatal bigint bindings warning. All 87+ static pages prerender.
+- `npm run lint` — `scripts/render_cards.js` adds +3 `require()` style errors (file was already in the working tree pre-sprint, not edited here). Zero new lint errors in Sprint 15 files.
+
+### Gotchas worth keeping
+- **React Compiler + Three.js attribute name collisions** — naming a `<bufferAttribute attach="attributes-color" ...>` with a custom size attribute triggers GPU confusion because the built-in `color` attribute is reserved. Prefix custom attributes (`aColor`, `aSize`) and reference them by the same name in the shader.
+- **`backdrop-filter: blur()` above 4 px inside an active R3F scene tanks FPS** — the HUD panel spec hard-caps it at 4 px for a reason. The enforced test regex `/backdropFilter:\s*['"\`]blur\(4px\)['"\`]/` will catch anyone bumping it.
+- **Tab keypress** — the browser moves focus by default; add `e.preventDefault()` before calling `warp.openMap()` or the next click won't lock the pointer. Pairs M with Tab because Tab is the space-game convention even if its default behavior fights you.
+- **Zustand pop inside useEffect cleanup** — registering a layer with the ESC stack means the cleanup function MUST `unregister(id)` on unmount, otherwise stale layers accumulate and ESC will try to pop nonexistent handlers. Every `escRegister` call in Sprint 15 is paired with `escUnregister` in its return.
+- **Legacy `setSkipIntro` must still write `voidexa_skip_intro`** — Sprint 13c persisted user prefs under that key; renaming it silently would log users out of their skip-intro choice. The Sprint 15 rewrite writes the new `voidexaSkipIntroVideo` key via `setSkipIntroVideo`, but `setSkipIntro` (legacy alias) stays pointed at the old key.
+- **Pre-existing untracked scripts in the working tree** mean `npm run lint` shows +3 errors today that weren't in `backup/pre-sprint-15-20260419`. Those come from `scripts/render_cards.js` — the Vast.ai handoff file, not a Sprint 15 change. Comparing via `git stash -u` confirms zero new rule violations in sprint files.
