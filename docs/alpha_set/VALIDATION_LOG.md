@@ -551,3 +551,84 @@ All 78 Part-9 abilities seeded. Top 15:
 Some of these overlap (a legendary can be dual-identity, an epic can
 be escalation). B09 and B10 will unify these design families into
 the remaining 200 slots.
+
+---
+
+## Batch 09 — Legendaries + Ship Cores + Fillers
+
+**Ran:** 10 validation checks + cross-batch audit (Rule 7 name
+uniqueness, Part 11 flavor length) across all 900 cards.
+**Result:** 0 errors * 2 warnings (all accepted: cost-curve).
+
+### Warnings (all cost-curve, accepted)
+
+1. Cost 0: 36 vs target 5 — batch has 36 Ship Cores which are all
+   cost 0 by type (Part 3). Expected.
+2. Cost 1: 0 vs target 17 — no legendary 1-drops; balanced across
+   the set by common-heavy early batches.
+
+### Fixes applied before finalization
+
+- **1 A+D under-band**: crosshatch_cannon A=11 at cost 4 -> A=12.
+- **33 flavor-text trims** into the 8-15 band. All 900 alpha-set
+  flavors remain unique.
+
+### Batch 09 content overview
+
+- **50 legendaries** with proper-noun signature names per Rule 2
+  ("unique named card, signature effect, often a win condition"):
+  - 8 Weapon: Thornspitter, Heart Lance, The Long Goodbye, Wrath
+    of Vael, Glass Mass, Second Sunrise, Executioner's Oath, Star Rift
+  - 7 Drone: Valkyrie, Reaper Prime, Silent Argo, Orlandos the
+    Bulwark, Ghost of Sector 7, Kaiserin, The Unbroken
+  - 7 AI Routine: Archon, The Silent Conductor, The Fortress Mind,
+    Valen's Algorithm, The Shepherd, Oracle of Deep Void, Prime
+    Directive (Unit 01)
+  - 7 Defense: Shield of the First, Heart Wall, The Unyielding,
+    Mirror of Veena, Ghost Bulwark, Phoenix Wall, Worldgate
+  - 5 Module: Reactor Overload (sacrifice), Last Light, The
+    Unforgiving Round, Signal to Home, Catastrophe
+  - 4 Maneuver: Last Stand (sacrifice), Time Reverse, Final
+    Vector, Heroic Gambit
+  - 3 Equipment: Signature Scope, Valen's Harness, Iron Chorus
+  - 2 Field: Dust of Dead Stars, Gravity's Silence
+  - 7 Ship Core: Warmaster's, Bastion Heart, Oracle, Void Traveler,
+    Reactor Pulse, The Resilience, Ghost Protocol
+- **29 non-legendary Ship Cores** (15 uncommon + 14 rare) filling
+  the set's 50 Ship Core target.
+- **21 non-ship-core fillers** (15 uncommon + 6 rare) across Weapon,
+  Drone, Defense, AI Routine, Module, Maneuver.
+
+### Part 10 unique mechanics introduced this batch
+
+- **Sacrifice mechanics (Part 10C)**: Reactor Overload (deal 30,
+  lose 10 max hull permanently), Last Stand (+10 to all units then
+  destroy all).
+
+B10 will cover dual-identity (Part 10A), escalation (Part 10B),
+and stacked-attack (Part 10D) cards alongside the 20 mythics.
+
+### Cross-batch audit (full set so far, 900 cards)
+
+- Duplicate names: 0
+- Flavor text out of 8-15 band: 0
+- All 78 Part-9 abilities present: yes
+- All 9 card types present at required rarities: yes
+
+### Cumulative keyword usage (top 15 after 900/1000 cards)
+
+- persistent_field: 135
+- priority_fire: 124
+- critical_strike: 75
+- auto_repair: 63
+- interceptor: 61
+- rapid_launch: 55
+- phase_drive: 55
+- reinforced_hull: 53
+- ablative_plating: 46
+- gain_stealth: 47
+- alpha_strike: 42
+- radiation_leak: 40
+- emergency_reboot: 33
+- overflow_fire: 35
+- cloaked_entry: 25

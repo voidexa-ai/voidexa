@@ -13,19 +13,18 @@ Each batch's plan is derived from remaining budget ÷ remaining batches, not
 from the static Rule 8 per-batch average — so a batch that over-delivers on
 one archetype must be offset by the next.
 
-| Archetype | Target | B01 | B02 | B03 | B04 | B05 | B06 | B07 | B08 | Remaining | Batches left | Avg needed |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Aggro    | 200 | 51 | 55  | 68  |  92 | 111 | 127 | 145 | 163 |  37 | 2 | 18.5 |
-| Control  | 200 | 18 | 68  | 82  | 100 | 120 | 143 | 156 | 172 |  28 | 2 | 14.0 |
-| Midrange | 250 | 21 | 38  | 69  |  94 | 120 | 142 | 169 | 196 |  54 | 2 | 27.0 |
-| Combo    | 150 |  5 | 16  | 36  |  51 |  66 |  86 | 104 | 123 |  27 | 2 | 13.5 |
-| Ramp     |  80 |  0 |  5  | 15  |  22 |  30 |  39 |  51 |  60 |  20 | 2 | 10.0 |
-| Utility  | 120 |  5 | 18  | 30  |  41 |  53 |  63 |  75 |  86 |  34 | 2 | 17.0 |
+| Archetype | Target | B01 | B02 | B03 | B04 | B05 | B06 | B07 | B08 | B09 | Remaining | Batches left | Avg needed |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Aggro    | 200 | 51 | 55  | 68  |  92 | 111 | 127 | 145 | 163 | 179 |  21 | 1 | 21.0 |
+| Control  | 200 | 18 | 68  | 82  | 100 | 120 | 143 | 156 | 172 | 187 |  13 | 1 | 13.0 |
+| Midrange | 250 | 21 | 38  | 69  |  94 | 120 | 142 | 169 | 196 | 223 |  27 | 1 | 27.0 |
+| Combo    | 150 |  5 | 16  | 36  |  51 |  66 |  86 | 104 | 123 | 137 |  13 | 1 | 13.0 |
+| Ramp     |  80 |  0 |  5  | 15  |  22 |  30 |  39 |  51 |  60 |  72 |   8 | 1 |  8.0 |
+| Utility  | 120 |  5 | 18  | 30  |  41 |  53 |  63 |  75 |  86 | 102 |  18 | 1 | 18.0 |
 
-Status after B08 (800/1000 cards): Midrange still on the 27/batch
-line for the final two batches. Utility needs a slight lean in B09-B10.
-Legendaries (B09) will lean combo/midrange signature plays; mythics
-(B10) are 1-of-a-kind top plays with flexible variance.
+Status after B09 (900/1000 cards): Final batch (B10) targets are
+locked in. Mythics + dual-identity/escalation/sacrifice cards need:
+21 aggro / 13 control / 27 midrange / 13 combo / 8 ramp / 18 utility.
 
 ---
 
@@ -960,3 +959,120 @@ Distribution:
 | 798 | recon_region | Recon Region | Field | U | 3 | 0/0 | utility | persistent_field, probe |
 | 799 | master_conduit | Master Conduit | Equipment | R | 4 | 0/0 | ramp | crew_pooling, cascading_power, efficiency_protocol |
 | 800 | stealth_region | Stealth Region | Field | R | 5 | 0/0 | control | persistent_field, gain_stealth, cloaked_entry |
+
+## Batch 09 — Legendaries + Ship Cores + Fillers
+
+**Cards:** 100 * **File:** `batch_09.json`
+
+Distribution:
+- Rarity: 50 legendary * 30 uncommon * 20 rare
+- Types: Ship Core 36 * Weapon 14 * Drone 11 * Defense 11 * AI Routine 10 * Module 8 * Maneuver 5 * Equipment 3 * Field 2
+- Cost: 36x 0 (all Ship Cores) * 6x 2 * 9x 3 * 11x 4 * 14x 5 * 13x 6 * 7x 7 * 4x 8
+- Archetype: 27 midrange * 16 aggro * 16 utility * 15 control * 14 combo * 12 ramp
+- 50 legendary signature-named cards (per Rule 2: unique named cards)
+- 7 legendary Ship Cores + 14 rare Ship Cores + 15 uncommon Ship Cores = 36 new Ship Cores, bringing set total to 50 (10 common from B04 + 1 epic from B08 + 36 from B09 + ~3 mythic planned for B10)
+
+### Cards
+
+| # | id | name | type | rarity | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|---|
+| 801 | thornspitter | Thornspitter | Weapon | L | 4 | 14/0 | combo | alpha_strike, critical_strike, priority_fire |
+| 802 | heart_lance | Heart Lance | Weapon | L | 5 | 16/0 | midrange | critical_strike, overflow_fire, hull_drain |
+| 803 | the_long_goodbye | The Long Goodbye | Weapon | L | 5 | 16/0 | control | radiation_leak, phase_drive, critical_strike |
+| 804 | wrath_of_vael | Wrath of Vael | Weapon | L | 6 | 20/0 | combo | priority_fire, alpha_strike, breach_cascade |
+| 805 | glass_mass | Glass Mass | Weapon | L | 6 | 20/0 | aggro | breach_cascade, overflow_fire, radiation_leak |
+| 806 | second_sunrise | Second Sunrise | Weapon | L | 7 | 24/0 | control | overflow_fire, radiation_leak, critical_strike |
+| 807 | executioners_oath | Executioner's Oath | Weapon | L | 7 | 24/0 | combo | priority_fire, critical_strike, alpha_strike |
+| 808 | star_rift | Star Rift | Weapon | L | 8 | 28/0 | control | phase_drive, overflow_fire, breach_cascade, radiation_leak |
+| 809 | valkyrie | Valkyrie | Drone | L | 4 | 8/5 | aggro | rapid_launch, priority_fire, alpha_strike |
+| 810 | reaper_prime | Reaper Prime | Drone | L | 5 | 10/7 | aggro | critical_strike, priority_fire, rapid_launch |
+| 811 | silent_argo | Silent Argo | Drone | L | 5 | 7/10 | utility | gain_stealth, cloaked_entry, phase_drive |
+| 812 | orlandos_the_bulwark | Orlandos the Bulwark | Drone | L | 6 | 7/14 | midrange | interceptor, reinforced_hull, auto_repair |
+| 813 | ghost_of_sector_7 | Ghost of Sector 7 | Drone | L | 6 | 10/11 | control | gain_stealth, critical_strike, phase_drive |
+| 814 | kaiserin | Kaiserin | Drone | L | 7 | 14/13 | midrange | priority_fire, alpha_strike, battle_hardened |
+| 815 | the_unbroken | The Unbroken | Drone | L | 8 | 15/17 | ramp | reinforced_hull, emergency_reboot, auto_repair |
+| 816 | archon | Archon | AI Routine | L | 4 | 0/14 | combo | persistent_field, priority_fire, overclock |
+| 817 | the_silent_conductor | The Silent Conductor | AI Routine | L | 5 | 0/17 | combo | persistent_field, cascading_power, chain_catalyst |
+| 818 | the_fortress_mind | The Fortress Mind | AI Routine | L | 5 | 0/18 | midrange | persistent_field, interceptor, reinforced_hull |
+| 819 | valens_algorithm | Valen's Algorithm | AI Routine | L | 6 | 0/21 | ramp | persistent_field, adaptive_learning, efficiency_protocol |
+| 820 | the_shepherd | The Shepherd | AI Routine | L | 6 | 0/22 | aggro | persistent_field, rapid_launch, battle_hardened |
+| 821 | oracle_of_deep_void | Oracle of Deep Void | AI Routine | L | 7 | 0/25 | utility | persistent_field, probe, deep_scan, tactical_draw |
+| 822 | prime_directive_legendary | Prime Directive (Unit 01) | AI Routine | L | 8 | 0/30 | aggro | persistent_field, priority_fire, rapid_launch, alpha_strike |
+| 823 | shield_of_the_first | Shield of the First | Defense | L | 4 | 0/15 | midrange | ablative_plating, interceptor, reinforced_hull |
+| 824 | heart_wall | Heart Wall | Defense | L | 5 | 0/18 | midrange | interceptor, reinforced_hull, auto_repair |
+| 825 | the_unyielding | The Unyielding | Defense | L | 5 | 0/18 | midrange | reinforced_hull, emergency_reboot, ablative_plating |
+| 826 | mirror_of_veena | Mirror of Veena | Defense | L | 6 | 0/22 | midrange | system_shielding, critical_breach, reinforced_hull |
+| 827 | ghost_bulwark | Ghost Bulwark | Defense | L | 6 | 0/22 | midrange | gain_stealth, phase_drive, reinforced_hull |
+| 828 | phoenix_wall | Phoenix Wall | Defense | L | 7 | 0/25 | ramp | emergency_reboot, auto_repair, reinforced_hull |
+| 829 | worldgate | Worldgate | Defense | L | 8 | 0/32 | midrange | interceptor, reinforced_hull, ablative_plating, auto_repair |
+| 830 | reactor_overload | Reactor Overload | Module | L | 5 | 0/0 | aggro |  |
+| 831 | last_light | Last Light | Module | L | 5 | 0/0 | ramp |  |
+| 832 | the_unforgiving_round | The Unforgiving Round | Module | L | 6 | 0/0 | control | critical_strike, radiation_leak |
+| 833 | signal_to_home | Signal to Home | Module | L | 6 | 0/0 | utility | system_reset |
+| 834 | catastrophe | Catastrophe | Module | L | 7 | 0/0 | aggro | breach_cascade, radiation_leak, overflow_fire |
+| 835 | last_stand | Last Stand | Maneuver | L | 4 | 0/0 | aggro |  |
+| 836 | time_reverse | Time Reverse | Maneuver | L | 5 | 0/0 | control |  |
+| 837 | final_vector | Final Vector | Maneuver | L | 6 | 0/0 | combo | priority_fire, alpha_strike, critical_strike |
+| 838 | heroic_gambit | Heroic Gambit | Maneuver | L | 7 | 0/0 | control |  |
+| 839 | signature_scope | Signature Scope | Equipment | L | 4 | 0/0 | combo | priority_fire, critical_strike, alpha_strike, tracking_lock |
+| 840 | valens_harness | Valen's Harness | Equipment | L | 5 | 0/0 | midrange | battle_hardened, rapid_launch, priority_fire, reinforced_hull |
+| 841 | iron_chorus | Iron Chorus | Equipment | L | 6 | 0/0 | aggro | priority_fire |
+| 842 | dust_of_dead_stars | Dust of Dead Stars | Field | L | 5 | 0/0 | control | persistent_field, gain_stealth, radiation_leak |
+| 843 | gravitys_silence | Gravity's Silence | Field | L | 6 | 0/0 | utility | persistent_field, phase_drive, evade, reinforced_hull |
+| 844 | warmasters_core | Warmaster's Core | Ship Core | L | 0 | 0/0 | combo |  |
+| 845 | bastion_heart | Bastion Heart | Ship Core | L | 0 | 0/0 | midrange |  |
+| 846 | oracle_core | Oracle Core | Ship Core | L | 0 | 0/0 | utility | end_cycle, probe, deep_scan |
+| 847 | void_traveler | Void Traveler | Ship Core | L | 0 | 0/0 | utility | phase_drive |
+| 848 | reactor_pulse | Reactor Pulse | Ship Core | L | 0 | 0/0 | ramp |  |
+| 849 | the_resilience | The Resilience | Ship Core | L | 0 | 0/0 | ramp | emergency_reboot |
+| 850 | ghost_protocol | Ghost Protocol | Ship Core | L | 0 | 0/0 | utility | gain_stealth |
+| 851 | swift_core | Swift Core | Ship Core | U | 0 | 0/0 | aggro |  |
+| 852 | solid_core | Solid Core | Ship Core | U | 0 | 0/0 | midrange |  |
+| 853 | recon_core | Recon Core | Ship Core | U | 0 | 0/0 | utility | deploy_burst, probe |
+| 854 | strike_core | Strike Core | Ship Core | U | 0 | 0/0 | midrange |  |
+| 855 | regen_core | Regen Core | Ship Core | U | 0 | 0/0 | ramp | auto_repair |
+| 856 | tactical_core | Tactical Core | Ship Core | U | 0 | 0/0 | utility |  |
+| 857 | boost_core | Boost Core | Ship Core | U | 0 | 0/0 | ramp |  |
+| 858 | warden_core | Interceptor Core | Ship Core | U | 0 | 0/0 | midrange | interceptor |
+| 859 | pulse_core | Pulse Core | Ship Core | U | 0 | 0/0 | midrange | end_cycle |
+| 860 | cycle_core | Cycle Core | Ship Core | U | 0 | 0/0 | utility | cycling_protocol |
+| 861 | heat_core | Heat Core | Ship Core | U | 0 | 0/0 | combo | overclock |
+| 862 | scout_core | Scout Core | Ship Core | U | 0 | 0/0 | utility | deploy_burst, probe |
+| 863 | guard_core | Guard Core | Ship Core | U | 0 | 0/0 | midrange |  |
+| 864 | ambush_core | Ambush Core | Ship Core | U | 0 | 0/0 | control | reactive |
+| 865 | heavy_cargo_core | Heavy Cargo Core | Ship Core | U | 0 | 0/0 | utility |  |
+| 866 | hunter_core | Hunter Core | Ship Core | R | 0 | 0/0 | combo | tracking_lock |
+| 867 | phoenix_core | Phoenix Core | Ship Core | R | 0 | 0/0 | ramp | emergency_reboot |
+| 868 | warden_guard_core | Warden Core | Ship Core | R | 0 | 0/0 | midrange | reinforced_hull |
+| 869 | assassin_core | Assassin Core | Ship Core | R | 0 | 0/0 | aggro | critical_strike |
+| 870 | sage_core | Sage Core | Ship Core | R | 0 | 0/0 | utility | end_cycle, deep_scan |
+| 871 | overclocked_core | Overclocked Core | Ship Core | R | 0 | 0/0 | combo | overclock |
+| 872 | survivor_core | Survivor Core | Ship Core | R | 0 | 0/0 | ramp | auto_repair |
+| 873 | combat_core | Combat Core | Ship Core | R | 0 | 0/0 | midrange | priority_fire |
+| 874 | swarm_core | Swarm Core | Ship Core | R | 0 | 0/0 | midrange |  |
+| 875 | armory_core | Armory Core | Ship Core | R | 0 | 0/0 | ramp |  |
+| 876 | command_core | Command Core | Ship Core | R | 0 | 0/0 | midrange |  |
+| 877 | phase_core | Phase Core | Ship Core | R | 0 | 0/0 | utility | phase_drive |
+| 878 | ace_core | Ace Core | Ship Core | R | 0 | 0/0 | ramp | fuel_scavenge |
+| 879 | dreadnought_core | Dreadnought Core | Ship Core | R | 0 | 0/0 | midrange |  |
+| 880 | thermal_salvo | Thermal Salvo | Weapon | U | 3 | 8/0 | midrange | priority_fire, radiation_leak |
+| 881 | matter_pike | Matter Pike | Weapon | U | 3 | 9/0 | control | phase_drive, critical_strike |
+| 882 | stagger_cannon | Stagger Cannon | Weapon | U | 2 | 5/0 | control | priority_fire, disable |
+| 883 | chorus_laser | Chorus Laser | Weapon | U | 2 | 5/0 | combo | linked_fire, priority_fire |
+| 884 | peregrine_drone | Peregrine Drone | Drone | U | 2 | 3/2 | aggro | outrider |
+| 885 | burrow_drone | Burrow Drone | Drone | U | 3 | 4/5 | utility | cloaked_entry, deploy_burst, probe |
+| 886 | warsign_drone | Warsign Drone | Drone | U | 3 | 5/4 | midrange | battle_hardened, priority_fire |
+| 887 | patient_hull | Patient Hull | Defense | U | 2 | 0/7 | midrange | ablative_plating, emergency_reboot |
+| 888 | ward_lattice | Ward Lattice | Defense | U | 3 | 0/10 | midrange | interceptor, system_shielding |
+| 889 | wave_barrier | Wave Barrier | Defense | U | 3 | 0/9 | control | countermeasure, evade |
+| 890 | observation_subroutine | Observation Subroutine | AI Routine | U | 2 | 0/5 | utility | persistent_field, end_cycle |
+| 891 | coordination_matrix | Coordination Matrix | AI Routine | U | 3 | 0/8 | combo | persistent_field, linked_fire |
+| 892 | sabot_shell | Sabot Shell | Module | U | 3 | 0/0 | aggro |  |
+| 893 | disruptor_shell | Disruptor Shell | Module | U | 3 | 0/0 | control | priority_fire, disable |
+| 894 | fast_reverse | Fast Reverse | Maneuver | U | 2 | 0/0 | control | reactive, phase_drive |
+| 895 | crosshatch_cannon | Crosshatch Cannon | Weapon | R | 4 | 12/0 | aggro | flanking_fire, alpha_strike, priority_fire |
+| 896 | glass_round | Glass Round | Weapon | R | 5 | 16/0 | control | phase_drive, radiation_leak, critical_strike |
+| 897 | lance_elite | Lance Elite | Drone | R | 4 | 7/5 | aggro | rapid_launch, priority_fire, outrider |
+| 898 | siege_lattice | Siege Lattice | Defense | R | 4 | 0/13 | midrange | interceptor, ablative_plating, reinforced_hull |
+| 899 | master_hunter_ai | Master Hunter AI | AI Routine | R | 4 | 0/13 | combo | persistent_field, tracking_lock, critical_strike |
+| 900 | arc_warhead | Arc Warhead | Module | R | 4 | 0/0 | aggro | breach_cascade, chain_catalyst, overflow_fire |

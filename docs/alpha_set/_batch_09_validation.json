@@ -1,0 +1,88 @@
+{
+  "batch": "09",
+  "errors": [],
+  "warnings": [
+    "cost 0: 36 cards vs target 5",
+    "cost 1: 0 cards vs target 17"
+  ],
+  "distributions": {
+    "card_count": 100,
+    "rarity": {
+      "legendary": 50,
+      "uncommon": 30,
+      "rare": 20
+    },
+    "type": {
+      "Weapon": 14,
+      "Drone": 11,
+      "AI Routine": 10,
+      "Defense": 11,
+      "Module": 8,
+      "Maneuver": 5,
+      "Equipment": 3,
+      "Field": 2,
+      "Ship Core": 36
+    },
+    "cost": {
+      "0": 36,
+      "2": 6,
+      "3": 9,
+      "4": 11,
+      "5": 14,
+      "6": 13,
+      "7": 7,
+      "8": 4
+    },
+    "archetype": {
+      "combo": 14,
+      "midrange": 27,
+      "control": 15,
+      "aggro": 16,
+      "utility": 16,
+      "ramp": 12
+    },
+    "keyword_usage": {
+      "priority_fire": 20,
+      "critical_strike": 14,
+      "reinforced_hull": 14,
+      "persistent_field": 12,
+      "phase_drive": 11,
+      "alpha_strike": 9,
+      "radiation_leak": 9,
+      "interceptor": 8,
+      "auto_repair": 7,
+      "overflow_fire": 6,
+      "rapid_launch": 6,
+      "emergency_reboot": 6,
+      "breach_cascade": 5,
+      "gain_stealth": 5,
+      "probe": 5,
+      "ablative_plating": 5,
+      "battle_hardened": 4,
+      "end_cycle": 4,
+      "overclock": 3,
+      "deep_scan": 3,
+      "tracking_lock": 3,
+      "deploy_burst": 3,
+      "cloaked_entry": 2,
+      "chain_catalyst": 2,
+      "system_shielding": 2,
+      "evade": 2,
+      "reactive": 2,
+      "disable": 2,
+      "linked_fire": 2,
+      "outrider": 2,
+      "hull_drain": 1,
+      "cascading_power": 1,
+      "adaptive_learning": 1,
+      "efficiency_protocol": 1,
+      "tactical_draw": 1,
+      "critical_breach": 1,
+      "system_reset": 1,
+      "cycling_protocol": 1,
+      "fuel_scavenge": 1,
+      "countermeasure": 1,
+      "flanking_fire": 1
+    }
+  }
+}
