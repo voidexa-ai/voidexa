@@ -1076,3 +1076,148 @@ Distribution:
 | 898 | siege_lattice | Siege Lattice | Defense | R | 4 | 0/13 | midrange | interceptor, ablative_plating, reinforced_hull |
 | 899 | master_hunter_ai | Master Hunter AI | AI Routine | R | 4 | 0/13 | combo | persistent_field, tracking_lock, critical_strike |
 | 900 | arc_warhead | Arc Warhead | Module | R | 4 | 0/0 | aggro | breach_cascade, chain_catalyst, overflow_fire |
+
+## Batch 10 — Mythics + Dual-Identity + Escalation (FINAL)
+
+**Cards:** 100 * **File:** `batch_10.json`
+
+Distribution:
+- Rarity: 20 mythic * 8 rare * 47 uncommon * 25 common
+- Types: Drone 34 * AI Routine 16 * Weapon 12 * Module 11 * Defense 9 * Maneuver 7 * Equipment 5 * Field 4 * Ship Core 2
+- Archetype: 29 midrange * 19 combo * 17 utility * 15 ramp * 13 aggro * 7 control
+- 20 mythics with signature once-per-match effects (Rule 2)
+- ~25 dual-identity flip cards (Part 10A)
+- ~20 escalation cards (Part 10B)
+- ~10 stacked-attack cards (Part 10D)
+
+### Cards
+
+| # | id | name | type | rarity | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|---|
+| 901 | quantum_convergence | Quantum Convergence | Maneuver | M | 8 | 0/0 | combo | priority_fire, alpha_strike, critical_strike |
+| 902 | reality_collapse | Reality Collapse | Module | M | 6 | 0/0 | control |  |
+| 903 | singularity_core | Quantum Core: Singularity | Ship Core | M | 0 | 0/0 | combo | persistent_field |
+| 904 | star_eater | Star-Eater | Weapon | M | 8 | 32/0 | aggro | priority_fire, breach_cascade, overflow_fire, radiation_leak |
+| 905 | the_first_and_last | The First and Last | AI Routine | M | 7 | 0/28 | midrange | persistent_field, adaptive_learning, cascading_power |
+| 906 | worldbreaker | Worldbreaker | Drone | M | 8 | 20/20 | aggro | priority_fire, critical_strike, rapid_launch, breach_cascade |
+| 907 | extinction | Extinction | Module | M | 8 | 0/0 | aggro | breach_cascade |
+| 908 | time_lord | Time Lord | Maneuver | M | 7 | 0/0 | combo |  |
+| 909 | the_infinite | The Infinite | AI Routine | M | 8 | 0/32 | combo | persistent_field, cascading_power, chain_catalyst, linked_fire |
+| 910 | genesis | Genesis | Field | M | 7 | 0/0 | midrange | persistent_field, priority_fire, auto_repair |
+| 911 | oblivion | Oblivion | Weapon | M | 7 | 28/0 | control | phase_drive, critical_strike, overflow_fire |
+| 912 | apex_pilot_core | Apex Pilot Core | Ship Core | M | 0 | 0/0 | aggro |  |
+| 913 | the_last_card | The Last Card | Module | M | 5 | 0/0 | ramp | endgame_protocol |
+| 914 | infinity_gate | Infinity Gate | Field | M | 8 | 0/0 | utility | persistent_field, phase_drive, priority_fire |
+| 915 | event_horizon | Event Horizon | Drone | M | 7 | 15/17 | control | interceptor, gain_stealth, phase_drive, critical_breach |
+| 916 | the_unmaker | The Unmaker | Weapon | M | 8 | 30/0 | aggro | priority_fire, critical_strike, radiation_leak, overflow_fire |
+| 917 | phoenix_ascendant | Phoenix Ascendant | AI Routine | M | 6 | 0/24 | ramp | persistent_field, emergency_reboot, auto_repair |
+| 918 | the_void_queen | The Void Queen | Drone | M | 8 | 18/20 | midrange | rapid_launch, priority_fire, alpha_strike, battle_hardened |
+| 919 | final_protocol | Final Protocol | AI Routine | M | 8 | 0/32 | aggro | persistent_field, priority_fire, rapid_launch, alpha_strike |
+| 920 | the_bulwark_eternal | The Bulwark Eternal | Defense | M | 7 | 0/35 | midrange | interceptor, reinforced_hull, ablative_plating, emergency_reboot, auto_repair |
+| 921 | scout_drone_alpha | Scout Drone Alpha | Drone | R | 2 | 1/4 | utility | deploy_burst, probe |
+| 922 | missile_module_flip | Missile Module | Module | U | 2 | 0/0 | aggro |  |
+| 923 | ghost_fighter | Ghost Fighter | Drone | U | 3 | 4/5 | utility | cloaked_entry |
+| 924 | training_drone | Training Drone | Drone | C | 2 | 3/5 | midrange |  |
+| 925 | sleeping_fortress | Sleeping Fortress | Defense | U | 3 | 0/8 | midrange | cold_boot |
+| 926 | scout_probe | Scout Probe | Drone | C | 1 | 1/2 | utility | deploy_burst, probe |
+| 927 | dormant_weapon | Dormant Weapon | Weapon | C | 1 | 3/0 | midrange | cold_boot |
+| 928 | patient_rook | Patient Rook | Drone | C | 2 | 1/7 | midrange |  |
+| 929 | quiet_engineer | Quiet Engineer | Drone | C | 2 | 1/4 | ramp |  |
+| 930 | rookie_pilot | Rookie Pilot | Drone | C | 1 | 2/2 | aggro |  |
+| 931 | new_hull | New Hull | Defense | C | 1 | 0/3 | midrange |  |
+| 932 | eager_bomb | Eager Bomb | Module | C | 2 | 0/0 | aggro |  |
+| 933 | charging_capacitor | Charging Capacitor | Weapon | U | 2 | 5/0 | midrange |  |
+| 934 | patient_wreck | Patient Wreck | Drone | U | 2 | 2/3 | midrange |  |
+| 935 | growing_threat | Growing Threat | Drone | U | 2 | 1/4 | midrange |  |
+| 936 | slow_burn | Slow Burn | Weapon | U | 2 | 5/0 | midrange |  |
+| 937 | building_shield | Building Shield | Defense | U | 2 | 0/5 | midrange |  |
+| 938 | feeding_ai | Feeding AI | AI Routine | U | 2 | 0/5 | midrange | persistent_field |
+| 939 | cold_start_drone | Cold Start Drone | Drone | U | 2 | 1/4 | midrange | cold_boot |
+| 940 | stacking_laser | Stacking Laser | Weapon | U | 3 | 8/0 | combo |  |
+| 941 | waking_titan | Waking Titan | Drone | U | 3 | 3/5 | midrange |  |
+| 942 | patient_sniper | Patient Sniper | Weapon | U | 2 | 5/0 | combo | manual_fire |
+| 943 | ancient_engine | Ancient Engine | AI Routine | U | 3 | 0/8 | ramp | persistent_field |
+| 944 | building_armor | Building Armor | Equipment | U | 2 | 0/0 | midrange |  |
+| 945 | growing_arsenal | Growing Arsenal | Equipment | U | 2 | 0/0 | combo |  |
+| 946 | slow_flame | Slow Flame | AI Routine | U | 2 | 0/8 | control | persistent_field, radiation_leak |
+| 947 | ascending_drone | Ascending Drone | Drone | U | 3 | 3/5 | midrange |  |
+| 948 | tempered_fortress | Tempered Fortress | Defense | U | 3 | 0/8 | midrange | battle_hardened |
+| 949 | evolving_ai | Evolving AI | AI Routine | U | 3 | 0/8 | ramp | adaptive_learning |
+| 950 | fleet_momentum | Fleet Momentum | Field | U | 3 | 0/0 | aggro | persistent_field |
+| 951 | aim_protocol | Aim Protocol | Maneuver | U | 1 | 0/0 | combo |  |
+| 952 | lock_protocol | Lock Protocol | Maneuver | U | 1 | 0/0 | combo | tracking_lock |
+| 953 | fire_protocol | Fire Protocol | Maneuver | U | 2 | 0/0 | combo | critical_strike |
+| 954 | twin_aim | Twin Aim | Weapon | U | 3 | 0/8 | combo | cold_boot, priority_fire, critical_strike |
+| 955 | siege_targeter | Siege Targeter | AI Routine | U | 3 | 0/8 | combo | persistent_field |
+| 956 | three_turn_strike | Three-Turn Strike | Module | U | 2 | 0/0 | combo |  |
+| 957 | patience_drone | Patience Drone | Drone | U | 3 | 2/6 | combo | cold_boot, critical_strike |
+| 958 | staggered_warhead | Staggered Warhead | Weapon | R | 4 | 12/0 | combo |  |
+| 959 | windup_cannon | Windup Cannon | Weapon | R | 4 | 12/0 | combo | cold_boot, manual_fire, priority_fire |
+| 960 | staged_assault | Staged Assault | AI Routine | R | 4 | 0/12 | combo | persistent_field |
+| 961 | veiled_sentinel | Veiled Sentinel | Drone | R | 4 | 3/9 | control | cloaked_entry |
+| 962 | quiet_fortress | Quiet Fortress | Defense | R | 4 | 0/12 | midrange | cold_boot |
+| 963 | shadow_agent | Shadow Agent | Drone | R | 3 | 4/4 | utility | gain_stealth |
+| 964 | larval_warship | Larval Warship | Drone | U | 3 | 2/6 | midrange |  |
+| 965 | decoy_runner | Decoy Runner | Drone | U | 2 | 1/4 | utility |  |
+| 966 | dormant_lord | Dormant Lord | Drone | R | 5 | 2/14 | midrange | cold_boot |
+| 967 | hidden_warhead | Hidden Warhead | Module | U | 2 | 0/0 | aggro |  |
+| 968 | silent_pilot | Silent Pilot | Drone | U | 3 | 4/4 | utility | gain_stealth |
+| 969 | dreaming_fortress | Dreaming Fortress | Defense | U | 3 | 0/8 | midrange |  |
+| 970 | trading_barge | Trading Barge | Drone | U | 3 | 1/7 | ramp | end_cycle |
+| 971 | observer_module | Observer Module | AI Routine | U | 2 | 0/5 | utility | persistent_field, end_cycle, probe |
+| 972 | sapling_fighter | Sapling Fighter | Drone | U | 2 | 2/3 | midrange |  |
+| 973 | meditating_ai | Meditating AI | AI Routine | U | 2 | 0/5 | ramp | cold_boot, persistent_field |
+| 974 | growing_cannon | Growing Cannon | Weapon | U | 2 | 5/0 | combo |  |
+| 975 | hidden_ai | Hidden AI | AI Routine | C | 2 | 0/5 | utility | gain_stealth |
+| 976 | waiting_probe | Waiting Probe | Drone | C | 1 | 2/2 | utility |  |
+| 977 | slow_shield | Slow Shield | Defense | C | 1 | 0/3 | midrange |  |
+| 978 | scavenger_ai | Scavenger AI | AI Routine | U | 2 | 0/5 | ramp | persistent_field, fuel_scavenge |
+| 979 | pilot_trainee | Pilot Trainee | Drone | C | 1 | 1/2 | utility |  |
+| 980 | old_freighter | Old Freighter | Drone | C | 2 | 1/4 | ramp | end_cycle |
+| 981 | small_patrol | Small Patrol | Drone | C | 2 | 2/3 | utility | deploy_burst, probe |
+| 982 | scout_glider | Scout Glider | Drone | C | 1 | 1/2 | utility | skyward_maneuver |
+| 983 | recycled_hull | Recycled Hull | Defense | C | 2 | 0/6 | midrange |  |
+| 984 | field_welder | Field Welder | Drone | C | 2 | 1/4 | ramp | auto_repair, end_cycle |
+| 985 | quiet_warhead | Quiet Warhead | Module | C | 2 | 0/0 | aggro |  |
+| 986 | simple_heal | Simple Heal | Module | C | 1 | 0/0 | ramp |  |
+| 987 | targeting_lens | Targeting Lens | Equipment | C | 1 | 0/0 | combo |  |
+| 988 | reserve_plating | Reserve Plating | Equipment | C | 1 | 0/0 | midrange |  |
+| 989 | basic_module | Basic Module | Module | C | 1 | 0/0 | utility |  |
+| 990 | gravity_boot | Gravity Boot | Equipment | U | 2 | 0/0 | utility | phase_drive |
+| 991 | backup_ai | Backup AI | AI Routine | U | 2 | 0/5 | ramp | persistent_field, emergency_reboot |
+| 992 | fast_maneuver | Fast Maneuver | Maneuver | C | 1 | 0/0 | utility | evade |
+| 993 | field_technician | Field Technician | Drone | U | 2 | 2/4 | ramp | end_cycle |
+| 994 | pressure_mine | Pressure Mine | Field | U | 2 | 0/0 | control | persistent_field |
+| 995 | recon_team | Recon Team | Drone | U | 2 | 2/4 | utility | deploy_burst, probe |
+| 996 | veteran_engineer | Veteran Engineer | Drone | U | 3 | 2/6 | ramp | auto_repair, end_cycle |
+| 997 | small_ambush | Small Ambush | Maneuver | U | 2 | 0/0 | control | reactive, priority_fire |
+| 998 | standard_missile | Standard Missile | Module | C | 2 | 0/0 | aggro |  |
+| 999 | quiet_listener | Quiet Listener | AI Routine | C | 2 | 0/5 | ramp | persistent_field, end_cycle |
+| 1000 | patient_bomber | Patient Bomber | Drone | U | 3 | 3/5 | midrange | cold_boot, critical_breach |
+
+---
+
+## SET COMPLETE — 1000 cards
+
+**Rarity totals (Part 5 targets, all hit exactly):**
+- Common: 400 / 400
+- Uncommon: 280 / 280
+- Rare: 160 / 160
+- Epic: 90 / 90
+- Legendary: 50 / 50
+- Mythic: 20 / 20
+
+**Archetype totals (Part 8 targets, all within tolerance):**
+- Aggro: 192 / 200 (-8)
+- Control: 194 / 200 (-6)
+- Midrange: 252 / 250 (+2)
+- Combo: 156 / 150 (+6)
+- Ramp: 87 / 80 (+7)
+- Utility: 119 / 120 (-1)
+
+**Cross-batch audit (all 1000 cards):**
+- 0 duplicate names
+- 0 duplicate IDs
+- 0 flavor text violations (all within 8-15 words)
+- All 78 Part-9 keywords present at least once
+- All 9 card types represented
