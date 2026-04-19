@@ -13,18 +13,20 @@ Each batch's plan is derived from remaining budget ÷ remaining batches, not
 from the static Rule 8 per-batch average — so a batch that over-delivers on
 one archetype must be offset by the next.
 
-| Archetype | Target | After B01 | After B02 | After B03 | Remaining | Batches left | Avg needed |
-|---|---|---|---|---|---|---|---|
-| Aggro    | 200 | 51 | 55  | 68  | 132 | 7 | 18.9 |
-| Control  | 200 | 18 | 68  | 82  | 118 | 7 | 16.9 |
-| Midrange | 250 | 21 | 38  | 69  | 181 | 7 | 25.9 |
-| Combo    | 150 |  5 | 16  | 36  | 114 | 7 | 16.3 |
-| Ramp     |  80 |  0 |  5  | 15  |  65 | 7 |  9.3 |
-| Utility  | 120 |  5 | 18  | 30  |  90 | 7 | 12.9 |
+| Archetype | Target | After B01 | After B02 | After B03 | After B04 | Remaining | Batches left | Avg needed |
+|---|---|---|---|---|---|---|---|---|
+| Aggro    | 200 | 51 | 55  | 68  |  92 | 108 | 6 | 18.0 |
+| Control  | 200 | 18 | 68  | 82  | 100 | 100 | 6 | 16.7 |
+| Midrange | 250 | 21 | 38  | 69  |  94 | 156 | 6 | 26.0 |
+| Combo    | 150 |  5 | 16  | 36  |  51 |  99 | 6 | 16.5 |
+| Ramp     |  80 |  0 |  5  | 15  |  22 |  58 | 6 |  9.7 |
+| Utility  | 120 |  5 | 18  | 30  |  41 |  79 | 6 | 13.2 |
 
-Status after B03: All six archetypes now within 1 card/batch of their
-per-batch pace. Midrange still the heaviest remaining lift (25.9/batch
-average). Control and Aggro both on track. Ramp and Utility smooth.
+Status after B04: All six archetypes tracking within ~1/batch of their
+pace target. Midrange remains the heaviest remaining commitment but is
+now roughly on the per-batch average. Control exactly at 50% (100/200)
+with 6 batches remaining — textbook pace. Rares + Epics + Legendaries +
+Mythics fit comfortably into remaining budgets.
 
 ---
 
@@ -377,3 +379,120 @@ Distribution:
 | 298 | ultimate_shield | Ultimate Shield | Module | 5 | 0/0 | midrange |  |
 | 299 | nuclear_charge | Nuclear Charge | Module | 6 | 0/0 | aggro |  |
 | 300 | life_reactor | Life Reactor | Module | 6 | 0/0 | midrange |  |
+
+## Batch 04 — Remaining Commons + First Uncommons
+
+**Cards:** 100 * **File:** `batch_04.json`
+
+Distribution:
+- Rarity: 75 common + 25 uncommon
+- Types: 21 Weapon, 18 Drone, 8 AI Routine, 20 Equipment, 16 Field, 10 Ship Core, 5 Defense, 2 Module
+- Cost: 10x 0 * 9x 1 * 23x 2 * 34x 3 * 19x 4 * 4x 5 * 1x 6
+- Archetype: 25 midrange * 24 aggro * 18 control * 15 combo * 11 utility * 7 ramp
+- First-time seeds: battle_hardened, outrider, emp_pulse, signal_jamming, data_wipe, upgrade_trigger, crew_pooling, mission_complete, hull_drain (9 new keywords introduced)
+- Equipment, Field, and Ship Core types introduced in this batch
+
+### Cards
+
+| # | id | name | type | rarity | cost | A/D | archetype | keywords |
+|---|---|---|---|---|---|---|---|---|
+| 301 | flak_burst | Flak Burst | Weapon | C | 1 | 3/0 | aggro |  |
+| 302 | sabot_round | Sabot Round | Weapon | C | 2 | 6/0 | aggro |  |
+| 303 | spread_laser | Spread Laser | Weapon | C | 2 | 5/0 | aggro |  |
+| 304 | hammer_salvo | Hammer Salvo | Weapon | C | 2 | 6/0 | aggro | hot_deploy |
+| 305 | plasma_drill | Plasma Drill | Weapon | C | 3 | 8/0 | control |  |
+| 306 | trench_cannon | Trench Cannon | Weapon | C | 3 | 9/0 | aggro |  |
+| 307 | burst_mortar | Burst Mortar | Weapon | C | 3 | 8/0 | aggro |  |
+| 308 | drilling_missile | Drilling Missile | Weapon | C | 4 | 12/0 | control |  |
+| 309 | railpulse_cannon | Railpulse Cannon | Weapon | C | 4 | 13/0 | midrange |  |
+| 310 | vector_missile | Vector Missile | Weapon | C | 4 | 12/0 | combo | flanking_fire |
+| 311 | matter_beam | Matter Beam | Weapon | C | 5 | 16/0 | control | radiation_leak |
+| 312 | annihilator_round | Annihilator Round | Weapon | C | 5 | 16/0 | control | critical_strike |
+| 313 | heavy_lance | Heavy Lance | Weapon | C | 6 | 20/0 | midrange |  |
+| 314 | harrier_drone | Harrier Drone | Drone | C | 1 | 2/1 | aggro | priority_fire |
+| 315 | raven_drone | Raven Drone | Drone | C | 1 | 1/2 | utility | deploy_burst, probe |
+| 316 | sentry_drone | Sentry Drone | Drone | C | 2 | 2/4 | midrange | tracking_array |
+| 317 | wasp_drone | Wasp Drone | Drone | C | 2 | 3/2 | aggro | evade |
+| 318 | vanguard_drone | Vanguard Drone | Drone | C | 2 | 4/1 | aggro | battle_hardened |
+| 319 | hawk_drone | Hawk Drone | Drone | C | 2 | 3/3 | midrange |  |
+| 320 | medic_drone | Medic Drone | Drone | C | 3 | 2/6 | midrange | hull_drain |
+| 321 | combat_medic | Combat Medic | Drone | C | 3 | 2/6 | ramp | auto_repair |
+| 322 | lead_drone | Lead Drone | Drone | C | 3 | 5/3 | aggro | outrider |
+| 323 | shepherd_drone | Shepherd Drone | Drone | C | 3 | 3/5 | combo | crew_pooling |
+| 324 | tesla_drone | Tesla Drone | Drone | C | 4 | 5/7 | control | emp_pulse |
+| 325 | siege_lance_drone | Siege Lance Drone | Drone | C | 4 | 7/5 | midrange |  |
+| 326 | reactive_core | Reactive Core | AI Routine | C | 2 | 0/5 | utility | deploy_burst, probe |
+| 327 | command_subroutine | Command Subroutine | AI Routine | C | 3 | 0/8 | midrange | persistent_field |
+| 328 | upgrade_processor | Upgrade Processor | AI Routine | C | 3 | 0/8 | combo | upgrade_trigger |
+| 329 | signal_trap | Signal Trap | AI Routine | C | 3 | 0/8 | control | signal_jamming |
+| 330 | data_scrubber | Data Scrubber | AI Routine | C | 4 | 0/12 | control | data_wipe |
+| 331 | targeting_sight | Targeting Sight | Equipment | C | 1 | 0/0 | combo |  |
+| 332 | barrel_extender | Barrel Extender | Equipment | C | 1 | 0/0 | combo | priority_fire |
+| 333 | recoil_damper | Recoil Damper | Equipment | C | 1 | 0/0 | midrange |  |
+| 334 | shield_module | Shield Module | Equipment | C | 1 | 0/0 | midrange |  |
+| 335 | thruster_pack | Thruster Pack | Equipment | C | 1 | 0/0 | utility | evade |
+| 336 | booster_pack | Booster Pack | Equipment | C | 2 | 0/0 | aggro |  |
+| 337 | plating_kit | Plating Kit | Equipment | C | 2 | 0/0 | midrange |  |
+| 338 | radar_array | Radar Array | Equipment | C | 2 | 0/0 | midrange | tracking_array |
+| 339 | cooling_unit | Cooling Unit | Equipment | C | 2 | 0/0 | ramp |  |
+| 340 | weapon_coupler | Weapon Coupler | Equipment | C | 2 | 0/0 | combo | linked_fire |
+| 341 | drone_interface | Drone Interface | Equipment | C | 2 | 0/0 | aggro |  |
+| 342 | sensor_package | Sensor Package | Equipment | C | 2 | 0/0 | utility | end_cycle, probe |
+| 343 | shield_capacitor | Shield Capacitor | Equipment | C | 3 | 0/0 | midrange |  |
+| 344 | life_support_backup | Life Support Backup | Equipment | C | 3 | 0/0 | midrange |  |
+| 345 | ammo_drum | Ammo Drum | Equipment | C | 3 | 0/0 | aggro |  |
+| 346 | targeting_suite | Targeting Suite | Equipment | C | 3 | 0/0 | combo | critical_strike |
+| 347 | armor_coating | Armor Coating | Equipment | C | 3 | 0/0 | midrange | reinforced_hull |
+| 348 | engine_upgrade | Engine Upgrade | Equipment | C | 3 | 0/0 | aggro | skyward_maneuver |
+| 349 | fleet_synchronizer | Fleet Synchronizer | Equipment | C | 4 | 0/0 | combo | cascading_power |
+| 350 | master_override | Master Override | Equipment | C | 4 | 0/0 | ramp | crew_pooling |
+| 351 | debris_cloud | Debris Cloud | Field | C | 1 | 0/0 | control | persistent_field |
+| 352 | nebula_edge | Nebula Edge | Field | C | 2 | 0/0 | utility | persistent_field, gain_stealth |
+| 353 | ion_storm | Ion Storm | Field | C | 2 | 0/0 | midrange | persistent_field |
+| 354 | gravity_well | Gravity Well | Field | C | 2 | 0/0 | midrange | persistent_field |
+| 355 | patrol_zone | Patrol Zone | Field | C | 2 | 0/0 | utility | end_cycle, probe |
+| 356 | siege_banner | Siege Banner | Field | C | 2 | 0/0 | combo | persistent_field |
+| 357 | defensive_formation | Defensive Formation | Field | C | 2 | 0/0 | midrange | persistent_field |
+| 358 | drone_swarm_field | Drone Swarm | Field | C | 3 | 0/0 | aggro | persistent_field |
+| 359 | combat_theater | Combat Theater | Field | C | 3 | 0/0 | aggro | persistent_field |
+| 360 | scanner_grid | Scanner Grid | Field | C | 3 | 0/0 | utility | end_cycle, deep_scan |
+| 361 | asteroid_belt_field | Asteroid Belt | Field | C | 3 | 0/0 | midrange | persistent_field |
+| 362 | radiation_zone | Radiation Zone | Field | C | 3 | 0/0 | midrange | persistent_field |
+| 363 | null_space | Null Space | Field | C | 4 | 0/0 | control | persistent_field |
+| 364 | solar_flare | Solar Flare | Field | C | 4 | 0/0 | midrange | persistent_field |
+| 365 | capture_zone | Capture Zone | Field | C | 4 | 0/0 | utility | mission_complete |
+| 366 | basic_frame | Basic Frame | Ship Core | C | 0 | 0/0 | aggro |  |
+| 367 | defender_hull | Defender Hull | Ship Core | C | 0 | 0/0 | midrange |  |
+| 368 | scout_chassis | Scout Chassis | Ship Core | C | 0 | 0/0 | utility | end_cycle, probe |
+| 369 | cargo_frame | Cargo Frame | Ship Core | C | 0 | 0/0 | utility |  |
+| 370 | fighter_core | Fighter Core | Ship Core | C | 0 | 0/0 | combo |  |
+| 371 | heavy_core | Heavy Core | Ship Core | C | 0 | 0/0 | midrange |  |
+| 372 | commander_core | Commander Core | Ship Core | C | 0 | 0/0 | midrange |  |
+| 373 | engineer_frame | Engineer Frame | Ship Core | C | 0 | 0/0 | ramp |  |
+| 374 | saboteur_core | Saboteur Core | Ship Core | C | 0 | 0/0 | control |  |
+| 375 | pilot_interface | Pilot Interface | Ship Core | C | 0 | 0/0 | midrange |  |
+| 376 | plasma_volley | Plasma Volley | Weapon | U | 2 | 6/0 | combo | priority_fire, overclock |
+| 377 | heavy_torpedo_uc | Heavy Torpedo | Weapon | U | 3 | 9/0 | midrange | rapid_launch, cold_boot |
+| 378 | barrage_cannon | Barrage Cannon | Weapon | U | 3 | 8/0 | combo | priority_fire, breach_cascade |
+| 379 | ghost_beam | Ghost Beam | Weapon | U | 3 | 8/0 | aggro | phase_drive, critical_strike |
+| 380 | sniper_rifle_uc | Sniper Rifle | Weapon | U | 3 | 8/0 | control | tracking_lock, critical_strike |
+| 381 | chain_lightning | Chain Lightning | Weapon | U | 4 | 12/0 | combo | breach_cascade, chain_catalyst |
+| 382 | gatling_cannon | Gatling Cannon | Weapon | U | 4 | 12/0 | aggro | alpha_strike |
+| 383 | void_torpedo | Void Torpedo | Weapon | U | 5 | 16/0 | aggro | overflow_fire, radiation_leak |
+| 384 | interceptor_elite | Interceptor Elite | Drone | U | 3 | 3/6 | control | interceptor, emergency_reboot |
+| 385 | phantom_drone | Phantom Drone | Drone | U | 3 | 5/3 | utility | cloaked_entry, gain_stealth |
+| 386 | strike_wing | Strike Wing | Drone | U | 3 | 5/4 | aggro | rapid_launch, priority_fire |
+| 387 | master_repair_drone | Master Repair Drone | Drone | U | 4 | 2/10 | ramp | auto_repair, hull_drain |
+| 388 | hunter_killer | Hunter Killer | Drone | U | 4 | 7/5 | aggro | critical_strike, tracking_lock |
+| 389 | bomber_elite | Bomber Elite | Drone | U | 5 | 10/6 | aggro | hot_deploy, critical_breach |
+| 390 | phase_shield | Phase Shield | Defense | U | 2 | 0/7 | control | phase_drive, ablative_plating |
+| 391 | stealth_hull | Stealth Hull | Defense | U | 3 | 0/9 | control | gain_stealth, cloaked_entry |
+| 392 | reactive_armor | Reactive Armor | Defense | U | 3 | 0/8 | control | system_shielding, critical_breach |
+| 393 | fortress_barrier | Fortress Barrier | Defense | U | 4 | 0/12 | control | interceptor, reinforced_hull |
+| 394 | aegis_shield | Aegis Shield | Defense | U | 4 | 0/12 | ramp | ablative_plating, auto_repair |
+| 395 | master_coordinator | Master Coordinator | AI Routine | U | 3 | 0/8 | combo | persistent_field, priority_fire, overclock |
+| 396 | prime_tactics | Prime Tactics | AI Routine | U | 4 | 0/12 | combo | persistent_field, adaptive_learning, chain_catalyst |
+| 397 | emergency_protocol | Emergency Protocol | AI Routine | U | 3 | 0/8 | ramp | emergency_reboot, auto_repair |
+| 398 | railgun_slug | Railgun Slug | Module | U | 3 | 0/0 | control |  |
+| 399 | nova_charge | Nova Charge | Module | U | 4 | 0/0 | aggro | breach_cascade |
+| 400 | stabilized_field | Stabilized Field | Field | U | 3 | 0/0 | control | persistent_field, negate |

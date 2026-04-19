@@ -206,3 +206,79 @@ x 13 niche keywords = 39 cards). At 3 batches done, on pace.
 - critical_breach: 6
 
 All Tier 1/2 keywords on pace for their ~12 and ~8 card set totals.
+
+---
+
+## Batch 04 — Remaining Commons + First Uncommons
+
+**Ran:** 10 validation checks (validator extended to exempt Ship Core
+type from Rule 4 0-cost discipline; Ship Cores are always cost 0 per
+Part 3 and are not played from hand).
+**Result:** 0 errors * 0 warnings.
+
+### Fixes applied before finalization
+
+- **10 Ship Core 0-cost false positives** — resolved by validator update
+  (Ship Core is a no-hand-play card type, inherently exempt from the
+  Rule 4 tradeoff requirement).
+- **2 common cards with 3 keywords** (`patrol_zone`, `scanner_grid`) —
+  trimmed to 2 by dropping `persistent_field` (already implied by the
+  Field card type per Part 3). Effect text unchanged.
+- **16 A+D under-band warnings** — bumped attack or defense into the
+  minimum for each cost band. Cards touched: ghost_beam, chain_lightning,
+  gatling_cannon, void_torpedo, master_repair_drone, hunter_killer,
+  bomber_elite, aegis_shield, burst_mortar, drilling_missile,
+  matter_beam, annihilator_round, heavy_lance, tesla_drone,
+  siege_lance_drone, barrage_cannon.
+- **13 flavor-text 16-19 word trims** into the 8-15 band. Cards touched:
+  sentry_drone, hawk_drone, barrel_extender, life_support_backup,
+  master_override, ion_storm, gravity_well, siege_banner,
+  defender_hull, cargo_frame, saboteur_core, void_torpedo,
+  prime_tactics.
+
+### Validator updates
+
+- Rule 4 0-cost discipline check now skips Ship Core type. Ship Cores
+  are passive modifiers placed at game start (Part 3) and never
+  triggered from hand, so the reactive/conditional/tradeoff/single-use
+  requirement does not apply.
+
+### Niche-keyword seeding this batch
+
+Introduced into the alpha set for the first time (9 new keywords):
+- `battle_hardened` (vanguard_drone) — Tier 2 combat
+- `outrider` (lead_drone) — Tier 3 evasion
+- `emp_pulse` (tesla_drone) — Tier 3 evasion
+- `signal_jamming` (signal_trap) — Tier 4 disruption
+- `data_wipe` (data_scrubber) — Tier 4 disruption
+- `upgrade_trigger` (upgrade_processor) — Tier 3 cost/efficiency
+- `crew_pooling` (shepherd_drone, master_override) — Tier 3 cost/efficiency
+- `mission_complete` (capture_zone) — Tier 3 trigger/timing
+- `hull_drain` (medic_drone, master_repair_drone) — Tier 3 life/resource
+
+Remaining unused (reserved for higher-rarity slots in batches 07-10):
+- `recon_beacon`, `power_surge`, `manual_fire`, `hot_activation`,
+  `tactical_draw`, `tractor_beam_hold`, `hack_corrupt`,
+  `transform_overhaul`, `deferred_deployment`, `system_corruption`,
+  `ai_takeover`, `encryption_block`, `phantom_echo`, `sabotage_charge`.
+
+### Cumulative keyword usage (top 15 after 400/1000 cards)
+
+- persistent_field: 46
+- priority_fire: 18
+- interceptor: 14
+- rapid_launch: 10
+- auto_repair: 14
+- probe: 12
+- critical_strike: 7
+- deploy_burst: 10
+- end_cycle: 12
+- evade: 9
+- reactive: 10
+- ablative_plating: 7
+- critical_breach: 8
+- radiation_leak: 8
+- tracking_lock: 8
+
+Tier 1 keywords (target ~12 cards each across the set) are on or ahead
+of pace. Tier 2-3 keywords well-distributed. Tier 4 niches seeded.

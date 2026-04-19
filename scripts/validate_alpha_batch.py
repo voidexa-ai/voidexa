@@ -153,9 +153,11 @@ def validate(batch_num: str, cards: list, prior_ids: set = None) -> tuple[list, 
                 f"cost {cost}: {actual} cards vs target {target}"
             )
 
-    # Check 6: 0-cost discipline
+    # Check 6: 0-cost discipline. Ship Core cards are always cost 0 per
+    # Part 3 (one per deck, placed at game start, not played from hand) and
+    # are exempt from Rule 4's 0-cost tradeoff requirement.
     for c in cards:
-        if c.get("energy_cost") == 0:
+        if c.get("energy_cost") == 0 and c.get("type") != "Ship Core":
             effect = (c.get("effect_text") or "").lower()
             kws = c.get("keywords") or []
             ok = ("reactive" in kws
