@@ -57,7 +57,7 @@ export default function GalaxyCanvas({ highlightedId, onHoverChange, onWarpChang
       style={{ position: 'absolute', inset: 0 }}
       gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
       dpr={[1, 1.5]}
-      camera={{ position: [0, 3, 28], fov: 60 }}
+      camera={{ position: [0, 3, 28], fov: 60, near: 0.1, far: 20000 }}
     >
       <GalaxyScene
         highlightedId={highlightedId}

@@ -13,7 +13,7 @@ export default function StarMapCanvas() {
       style={{ position: 'absolute', inset: 0 }}
       gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
       dpr={[1, 1.5]}
-      camera={{ position: [0, 0, 8], fov: 60 }}
+      camera={{ position: [0, 0, 8], fov: 60, near: 0.1, far: 20000 }}
     >
       <StarMapScene />
       <Suspense fallback={null}>
