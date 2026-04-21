@@ -118,10 +118,11 @@ const. No duplicate clients exist. No refactor was needed for STEP 3.
 
 ## Commit + deploy
 
-- Commit: _(filled in on commit)_
-- Deploy: _(Vercel auto-deploys on `git push origin main`)_
+- Commit: `6d67a4d`
+- Deploy: `voidexa-q1y2vqfsm-jixxwulff-4032s-projects.vercel.app` (Ready, 1m build)
+  aliased to https://voidexa.com/freeflight (verified HTTP 200)
 - Backup tag: `backup/pre-sprint-14a-20260418` (pushed)
-- Completion tag: `sprint-14a-complete` _(filled in on tag)_
+- Completion tag: `sprint-14a-complete` (pushed)
 
 ## Known side effects
 
