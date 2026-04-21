@@ -1,0 +1,1788 @@
+{
+  "landmarks": [
+    {
+      "id": "lm_inner_01",
+      "name": "Trade Hub Delta-9",
+      "zone": "inner_ring",
+      "description": "A bustling commercial station orbiting a pale green gas giant.",
+      "scannable": true,
+      "lore_text": "Established during the first expansion wave, Delta-9 serves as the primary supply line for Outer Rim expeditions. Its massive docking bays process over ten thousand freight containers a cycle. Rumors persist of a black market operating in the lower maintenance levels.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_02",
+      "name": "The Weeping Asteroid",
+      "zone": "inner_ring",
+      "description": "A massive, porous rock formation leaking a luminous blue fluid.",
+      "scannable": true,
+      "lore_text": "Scientists remain baffled by the cryogenic liquid constantly seeping from the rock's core. Initial mining operations were abandoned after the fluid caused rapid crystallization of extraction gear. It now serves as a scenic, albeit hazardous, navigational waypoint.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_inner_03",
+      "name": "Orbital Foundry Prime",
+      "zone": "inner_ring",
+      "description": "A massive zero-g manufacturing ring surrounding a molten moon.",
+      "scannable": true,
+      "lore_text": "Built to supply the core with structural plating. It operates autonomously using ancient smelting subroutines. Trespassers are usually melted down with the slag.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_04",
+      "name": "The Glass Gardens",
+      "zone": "inner_ring",
+      "description": "A cluster of interconnected biodomes floating in high orbit.",
+      "scannable": true,
+      "lore_text": "Once a resort for Core elites, now an overgrown ruin. The automated life support mutated the flora into hostile, glass-eating vines. Botanists pay handsomely for samples.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_05",
+      "name": "Beacon 88-A",
+      "zone": "inner_ring",
+      "description": "A standard navigation buoy, covered in graffiti and burn marks.",
+      "scannable": true,
+      "lore_text": "Serves as a makeshift message board for haulers. It broadcasts a looping audio track of a forgotten jazz song. Local syndicates use it for dead drops.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_inner_06",
+      "name": "Shattered Moonlet of Tarsis",
+      "zone": "inner_ring",
+      "description": "A small moon broken into three distinct, orbiting fragments.",
+      "scannable": true,
+      "lore_text": "The result of illegal tectonic mining decades ago. The fragments occasionally collide, sending hazardous debris into the shipping lanes. The inner core is exposed and highly radioactive.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_inner_07",
+      "name": "Hangar 4 Depository",
+      "zone": "inner_ring",
+      "description": "A sprawling, unlit warehouse station drifting off its original axis.",
+      "scannable": true,
+      "lore_text": "Used for cold storage of obsolete machinery. Scavengers claim the automated defense grid still activates randomly. The manifest logs were corrupted during the last solar flare.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_08",
+      "name": "The Crimson Dust Cloud",
+      "zone": "inner_ring",
+      "description": "A thin but vibrant red particulate cloud spanning several kilometers.",
+      "scannable": true,
+      "lore_text": "Composed of pulverized iron and unknown organic matter. It slightly degrades hull integrity over time. Haulers avoid it, but smugglers use its sensor-baffling properties.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_inner_09",
+      "name": "Abandoned Comms Relay",
+      "zone": "inner_ring",
+      "description": "A towering spire of antennas, completely dark and silent.",
+      "scannable": true,
+      "lore_text": "Shut down after a massive data breach compromised the sector. The hardware is stripped bare by scavengers. Occasionally, it powers on to broadcast static.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_10",
+      "name": "Goliath Mining Rig",
+      "zone": "inner_ring",
+      "description": "An oversized, skeletal mining ship locked onto a depleted asteroid.",
+      "scannable": true,
+      "lore_text": "The crew abandoned it when the drill shaft fused permanently. It stands as a monument to corporate greed. The internal quarters are supposedly haunted by asphyxiated miners.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_inner_11",
+      "name": "The Pearl Nebula",
+      "zone": "inner_ring",
+      "description": "A small, brightly glowing gas pocket emitting soft white light.",
+      "scannable": true,
+      "lore_text": "A popular tourist flyby due to its calming visual effect. Scanners indicate the light is generated by bioluminescent micro-organisms. Harvesting them is strictly prohibited.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_inner_12",
+      "name": "Customs Checkpoint Beta",
+      "zone": "inner_ring",
+      "description": "A heavily armored ring structure spanning a major hyperspace lane.",
+      "scannable": true,
+      "lore_text": "The final choke point before entering the Core. Bribes are the unspoken currency here. The scanners are top-tier, catching most amateur smugglers.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_13",
+      "name": "Wreck of the Silver Swan",
+      "zone": "inner_ring",
+      "description": "A luxury yacht peppered with kinetic slug holes.",
+      "scannable": true,
+      "lore_text": "Belonged to a Core politician who crossed the wrong syndicate. The wreck was left as a warning. All valuables were stripped long ago.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_inner_14",
+      "name": "The Magnetar Anomaly",
+      "zone": "inner_ring",
+      "description": "A localized magnetic storm that warps light around it.",
+      "scannable": true,
+      "lore_text": "A stable anomaly that pulls errant debris into a tight, fast-moving ring. Ships too close will find their navigation computers fried. It creates beautiful, deadly auroras.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_inner_15",
+      "name": "Hydroponics Array 7",
+      "zone": "inner_ring",
+      "description": "A spinning cylinder covered in solar mirrors, slowly failing.",
+      "scannable": true,
+      "lore_text": "Once produced food for three sectors, now suffering from critical water leaks. The remaining crew is desperate for parts. Famine is imminent if repairs aren't made.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_16",
+      "name": "The Twin Pillars",
+      "zone": "inner_ring",
+      "description": "Two perfectly identical, rectangular asteroids orbiting each other.",
+      "scannable": true,
+      "lore_text": "Geologists claim the identical shapes are a statistical impossibility. No signs of carving or machining have been found. They emit a low-frequency hum.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_inner_17",
+      "name": "Refinery Station Omicorn",
+      "zone": "inner_ring",
+      "description": "A massive complex belching toxic plasma flares into space.",
+      "scannable": true,
+      "lore_text": "Processes raw volatile ores from the Rim. The working conditions are notoriously lethal. It is highly defended by corporate mercenaries.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_18",
+      "name": "The Silent Fleet",
+      "zone": "inner_ring",
+      "description": "A dozen decommissioned frigates tethered together in a parking orbit.",
+      "scannable": true,
+      "lore_text": "Waiting to be broken down for scrap. Squatters and outlaws have turned the interconnected ships into a makeshift town. Security forces refuse to enter the maze-like corridors.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_inner_19",
+      "name": "Solar Array Kilo",
+      "zone": "inner_ring",
+      "description": "Vast fields of energy-gathering panels, many of them shattered.",
+      "scannable": true,
+      "lore_text": "Damaged during a micrometeorite storm and never fully repaired. It still transmits significant power to nearby hubs. Maintenance drones aggressively defend the intact panels.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_inner_20",
+      "name": "The Pioneer Monument",
+      "zone": "inner_ring",
+      "description": "A solid brass statue of a human figure pointing toward the Rim.",
+      "scannable": true,
+      "lore_text": "Erected to honor the first explorers who mapped the sector. It is heavily tarnished and pitted by space dust. Pilgrims occasionally leave offerings of raw fuel at its base.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_outer_01",
+      "name": "Wreck of the ISV Vanguard",
+      "zone": "outer_rim",
+      "description": "The shattered remains of a heavy cruiser, split clean in half.",
+      "scannable": true,
+      "lore_text": "The Vanguard was the flagship of the ill-fated 3rd Frontier Fleet. Records indicate it suffered a catastrophic failure of its slipspace drive, though the sheer kinetic damage suggests otherwise. Scavengers pick at its remains, but the core reactor is still dangerously unstable.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_outer_02",
+      "name": "The Cobalt Nebula",
+      "zone": "outer_rim",
+      "description": "A dense cloud of ionized gas that interferes with long-range comms.",
+      "scannable": true,
+      "lore_text": "Rich in rare isotopic gases, the Cobalt Nebula is a prime target for autonomous fuel scoops. However, the electromagnetic interference makes it a perfect hiding spot for pirate cartels. Navigating deeper than the fringe requires specialized shielding.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_outer_03",
+      "name": "Tarsus Outpost",
+      "zone": "outer_rim",
+      "description": "A rugged refueling depot bolted to a massive, frozen comet.",
+      "scannable": true,
+      "lore_text": "The comet provides a steady supply of water for synthesis. The locals are wary of outsiders but desperate for trade. It's a key staging ground for deep expeditions.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_04",
+      "name": "The Rust Belt",
+      "zone": "outer_rim",
+      "description": "An asteroid field entirely composed of oxidized metallic rocks.",
+      "scannable": true,
+      "lore_text": "The iron-rich asteroids play havoc with targeting sensors. Many ships have crashed here while trying to hide from patrols. Salvage is plentiful but dangerous to extract.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_outer_05",
+      "name": "Wreck of the Horizon Walker",
+      "zone": "outer_rim",
+      "description": "A massive colony ship drifting dead, overgrown with bioluminescent fungi.",
+      "scannable": true,
+      "lore_text": "Lost contact a century ago before reaching its destination. The fungi thrive on the ship's residual radiation. No human remains were ever found inside.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_outer_06",
+      "name": "The Emerald Vortex",
+      "zone": "outer_rim",
+      "description": "A swirling green ion cloud that constantly discharges lightning.",
+      "scannable": true,
+      "lore_text": "The energetic discharges can recharge ship shields or overload them entirely. It is highly unpredictable. Pirate factions use it to trap unwary travelers.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_outer_07",
+      "name": "Smuggler's Notch",
+      "zone": "outer_rim",
+      "description": "A hollowed-out asteroid serving as a hidden docking bay.",
+      "scannable": true,
+      "lore_text": "The entrance is shielded by a fake holographic rock face. Used heavily by the Crimson Syndicate for offloading contraband. Only those with the daily frequency can enter safely.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_08",
+      "name": "The Fractured Spire",
+      "zone": "outer_rim",
+      "description": "An alien ruin resembling a shattered tuning fork.",
+      "scannable": true,
+      "lore_text": "Predates human expansion. It emits a low frequency that causes nausea in unshielded crews. Attempts to excavate its base have met with catastrophic equipment failure.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_outer_09",
+      "name": "Derelict Casino 'The Lucky Star'",
+      "zone": "outer_rim",
+      "description": "A gaudy, neon-lit station floating powerless in the void.",
+      "scannable": true,
+      "lore_text": "Bankrupted when the local hyperspace lane was rerouted. The interior is a zero-g graveyard of slot machines and playing cards. Rumors say the main vault was never cracked.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_10",
+      "name": "The Plasma Geysers",
+      "zone": "outer_rim",
+      "description": "A cluster of volatile gas giants expelling violent jets of raw plasma.",
+      "scannable": true,
+      "lore_text": "A beautiful but deadly navigational hazard. Specialized scoop ships dive near the geysers to collect rare plasma isotopes. The survival rate for this maneuver is grim.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_outer_11",
+      "name": "Wreckage of Flight 771",
+      "zone": "outer_rim",
+      "description": "A civilian transport shredded into thousands of tiny pieces.",
+      "scannable": true,
+      "lore_text": "Destroyed by a still-unidentified weapon signature. The debris field is considered a mass grave and is heavily patrolled. Scavenging here carries a severe penalty.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_outer_12",
+      "name": "The Obsidian Shard",
+      "zone": "outer_rim",
+      "description": "A monolithic black rock that reflects no light whatsoever.",
+      "scannable": true,
+      "lore_text": "Absorbs radar and lidar, making it invisible to standard sensors until visual range. It has caused dozens of fatal collisions. Mining lasers cannot scratch its surface.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_outer_13",
+      "name": "Freeport 9",
+      "zone": "outer_rim",
+      "description": "A chaotic, unregulated trading post built from lashed-together freighters.",
+      "scannable": true,
+      "lore_text": "No laws, no taxes, no security. Everything is for sale here, from military hardware to stolen identities. Disagreements are settled out the airlock.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_14",
+      "name": "The Weeping Nebula",
+      "zone": "outer_rim",
+      "description": "A dense, tear-shaped cloud of heavy water vapor.",
+      "scannable": true,
+      "lore_text": "Condensation instantly freezes on ship hulls, adding dangerous mass. It's a vital source of water for Rim settlements. The cloud interior is pitch black.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_outer_15",
+      "name": "Sentinel Drone Factory",
+      "zone": "outer_rim",
+      "description": "An automated factory complex still churning out obsolete defense drones.",
+      "scannable": true,
+      "lore_text": "Its masters died out a century ago, but the factory continues its quota. The drones immediately attack anything approaching the facility. The logic core is highly sought after.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_16",
+      "name": "The Ghost Ship 'Erebus'",
+      "zone": "outer_rim",
+      "description": "An ancient dreadnought that drifts randomly through the sector.",
+      "scannable": true,
+      "lore_text": "It appears on sensors briefly before jumping blindly to a new coordinate. Boarding parties have never returned. Its automated defenses are fully operational.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_outer_17",
+      "name": "The Prism",
+      "zone": "outer_rim",
+      "description": "A multi-faceted crystalline structure drifting in space.",
+      "scannable": true,
+      "lore_text": "Refracts starlight into blinding, focused beams that can cut through light armor. Navigating around it requires polarized shielding. Its origin is unknown.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_outer_18",
+      "name": "Pirate Cove 'The Anvil'",
+      "zone": "outer_rim",
+      "description": "A heavily armed pirate base built into the caldera of a dead volcano on a rogue planetoid.",
+      "scannable": true,
+      "lore_text": "Home to the bloodthirsty Iron Corsairs. The entrance is guarded by tethered capital ship cannons. Even military patrols give it a wide berth.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_19",
+      "name": "The Graveyard of Giants",
+      "zone": "outer_rim",
+      "description": "The skeletal remains of massive, extinct space-faring leviathans.",
+      "scannable": true,
+      "lore_text": "Bones the size of skyscrapers drift slowly in the void. Rich in exotic calcium isotopes used in advanced armor. The marrow is highly toxic.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_outer_20",
+      "name": "The Sulfur Clouds",
+      "zone": "outer_rim",
+      "description": "Corrosive yellow gas clouds that eat through standard plating.",
+      "scannable": true,
+      "lore_text": "Ships must engage specialized energetic shielding to survive a transit. The gas is valuable for high-yield explosives. Visibility is practically zero inside.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_outer_21",
+      "name": "Abandoned Penal Colony",
+      "zone": "outer_rim",
+      "description": "A maximum-security prison asteroid, its blast doors blown outward.",
+      "scannable": true,
+      "lore_text": "A riot fifty years ago resulted in total catastrophic decompression. The frozen remains of guards and inmates still drift in the corridors. Automated turrets still guard the armory.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_outer_22",
+      "name": "The Singularity Engine",
+      "zone": "outer_rim",
+      "description": "A massive, broken machine wrapped around a contained micro-black hole.",
+      "scannable": true,
+      "lore_text": "A failed experiment in infinite energy generation. The containment field fluctuates dangerously. The gravitational sheer destroys anything that gets too close.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_outer_23",
+      "name": "Wreck of the 'Stardust'",
+      "zone": "outer_rim",
+      "description": "A famous racing ship that crashed during a high-stakes Rim rally.",
+      "scannable": true,
+      "lore_text": "The pilot was a legend, and their custom engine core is still inside. The wreck is perched precariously on the edge of a deep gravity well. Many have died trying to claim the prize.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_outer_24",
+      "name": "The Whispering Asteroid",
+      "zone": "outer_rim",
+      "description": "A rocky body that transmits strange, rhythmic radio interference.",
+      "scannable": true,
+      "lore_text": "The interference causes auditory hallucinations in crew members. No source of the transmission has been found on the surface. Some cults believe it's the voice of a slumbering god.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_outer_25",
+      "name": "Frontier Medical Hub",
+      "zone": "outer_rim",
+      "description": "A clean, white station starkly contrasting its grimy surroundings.",
+      "scannable": true,
+      "lore_text": "Maintained by a neutral humanitarian order. They treat anyone, regardless of faction or bounty. Attacking the hub brings the wrath of every mercenary in the sector.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_contested_01",
+      "name": "Outpost 44 - 'The Meatgrinder'",
+      "zone": "contested_space",
+      "description": "A heavily fortified, battle-scarred listening post.",
+      "scannable": true,
+      "lore_text": "Outpost 44 has changed hands fourteen times in the last decade. Its strategic position overlooking the primary hyper-lane choke point makes it invaluable. The hull is a patchwork of different faction armors welded together hastily under fire.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_contested_02",
+      "name": "Graveyard of the Exiled",
+      "zone": "contested_space",
+      "description": "A dense field of destroyed fighter craft surrounding a central beacon.",
+      "scannable": true,
+      "lore_text": "This sector saw the largest dogfight of the Separatist Wars. The central beacon constantly broadcasts an unencrypted memorial code. Both salvage operations and unauthorized memorials are strictly fired upon by automated defense grids left behind.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_contested_03",
+      "name": "The Burned Sector",
+      "zone": "contested_space",
+      "description": "A vast area of space littered with still-smoldering debris and slag.",
+      "scannable": true,
+      "lore_text": "The site of a localized orbital bombardment. The radiation levels are lethal without heavy shielding. Scavengers brave the heat for military-grade scrap.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_contested_04",
+      "name": "Fortress 'Aegis'",
+      "zone": "contested_space",
+      "description": "A heavily armed military installation currently under siege.",
+      "scannable": true,
+      "lore_text": "The defensive cannons fire constantly at unseen targets in the dark. Communication is jammed across all frequencies. The defenders are presumed to be running low on munitions.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_contested_05",
+      "name": "The Minefield of Sorrows",
+      "zone": "contested_space",
+      "description": "A dense network of cloaked proximity mines spanning a parsec.",
+      "scannable": true,
+      "lore_text": "Laid down during the last territorial war and left active. The safe corridors change daily as the mines drift. It claims dozens of unwary ships every cycle.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_contested_06",
+      "name": "Wreck of the 'Vindicator'",
+      "zone": "contested_space",
+      "description": "A massive super-carrier, gutted and burning in the void.",
+      "scannable": true,
+      "lore_text": "Fell to a coordinated pirate swarm last week. The hull is a warzone as different factions fight over the remaining armory. The reactor is critical and could blow at any moment.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_contested_07",
+      "name": "The Crimson Corridor",
+      "zone": "contested_space",
+      "description": "A blood-red nebula that hides sensor signatures completely.",
+      "scannable": true,
+      "lore_text": "The premier ambush spot in Contested Space. If you fly through here, you assume you will be attacked. The gas itself is highly flammable if ignited by plasma fire.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_contested_08",
+      "name": "Black Market Hub 'The Spoke'",
+      "zone": "contested_space",
+      "description": "A wheel-shaped station where illicit goods flow openly.",
+      "scannable": true,
+      "lore_text": "Run by a consortium of warlords. Security is tight, and violence is swift. The best place to buy illegal weapons or fence stolen cargo.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_contested_09",
+      "name": "The Shattered Gate",
+      "zone": "contested_space",
+      "description": "The ruined arch of an ancient, massive hyperspace relay.",
+      "scannable": true,
+      "lore_text": "Destroyed to prevent an invasion fleet from entering the sector. The debris field is highly energized and unstable. Research teams frequently vanish here.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_contested_10",
+      "name": "Dead Man's Rock",
+      "zone": "contested_space",
+      "description": "A large asteroid covered in frozen, tethered corpses.",
+      "scannable": true,
+      "lore_text": "A brutal warning left by the flaying syndicate. The bodies are rigged with thermal detonators. It serves as a macabre border marker.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_contested_11",
+      "name": "The Ion Storms of Kael",
+      "zone": "contested_space",
+      "description": "Violent, sweeping storms of electrical energy that tear through the sector.",
+      "scannable": true,
+      "lore_text": "The storms strip shields and fry electronics in seconds. Fleets use them as cover to maneuver unseen. Navigation requires blind jumps and luck.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_contested_12",
+      "name": "Mercenary Barracks 'The Pit'",
+      "zone": "contested_space",
+      "description": "A heavily armored, blocky station crawling with gunships.",
+      "scannable": true,
+      "lore_text": "Where warlords go to buy armies. Contracts are signed in blood and credits. The bar fights often escalate into ship-to-ship combat outside.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_contested_13",
+      "name": "Wreck of the Peacekeeper",
+      "zone": "contested_space",
+      "description": "A diplomatic vessel, destroyed despite its white flags.",
+      "scannable": true,
+      "lore_text": "The incident that sparked the current conflict. The wreck is heavily guarded by the faction that lost it. Evidence of who fired first is still supposedly aboard.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_contested_14",
+      "name": "The Kinetic Barrier",
+      "zone": "contested_space",
+      "description": "A dense field of fast-moving, jagged shrapnel.",
+      "scannable": true,
+      "lore_text": "The result of thousands of missiles detonating in a small area. The shrapnel travels at near-light speeds. Only the most heavily armored ships dare cross it.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_contested_15",
+      "name": "Smuggler's Run",
+      "zone": "contested_space",
+      "description": "A narrow, twisting canyon carved through a massive asteroid.",
+      "scannable": true,
+      "lore_text": "The only safe passage through a dense gravity well. It is highly contested and frequently blockaded. The walls are scarred by thousands of laser burns.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_contested_16",
+      "name": "The Warlord's Keep",
+      "zone": "contested_space",
+      "description": "A captured dreadnought converted into a static fortress.",
+      "scannable": true,
+      "lore_text": "Seat of power for the sector's most brutal dictator. Surrounded by a swarm of loyalist fighters. The execution docks are visible from orbit.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_contested_17",
+      "name": "The Toxic Veil",
+      "zone": "contested_space",
+      "description": "A sickly green nebula formed from vented bio-weapons.",
+      "scannable": true,
+      "lore_text": "A lingering scar of chemical warfare. The gas aggressively degrades life-support systems. Mutations are common among those who survive transit.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_contested_18",
+      "name": "Monument to the Fallen",
+      "zone": "contested_space",
+      "description": "A massive slab of titanium inscribed with millions of names.",
+      "scannable": true,
+      "lore_text": "A rare neutral zone where firing is universally condemned. Relatives leave holographic candles that drift endlessly. It is a sobering reminder of the cost of war.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_contested_19",
+      "name": "The Scrapyard of Hubris",
+      "zone": "contested_space",
+      "description": "A vast, tangled mass of wrecked experimental warships.",
+      "scannable": true,
+      "lore_text": "Where bleeding-edge tech went to die in combat. The wreckage is highly unstable and prone to secondary explosions. Covert ops teams frequently clash here over tech recovery.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_contested_20",
+      "name": "Outpost 'Desolation'",
+      "zone": "contested_space",
+      "description": "A lone listening post on the very edge of the contested zone.",
+      "scannable": true,
+      "lore_text": "The crew is isolated, paranoid, and trigger-happy. They report seeing ghost ships on the sensors. Morale is non-existent.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_void_01",
+      "name": "Anomaly X-88",
+      "zone": "deep_void",
+      "description": "A localized distortion in spacetime emitting zero light.",
+      "scannable": true,
+      "lore_text": "Probes sent into X-88 return data that defies current quantum models, showing localized time moving in reverse. Ships passing too close report severe auditory hallucinations and chronal displacement. It is designated a Class-5 avoidance zone.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_void_02",
+      "name": "The Silent Spire",
+      "zone": "deep_void",
+      "description": "An impossibly smooth, obsidian-like obelisk drifting in the dark.",
+      "scannable": true,
+      "lore_text": "Discovered by a deep-space cartographer who subsequently went mad. The Spire absorbs all active scans and reflects no radar. Its origin is completely unknown, predating any known civilization in this galactic sector.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_void_03",
+      "name": "The Event Horizon",
+      "zone": "deep_void",
+      "description": "The terrifyingly close edge of a dormant supermassive black hole.",
+      "scannable": true,
+      "lore_text": "Time dilation is severely pronounced here. Ships seem to hang motionless for centuries. The gravitational forces constantly test structural integrity.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_void_04",
+      "name": "The Monolith of Silence",
+      "zone": "deep_void",
+      "description": "A towering, featureless block of unknown dense matter.",
+      "scannable": true,
+      "lore_text": "It absorbs all sound and electromagnetic radiation within a ten-kilometer radius. Ships lose all power temporarily when passing near it. It induces profound feelings of dread.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_void_05",
+      "name": "Wreck of the 'Eternity'",
+      "zone": "deep_void",
+      "description": "A deep-space exploration vessel, perfectly preserved but completely empty.",
+      "scannable": true,
+      "lore_text": "Found drifting centuries after its launch. There are no signs of a struggle, and all escape pods remain docked. The crew simply vanished.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_void_06",
+      "name": "The Luminous Web",
+      "zone": "deep_void",
+      "description": "A gigantic, delicate structure of glowing energy filaments.",
+      "scannable": true,
+      "lore_text": "Resembles a spider's web spun across the stars. Ships that touch the filaments are drained of power instantly. The architects are entirely unknown.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_void_07",
+      "name": "Station 'Nowhere'",
+      "zone": "deep_void",
+      "description": "A research outpost barely holding together in the extreme cold.",
+      "scannable": true,
+      "lore_text": "Staffed by eccentric scientists studying the void's anomalies. Supply drops are rare and highly lucrative. The crew's sanity is questionable.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_void_08",
+      "name": "The Frozen Fleet",
+      "zone": "deep_void",
+      "description": "An armada of unknown design, completely encased in ice.",
+      "scannable": true,
+      "lore_text": "Trapped in a deep freeze anomaly. The ships emit no thermal signatures. Attempts to thaw the ice have resulted in massive energy backlashes.",
+      "visual_type": "wreck"
+    },
+    {
+      "id": "lm_void_09",
+      "name": "The Whispering Dark",
+      "zone": "deep_void",
+      "description": "A region of space where background radiation sounds exactly like human voices.",
+      "scannable": true,
+      "lore_text": "Navigators are advised to deafen audio sensors while transiting. Prolonged exposure leads to madness and mutiny. Some claim to hear loved ones calling them.",
+      "visual_type": "nebula"
+    },
+    {
+      "id": "lm_void_10",
+      "name": "The Quantum Rift",
+      "zone": "deep_void",
+      "description": "A tear in reality revealing shifting, impossible geometries.",
+      "scannable": true,
+      "lore_text": "Looking directly at the rift causes severe neural feedback. Probes sent inside return data from multiple distinct timelines. It expands slightly every cycle.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_void_11",
+      "name": "The Pale Asteroid",
+      "zone": "deep_void",
+      "description": "A perfectly spherical, stark white asteroid.",
+      "scannable": true,
+      "lore_text": "Composed of a material not found on the periodic table. It repels matter, making landing impossible. It occasionally pulses with a blinding light.",
+      "visual_type": "asteroid"
+    },
+    {
+      "id": "lm_void_12",
+      "name": "The Tomb of the Precursors",
+      "zone": "deep_void",
+      "description": "A massive, ornate sarcophagus drifting alone in the dark.",
+      "scannable": true,
+      "lore_text": "Covered in glowing runes that translate to warnings of a great devourer. Heavily shielded by ancient, unbreakable technology. Scanners detect biological material inside.",
+      "visual_type": "monument"
+    },
+    {
+      "id": "lm_void_13",
+      "name": "The Void Maelstrom",
+      "zone": "deep_void",
+      "description": "A hyper-violent storm of dark energy tearing space apart.",
+      "scannable": true,
+      "lore_text": "The most dangerous phenomenon in known space. It devours light, matter, and energy indiscriminately. It is slowly moving towards the Inner Ring.",
+      "visual_type": "anomaly"
+    },
+    {
+      "id": "lm_void_14",
+      "name": "Derelict Observation Post 'Eye'",
+      "zone": "deep_void",
+      "description": "A long-abandoned stealth platform pointed into intergalactic space.",
+      "scannable": true,
+      "lore_text": "The databanks were intentionally wiped. The physical telescopes are all cracked from the inside. Whatever they saw, they didn't want anyone else to see.",
+      "visual_type": "station"
+    },
+    {
+      "id": "lm_void_15",
+      "name": "The Echo of Creation",
+      "zone": "deep_void",
+      "description": "A point in space emitting the exact background radiation of the Big Bang, localized.",
+      "scannable": true,
+      "lore_text": "A physics-breaking anomaly. It generates immense heat and blinding light in a void of cold nothingness. It is considered holy ground by techno-cults.",
+      "visual_type": "anomaly"
+    }
+  ],
+  "encounters": [
+    {
+      "id": "enc_01",
+      "name": "Distress Signal from Civilian Transport",
+      "zone": "inner_ring",
+      "description": "A low-power SOS is repeating on emergency channels from a drifting transport.",
+      "choices": [
+        {
+          "label": "Investigate and Assist",
+          "outcome": "You repair their life support. Grateful passengers pool their credits.",
+          "reward_ghai": 120
+        },
+        {
+          "label": "Avoid",
+          "outcome": "You ignore the call and alter your course.",
+          "reward_ghai": 0
+        }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_02",
+      "name": "Unregistered Cargo Pod",
+      "zone": "outer_rim",
+      "description": "A jettisoned cargo pod floats among space debris, its lock partially damaged.",
+      "choices": [
+        {
+          "label": "Hack the Lock",
+          "outcome": "Successfully bypassed. Inside is a cache of refined isotopes.",
+          "reward_ghai": 250
+        },
+        {
+          "label": "Avoid",
+          "outcome": "You leave the pod for the next scavenger.",
+          "reward_ghai": 0
+        }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_03",
+      "name": "Pirate Ambush Bait",
+      "zone": "contested_space",
+      "description": "A seemingly abandoned high-tier fighter is drifting with its transponder active.",
+      "choices": [
+        {
+          "label": "Investigate",
+          "outcome": "Ambush! You destroy the attackers and strip their hulls.",
+          "reward_ghai": 400
+        },
+        {
+          "label": "Avoid",
+          "outcome": "You recognize the trap and burn away quickly.",
+          "reward_ghai": 0
+        }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_04",
+      "name": "Rogue Drone Swarm",
+      "zone": "contested_space",
+      "description": "A cloud of malfunctioning mining drones is aggressively breaking down a nearby asteroid.",
+      "choices": [
+        {
+          "label": "Engage and Salvage",
+          "outcome": "You EMP the swarm and extract their intact processor cores.",
+          "reward_ghai": 300
+        },
+        {
+          "label": "Avoid",
+          "outcome": "You plot a course around the aggressive swarm.",
+          "reward_ghai": 0
+        }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_05",
+      "name": "The Whispering Void",
+      "zone": "deep_void",
+      "description": "Your ship's sensors detect nothing, but anomalous radiation is spiking and your comms crackle with strange voices.",
+      "choices": [
+        {
+          "label": "Calibrate Scanners to Frequency",
+          "outcome": "You isolate the signal, downloading rare precursor data before your shields fail.",
+          "reward_ghai": 800
+        },
+        {
+          "label": "Avoid",
+          "outcome": "You initiate an emergency jump out of the sector.",
+          "reward_ghai": 0
+        }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_06",
+      "name": "Stranded Merchant Vessel",
+      "zone": "inner_ring",
+      "description": "A merchant ship's engines are dead, drifting toward an asteroid.",
+      "choices": [
+        { "label": "Tow Ship to Safety", "outcome": "They reward you with a cut of their cargo.", "reward_ghai": 150 },
+        { "label": "Ignore", "outcome": "You watch them brace for impact.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_07",
+      "name": "Corrupted Nav-Buoy",
+      "zone": "inner_ring",
+      "description": "A buoy is broadcasting false distress signals to lure ships into a dust cloud.",
+      "choices": [
+        { "label": "Hack and Reprogram", "outcome": "You extract bounty data left by the trap's creator.", "reward_ghai": 200 },
+        { "label": "Avoid", "outcome": "You fly clear of the hazard.", "reward_ghai": 0 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_08",
+      "name": "Rogue Mining Laser",
+      "zone": "inner_ring",
+      "description": "An automated laser is firing wildly across the trade route.",
+      "choices": [
+        { "label": "Target the Power Core", "outcome": "You destroy the laser and salvage its focusing crystal.", "reward_ghai": 250 },
+        { "label": "Evade", "outcome": "You narrowly dodge a plasma beam.", "reward_ghai": 0 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_09",
+      "name": "Abandoned Lifepod",
+      "zone": "outer_rim",
+      "description": "A lifepod with a faint life sign is tumbling in the void.",
+      "choices": [
+        { "label": "Dock and Rescue", "outcome": "You save a wealthy executive who wires you a reward.", "reward_ghai": 400 },
+        { "label": "Avoid", "outcome": "You leave them to their fate.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_10",
+      "name": "Syndicate Toll Booth",
+      "zone": "outer_rim",
+      "description": "Two heavy fighters demand a toll to pass the hyper-lane.",
+      "choices": [
+        { "label": "Open Fire", "outcome": "You destroy the extortionists and loot their hold.", "reward_ghai": 350 },
+        { "label": "Pay Toll", "outcome": "You lose credits but pass safely.", "reward_ghai": -100 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_11",
+      "name": "Unstable Isotope Cache",
+      "zone": "outer_rim",
+      "description": "A cluster of glowing containers is leaking radiation.",
+      "choices": [
+        { "label": "Carefully Extract", "outcome": "You secure the valuable isotopes before containment fails.", "reward_ghai": 500 },
+        { "label": "Avoid", "outcome": "You keep a safe distance from the radiation.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_12",
+      "name": "Fleeing Smuggler",
+      "zone": "outer_rim",
+      "description": "A damaged smuggler asks you to take their cargo before security arrives.",
+      "choices": [
+        { "label": "Accept Cargo", "outcome": "You fence the goods later for a profit.", "reward_ghai": 300 },
+        { "label": "Report to Security", "outcome": "Security pays you a small bounty.", "reward_ghai": 100 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_13",
+      "name": "Asteroid Hermit",
+      "zone": "outer_rim",
+      "description": "A crazy prospector offers to sell a 'treasure map' for scrap.",
+      "choices": [
+        { "label": "Buy Map", "outcome": "It leads to a hidden cache of GHAI.", "reward_ghai": 250 },
+        { "label": "Ignore", "outcome": "You fly away as he rants.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_14",
+      "name": "Derelict Science Vessel",
+      "zone": "contested_space",
+      "description": "A ship full of dead scientists and intact research data.",
+      "choices": [
+        { "label": "Download Data", "outcome": "You sell the data to a corporation.", "reward_ghai": 600 },
+        { "label": "Avoid", "outcome": "You decide not to risk whatever killed them.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_15",
+      "name": "Warlord's Patrol",
+      "zone": "contested_space",
+      "description": "A heavily armed patrol demands to inspect your cargo.",
+      "choices": [
+        { "label": "Submit to Search", "outcome": "They take a bribe and let you go.", "reward_ghai": -50 },
+        { "label": "Run Blockade", "outcome": "You outmaneuver them, scraping their hulls.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_16",
+      "name": "Crossfire Zone",
+      "zone": "contested_space",
+      "description": "Two factions are engaged in a massive dogfight ahead.",
+      "choices": [
+        { "label": "Scavenge the Edges", "outcome": "You pick up dropped cargo amidst the chaos.", "reward_ghai": 300 },
+        { "label": "Fly Through", "outcome": "You take armor damage but survive.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_17",
+      "name": "Trapped Mercenary",
+      "zone": "contested_space",
+      "description": "A merc's fighter is caught in a tractor beam snare.",
+      "choices": [
+        { "label": "Destroy Snare", "outcome": "The merc transfers credits in thanks.", "reward_ghai": 400 },
+        { "label": "Avoid", "outcome": "You leave them to be captured.", "reward_ghai": 0 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_18",
+      "name": "Hostile Boarding Party",
+      "zone": "contested_space",
+      "description": "Pirates launch boarding pods at your hull.",
+      "choices": [
+        { "label": "Evasive Maneuvers", "outcome": "You shake them off and destroy the pods.", "reward_ghai": 200 },
+        { "label": "Vent Atmosphere", "outcome": "You kill the boarders and loot their gear.", "reward_ghai": 450 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_19",
+      "name": "Ghost Signal",
+      "zone": "deep_void",
+      "description": "A distress signal is broadcasting from a ship that exploded decades ago.",
+      "choices": [
+        { "label": "Investigate Anomaly", "outcome": "You find ancient, valuable tech floating in the coordinates.", "reward_ghai": 700 },
+        { "label": "Ignore", "outcome": "You ignore the chilling signal.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_20",
+      "name": "The Swarm",
+      "zone": "deep_void",
+      "description": "Thousands of tiny, biological entities attach to your hull, draining power.",
+      "choices": [
+        { "label": "Electrify Hull", "outcome": "You fry the entities and scrape off their rare carapace.", "reward_ghai": 500 },
+        { "label": "Burn Engines", "outcome": "You outrun the swarm but burn heavy fuel.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_21",
+      "name": "Spatial Distortion",
+      "zone": "deep_void",
+      "description": "Space ahead is warping, threatening to crush your ship.",
+      "choices": [
+        { "label": "Modulate Shields", "outcome": "You ride the distortion, finding a hidden resource cache.", "reward_ghai": 800 },
+        { "label": "Emergency Jump", "outcome": "You jump away safely.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_22",
+      "name": "Silent Stalker",
+      "zone": "deep_void",
+      "description": "A massive, unidentifiable silhouette is trailing your ship.",
+      "choices": [
+        { "label": "Drop Mines", "outcome": "The mines detonate, shattering the stalker and dropping loot.", "reward_ghai": 600 },
+        { "label": "Run Silent", "outcome": "You cut power and hide until it passes.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_23",
+      "name": "Drifting Munitions Depot",
+      "zone": "inner_ring",
+      "description": "An old military supply pod has broken orbit.",
+      "choices": [
+        { "label": "Salvage Weapons", "outcome": "You extract valuable missiles before the military arrives.", "reward_ghai": 200 },
+        { "label": "Avoid", "outcome": "You steer clear of the explosive hazard.", "reward_ghai": 0 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_24",
+      "name": "Corrupt Security Patrol",
+      "zone": "inner_ring",
+      "description": "A security cruiser demands a 'random inspection fee'.",
+      "choices": [
+        { "label": "Pay Bribe", "outcome": "You lose credits but avoid trouble.", "reward_ghai": -50 },
+        { "label": "Threaten Exposure", "outcome": "They back down, dropping some illicit cargo in haste.", "reward_ghai": 150 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_25",
+      "name": "Malfunctioning Advertising Drone",
+      "zone": "inner_ring",
+      "description": "A giant holographic billboard drone is stuck in a collision course.",
+      "choices": [
+        { "label": "Shoot it Down", "outcome": "You destroy it, salvaging high-end optics.", "reward_ghai": 100 },
+        { "label": "Avoid", "outcome": "You change course to let it pass.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_26",
+      "name": "Lost Tourist Ship",
+      "zone": "inner_ring",
+      "description": "A luxury yacht has drifted out of the safe zones.",
+      "choices": [
+        { "label": "Guide them Back", "outcome": "The wealthy tourists tip you generously.", "reward_ghai": 250 },
+        { "label": "Ignore", "outcome": "You let them figure it out.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_27",
+      "name": "Illegal Racing Circuit",
+      "zone": "outer_rim",
+      "description": "Street racers have cordoned off an asteroid belt for a race.",
+      "choices": [
+        { "label": "Place a Bet", "outcome": "Your chosen racer wins, doubling your money.", "reward_ghai": 300 },
+        { "label": "Avoid", "outcome": "You bypass the reckless racers.", "reward_ghai": 0 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_28",
+      "name": "Cryo-Pod Graveyard",
+      "zone": "outer_rim",
+      "description": "Hundreds of frozen sleep pods are floating together.",
+      "choices": [
+        { "label": "Scan for VIPs", "outcome": "You find a high-bounty target frozen inside.", "reward_ghai": 450 },
+        { "label": "Avoid", "outcome": "You leave the dead to rest.", "reward_ghai": 0 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_29",
+      "name": "Automated Toll Enforcer",
+      "zone": "outer_rim",
+      "description": "An old corporate satellite demands payment for entering the sector.",
+      "choices": [
+        { "label": "Hack the Satellite", "outcome": "You drain its accumulated credit reserves.", "reward_ghai": 350 },
+        { "label": "Pay", "outcome": "You lose credits to the machine.", "reward_ghai": -50 }
+      ],
+      "danger_level": 2
+    },
+    {
+      "id": "enc_30",
+      "name": "Biological Infestation",
+      "zone": "outer_rim",
+      "description": "A derelict freighter is covered in pulsing organic matter.",
+      "choices": [
+        { "label": "Purge with Fire", "outcome": "You burn the infestation and loot the safe.", "reward_ghai": 400 },
+        { "label": "Avoid", "outcome": "You avoid the spores.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_31",
+      "name": "Mutinied Warship",
+      "zone": "contested_space",
+      "description": "A cruiser broadcasts that the crew has taken over and will fire on anyone.",
+      "choices": [
+        { "label": "Engage Systems", "outcome": "You cripple their weapons and steal their munitions.", "reward_ghai": 600 },
+        { "label": "Avoid", "outcome": "You stay out of their range.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_32",
+      "name": "Shattered Convoy",
+      "zone": "contested_space",
+      "description": "Fresh wreckage of a supply convoy floats in a quiet zone.",
+      "choices": [
+        { "label": "Loot Quickly", "outcome": "You grab supplies before the attackers return.", "reward_ghai": 350 },
+        { "label": "Avoid", "outcome": "You assume it's a trap and leave.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_33",
+      "name": "The False Beacon",
+      "zone": "contested_space",
+      "description": "A powerful beacon is pulling your navigation system off course.",
+      "choices": [
+        { "label": "Destroy Beacon", "outcome": "You shatter the lure, finding a pirate cache nearby.", "reward_ghai": 500 },
+        { "label": "Recalibrate Nav", "outcome": "You correct your course manually.", "reward_ghai": 0 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_34",
+      "name": "Drifting Minefield",
+      "zone": "contested_space",
+      "description": "A cluster of explosive mines is drifting into the hyper-lane.",
+      "choices": [
+        { "label": "Shoot to Clear", "outcome": "You clear a path and find a disabled scout ship inside.", "reward_ghai": 400 },
+        { "label": "Avoid", "outcome": "You carefully go around.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_35",
+      "name": "The Black Comet",
+      "zone": "deep_void",
+      "description": "A comet made of dark matter passes, draining your shields.",
+      "choices": [
+        { "label": "Harvest Wake", "outcome": "You collect rare dark particles before shields fail.", "reward_ghai": 750 },
+        { "label": "Avoid", "outcome": "You boost away from its path.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_36",
+      "name": "Precursor Drone",
+      "zone": "deep_void",
+      "description": "A glowing, geometric shape begins scanning your hull aggressively.",
+      "choices": [
+        { "label": "Transmit Data", "outcome": "The drone accepts the data trade and drops a relic.", "reward_ghai": 900 },
+        { "label": "Flee", "outcome": "You escape before it turns hostile.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_37",
+      "name": "The Cold Sleep",
+      "zone": "deep_void",
+      "description": "Your life support starts failing due to ambient void cold.",
+      "choices": [
+        { "label": "Overcharge Reactor", "outcome": "You survive the freeze and find crystallized fuel.", "reward_ghai": 600 },
+        { "label": "Jump Away", "outcome": "You perform an emergency jump.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_38",
+      "name": "Rogue AI Core",
+      "zone": "outer_rim",
+      "description": "A floating server rack begs for rescue via text broadcast.",
+      "choices": [
+        { "label": "Extract Core", "outcome": "You sell the valuable AI to a data broker.", "reward_ghai": 500 },
+        { "label": "Avoid", "outcome": "You ignore the machine's pleas.", "reward_ghai": 0 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_39",
+      "name": "Drifting Casino Vault",
+      "zone": "outer_rim",
+      "description": "An intact vault from a destroyed casino ship floats by.",
+      "choices": [
+        { "label": "Crack Vault", "outcome": "You break the seal and loot the chips.", "reward_ghai": 800 },
+        { "label": "Avoid", "outcome": "You leave it for someone with better tools.", "reward_ghai": 0 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_40",
+      "name": "Fighter Duel",
+      "zone": "contested_space",
+      "description": "Two aces are fighting to the death ahead.",
+      "choices": [
+        { "label": "Destroy the Victor", "outcome": "You ambush the weakened winner for their gear.", "reward_ghai": 550 },
+        { "label": "Avoid", "outcome": "You watch them destroy each other.", "reward_ghai": 0 }
+      ],
+      "danger_level": 4
+    },
+    {
+      "id": "enc_41",
+      "name": "Orbital Debris Storm",
+      "zone": "inner_ring",
+      "description": "A cloud of high-speed trash threatens to sandblast your hull.",
+      "choices": [
+        { "label": "Deploy Deflectors", "outcome": "You survive and collect scrap metal.", "reward_ghai": 150 },
+        { "label": "Avoid", "outcome": "You navigate around the storm.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_42",
+      "name": "Stranded Diplomat",
+      "zone": "inner_ring",
+      "description": "A VIP shuttle has engine failure in a safe zone.",
+      "choices": [
+        { "label": "Assist Shuttle", "outcome": "The diplomat pays you generously for discretion.", "reward_ghai": 300 },
+        { "label": "Avoid", "outcome": "You ignore them.", "reward_ghai": 0 }
+      ],
+      "danger_level": 1
+    },
+    {
+      "id": "enc_43",
+      "name": "Plasma Leak",
+      "zone": "outer_rim",
+      "description": "A ruptured pipeline is spewing valuable plasma into space.",
+      "choices": [
+        { "label": "Scoop Plasma", "outcome": "You collect the volatile fuel before it ignites.", "reward_ghai": 400 },
+        { "label": "Avoid", "outcome": "You keep away from the fire hazard.", "reward_ghai": 0 }
+      ],
+      "danger_level": 3
+    },
+    {
+      "id": "enc_44",
+      "name": "Warlord's Tribute",
+      "zone": "contested_space",
+      "description": "A massive dreadnought demands tribute from all passing ships.",
+      "choices": [
+        { "label": "Hack their Sensors", "outcome": "You spoof your signature and steal from their cargo.", "reward_ghai": 600 },
+        { "label": "Pay Tribute", "outcome": "You lose GHAI to survive.", "reward_ghai": -200 }
+      ],
+      "danger_level": 5
+    },
+    {
+      "id": "enc_45",
+      "name": "Echo of the Big Bang",
+      "zone": "deep_void",
+      "description": "A micro-anomaly pulses with the light of creation.",
+      "choices": [
+        { "label": "Record Data", "outcome": "You capture priceless scientific data.", "reward_ghai": 1000 },
+        { "label": "Flee", "outcome": "The radiation is too intense; you run.", "reward_ghai": 0 }
+      ],
+      "danger_level": 5
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc_01",
+      "name": "Captain Jax 'Rust' Vane",
+      "role": "salvager",
+      "zone": "outer_rim",
+      "personality": "Gruff, pragmatic, and highly suspicious of clean ships.",
+      "greeting": "Unless you're here to trade scrap or pull my fat out of the fire, keep your distance.",
+      "hostile": false,
+      "dialogue_lines": [
+        "There's good money in dead ships, if you don't mind the smell.",
+        "Core-worlders think they know space. They don't know the Rim.",
+        "Got a plasma torch and an eye for intact reactor coils. What do you need?"
+      ]
+    },
+    {
+      "id": "npc_02",
+      "name": "Vex",
+      "role": "pirate",
+      "zone": "contested_space",
+      "personality": "Arrogant, thrill-seeking, and dangerously unpredictable.",
+      "greeting": "Well, well. Looks like a piñata just wandered into my strike zone.",
+      "hostile": true,
+      "dialogue_lines": [
+        "Cut your engines and dump the cargo, and I might just shoot out your comms instead of your cockpit.",
+        "I love the Contested Space. No laws, just velocity and firepower.",
+        "You think those shields are gonna save you? Cute."
+      ]
+    },
+    {
+      "id": "npc_03",
+      "name": "Talin Rael",
+      "role": "merchant",
+      "zone": "inner_ring",
+      "personality": "Smooth-talking, polite, and always looking for the optimal profit margin.",
+      "greeting": "Greetings, traveler! May your engines run cool and your wallet run thick. Let's do business.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I have goods from the Core to the Rim. Best prices this side of the sector, I guarantee.",
+        "Information is a commodity too. Buy enough from me, and I might throw some in for free.",
+        "Avoid the Cobalt Nebula today, friend. I hear the cartels are setting up toll blocks."
+      ]
+    },
+    {
+      "id": "npc_04",
+      "name": "Kaelen 'Ghost' Thorne",
+      "role": "bounty_hunter",
+      "zone": "contested_space",
+      "personality": "Cold, professional, speaks only when necessary.",
+      "greeting": "You aren't my mark. Move along.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I track, I kill, I collect. The rest is noise.",
+        "Seen a Crimson Syndicate fighter painted black? No? Then we have nothing to discuss.",
+        "The Void changes people. It usually breaks them."
+      ]
+    },
+    {
+      "id": "npc_05",
+      "name": "Dr. Aris Thorne",
+      "role": "scout",
+      "zone": "deep_void",
+      "personality": "Obsessive, slightly paranoid, fascinated by the unknown.",
+      "greeting": "Do you hear it? The background radiation... it's forming a pattern!",
+      "hostile": false,
+      "dialogue_lines": [
+        "The maps are wrong. The maps are all wrong. There's something else out here.",
+        "My sensor arrays are picking up tachyon bursts from Anomaly X-88.",
+        "Don't turn off your lights. Never turn off your lights in the Void."
+      ]
+    },
+    {
+      "id": "npc_06",
+      "name": "Silas 'Rivet' Vance",
+      "role": "merchant",
+      "zone": "inner_ring",
+      "personality": "Nervous, fast-talking, always looking over his shoulder.",
+      "greeting": "Quickly now, buy what you need. They are always watching.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I have parts you won't find on any corporate registry.",
+        "Don't ask where this came from. Just look at the price.",
+        "I need to jump in five minutes, make your choice."
+      ]
+    },
+    {
+      "id": "npc_07",
+      "name": "Kira 'The Comet' Vance",
+      "role": "scout",
+      "zone": "outer_rim",
+      "personality": "Cocky, fearless, loves high speeds.",
+      "greeting": "Try to keep up, slowpoke! Space is moving!",
+      "hostile": false,
+      "dialogue_lines": [
+        "I mapped the Cobalt Nebula blindfolded.",
+        "Your engines sound like an asthmatic grox. Need an upgrade?",
+        "I've seen things in the Deep Void that would fry your nav-computer."
+      ]
+    },
+    {
+      "id": "npc_08",
+      "name": "Warlord Ghor",
+      "role": "pirate",
+      "zone": "contested_space",
+      "personality": "Brutal, uncompromising, demands absolute respect.",
+      "greeting": "You fly in my space. You pay my tax, or you die.",
+      "hostile": true,
+      "dialogue_lines": [
+        "I built my throne from the hulls of better pilots than you.",
+        "Begging is pointless. Your cargo belongs to me.",
+        "Fire the broadsides! Leave nothing but dust!"
+      ]
+    },
+    {
+      "id": "npc_09",
+      "name": "Dr. Elena Rostova",
+      "role": "salvager",
+      "zone": "deep_void",
+      "personality": "Clinical, detached, values data over human life.",
+      "greeting": "Do not disturb my analysis of this wreckage.",
+      "hostile": false,
+      "dialogue_lines": [
+        "The scorch marks indicate a Class-4 plasma weapon. Fascinating.",
+        "If you die out here, may I harvest your ship's black box?",
+        "The Void is not empty. It is merely patient."
+      ]
+    },
+    {
+      "id": "npc_10",
+      "name": "Cutter",
+      "role": "bounty_hunter",
+      "zone": "contested_space",
+      "personality": "A cyborg of few words, heavily armed.",
+      "greeting": "Target acquired. Wait. You are not the target.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I only kill for credits.",
+        "Have you seen a red freighter with a busted thruster?",
+        "Move."
+      ]
+    },
+    {
+      "id": "npc_11",
+      "name": "Old Man Harris",
+      "role": "hauler",
+      "zone": "inner_ring",
+      "personality": "Nostalgic, friendly, always has a story.",
+      "greeting": "Good to see a friendly face on the lanes, kid.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I remember when the Inner Ring was just a frontier outpost.",
+        "Need some rations? I've got plenty to spare.",
+        "Fly safe. The stars are beautiful, but they don't care about you."
+      ]
+    },
+    {
+      "id": "npc_12",
+      "name": "Zane the Viper",
+      "role": "pirate",
+      "zone": "outer_rim",
+      "personality": "Sadistic, theatrical, loves to play with his prey.",
+      "greeting": "Welcome to my parlor, little fly.",
+      "hostile": true,
+      "dialogue_lines": [
+        "I'm going to carve my name into your hull.",
+        "Let's see how long your shields last against my swarm missiles.",
+        "Scream for me. The comms are open."
+      ]
+    },
+    {
+      "id": "npc_13",
+      "name": "Lira Sentinel",
+      "role": "scout",
+      "zone": "contested_space",
+      "personality": "Stoic, duty-bound, heavily scarred.",
+      "greeting": "This sector is restricted. State your business.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I enforce the law where the Core cannot reach.",
+        "Keep your weapons powered down, and we won't have a problem.",
+        "I lost my squad here last year. I don't lose ships anymore."
+      ]
+    },
+    {
+      "id": "npc_14",
+      "name": "Grog the Scrap King",
+      "role": "salvager",
+      "zone": "outer_rim",
+      "personality": "Jovial, greedy, loves a good bargain.",
+      "greeting": "Bring me your broken, your busted, your blown-up ships!",
+      "hostile": false,
+      "dialogue_lines": [
+        "One man's trash is Grog's treasure!",
+        "I can fix that dent for a hundred credits. Or buy the whole ship for ten.",
+        "The Rim is full of junk, and I am its king."
+      ]
+    },
+    {
+      "id": "npc_15",
+      "name": "The Architect",
+      "role": "merchant",
+      "zone": "deep_void",
+      "personality": "Cryptic, serene, seemingly ancient.",
+      "greeting": "You have traveled far to seek my wares.",
+      "hostile": false,
+      "dialogue_lines": [
+        "I sell things that the Core has forgotten how to build.",
+        "Credits are meaningless. Trade me your memories, your data.",
+        "The Void speaks to those who listen."
+      ]
+    },
+    {
+      "id": "npc_16",
+      "name": "Captain 'Blackout' Reese",
+      "role": "hauler",
+      "zone": "outer_rim",
+      "personality": "Exhausted, cynical, runs on caffeine and stims.",
+      "greeting": "Make it quick, I have a deadline and a headache.",
+      "hostile": false,
+      "dialogue_lines": [
+        "Hauling toxic waste pays well, but it ruins the upholstery.",
+        "If you see pirates, tell them I'm already broke.",
+        "Just another million miles to go."
+      ]
+    },
+    {
+      "id": "npc_17",
+      "name": "Sister Miriam",
+      "role": "merchant",
+      "zone": "inner_ring",
+      "personality": "Pious, gentle, runs a charity supply ship.",
+      "greeting": "Blessings upon you, traveler. Do you need medical aid?",
+      "hostile": false,
+      "dialogue_lines": [
+        "We offer healing to all, regardless of their past.",
+        "The stars are a harsh mistress, but kindness costs nothing.",
+        "Take these supplies. Pay it forward."
+      ]
+    },
+    {
+      "id": "npc_18",
+      "name": "Jax 'The Ghost'",
+      "role": "scout",
+      "zone": "deep_void",
+      "personality": "Paranoid, whispers constantly.",
+      "greeting": "Did you see it? Did it follow you?",
+      "hostile": false,
+      "dialogue_lines": [
+        "They are hiding in the dark matter.",
+        "My sensors are bleeding. The numbers are all wrong.",
+        "Don't trust your eyes. Trust the math."
+      ]
+    },
+    {
+      "id": "npc_19",
+      "name": "Baron Von Stratt",
+      "role": "bounty_hunter",
+      "zone": "inner_ring",
+      "personality": "Aristocratic, arrogant, hunts for sport.",
+      "greeting": "Ah, a fellow hunter. Or are you prey?",
+      "hostile": false,
+      "dialogue_lines": [
+        "I use only the finest Core-world weaponry.",
+        "The thrill of the chase is unmatched.",
+        "Your ship is terribly rustic. How charming."
+      ]
+    },
+    {
+      "id": "npc_20",
+      "name": "Scrap-Iron Sally",
+      "role": "salvager",
+      "zone": "contested_space",
+      "personality": "Tough, loud, swears constantly.",
+      "greeting": "Get off my claim before I weld your airlock shut!",
+      "hostile": false,
+      "dialogue_lines": [
+        "I found this wreck fair and square!",
+        "You want these parts? You pay my price.",
+        "Contested Space is for the strong. Weaklings get scrapped."
+      ]
+    }
+  ],
+  "quest_chains": [
+    {
+      "id": "chain_01",
+      "name": "The Syndicate's Shadow",
+      "zone": "outer_rim",
+      "description": "A local salvager has found a data drive containing Crimson Syndicate deployment codes. You must decrypt it, survive the assassins sent to silence you, and deliver it to Sector Security.",
+      "missions": [
+        {
+          "step": 1,
+          "objective": "Purchase or take the encrypted drive from Captain Vane.",
+          "reward_ghai": 100
+        },
+        {
+          "step": 2,
+          "objective": "Take the drive to the comms relay in the Cobalt Nebula for decryption.",
+          "reward_ghai": 250
+        },
+        {
+          "step": 3,
+          "objective": "Defend the relay from 3 waves of Syndicate interceptors.",
+          "reward_ghai": 400
+        },
+        {
+          "step": 4,
+          "objective": "Deliver the decrypted data to the Inner Ring Security Hub.",
+          "reward_ghai": 500
+        }
+      ],
+      "final_reward": "Unique Ship Module: Syndicate Stealth Plating"
+    },
+    {
+      "id": "chain_02",
+      "name": "Echoes of the Void",
+      "zone": "deep_void",
+      "description": "Dr. Aris Thorne needs escorts to place sensor buoys around a Class-5 anomaly. The deeper you go, the more the fabric of space seems to fight back.",
+      "missions": [
+        {
+          "step": 1,
+          "objective": "Rendezvous with Dr. Thorne at the edge of the Deep Void.",
+          "reward_ghai": 200
+        },
+        {
+          "step": 2,
+          "objective": "Deploy Buoy Alpha while surviving environmental hazard spikes.",
+          "reward_ghai": 300
+        },
+        {
+          "step": 3,
+          "objective": "Deploy Buoy Beta and destroy the unknown crystalline entities attacking the ship.",
+          "reward_ghai": 500
+        },
+        {
+          "step": 4,
+          "objective": "Extract data from The Silent Spire before chronal distortion destroys your hull.",
+          "reward_ghai": 800
+        }
+      ],
+      "final_reward": "Unique Weapon: Tachyon Lance"
+    },
+    {
+      "id": "chain_03",
+      "name": "Blockade Runner",
+      "zone": "contested_space",
+      "description": "Medical supplies are desperately needed at Outpost 44. You must navigate a minefield, break a pirate blockade, and dock under heavy fire.",
+      "missions": [
+        {
+          "step": 1,
+          "objective": "Load the volatile medical cargo at Trade Hub Delta-9.",
+          "reward_ghai": 150
+        },
+        {
+          "step": 2,
+          "objective": "Navigate the kinetic minefield outside Contested Sector 4.",
+          "reward_ghai": 300
+        },
+        {
+          "step": 3,
+          "objective": "Destroy the pirate jamming frigate maintaining the blockade.",
+          "reward_ghai": 600
+        },
+        {
+          "step": 4,
+          "objective": "Dock at Outpost 44 within the time limit before cargo spoils.",
+          "reward_ghai": 450
+        }
+      ],
+      "final_reward": "Unique Card: Emergency Override"
+    },
+    {
+      "id": "chain_04",
+      "name": "The Missing Convoy",
+      "zone": "inner_ring",
+      "description": "A supply convoy vanished near the Pearl Nebula. You must retrace their steps, find the wreckage, and recover the black box.",
+      "missions": [
+        { "step": 1, "objective": "Scan the last known coordinates of Convoy Delta.", "reward_ghai": 100 },
+        { "step": 2, "objective": "Follow the ion trail into the Pearl Nebula.", "reward_ghai": 150 },
+        { "step": 3, "objective": "Defend against the automated drones guarding the wreckage.", "reward_ghai": 300 },
+        { "step": 4, "objective": "Extract the black box and return to Core Command.", "reward_ghai": 400 }
+      ],
+      "final_reward": "Unique Ship Module: Nebula Scanner"
+    },
+    {
+      "id": "chain_05",
+      "name": "Warlord's Demise",
+      "zone": "contested_space",
+      "description": "Warlord Ghor has put a bounty on your head. Take the fight to him, cripple his fleet, and assault his fortress.",
+      "missions": [
+        { "step": 1, "objective": "Survive the ambush by Ghor's elite hunters.", "reward_ghai": 200 },
+        { "step": 2, "objective": "Destroy Ghor's fuel depot in the Burned Sector.", "reward_ghai": 350 },
+        { "step": 3, "objective": "Disable the defense grid around The Warlord's Keep.", "reward_ghai": 500 },
+        { "step": 4, "objective": "Defeat Warlord Ghor in ship-to-ship combat.", "reward_ghai": 800 }
+      ],
+      "final_reward": "Unique Weapon: Warlord's Fury"
+    },
+    {
+      "id": "chain_06",
+      "name": "Voices in the Dark",
+      "zone": "deep_void",
+      "description": "Dr. Rostova has decoded a signal from the Monolith of Silence. Help her construct a dampener, approach the monolith, and retrieve the precursor artifact.",
+      "missions": [
+        { "step": 1, "objective": "Gather 5 Rare Isotopes from the Void Maelstrom.", "reward_ghai": 300 },
+        { "step": 2, "objective": "Deliver the isotopes to Dr. Rostova at Station Nowhere.", "reward_ghai": 200 },
+        { "step": 3, "objective": "Approach the Monolith while keeping the dampener active.", "reward_ghai": 500 },
+        { "step": 4, "objective": "Extract the artifact and flee before the void creatures awaken.", "reward_ghai": 700 }
+      ],
+      "final_reward": "Unique Card: Void Whisper"
+    },
+    {
+      "id": "chain_07",
+      "name": "The Smuggler's Run",
+      "zone": "outer_rim",
+      "description": "A syndicate boss needs a package delivered fast and quiet. Navigate through hazards, avoid patrols, and make the drop.",
+      "missions": [
+        { "step": 1, "objective": "Pick up the illicit cargo at Smuggler's Notch.", "reward_ghai": 150 },
+        { "step": 2, "objective": "Navigate the Rust Belt without being scanned.", "reward_ghai": 250 },
+        { "step": 3, "objective": "Outrun the sector patrol interceptors.", "reward_ghai": 400 },
+        { "step": 4, "objective": "Deliver the cargo to Freeport 9.", "reward_ghai": 500 }
+      ],
+      "final_reward": "Unique Ship Module: Smuggler's Hold"
+    },
+    {
+      "id": "chain_08",
+      "name": "The Ghost Ship",
+      "zone": "outer_rim",
+      "description": "The derelict ship 'Erebus' has appeared again. Board it, survive its automated defenses, and uncover its final log.",
+      "missions": [
+        { "step": 1, "objective": "Track the hyper-wake of the Erebus.", "reward_ghai": 200 },
+        { "step": 2, "objective": "Disable the external defense turrets to dock.", "reward_ghai": 300 },
+        { "step": 3, "objective": "Navigate the irradiated corridors to the bridge.", "reward_ghai": 450 },
+        { "step": 4, "objective": "Download the final log and escape before it jumps.", "reward_ghai": 600 }
+      ],
+      "final_reward": "Unique Weapon: Phantom Torpedo"
+    },
+    {
+      "id": "chain_09",
+      "name": "The Miner's Plight",
+      "zone": "inner_ring",
+      "description": "Hydroponics Array 7 is failing. Gather parts, repair the water recyclers, and fend off desperate scavengers.",
+      "missions": [
+        { "step": 1, "objective": "Purchase heavy-duty seals from Orbital Foundry Prime.", "reward_ghai": 100 },
+        { "step": 2, "objective": "Deliver the seals to Hydroponics Array 7.", "reward_ghai": 150 },
+        { "step": 3, "objective": "Repair the exterior pipes under micro-meteorite fire.", "reward_ghai": 250 },
+        { "step": 4, "objective": "Defend the array from a gang of desperate scavengers.", "reward_ghai": 350 }
+      ],
+      "final_reward": "Unique Card: Abundance"
+    },
+    {
+      "id": "chain_10",
+      "name": "Bounty: The Viper",
+      "zone": "outer_rim",
+      "description": "Zane the Viper has terrorized the Rim for too long. Track him, dismantle his gang, and claim the massive bounty.",
+      "missions": [
+        { "step": 1, "objective": "Interrogate informants at Freeport 9.", "reward_ghai": 150 },
+        { "step": 2, "objective": "Destroy Zane's lieutenant in the Emerald Vortex.", "reward_ghai": 300 },
+        { "step": 3, "objective": "Assault Zane's hideout in Pirate Cove 'The Anvil'.", "reward_ghai": 500 },
+        { "step": 4, "objective": "Defeat Zane the Viper and claim his ship's core.", "reward_ghai": 800 }
+      ],
+      "final_reward": "Unique Weapon: Viper's Kiss"
+    },
+    {
+      "id": "chain_11",
+      "name": "The Precursor's Legacy",
+      "zone": "deep_void",
+      "description": "Assemble pieces of an ancient map scattered across the Void, leading to the legendary Tomb of the Precursors.",
+      "missions": [
+        { "step": 1, "objective": "Find the first map fragment in the Luminous Web.", "reward_ghai": 300 },
+        { "step": 2, "objective": "Salvage the second fragment from the Frozen Fleet.", "reward_ghai": 400 },
+        { "step": 3, "objective": "Decrypt the complete map at Station 'Nowhere'.", "reward_ghai": 500 },
+        { "step": 4, "objective": "Open the Tomb of the Precursors and defeat its guardian.", "reward_ghai": 1000 }
+      ],
+      "final_reward": "Unique Ship Module: Precursor Core"
+    },
+    {
+      "id": "chain_12",
+      "name": "Blockade Runner II",
+      "zone": "contested_space",
+      "description": "A military fortress is under heavy siege. Smuggle experimental weapons to the defenders through the enemy lines.",
+      "missions": [
+        { "step": 1, "objective": "Load the experimental payload at The Spoke.", "reward_ghai": 200 },
+        { "step": 2, "objective": "Navigate the Crimson Corridor undetected.", "reward_ghai": 350 },
+        { "step": 3, "objective": "Break through the siege lines surrounding Fortress 'Aegis'.", "reward_ghai": 600 },
+        { "step": 4, "objective": "Defend the fortress while the weapons are deployed.", "reward_ghai": 750 }
+      ],
+      "final_reward": "Unique Card: Aegis Shield"
+    },
+    {
+      "id": "chain_13",
+      "name": "The AI Uprising",
+      "zone": "outer_rim",
+      "description": "The Sentinel Drone Factory has gone rogue, producing heavily armed death machines. Shut it down.",
+      "missions": [
+        { "step": 1, "objective": "Destroy the scout drones patrolling the factory sector.", "reward_ghai": 200 },
+        { "step": 2, "objective": "Hack the factory's external sensor grid.", "reward_ghai": 300 },
+        { "step": 3, "objective": "Fight your way into the main assembly bay.", "reward_ghai": 500 },
+        { "step": 4, "objective": "Destroy the Rogue AI Core to halt production.", "reward_ghai": 700 }
+      ],
+      "final_reward": "Unique Weapon: EMP Cannon"
+    },
+    {
+      "id": "chain_14",
+      "name": "The Toxic Cure",
+      "zone": "contested_space",
+      "description": "A plague is sweeping Outpost Desolation. Gather rare spores from the Toxic Veil to synthesize a cure.",
+      "missions": [
+        { "step": 1, "objective": "Equip specialized shielding to enter the Toxic Veil.", "reward_ghai": 150 },
+        { "step": 2, "objective": "Harvest 3 bio-spore samples from the nebula.", "reward_ghai": 400 },
+        { "step": 3, "objective": "Synthesize the cure at the Frontier Medical Hub.", "reward_ghai": 250 },
+        { "step": 4, "objective": "Deliver the cure to Outpost Desolation before time runs out.", "reward_ghai": 500 }
+      ],
+      "final_reward": "Unique Ship Module: Bio-Filter Plating"
+    },
+    {
+      "id": "chain_15",
+      "name": "The Event Horizon Dive",
+      "zone": "deep_void",
+      "description": "A billionaire wants telemetry data from the edge of a black hole. Dive deeper than anyone has before and survive.",
+      "missions": [
+        { "step": 1, "objective": "Upgrade your structural integrity field.", "reward_ghai": 200 },
+        { "step": 2, "objective": "Deploy the first sensor buoy at the accretion disk.", "reward_ghai": 500 },
+        { "step": 3, "objective": "Deploy the second buoy near the Event Horizon.", "reward_ghai": 800 },
+        { "step": 4, "objective": "Burn all engines to escape the gravitational pull.", "reward_ghai": 1000 }
+      ],
+      "final_reward": "Unique Card: Gravity Slingshot"
+    }
+  ]
+}
