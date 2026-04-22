@@ -7,6 +7,7 @@ import ConditionalFooter from '@/components/layout/ConditionalFooter'
 import GlobalStarfield from '@/components/layout/GlobalStarfield'
 import JarvisAssistant from '@/components/ui/JarvisAssistant'
 import UniverseChat from '@/components/chat/UniverseChat'
+import CookieBanner from '@/components/legal/CookieBanner'
 import { AuthProvider } from '@/components/AuthProvider'
 import { GetInTouchProvider } from '@/components/GetInTouchModal'
 import { LocaleProvider } from '@/lib/i18n/context'
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ConditionalFooter />
               <JarvisAssistant />
               <UniverseChat />
+              <CookieBanner />
             </GetInTouchProvider>
           </AuthProvider>
         </LocaleProvider>
