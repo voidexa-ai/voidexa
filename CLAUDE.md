@@ -85,10 +85,155 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-7 complete** | `b58fcb8` | **860** | **Legal pages + sitemap + robots + cookie banner** |
 | **AFS-2 complete** | `36d5f62` | **910** | **Auth route infra — 14 redirects + /wallet + /settings** |
 | **AFS-3 complete** | `3da828c` | **938** | **Game hub 404 fixes — 8 redirects + tile UX pass** |
+| **AFS-4 complete** | `a15e568` | **973** | **Admin Control Plane data pipeline — kcp90_compression_events + 4 product loggers + real dashboard** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-22 — Sprint AFS-4 COMPLETE (Admin Control Plane Data Pipeline)
+
+**Status:** ✅ SHIPPED to `origin/main`, migration applied in Supabase
+(`ihuljnekxkyqgroklurp`), tests green, build clean. Live dashboard
+verification to be done by Jix after first real events land.
+**Tag:** `sprint-afs-4-complete`
+**Backup:** `backup/pre-afs-4-20260422`
+**Tests:** 973/973 green (was 938, +35 new AFS-4 assertions)
+**Final HEAD:** `a15e568`
+
+**Commit chain:**
+```
+a15e568 test(afs-4): playwright admin flow + unit tests
+b455380 feat(afs-4): rewire control plane dashboard to real data
+3d2b3da feat(afs-4): rewire /api/kcp90/stats to aggregate real events
+8233b93 feat(afs-4): trading bot events endpoint stub
+6eb13b5 feat(afs-4): wire break room logging
+3e20887 feat(afs-4): wire quantum session logging via proxy endpoint
+42a4f62 feat(afs-4): wire void chat compression logging
+72b2459 feat(afs-4): server-side log-event helper
+b91ec9e feat(afs-4): kcp90_compression_events migration
+6f5bcbf docs(afs-4): SKILL v2 for admin data pipeline
+```
+
+**What shipped:**
+- New Supabase table `kcp90_compression_events` (13 cols + 3 indexes),
+  RLS enabled, exactly one policy `admin_read_all` using existing
+  `public.is_admin()` — default-deny for everyone else; service-role
+  bypass handles writes by design
+- Server-only helper `lib/kcp90/log-event.ts` — fire-and-forget,
+  `import 'server-only'`, singleton `supabaseAdmin`, never throws to
+  caller, console-only error path
+- **Void Chat:** `app/api/chat/send/route.ts` now captures raw vs
+  compressed history byte sizes around the existing
+  `compressForContext()` call and logs a `product: 'void-chat'` event
+  in `onDone` after GHAI deduction (non-blocking)
+- **Quantum:** new proxy endpoint `/api/quantum/log-session` so the
+  browser-side SSE loop can report without ever touching the
+  service-role key. `lib/quantum/client.ts` posts to it on
+  `session_complete` events, carrying `mode`, `rounds`,
+  `providers_used`, `kcp_savings`, `cost`
+- **Break Room:** `app/api/break-room/chat/route.ts` logs each chat
+  turn with `product: 'break-room'`, token counts estimated from
+  character counts (`~4 chars/token`) and flagged
+  `tokensEstimated: true` in `meta`
+- **Trading Bot:** new `/api/trading-bot/events` endpoint using the
+  shared `KCP90_API_SECRET` + Bearer convention (no new bespoke
+  secret). Bot repo wiring stays out of scope (AFS-16)
+- **`/api/kcp90/stats` overwrite (not new path):** preserved POST
+  contract with external callers but migrated writes to new table via
+  `logKcp90Event`; GET now enforces `profile.role === 'admin'` and
+  returns `{ generatedAt, windows: {24h,7d,30d}, recent }` aggregated
+  from `kcp90_compression_events`. Public consumer
+  `/api/kcp90/public-stats` untouched
+- **Dashboard rewire:** extracted `lib/kcp90/dashboard-adapter.ts` with
+  pure `toLegacySummary` + `toLegacyRecent` that map the new API shape
+  onto the existing `Summary`/`RecentStat` UI types, so no panel
+  code had to change. Dashboard fetches on mount + every 30s, keeps
+  previous data on network error. `app/control-plane/page.tsx`
+  dropped legacy SSR fetch of `kcp90_summary`/`kcp90_daily_stats`
+  and now uses `createServerSupabaseClient` + `supabaseAdmin` for
+  auth + role check
+
+**Sprint scope deviations from SKILL v2 (documented):**
+1. **Server-client export name** — SKILL's VERIFY-FIRST tag flagged
+   correctly: `lib/supabase-server.ts` exports
+   `createServerSupabaseClient`, not `createServerClient`. Tasks 4, 7,
+   and 8 adjusted.
+2. **Admin-client shape** — `lib/supabase-admin.ts` exports the
+   pre-built `supabaseAdmin` singleton, not a factory. Task 2 helper
+   uses the singleton directly (dropped the local `serviceClient()`
+   factory from the SKILL's "universally safe" variant in favour of
+   the SKILL's own "Alternative" block).
+3. **Test framework** — Vitest, not Playwright. AFS-1/2/3 precedent
+   was explicit. Playwright is in a separate `voidexa-tests` repo.
+   35 assertions shipped against the SKILL's target of ~20.
+4. **Task 7 existing POST ingest** — SKILL assumed the endpoint
+   "returns nulls". Reality: it had a working POST path writing to
+   legacy `kcp90_stats` table via `KCP90_API_SECRET` + Bearer. Per
+   approved plan: preserved the POST body contract for external
+   callers, delegated writes to `logKcp90Event` so legacy callers
+   start contributing to the new table.
+5. **Shared secret for trading-bot** — SKILL proposed a new
+   `TRADING_BOT_WEBHOOK_SECRET`. Per approved plan: reused the
+   existing `KCP90_API_SECRET` so there is ONE machine-to-machine
+   secret across all product ingest endpoints. No new env var.
+6. **Dashboard adapter extracted** — originally inlined in
+   `ControlPlaneDashboard.tsx` but that put the file at 944 lines
+   (SKILL target 900). Extracted the pure functions to
+   `lib/kcp90/dashboard-adapter.ts` — kept the dashboard under budget
+   AND gave Task 9 real unit tests (not just source-level grep).
+
+**Files added:**
+- `docs/skills/sprint-afs-4-admin-data-pipeline.md` (Task 0)
+- `supabase/migrations/20260422_kcp90_compression_events.sql`
+- `lib/kcp90/log-event.ts` (73 lines, server-only)
+- `lib/kcp90/dashboard-adapter.ts` (108 lines, pure)
+- `app/api/quantum/log-session/route.ts` (48 lines)
+- `app/api/trading-bot/events/route.ts` (49 lines)
+- `tests/afs-4-admin-data-pipeline.test.ts` (35 assertions)
+
+**Files modified:**
+- `app/api/chat/send/route.ts` (Void Chat wire, +17 lines)
+- `app/api/break-room/chat/route.ts` (Break Room wire, +19 lines)
+- `app/api/kcp90/stats/route.ts` (OVERWRITE — 131 → 191 lines)
+- `lib/quantum/client.ts` (session_complete hook, +30 lines)
+- `app/control-plane/page.tsx` (dropped legacy SSR fetch, 66 → 36
+  lines)
+- `components/control-plane/ControlPlaneDashboard.tsx` (adapter fetch
+  + mount-refresh, 861 → 872 lines, still over component 300-line
+  limit — pre-existing debt, not introduced by AFS-4)
+- `CLAUDE.md` (this entry + sprint history row + P0 bug row update)
+
+**Supabase changes (project `ihuljnekxkyqgroklurp`, EU):**
+- Table `kcp90_compression_events` — created + smoke-tested by Jix
+  (insert → count=1 → delete)
+- RLS enabled with 1 policy (`admin_read_all`)
+- Legacy `kcp90_stats` / `kcp90_summary` / `kcp90_daily_stats` tables
+  untouched — frozen for historical data, no longer written to
+
+**Known items out-of-scope:**
+- AFS-16 — Trading Bot repo-side wiring (endpoint stub built here,
+  bot still needs to POST to `/api/trading-bot/events`)
+- AFS-26 — Danish translation of dashboard copy
+- Live dashboard screenshot verification — waits for Void Chat /
+  Quantum / Break Room traffic to generate real events. Jix to
+  confirm once numbers appear
+- Legacy `kcp90_stats` table migration into new table — data remains
+  queryable in Supabase, never auto-merged
+- `components/control-plane/ControlPlaneDashboard.tsx` at 872 lines
+  still violates the 300-line component limit (inherited from
+  pre-sprint state; touching it here was constrained to a minimal
+  adapter wire-up)
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-afs-4-20260422
+git push origin main --force-with-lease
+git push origin :refs/tags/sprint-afs-4-complete
+# Supabase: drop table kcp90_compression_events (no production data yet)
+```
+
+---
 
 ### Session 2026-04-22 — Sprint AFS-3 COMPLETE (Game Hub 404 Fixes)
 
@@ -389,7 +534,7 @@ can be executed.
 | ~~Homepage cinematic + quick menu~~ | ✅ **AFS-1 COMPLETE** |
 | ~~`/login`, `/signin`, `/wallet`, `/settings`, `/account` 404~~ | ✅ **AFS-2 COMPLETE** |
 | ~~`/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` 404~~ | ✅ **AFS-3 COMPLETE** |
-| Admin Control Plane ZERO data | AFS-4 (SKILL NOT written) |
+| ~~Admin Control Plane ZERO data~~ | ✅ **AFS-4 COMPLETE** |
 | 257 Cards blank art | AFS-5 (SKILL NOT written) |
 | Shop 26 cosmetics "COMING SOON" | AFS-6a |
 | ~~`/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404~~ | ✅ **AFS-7 COMPLETE** |
