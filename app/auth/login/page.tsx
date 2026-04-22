@@ -1,13 +1,31 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { supabase } from '@/lib/supabase'
 
+// Only allow relative redirects that stay on voidexa.com — prevents open-redirect abuse.
+function sanitizeRedirect(raw: string | null): string {
+  if (!raw) return '/profile'
+  if (!raw.startsWith('/') || raw.startsWith('//')) return '/profile'
+  return raw
+}
+
 export default function LoginPage() {
+  // useSearchParams forces a Suspense boundary under Next.js static export.
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = sanitizeRedirect(searchParams.get('redirect'))
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [error, setError]       = useState('')
@@ -24,7 +42,7 @@ export default function LoginPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      router.push('/profile')
+      router.push(redirectTo)
       router.refresh()
     }
   }
