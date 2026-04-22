@@ -84,10 +84,87 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-1d** | `357e1a9` | 825 | **Ultrawide backdrop PNG** |
 | **AFS-7 complete** | `b58fcb8` | **860** | **Legal pages + sitemap + robots + cookie banner** |
 | **AFS-2 complete** | `36d5f62` | **910** | **Auth route infra — 14 redirects + /wallet + /settings** |
+| **AFS-3 complete** | `3da828c` | **938** | **Game hub 404 fixes — 8 redirects + tile UX pass** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-22 — Sprint AFS-3 COMPLETE (Game Hub 404 Fixes)
+
+**Status:** ✅ SHIPPED to `origin/main`, live-verified on voidexa.com
+**Tag:** `sprint-afs-3-complete`
+**Backup:** `backup/pre-sprint-afs-3-20260422`
+**Tests:** 938/938 green (was 910, +28 new AFS-3 assertions)
+**Final HEAD:** `3da828c`
+
+**Commit chain:**
+```
+3da828c test(afs-3): game hub redirects + tile UX coverage
+83c798b feat(afs-3): game hub tile UX with icons and descriptions
+631d08d feat(afs-3): 308 redirects for canonical game hub aliases
+ebd6a8b chore(afs-3): add sprint SKILL documentation
+```
+
+**What shipped:**
+- 8 permanent (308) redirects in `next.config.ts`: 4 EN canonicals
+  (`/game/card-battle` → `/game/battle`, `/game/deck-builder` →
+  `/game/cards/deck-builder`, `/game/pilot-profile` → `/game/profile`,
+  `/game/shop` → `/shop`) plus 4 DK mirrors pointing at the same
+  English destinations (DK game surface is untranslated for now —
+  tracked under AFS-26)
+- Game Hub tile UX refresh: extracted to `components/game/GameHubTiles.tsx`,
+  every tile now carries a lucide-react icon, a 1-line description, a
+  responsive grid (1 col mobile / 2 tablet / 4 desktop), hover + focus
+  states, and a `data-testid` hook for future E2E
+- UniverseWallFeed retained below the grid
+
+**Sprint scope deviation (documented):** The AFS-3 SKILL (pushed as
+`ebd6a8b`) was written assuming `/game/card-battle`, `/game/deck-builder`,
+and `/game/pilot-profile` did not exist. Task 1 inventory proved the
+features **already ship** at non-canonical URLs — `/game/battle`
+(BattleClient + BattleEntry + BattleController, 12 components),
+`/game/cards/deck-builder` (DeckBuilderClient, 584 lines), and
+`/game/profile[/userId]` (PilotCard + TalesLog + ProfileEditForm). The
+Shop tile in the hub already pointed at `/shop`, not the dead
+`/game/shop`. Re-implementing these from `components/combat/*` would
+have produced two live URLs for every feature and ~2000 lines of
+duplicated code. Using the AFS-2 redirect pattern instead delivers the
+P0 fix (canonical URLs no longer 404) without touching working
+battle/deck/profile code.
+
+**Files added:**
+- `components/game/GameHubTiles.tsx` (141 lines, exports `GAME_HUB_TILES`)
+- `tests/afs-3-game-hub.test.ts` (28 assertions)
+
+**Files modified:** `next.config.ts`, `app/game/page.tsx`, `CLAUDE.md`.
+
+**Live verification (2026-04-22 via curl):**
+- 308 with `Location: /game/battle` for `/game/card-battle`
+- 308 with `Location: /game/cards/deck-builder` for `/game/deck-builder`
+- 308 with `Location: /game/profile` for `/game/pilot-profile`
+- 308 with `Location: /shop` for `/game/shop`
+- Same 308s for all 4 DK mirror URLs
+- Destinations: `/game/battle` 200, `/game/cards/deck-builder` 200,
+  `/game/profile` 307 (server-component auth redirect, expected),
+  `/shop` 200, `/game` 200
+
+**Known items out-of-scope (unchanged):**
+- AFS-26 — Danish translation of the game surface; DK redirects
+  currently land on English destinations on purpose
+- AFS-12 — sound wiring on battle events (5 boss themes still unwired)
+- AFS-4 — Admin Control Plane data pipeline
+- AFS-5 — 257-card art pipeline
+- Tutorial flow for first-time card battle players
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-sprint-afs-3-20260422
+git push origin main --force-with-lease
+git push origin :refs/tags/sprint-afs-3-complete
+```
+
+---
 
 ### Session 2026-04-22 — Sprint AFS-2 COMPLETE (Auth Route Infrastructure)
 
@@ -311,7 +388,7 @@ can be executed.
 |---|---|
 | ~~Homepage cinematic + quick menu~~ | ✅ **AFS-1 COMPLETE** |
 | ~~`/login`, `/signin`, `/wallet`, `/settings`, `/account` 404~~ | ✅ **AFS-2 COMPLETE** |
-| `/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` 404 | AFS-3 |
+| ~~`/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` 404~~ | ✅ **AFS-3 COMPLETE** |
 | Admin Control Plane ZERO data | AFS-4 (SKILL NOT written) |
 | 257 Cards blank art | AFS-5 (SKILL NOT written) |
 | Shop 26 cosmetics "COMING SOON" | AFS-6a |
