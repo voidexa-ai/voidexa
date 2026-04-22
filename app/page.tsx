@@ -119,7 +119,7 @@ function HomePageInner() {
             inset: 0,
             width: '100vw',
             height: '100vh',
-            objectFit: 'contain',
+            objectFit: 'cover',
             zIndex: 2,
           }}
         />
