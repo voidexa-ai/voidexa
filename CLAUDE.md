@@ -82,6 +82,7 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | Alpha set | `b47053e` | — | 1000-card alpha on main |
 | **AFS-1 complete** | `8d3a1e6` | **825** | **Homepage cinematic repair** |
 | **AFS-1d** | `357e1a9` | 825 | **Ultrawide backdrop PNG** |
+| **AFS-7 complete** | `b58fcb8` | **860** | **Legal pages + sitemap + robots + cookie banner** |
 
 ---
 
@@ -157,15 +158,75 @@ a819608 chore(sprint-afs-1): SKILL.md + upload script
 
 ---
 
-### BATCH 1 SKILLs PUSHED (AFS-4, AFS-5, AFS-7 ready)
+### Session 2026-04-22 — Sprint AFS-7 COMPLETE (Legal Pages)
 
-Sprint SKILL files committed but NOT executed. Claude Code can run them independently when Jix ready:
+**Status:** ✅ SHIPPED to production, 8/8 routes live-verified (200)
+**Tag:** `sprint-afs-7-complete`
+**Backup:** `backup/pre-sprint-afs-7-20260422`
+**Tests:** 860/860 green (was 825, +35 new AFS-7 assertions)
+**Final HEAD:** `b58fcb8`
 
-- `docs/skills/sprint-afs-4-admin-data-pipeline.md`
-- `docs/skills/sprint-afs-5-cards-blank-art.md`
-- `docs/skills/sprint-afs-7-legal-pages.md`
+**Commit chain:**
+```
+b58fcb8 feat(afs-7): legal pages + sitemap + robots + cookie banner
+5971d52 chore(afs-7): add sprint SKILL documentation
+```
 
-All 3 parallel-safe with each other (no shared files).
+**What shipped:**
+- `/privacy` (+ `/dk/privacy`) — GDPR policy: data controller (CVR 46343387),
+  7 sub-processors (Supabase EU, Stripe, Vercel, Anthropic, OpenAI, Google,
+  Perplexity), retention table, GDPR rights, Datatilsynet escalation, Danish
+  governing law
+- `/terms` (+ `/dk/terms`) — commercial ToS: GHAI as non-refundable digital
+  platform credit (not crypto / not investment / not security / not legal
+  tender / not cash-redeemable), UGC license, 2-year reklamationsret for
+  physical products, 14-day distance-sales return right, Vordingborg
+  retskreds jurisdiction
+- `/cookies` (+ `/dk/cookies`) — policy + inline `CookieSettings` mid-page
+  consent toggle. Key `voidexa_cookie_consent_v1` stores `essential` or `all`.
+- `/sitemap.xml` — 48 URLs (34 EN + 14 DK), change-frequency and priority
+  tuned per route class
+- `/robots.txt` — allow `/`, disallow `/admin`, `/control-plane`, `/auth`,
+  `/api` (with + without trailing slash), Sitemap + Host point to voidexa.com
+- `CookieBanner` wired globally via `app/layout.tsx`; pure helpers in
+  `lib/cookies/consent.ts` so Vitest exercises them without a DOM
+
+**Files added:**
+- `docs/skills/sprint-afs-7-legal-pages.md` (new)
+- `app/privacy/page.tsx` + `layout.tsx`
+- `app/terms/page.tsx` + `layout.tsx`
+- `app/cookies/page.tsx` + `layout.tsx`
+- `app/dk/privacy/page.tsx`, `app/dk/terms/page.tsx`, `app/dk/cookies/page.tsx`
+- `app/sitemap.ts`, `app/robots.ts`
+- `components/legal/LegalPage.tsx`
+- `components/legal/CookieBanner.tsx`, `components/legal/CookieSettings.tsx`
+- `lib/cookies/consent.ts`
+- `tests/afs-7-legal-pages.test.ts` (35 assertions)
+
+**Files modified:** `app/layout.tsx` (CookieBanner import + render).
+
+**Live verification (2026-04-22 via curl):**
+- 200 `/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt`
+- 200 `/dk/privacy`, `/dk/terms`, `/dk/cookies`
+- Content checks: CVR 46343387 + Datatilsynet render on `/privacy`;
+  non-refundable + Vordingborg + reklamationsret render on `/terms`;
+  consent key + CookieSettings id render on `/cookies`
+
+**Legal disclaimer baked into both /privacy and /terms:** boilerplate
+sufficient for technical compliance. Full solicitor review tracked as
+**AFS-37** before any major marketing push.
+
+**Known items out-of-scope:**
+- AFS-26 — proper Danish translations (DK routes re-export English)
+- AFS-37 — ADVORA attorney review of legal copy
+- CW-4 — cookie banner copy polish with i18n strings
+- Analytics SDK not yet installed; when added, it must read
+  `getCookieConsent()` and gate itself on `'all'` before firing
+
+**Prior CLAUDE.md claim that AFS-4 + AFS-5 SKILL files were pushed was
+incorrect** — only AFS-1 was actually committed before this sprint. AFS-4
+and AFS-5 SKILL files still do not exist and need to be written before they
+can be executed.
 
 ---
 
@@ -176,10 +237,10 @@ All 3 parallel-safe with each other (no shared files).
 | ~~Homepage cinematic + quick menu~~ | ✅ **AFS-1 COMPLETE** |
 | `/login`, `/signin`, `/wallet`, `/settings`, `/account` 404 | AFS-2 |
 | `/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` 404 | AFS-3 |
-| Admin Control Plane ZERO data | AFS-4 (SKILL ready) |
-| 257 Cards blank art | AFS-5 (SKILL ready) |
+| Admin Control Plane ZERO data | AFS-4 (SKILL NOT written) |
+| 257 Cards blank art | AFS-5 (SKILL NOT written) |
 | Shop 26 cosmetics "COMING SOON" | AFS-6a |
-| `/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404 | AFS-7 (SKILL ready) |
+| ~~`/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404~~ | ✅ **AFS-7 COMPLETE** |
 | Starmap Level 2 nebula zoom | AFS-10 |
 | Cinematic video end-frame ≠ new backdrop | AFS-11 (future, low prio) |
 | "We are live. Welcome" banner | AFS-12 (polish) |
