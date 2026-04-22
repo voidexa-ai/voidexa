@@ -11,6 +11,7 @@ import { getModelById } from '@/config/providers';
 import { getMessages, insertMessage, getConversation, updateMessageCompression, updateConversationTokensSaved } from '@/lib/supabase/chat-queries';
 import { logGhaiTransaction } from '@/lib/supabase/credit-queries';
 import { compressForContext } from '@/lib/kcp90/compress-context';
+import { logKcp90Event } from '@/lib/kcp90/log-event';
 import { PLATFORM } from '@/config/constants';
 import { streamProvider } from '@/lib/providers/router';
 import { sanitizeMessage, sanitizeUuid } from '@/lib/sanitize';
@@ -93,7 +94,9 @@ export async function POST(req: NextRequest) {
 
     // 7. Build message history for provider — with KCP-90 context compression
     const history = await getMessages(conversationId, user.id);
+    const rawHistoryBytes = JSON.stringify(history).length;
     const compressionResult = compressForContext(history);
+    const compressedHistoryBytes = JSON.stringify(compressionResult.messages).length;
     const providerMessages: ProviderMessage[] = compressionResult.messages.map((m) => ({
       role: m.role,
       content: m.content,
@@ -155,6 +158,20 @@ export async function POST(req: NextRequest) {
               if (deductResult.ghaiDeducted && deductResult.ghaiDeducted > 0) {
                 await logGhaiTransaction(user.id, -deductResult.ghaiDeducted, 'spend', 'ghost-ai');
               }
+
+              // AFS-4: fire-and-forget KCP-90 compression event log
+              logKcp90Event({
+                product: 'void-chat',
+                userId: user.id,
+                sessionId: conversationId,
+                tokensIn,
+                tokensOut,
+                bytesRaw: rawHistoryBytes,
+                bytesCompressed: compressedHistoryBytes,
+                layerUsed: compressionResult.compressed ? 'server-regex-v1' : 'none',
+                success: true,
+                meta: { model: modelId, provider: modelDef.provider },
+              });
 
               // Send done event with metadata
               const doneEvent = `data: ${JSON.stringify({
