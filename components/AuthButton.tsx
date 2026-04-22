@@ -5,12 +5,18 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from './AuthProvider'
 import { supabase } from '@/lib/supabase'
+import { useI18n } from '@/lib/i18n/context'
 
 export default function AuthButton() {
   const { user, loading } = useAuth()
+  const { locale, localizeHref } = useI18n()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+
+  const labels = locale === 'da'
+    ? { profile: 'Profil', wallet: 'Tegnebog', settings: 'Indstillinger', signOut: 'Log ud', join: 'Tilmeld' }
+    : { profile: 'Profile', wallet: 'Wallet', settings: 'Settings', signOut: 'Sign out', join: 'Join' }
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -33,7 +39,7 @@ export default function AuthButton() {
   if (!user) {
     return (
       <Link
-        href="/auth/login"
+        href={localizeHref('/auth/login')}
         className="px-4 py-2 text-sm font-semibold rounded-full transition-all"
         style={{
           background: 'rgba(0,212,255,0.08)',
@@ -41,7 +47,7 @@ export default function AuthButton() {
           color: '#00d4ff',
         }}
       >
-        Join
+        {labels.join}
       </Link>
     )
   }
@@ -84,12 +90,28 @@ export default function AuthButton() {
           }}
         >
           <Link
-            href="/profile"
+            href={localizeHref('/profile')}
             onClick={() => setOpen(false)}
             className="flex items-center px-4 py-2.5 text-sm transition-colors hover:bg-white/5"
             style={{ color: '#94a3b8' }}
           >
-            Profile
+            {labels.profile}
+          </Link>
+          <Link
+            href={localizeHref('/wallet')}
+            onClick={() => setOpen(false)}
+            className="flex items-center px-4 py-2.5 text-sm transition-colors hover:bg-white/5"
+            style={{ color: '#94a3b8' }}
+          >
+            {labels.wallet}
+          </Link>
+          <Link
+            href={localizeHref('/settings')}
+            onClick={() => setOpen(false)}
+            className="flex items-center px-4 py-2.5 text-sm transition-colors hover:bg-white/5"
+            style={{ color: '#94a3b8' }}
+          >
+            {labels.settings}
           </Link>
           <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '4px 0' }} />
           <button
@@ -97,7 +119,7 @@ export default function AuthButton() {
             className="flex items-center w-full px-4 py-2.5 text-sm transition-colors hover:bg-white/5 text-left"
             style={{ color: '#64748b' }}
           >
-            Sign out
+            {labels.signOut}
           </button>
         </div>
       )}
