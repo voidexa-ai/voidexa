@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { logKcp90Event } from '@/lib/kcp90/log-event';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -132,6 +133,24 @@ export async function POST(req: NextRequest) {
       default:
         reply = await callAnthropic(system, userMsg);
     }
+
+    // AFS-4: break-room chat turn — token counts estimated from chars (~4/token).
+    logKcp90Event({
+      product: 'break-room',
+      userId: null,
+      sessionId: null,
+      tokensIn: Math.ceil(userMsg.length / 4),
+      tokensOut: Math.ceil(reply.length / 4),
+      layerUsed: 'none',
+      success: true,
+      meta: {
+        personality: character,
+        provider,
+        tokensEstimated: true,
+        charsIn: userMsg.length,
+        charsOut: reply.length,
+      },
+    });
 
     return NextResponse.json({ reply, character, provider });
   } catch {
