@@ -11,10 +11,22 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'node:fs';
-import { basename } from 'node:path';
-import { config } from 'dotenv';
 
-config({ path: '.env.local' });
+function loadEnvFile(path) {
+  try {
+    const raw = readFileSync(path, 'utf8');
+    for (const line of raw.split(/\r?\n/)) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+      if (!m) continue;
+      let [, key, value] = m;
+      if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1);
+      if (value.startsWith("'") && value.endsWith("'")) value = value.slice(1, -1);
+      if (process.env[key] === undefined) process.env[key] = value;
+    }
+  } catch { /* file missing — rely on real env */ }
+}
+
+loadEnvFile('.env.local');
 
 const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim();
 const SERVICE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
