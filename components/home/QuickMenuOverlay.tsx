@@ -30,6 +30,35 @@ const ctaBase: React.CSSProperties = {
 // in luminance to the old 0.35-opacity card, so copy barely read. The card is
 // now a near-opaque dark slab with a 12 px blur (static overlay, 4 panels
 // only — perf is fine) and a subtle cyan border.
+// Sprint AFS-1 Task 5 — checkbox labels and replay link read against both the
+// video last-frame and the default dark bg. Opacity bumped 0.8 -> 0.95, weight
+// raised to 500, and a text-shadow guarantees readability on any luminance.
+const CHECKBOX_LABEL_STYLE: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+  fontSize: 14,
+  fontWeight: 500,
+  color: 'rgba(230,240,255,0.95)',
+  letterSpacing: '0.02em',
+  textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+}
+
+const REPLAY_LINK_STYLE: React.CSSProperties = {
+  marginTop: 4,
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  fontSize: 14,
+  fontWeight: 500,
+  color: 'rgba(127,216,255,0.95)',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  cursor: 'pointer',
+  fontFamily: 'inherit',
+  textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+}
+
 const CARD_STYLE: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
@@ -187,7 +216,7 @@ export default function QuickMenuOverlay({
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.02em' }}>
+        <label style={CHECKBOX_LABEL_STYLE}>
           <input
             type="checkbox"
             data-testid="skip-video-checkbox"
@@ -197,7 +226,7 @@ export default function QuickMenuOverlay({
           />
           <span>Don&rsquo;t show intro video on future visits</span>
         </label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.02em' }}>
+        <label style={CHECKBOX_LABEL_STYLE}>
           <input
             type="checkbox"
             data-testid="skip-menu-checkbox"
@@ -212,18 +241,7 @@ export default function QuickMenuOverlay({
             type="button"
             data-testid="replay-intro-link"
             onClick={onReplayVideo}
-            style={{
-              marginTop: 4,
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              fontSize: 14,
-              color: 'rgba(127,216,255,0.75)',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
+            style={REPLAY_LINK_STYLE}
           >
             Replay intro video
           </button>
