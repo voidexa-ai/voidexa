@@ -10,8 +10,10 @@ import SkipButton from '@/components/home/SkipButton'
 import {
   computeIntroMode,
   getAudioPreference,
-  markIntroSeenThisSession,
+  hasAnsweredAudioGateThisSession,
   hasSeenIntroThisSession,
+  markAudioGateAnsweredThisSession,
+  markIntroSeenThisSession,
   setAudioPreference,
   shouldSkipIntroVideo,
   shouldSkipQuickMenu,
@@ -68,18 +70,20 @@ function HomePageInner() {
       setStage('menu')
       return
     }
-    // mode === 'video' — gate on audio preference first time, then play.
-    const pref = getAudioPreference()
-    if (pref === null) {
+    // mode === 'video' — show audio gate once per browser session. The stored
+    // preference (voidexaAudioPreference) stays as a smart default for the
+    // gate's Yes/No highlight, but the gate itself re-asks every session.
+    if (!hasAnsweredAudioGateThisSession()) {
       setStage('audio-gate')
     } else {
-      setAudioPrefState(pref)
+      setAudioPrefState(getAudioPreference() ?? 'muted')
       setStage('video')
     }
   }, [router, menuOnly, replay])
 
   const handleAudioChoice = useCallback((choice: 'enabled' | 'muted') => {
     setAudioPreference(choice)
+    markAudioGateAnsweredThisSession()
     setAudioPrefState(choice)
     setStage('video')
   }, [])
@@ -121,7 +125,9 @@ function HomePageInner() {
         />
       )}
 
-      {stage === 'audio-gate' && <AudioGatePopup onChoose={handleAudioChoice} />}
+      {stage === 'audio-gate' && (
+        <AudioGatePopup onChoose={handleAudioChoice} defaultChoice={getAudioPreference()} />
+      )}
 
       {stage === 'video' && VIDEO_URL && (
         <IntroVideo

@@ -2,9 +2,13 @@
 
 interface Props {
   onChoose: (audio: 'enabled' | 'muted') => void
+  /** Sprint AFS-1 Task 3: the answer the user gave previously (from localStorage). */
+  defaultChoice?: 'enabled' | 'muted' | null
 }
 
-export default function AudioGatePopup({ onChoose }: Props) {
+export default function AudioGatePopup({ onChoose, defaultChoice = null }: Props) {
+  const yesIsDefault = defaultChoice === 'enabled'
+  const noIsDefault = defaultChoice === 'muted'
   return (
     <div
       data-testid="audio-gate-popup"
@@ -54,25 +58,28 @@ export default function AudioGatePopup({ onChoose }: Props) {
           margin: 0,
           maxWidth: 520,
         }}>
-          The voidexa intro has a narrated voiceover. You can mute it at any time from the corner control.
+          The voidexa intro has a narrated voiceover.
         </p>
 
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           <button
             type="button"
             data-testid="audio-gate-yes"
+            data-default={yesIsDefault ? 'true' : undefined}
             onClick={() => onChoose('enabled')}
             style={{
               minWidth: 200, minHeight: 60,
               padding: '14px 28px',
               background: '#22c55e',
               color: '#ffffff',
-              border: 'none',
+              border: yesIsDefault ? '2px solid rgba(255,255,255,0.85)' : 'none',
               borderRadius: 12,
               fontSize: 18, fontWeight: 700,
               letterSpacing: '0.08em', textTransform: 'uppercase',
               cursor: 'pointer',
-              boxShadow: '0 0 24px rgba(34,197,94,0.55)',
+              boxShadow: yesIsDefault
+                ? '0 0 34px rgba(34,197,94,0.85)'
+                : '0 0 24px rgba(34,197,94,0.55)',
               fontFamily: 'inherit',
             }}
           >
@@ -81,31 +88,26 @@ export default function AudioGatePopup({ onChoose }: Props) {
           <button
             type="button"
             data-testid="audio-gate-no"
+            data-default={noIsDefault ? 'true' : undefined}
             onClick={() => onChoose('muted')}
             style={{
               minWidth: 200, minHeight: 60,
               padding: '14px 28px',
               background: '#ef4444',
               color: '#ffffff',
-              border: 'none',
+              border: noIsDefault ? '2px solid rgba(255,255,255,0.85)' : 'none',
               borderRadius: 12,
               fontSize: 18, fontWeight: 700,
               letterSpacing: '0.08em', textTransform: 'uppercase',
               cursor: 'pointer',
-              boxShadow: '0 0 24px rgba(239,68,68,0.55)',
+              boxShadow: noIsDefault
+                ? '0 0 34px rgba(239,68,68,0.85)'
+                : '0 0 24px rgba(239,68,68,0.55)',
               fontFamily: 'inherit',
             }}
           >
             No
           </button>
-        </div>
-
-        <div style={{
-          fontSize: 14, letterSpacing: '0.06em',
-          color: 'rgba(220,236,255,0.5)',
-          textTransform: 'uppercase',
-        }}>
-          Your choice is saved for next time.
         </div>
       </div>
     </div>

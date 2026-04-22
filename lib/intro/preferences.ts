@@ -10,6 +10,11 @@ export const SKIP_VIDEO_KEY = 'voidexaSkipIntroVideo'
 export const SKIP_QUICK_MENU_KEY = 'voidexaSkipQuickMenu'
 export const SESSION_SEEN_KEY = 'hasSeenIntroThisSession'
 export const AUDIO_PREFERENCE_KEY = 'voidexaAudioPreference'
+// Sprint AFS-1 Task 3: per-session flag so the audio-gate popup re-shows on
+// every new browser session, instead of being silenced forever the first time
+// a user answers it. The answer (enabled/muted) persists in
+// voidexaAudioPreference as a *default* for the next session's popup.
+export const AUDIO_GATE_ANSWERED_KEY = 'voidexaSoundPopupAnsweredThisSession'
 
 // Retained so older code + migration paths keep working. New code should use
 // SKIP_VIDEO_KEY / SKIP_QUICK_MENU_KEY.
@@ -82,12 +87,21 @@ export function setAudioPreference(pref: AudioPreference): void {
   writeLocal(AUDIO_PREFERENCE_KEY, pref)
 }
 
+export function hasAnsweredAudioGateThisSession(): boolean {
+  return readSession(AUDIO_GATE_ANSWERED_KEY) === 'true'
+}
+
+export function markAudioGateAnsweredThisSession(): void {
+  writeSession(AUDIO_GATE_ANSWERED_KEY, 'true')
+}
+
 export function resetOnboardingPreferences(): void {
   writeLocal(SKIP_VIDEO_KEY, null)
   writeLocal(SKIP_QUICK_MENU_KEY, null)
   writeLocal(LEGACY_SKIP_KEY, null)
   writeLocal(AUDIO_PREFERENCE_KEY, null)
   writeSession(SESSION_SEEN_KEY, null)
+  writeSession(AUDIO_GATE_ANSWERED_KEY, null)
 }
 
 // ─── Legacy names retained so existing imports keep compiling. ─────────────
