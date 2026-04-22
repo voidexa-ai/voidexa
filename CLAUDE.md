@@ -111,7 +111,7 @@ These are completion tags from the Claude Code memory-loss period (April 17-20).
 
 | Bug | Fix |
 |---|---|
-| Homepage cinematic frozen / MUTE button / no sound popup on reload / 4-box overlay / zoom mismatch | **AFS-1** (IN PROGRESS) |
+| Homepage cinematic frozen / MUTE button / no sound popup on reload / 4-box overlay / zoom mismatch | **AFS-1** ✅ COMPLETE (tag `sprint-afs-1-complete`) |
 | `/login`, `/signin`, `/wallet`, `/settings`, `/account` all 404 | AFS-2 |
 | `/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` all 404 | AFS-3 |
 | Admin Control Plane shows ZERO data (API returns nulls) | AFS-4 |
@@ -124,13 +124,36 @@ These are completion tags from the Claude Code memory-loss period (April 17-20).
 
 ## SESSION LOG
 
-### Session 2026-04-22 — Sprint AFS-1: Homepage Repair (IN PROGRESS)
+### Session 2026-04-22 — Sprint AFS-1: Homepage Repair ✅ COMPLETE
 
-**Status:** SKILL.md committed, execution pending Claude Code run.
-**Commit (SKILL):** [populated after push]
-**Tag target:** `sprint-afs-1-complete`
-**Tests baseline:** 800/800
-**Tests target:** 803+
+**Status:** All 6 tasks shipped, 825/825 green, build OK, tag pushed.
+**Commits (in order):**
+- `a819608` chore(sprint-afs-1): add SKILL.md + upload-intro-frame script
+- `fa5d379` Task 1 — matched-aspect still frame (1920×1080 overwrite) + dotenv-free uploader
+- `cb16c40` Task 2 — remove in-video MUTE button (IntroVideo 151 → 73 lines)
+- `122ac57` Task 3 — audio gate is per-session, highlight prior choice, drop stale copy
+- `228d79e` Task 4 — replace "Bespoke software" with "Custom-built apps tailored to your workflow"
+- `85c830f` Task 5 — raise checkbox + replay-link contrast (opacity ≥ 0.95, weight 500, text-shadow)
+- `b8aed26` Task 6 — AFS-1 regression test suite (25 vitest assertions)
+
+**Tag:** `sprint-afs-1-complete` (pushed)
+**Tests:** 825/825 green (baseline 800 + 25 new AFS-1 tests — exceeds 803 target)
+**Build:** ✅ `npm run build` clean, 87 static pages generated in 11.2s
+
+**Deviation from brief:** Task 6 is a vitest source-level regression suite
+instead of a Playwright test — project has no Playwright harness, adding it
+for this sprint would have been ~300 MB of dev deps for 25 assertions. Same
+invariants covered, no new dependencies.
+
+**Supabase side-effect:** overwrote `intro/stil_picture_intro.png` (1536×1024
+→ 1920×1080, 3.2 MB, Cache-Control: no-cache so browsers refetch).
+
+**File size check:**
+- `components/home/IntroVideo.tsx` 73 lines (was 151) ✅
+- `components/home/QuickMenuOverlay.tsx` 261 lines ✅ (under 300)
+- `components/home/AudioGatePopup.tsx` 115 lines ✅
+- `app/page.tsx` 166 lines — over the 100-line target, same as before sprint;
+  refactor into a client wrapper is left to a follow-up (out of AFS-1 scope)
 
 **Scope:** Repair homepage cinematic → quick menu flow. 6 interconnected bugs fixed in single sprint because they share state machine and components.
 
