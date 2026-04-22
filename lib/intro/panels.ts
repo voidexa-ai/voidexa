@@ -8,7 +8,7 @@ export interface QuickMenuPanel {
 
 export const QUICK_MENU_PANELS: QuickMenuPanel[] = [
   { key: 'website',  title: 'Website Creation', description: 'AI-assisted websites delivered fast and affordable.', icon: '🌐' },
-  { key: 'apps',     title: 'Custom Apps',      description: 'Bespoke software tailored to your business workflow.', icon: '🛠', href: '/apps' },
+  { key: 'apps',     title: 'Custom Apps',      description: 'Custom-built apps tailored to your workflow.',         icon: '🛠', href: '/apps' },
   { key: 'universe', title: 'Universe',         description: 'Explore the living voidexa sci-fi universe.',         icon: '🧭', href: '/starmap' },
   { key: 'tools',    title: 'Tools',            description: 'Production-grade AI tools engineered at voidexa.',    icon: '⚡', href: '/ai-tools' },
 ]
