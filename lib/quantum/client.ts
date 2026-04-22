@@ -42,6 +42,34 @@ export async function createQuantumSession(
   }
 }
 
+/** AFS-4: fire-and-forget compression-event log to /api/quantum/log-session. */
+function logQuantumSessionComplete(sessionId: string, event: QuantumSSEEvent): void {
+  try {
+    const totalTokens = typeof event.tokens === 'number' ? event.tokens : 0
+    const mode = typeof event.mode === 'string' ? event.mode : 'unknown'
+    void fetch('/api/quantum/log-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId,
+        tokensIn: totalTokens,
+        tokensOut: 0,
+        layerUsed: mode === 'deep' ? 'kcp90-full' : 'none',
+        success: true,
+        meta: {
+          mode,
+          rounds: event.rounds ?? null,
+          providersUsed: event.providers_used ?? null,
+          kcpSavings: event.kcp_savings ?? null,
+          cost: event.cost ?? null,
+        },
+      }),
+    }).catch((err) => console.error('[quantum/log-session]', err))
+  } catch (err) {
+    console.error('[quantum/log-session]', err)
+  }
+}
+
 /** Deep mode runs 3 rounds × 4 providers — allow up to 10 minutes. */
 const STREAM_TIMEOUT_MS = 600_000
 /** Max reconnect attempts before giving up. */
@@ -97,7 +125,10 @@ export function streamQuantumSession(
           if (line.startsWith('data: ')) {
             try {
               const event: QuantumSSEEvent = JSON.parse(line.slice(6))
-              if (event.type === 'session_complete') sessionComplete = true
+              if (event.type === 'session_complete') {
+                sessionComplete = true
+                logQuantumSessionComplete(sessionId, event)
+              }
               onEvent(event)
             } catch {
               // skip malformed events
