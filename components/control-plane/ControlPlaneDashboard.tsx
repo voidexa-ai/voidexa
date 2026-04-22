@@ -4,6 +4,11 @@
 // voidexa Control Plane — full admin command center
 
 import React, { useEffect, useState, useCallback } from 'react';
+import {
+  toLegacySummary,
+  toLegacyRecent,
+  type StatsApiResponse,
+} from '@/lib/kcp90/dashboard-adapter';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -744,19 +749,25 @@ export default function ControlPlaneDashboard({ initial }: { initial: { summary:
   const refresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const res = await fetch('/api/kcp90/stats');
+      const res = await fetch('/api/kcp90/stats', { cache: 'no-store' });
       if (res.ok) {
-        const json = await res.json();
-        setData(json);
+        const json = (await res.json()) as StatsApiResponse;
+        setData({
+          summary: toLegacySummary(json.windows?.['30d']),
+          daily: [],
+          recent: toLegacyRecent(json.recent),
+        });
         setLastRefresh(new Date());
       }
+    } catch {
+      // keep previous data on error — TopBar shows stale timestamp
     } finally {
       setRefreshing(false);
     }
   }, []);
 
   useEffect(() => {
-    setLastRefresh(new Date());
+    void refresh();
     const id = setInterval(refresh, 30_000);
     return () => clearInterval(id);
   }, [refresh]);
