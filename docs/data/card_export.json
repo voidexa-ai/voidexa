@@ -1,0 +1,1729 @@
+[
+  {
+    "id": "thermal_lance",
+    "name": "Thermal Lance",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "flak_burst",
+    "name": "Flak Burst",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "finisher_torpedo",
+    "name": "Finisher Torpedo",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "breach_mark",
+    "name": "Breach Mark",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "salvo_barrage",
+    "name": "Salvo Barrage",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "piercing_beam",
+    "name": "Piercing Beam",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "arc_coil",
+    "name": "Arc Coil",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "reactor_spike",
+    "name": "Reactor Spike",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "rail_line",
+    "name": "Rail Line",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "emp_nova",
+    "name": "EMP Nova",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "shatter_beam",
+    "name": "Shatter Beam",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "void_lance",
+    "name": "Void Lance",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "charged_shot",
+    "name": "Charged Shot",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "stellar_annihilator",
+    "name": "Stellar Annihilator",
+    "type": "weapon",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "void_echo",
+    "name": "Void Echo",
+    "type": "weapon",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "ablative_plating",
+    "name": "Ablative Plating",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "firewall_bubble",
+    "name": "Firewall Bubble",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "drain_beam",
+    "name": "Drain Beam",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "shield_lattice",
+    "name": "Shield Lattice",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "bulkhead_lock",
+    "name": "Bulkhead Lock",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "auto_repair_module",
+    "name": "Auto-Repair Module",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "phase_shell",
+    "name": "Phase Shell",
+    "type": "defense",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "leech_shield",
+    "name": "Leech Shield",
+    "type": "defense",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "persistent_barrier",
+    "name": "Persistent Barrier",
+    "type": "defense",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "crash_override",
+    "name": "Crash Override",
+    "type": "defense",
+    "tier": "legendary",
+    "keywords": [
+      "auto_repair_protocol"
+    ]
+  },
+  {
+    "id": "afterburn",
+    "name": "Afterburn",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "barrel_roll",
+    "name": "Barrel Roll",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "vector_feint",
+    "name": "Vector Feint",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "drift_turn",
+    "name": "Drift Turn",
+    "type": "maneuver",
+    "tier": "uncommon",
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "tractor_pulse",
+    "name": "Tractor Pulse",
+    "type": "maneuver",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "anchor_protocol",
+    "name": "Anchor Protocol",
+    "type": "maneuver",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "cloak_burst",
+    "name": "Cloak Burst",
+    "type": "maneuver",
+    "tier": "rare",
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "phantom_strike",
+    "name": "Phantom Strike",
+    "type": "maneuver",
+    "tier": "legendary",
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "decoy_drone",
+    "name": "Decoy Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "oracle_drone",
+    "name": "Oracle Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "snare_drone",
+    "name": "Snare Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "salvage_drone",
+    "name": "Salvage Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "emp_drone",
+    "name": "EMP Drone",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "escort_wing",
+    "name": "Escort Wing",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "kamikaze_drone",
+    "name": "Kamikaze Drone",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "carrier_deploy",
+    "name": "Carrier Deploy",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "efficiency_protocol",
+    "name": "Efficiency Protocol",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "system_query",
+    "name": "System Query",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "predator_lock",
+    "name": "Predator Lock",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "fleet_commander",
+    "name": "Fleet Commander",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "leviathan_presence",
+    "name": "Leviathan Presence",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "quantum_convergence",
+    "name": "Quantum Convergence",
+    "type": "ai",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "battery_swap",
+    "name": "Battery Swap",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "nanite_pack",
+    "name": "Nanite Pack",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "smoke_chaff",
+    "name": "Smoke Chaff",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "spare_drone_kit",
+    "name": "Spare Drone Kit",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "field_patch",
+    "name": "Field Patch",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "hard_reboot",
+    "name": "Hard Reboot",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "thermal_vent",
+    "name": "Thermal Vent",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "heavy_torpedo",
+    "name": "Heavy Torpedo",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "unstable_warhead",
+    "name": "Unstable Warhead",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "flak_warhead",
+    "name": "Flak Warhead",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "guided_missile",
+    "name": "Guided Missile",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "thermal_breach",
+    "name": "Thermal Breach",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "emp_spike",
+    "name": "EMP Spike",
+    "type": "weapon",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "signal_jam",
+    "name": "Signal Jam",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "grapple_lock",
+    "name": "Grapple Lock",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "null_field",
+    "name": "Null Field",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "system_ping",
+    "name": "System Ping",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "cascade_overload",
+    "name": "Cascade Overload",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "elite_hunter",
+    "name": "Elite Hunter",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "dual_lock_salvo",
+    "name": "Dual Lock Salvo",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "proximity_mine",
+    "name": "Proximity Mine",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "heat_injector",
+    "name": "Heat Injector",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "paint_target",
+    "name": "Paint Target",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "polarity_flip",
+    "name": "Polarity Flip",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "energy_siphon",
+    "name": "Energy Siphon",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "hazard_pulse",
+    "name": "Hazard Pulse",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "catastrophic_strike",
+    "name": "Catastrophic Strike",
+    "type": "weapon",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "singularity_cannon",
+    "name": "Singularity Cannon",
+    "type": "weapon",
+    "tier": "mythic",
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "blink_strike",
+    "name": "Blink Strike",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "chaff_torpedo",
+    "name": "Chaff Torpedo",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "iff_scrambler",
+    "name": "IFF Scrambler",
+    "type": "weapon",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "berserker_round",
+    "name": "Berserker Round",
+    "type": "weapon",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "purge_protocol",
+    "name": "Purge Protocol",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "shield_recharge",
+    "name": "Shield Recharge",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "shield_drone",
+    "name": "Shield Drone",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "point_defense",
+    "name": "Point Defense",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "signal_denial",
+    "name": "Signal Denial",
+    "type": "defense",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "spoof_flare",
+    "name": "Spoof Flare",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "escort_screen",
+    "name": "Escort Screen",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "threat_spoof",
+    "name": "Threat Spoof",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "digital_firewall",
+    "name": "Digital Firewall",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "stealth_mask",
+    "name": "Stealth Mask",
+    "type": "defense",
+    "tier": "common",
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "harmonic_barrier",
+    "name": "Harmonic Barrier",
+    "type": "defense",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "shield_breaker_protocol",
+    "name": "Shield Breaker Protocol",
+    "type": "defense",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "capacitor_hold",
+    "name": "Capacitor Hold",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "temporal_loop",
+    "name": "Temporal Loop",
+    "type": "defense",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "reinforced_plating",
+    "name": "Reinforced Plating",
+    "type": "defense",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "timing_override",
+    "name": "Timing Override",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": [
+      "priority_fire"
+    ]
+  },
+  {
+    "id": "warp_blink",
+    "name": "Warp Blink",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "boost_thrusters",
+    "name": "Boost Thrusters",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "true_aim",
+    "name": "True Aim",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "combat_mode_swap",
+    "name": "Combat Mode Swap",
+    "type": "maneuver",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "burst_window",
+    "name": "Burst Window",
+    "type": "maneuver",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "lag_injection",
+    "name": "Lag Injection",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "echo_shot",
+    "name": "Echo Shot",
+    "type": "maneuver",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "queued_command",
+    "name": "Queued Command",
+    "type": "maneuver",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "rate_limiter",
+    "name": "Rate Limiter",
+    "type": "maneuver",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "signal_scramble",
+    "name": "Signal Scramble",
+    "type": "maneuver",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "wide_spectrum_jam",
+    "name": "Wide Spectrum Jam",
+    "type": "maneuver",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "micro_swarm",
+    "name": "Micro-Swarm",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "detonate_drone",
+    "name": "Detonate Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "firmware_patch",
+    "name": "Firmware Patch",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "drone_controller",
+    "name": "Drone Controller",
+    "type": "drone",
+    "tier": "legendary",
+    "keywords": [
+      "hot_deploy",
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "hangar_pod",
+    "name": "Hangar Pod",
+    "type": "drone",
+    "tier": "legendary",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "fleet_sync",
+    "name": "Fleet Sync",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "swarm_intelligence",
+    "name": "Swarm Intelligence",
+    "type": "drone",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "sleeper_drone",
+    "name": "Sleeper Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "emergency_swarm",
+    "name": "Emergency Swarm",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "decoy_flare_token",
+    "name": "Decoy Flare Token",
+    "type": "drone",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "the_hive_mind",
+    "name": "The Hive Mind",
+    "type": "drone",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "emp_net",
+    "name": "EMP Net",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "cycle_systems",
+    "name": "Cycle Systems",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "telemetry_leak",
+    "name": "Telemetry Leak",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "power_drain",
+    "name": "Power Drain",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "system_shutdown",
+    "name": "System Shutdown",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "signal_spoof",
+    "name": "Signal Spoof",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "trace_protocol",
+    "name": "Trace Protocol",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "weapons_hot",
+    "name": "Weapons Hot",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "fortress_logic",
+    "name": "Fortress Logic",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "intel_cascade",
+    "name": "Intel Cascade",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "scrap_synergy",
+    "name": "Scrap Synergy",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "ecm_feedback",
+    "name": "ECM Feedback",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "rapid_fire_logic",
+    "name": "Rapid Fire Logic",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "power_surge_protocol",
+    "name": "Power Surge Protocol",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "targeting_core",
+    "name": "Targeting Core",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "weapon_router",
+    "name": "Weapon Router",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "heat_sink_protocol",
+    "name": "Heat Sink Protocol",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "ecm_suite",
+    "name": "ECM Suite",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "system_restore",
+    "name": "System Restore",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "archive_recall",
+    "name": "Archive Recall",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "preload_sequence",
+    "name": "Preload Sequence",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "recycle_protocol",
+    "name": "Recycle Protocol",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "hard_burn",
+    "name": "Hard Burn",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "archive_echo",
+    "name": "Archive Echo",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "the_founders_key",
+    "name": "The Founder's Key",
+    "type": "ai",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "dome_protocol",
+    "name": "Dome Protocol",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": [
+      "priority_fire"
+    ]
+  },
+  {
+    "id": "load_rack",
+    "name": "Load Rack",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "emergency_reload",
+    "name": "Emergency Reload",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "tow_beacon",
+    "name": "Tow Beacon",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "legal_lock",
+    "name": "Legal Lock",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "defrag_routine",
+    "name": "Defrag Routine",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "jettison",
+    "name": "Jettison",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "refit_module",
+    "name": "Refit Module",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "recode_chip",
+    "name": "Recode Chip",
+    "type": "consumable",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "print_routine",
+    "name": "Print Routine",
+    "type": "consumable",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "flash_routine",
+    "name": "Flash Routine",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "buffer_burst",
+    "name": "Buffer Burst",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "chaff_packet",
+    "name": "Chaff Packet",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "emergency_reroute",
+    "name": "Emergency Reroute",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "amplifier_cell",
+    "name": "Amplifier Cell",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "servo_disruptor",
+    "name": "Servo Disruptor",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "armor_strip_charge",
+    "name": "Armor Strip Charge",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "critical_lock_cell",
+    "name": "Critical Lock Cell",
+    "type": "consumable",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "quantum_splice",
+    "name": "Quantum Splice",
+    "type": "consumable",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "docking_window",
+    "name": "Docking Window",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "rescue_beacon",
+    "name": "Rescue Beacon",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "nebula_fog",
+    "name": "Nebula Fog",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "asteroid_field",
+    "name": "Asteroid Field",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "ion_storm",
+    "name": "Ion Storm",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "gravity_well",
+    "name": "Gravity Well",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "derelict_debris_field",
+    "name": "Derelict Debris Field",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "signal_blackout",
+    "name": "Signal Blackout",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": []
+  },
+  {
+    "id": "solar_flare",
+    "name": "Solar Flare",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "quantum_rift",
+    "name": "Quantum Rift",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "ammo_rack",
+    "name": "Ammo Rack",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "missile_guidance",
+    "name": "Missile Guidance",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "rail_capacitor",
+    "name": "Rail Capacitor",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "heat_sink_module",
+    "name": "Heat Sink Module",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "repair_bay",
+    "name": "Repair Bay",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "salvage_rig",
+    "name": "Salvage Rig",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "quantum_relay",
+    "name": "Quantum Relay",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": []
+  },
+  {
+    "id": "memory_pin",
+    "name": "Memory Pin",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "risk_rider",
+    "name": "Risk Rider",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "insurance_clause",
+    "name": "Insurance Clause",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "tow_voucher",
+    "name": "Tow Voucher",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "cargo_stabilizer",
+    "name": "Cargo Stabilizer",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "race_sponsor",
+    "name": "Race Sponsor",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "reputation_first",
+    "name": "Reputation First",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "black_market_deal",
+    "name": "Black Market Deal",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "power_contest",
+    "name": "Power Contest",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "arena_modifier",
+    "name": "Arena Modifier",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "data_cache",
+    "name": "Data Cache",
+    "type": "consumable",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "long_range_scan",
+    "name": "Long-Range Scan",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "supply_credit",
+    "name": "Supply Credit",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "silent_running",
+    "name": "Silent Running",
+    "type": "consumable",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "null_ray",
+    "name": "Null Ray",
+    "type": "weapon",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "intent_scanner",
+    "name": "Intent Scanner",
+    "type": "ai",
+    "tier": "common",
+    "keywords": []
+  },
+  {
+    "id": "counter_clamp",
+    "name": "Counter Clamp",
+    "type": "defense",
+    "tier": "uncommon",
+    "keywords": []
+  },
+  {
+    "id": "event_horizon",
+    "name": "Event Horizon",
+    "type": "maneuver",
+    "tier": "mythic",
+    "keywords": []
+  },
+  {
+    "id": "scrapline_reclaimer",
+    "name": "Scrapline Reclaimer",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "system_reboot",
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "lazarus_swarm_node",
+    "name": "Lazarus Swarm Node",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "system_reboot"
+    ]
+  },
+  {
+    "id": "dockborn_interceptor",
+    "name": "Dockborn Interceptor",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "assembly_line_siege_pod",
+    "name": "Assembly-Line Siege Pod",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "cold_boot"
+    ]
+  },
+  {
+    "id": "redline_breacher",
+    "name": "Redline Breacher",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "burnwake_assault_rack",
+    "name": "Burnwake Assault Rack",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "vector_duelist",
+    "name": "Vector Duelist",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "priority_fire"
+    ]
+  },
+  {
+    "id": "sentinel_mark_iv",
+    "name": "Sentinel Mark-IV",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "priority_fire"
+    ]
+  },
+  {
+    "id": "mass_driver_colossus",
+    "name": "Mass Driver Colossus",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "cascade"
+    ]
+  },
+  {
+    "id": "breachline_torpedo_bus",
+    "name": "Breachline Torpedo Bus",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "cascade"
+    ]
+  },
+  {
+    "id": "stratos_relay_kite",
+    "name": "Stratos Relay Kite",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "high_orbit"
+    ]
+  },
+  {
+    "id": "orbital_lance_platform",
+    "name": "Orbital Lance Platform",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "high_orbit"
+    ]
+  },
+  {
+    "id": "skyhook_flak_drone",
+    "name": "Skyhook Flak Drone",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "predictive_aegis_grid",
+    "name": "Predictive Aegis Grid",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": [
+      "tracking_lock"
+    ]
+  },
+  {
+    "id": "needlefang_hunter",
+    "name": "Needlefang Hunter",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "blacksite_sever_pod",
+    "name": "Blacksite Sever Pod",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "patchwork_bastion",
+    "name": "Patchwork Bastion",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "auto_repair_protocol"
+    ]
+  },
+  {
+    "id": "self_mending_bulwark",
+    "name": "Self-Mending Bulwark",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "auto_repair_protocol"
+    ]
+  },
+  {
+    "id": "leechray_skimmer",
+    "name": "Leechray Skimmer",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "hull_siphon"
+    ]
+  },
+  {
+    "id": "reclamation_harvester",
+    "name": "Reclamation Harvester",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "hull_siphon"
+    ]
+  },
+  {
+    "id": "watchline_custodian",
+    "name": "Watchline Custodian",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "persistent_systems"
+    ]
+  },
+  {
+    "id": "everwake_patrol_spine",
+    "name": "Everwake Patrol Spine",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "persistent_systems"
+    ]
+  },
+  {
+    "id": "ghostglass_scout",
+    "name": "Ghostglass Scout",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "phantom_mesh_array",
+    "name": "Phantom Mesh Array",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": [
+      "stealth_coating"
+    ]
+  },
+  {
+    "id": "adamant_siege_engine",
+    "name": "Adamant Siege Engine",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "hardened_core"
+    ]
+  },
+  {
+    "id": "corevault_guardian",
+    "name": "Corevault Guardian",
+    "type": "drone",
+    "tier": "legendary",
+    "keywords": [
+      "hardened_core"
+    ]
+  },
+  {
+    "id": "rapid_bay_interceptor",
+    "name": "Rapid Bay Interceptor",
+    "type": "drone",
+    "tier": "common",
+    "keywords": [
+      "emergency_launch"
+    ]
+  },
+  {
+    "id": "ambush_deployment_net",
+    "name": "Ambush Deployment Net",
+    "type": "ai",
+    "tier": "uncommon",
+    "keywords": [
+      "emergency_launch"
+    ]
+  },
+  {
+    "id": "dualcoil_pursuer",
+    "name": "Dualcoil Pursuer",
+    "type": "drone",
+    "tier": "uncommon",
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "barrage_widow",
+    "name": "Barrage Widow",
+    "type": "drone",
+    "tier": "rare",
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "graveyard_sync_core",
+    "name": "Graveyard Sync Core",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": [
+      "system_reboot"
+    ]
+  },
+  {
+    "id": "burngate_commander",
+    "name": "Burngate Commander",
+    "type": "ai",
+    "tier": "legendary",
+    "keywords": [
+      "hot_deploy"
+    ]
+  },
+  {
+    "id": "surgical_kill_mesh",
+    "name": "Surgical Kill Mesh",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": [
+      "critical_breach"
+    ]
+  },
+  {
+    "id": "overclocked_gunbrain",
+    "name": "Overclocked Gunbrain",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": [
+      "twin_barrels"
+    ]
+  },
+  {
+    "id": "crisis_hangar_ai",
+    "name": "Crisis Hangar AI",
+    "type": "ai",
+    "tier": "rare",
+    "keywords": [
+      "emergency_launch"
+    ]
+  }
+]
