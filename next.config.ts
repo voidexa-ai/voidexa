@@ -22,6 +22,22 @@ const nextConfig: NextConfig = {
     { source: '/dk/auth/signin',   destination: '/dk/auth/login',  permanent: true },
     { source: '/dk/auth/register', destination: '/dk/auth/signup', permanent: true },
     { source: '/dk/account',       destination: '/dk/profile',     permanent: true },
+
+    // AFS-3 — canonical game hub aliases. The underlying features already
+    // live at pre-existing routes; typed canonical URLs used in docs and P0
+    // audits should resolve to them.
+    { source: '/game/card-battle',   destination: '/game/battle',              permanent: true },
+    { source: '/game/deck-builder',  destination: '/game/cards/deck-builder',  permanent: true },
+    { source: '/game/pilot-profile', destination: '/game/profile',             permanent: true },
+    { source: '/game/shop',          destination: '/shop',                     permanent: true },
+
+    // Danish mirrors for game canonical aliases. /dk/game/* is not yet a
+    // fully localised surface, so mirrors target the canonical English
+    // routes until AFS-26 ships proper DK translations.
+    { source: '/dk/game/card-battle',   destination: '/game/battle',              permanent: true },
+    { source: '/dk/game/deck-builder',  destination: '/game/cards/deck-builder',  permanent: true },
+    { source: '/dk/game/pilot-profile', destination: '/game/profile',             permanent: true },
+    { source: '/dk/game/shop',          destination: '/shop',                     permanent: true },
   ],
 
   headers: async () => [
