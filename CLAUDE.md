@@ -83,10 +83,85 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-1 complete** | `8d3a1e6` | **825** | **Homepage cinematic repair** |
 | **AFS-1d** | `357e1a9` | 825 | **Ultrawide backdrop PNG** |
 | **AFS-7 complete** | `b58fcb8` | **860** | **Legal pages + sitemap + robots + cookie banner** |
+| **AFS-2 complete** | `36d5f62` | **910** | **Auth route infra — 14 redirects + /wallet + /settings** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-22 — Sprint AFS-2 COMPLETE (Auth Route Infrastructure)
+
+**Status:** ✅ SHIPPED to `origin/main`, live verification pending Vercel deploy
+**Tag:** `sprint-afs-2-complete`
+**Backup:** `backup/pre-sprint-afs-2-20260422`
+**Tests:** 910/910 green (was 860, +50 new AFS-2 assertions)
+**Final HEAD:** `36d5f62`
+
+**Commit chain:**
+```
+36d5f62 test(afs-2): wallet/settings/smoke coverage
+ee70831 feat(afs-2): wallet + settings in user dropdown
+11055b1 feat(afs-2): /settings page MVP
+6ec6c2e feat(afs-2): /wallet page binds existing backend APIs
+e223382 feat(afs-2): 308 redirects for canonical auth aliases
+00c6c0c chore(afs-2): add sprint SKILL documentation
+```
+
+**What shipped:**
+- 14 permanent (308) redirects in `next.config.ts`: 7 EN canonicals
+  (`/login`, `/signin`, `/signup`, `/register`, `/auth/signin`,
+  `/auth/register`, `/account`) plus 7 DK mirrors
+- `/wallet` (+ `/dk/wallet`) — server-rendered auth-gated page that
+  redirects unauthenticated visitors to `/auth/login?redirect=/wallet`,
+  reuses the existing `WalletBar` component for Stripe top-up, and
+  shows the last 10 `wallet_transactions` with Stripe flag + running
+  balance
+- `/settings` (+ `/dk/settings`) — MVP account settings: display name
+  (writes to `profiles.name`), read-only email, language preference
+  stored under `voidexa_locale_pref_v1`, notifications stub, sign-out,
+  delete-account hand-off to `/contact`
+- DK auth re-export pages: `/dk/auth/login`, `/dk/auth/signup`,
+  `/dk/profile` — thin wrappers around the English pages with DK
+  metadata, matching the AFS-7 locale-mirror pattern
+- `app/auth/login/page.tsx` — now reads `?redirect=` and sends users
+  back to their intended destination after signing in, with an
+  allowlist that blocks open-redirect abuse; wrapped in Suspense to
+  keep Next.js 16 prerender happy
+- `components/AuthButton.tsx` — user dropdown now contains Profile +
+  Wallet + Settings + Sign out with Danish labels (Profil, Tegnebog,
+  Indstillinger, Log ud, Tilmeld); all links route through
+  `localizeHref`
+
+**Files added:**
+- `app/wallet/page.tsx` + `layout.tsx`
+- `app/settings/page.tsx` + `layout.tsx`
+- `app/dk/wallet/page.tsx`, `app/dk/settings/page.tsx`
+- `app/dk/auth/login/page.tsx`, `app/dk/auth/signup/page.tsx`
+- `app/dk/profile/page.tsx`
+- `components/wallet/WalletPageClient.tsx`
+- `components/settings/SettingsPageClient.tsx`
+- `tests/afs-2-auth-routes.test.ts` (50 assertions)
+
+**Files modified:** `next.config.ts`, `app/auth/login/page.tsx`,
+`components/AuthButton.tsx`.
+
+**Known items out-of-scope (unchanged):**
+- Password reset flow (separate sprint)
+- 2FA / MFA
+- OAuth provider expansion
+- Deeper wallet analytics (GHAI balance, per-product spend)
+- Deeper settings (email change, notification backend, GDPR-automation
+  delete) — currently stub/toast only, handled by support
+- Danish translation of the auth forms themselves (AFS-26)
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-sprint-afs-2-20260422
+git push origin main --force-with-lease
+git push origin :refs/tags/sprint-afs-2-complete
+```
+
+---
 
 ### Session 2026-04-22 — Sprint AFS-1 COMPLETE (+ 1b, 1c, 1d hotfixes)
 
@@ -235,7 +310,7 @@ can be executed.
 | Bug | Fix |
 |---|---|
 | ~~Homepage cinematic + quick menu~~ | ✅ **AFS-1 COMPLETE** |
-| `/login`, `/signin`, `/wallet`, `/settings`, `/account` 404 | AFS-2 |
+| ~~`/login`, `/signin`, `/wallet`, `/settings`, `/account` 404~~ | ✅ **AFS-2 COMPLETE** |
 | `/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` 404 | AFS-3 |
 | Admin Control Plane ZERO data | AFS-4 (SKILL NOT written) |
 | 257 Cards blank art | AFS-5 (SKILL NOT written) |
