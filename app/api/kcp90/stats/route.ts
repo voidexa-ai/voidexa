@@ -1,25 +1,43 @@
 // app/api/kcp90/stats/route.ts
-// KCP-90 stats API
-//   GET  — Control Plane dashboard auto-refresh (admin session required)
-//   POST — Ingest compression event from local products (Bearer token required)
-//          Body: { product, encoder_used, original_chars, compressed_chars,
-//                  compression_ratio, tokens_saved, session_id? }
+// AFS-4: KCP-90 stats API, rewired to kcp90_compression_events.
+//
+//   POST — Machine-to-machine compression-event ingest (Bearer KCP90_API_SECRET).
+//          Accepts the legacy body shape used by external callers:
+//            { product, encoder_used, original_chars, compressed_chars,
+//              compression_ratio, tokens_saved, session_id? }
+//          Translates to the new kcp90_compression_events schema and writes
+//          via the shared logKcp90Event helper. The legacy kcp90_stats table
+//          is left in place for historical data but no longer written.
+//
+//   GET  — Admin-only dashboard aggregation. Returns
+//            { generatedAt, windows: { '24h' | '7d' | '30d' : byProduct } }
+//          where byProduct maps the 4 known products to counters. The public
+//          consumer path is /api/kcp90/public-stats and is untouched.
 
-import { NextResponse, NextRequest } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import {
+  logKcp90Event,
+  type Kcp90Product,
+} from '@/lib/kcp90/log-event';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // ─── POST — ingest a compression event ───────────────────────────────────────
 
-const VALID_ENCODERS = ['ollama', 'regex', 'raw'] as const;
-type EncoderUsed = typeof VALID_ENCODERS[number];
+const VALID_PRODUCTS: readonly Kcp90Product[] = [
+  'void-chat',
+  'quantum',
+  'trading-bot',
+  'break-room',
+];
 
 export async function POST(request: NextRequest) {
-  // Auth: shared secret for machine-to-machine calls
   const authHeader = request.headers.get('authorization') ?? '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
-  const secret = process.env.KCP90_API_SECRET;
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
+  const secret = process.env.KCP90_API_SECRET?.trim();
 
   if (!secret || token !== secret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -32,74 +50,92 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  // Validate required fields
-  const { product, encoder_used, original_chars, compressed_chars, compression_ratio, tokens_saved, session_id } = body;
+  const {
+    product,
+    encoder_used,
+    original_chars,
+    compressed_chars,
+    tokens_saved,
+    session_id,
+  } = body;
 
-  if (typeof product !== 'string' || !product.trim()) {
-    return NextResponse.json({ error: 'product is required' }, { status: 422 });
-  }
-  if (!VALID_ENCODERS.includes(encoder_used as EncoderUsed)) {
-    return NextResponse.json({ error: `encoder_used must be one of: ${VALID_ENCODERS.join(', ')}` }, { status: 422 });
+  if (
+    typeof product !== 'string' ||
+    !VALID_PRODUCTS.includes(product as Kcp90Product)
+  ) {
+    return NextResponse.json(
+      { error: `product must be one of: ${VALID_PRODUCTS.join(', ')}` },
+      { status: 422 },
+    );
   }
   if (typeof original_chars !== 'number' || original_chars < 0) {
-    return NextResponse.json({ error: 'original_chars must be a non-negative number' }, { status: 422 });
+    return NextResponse.json(
+      { error: 'original_chars must be a non-negative number' },
+      { status: 422 },
+    );
   }
   if (typeof compressed_chars !== 'number' || compressed_chars < 0) {
-    return NextResponse.json({ error: 'compressed_chars must be a non-negative number' }, { status: 422 });
-  }
-  if (typeof compression_ratio !== 'number' || compression_ratio < 0 || compression_ratio > 1) {
-    return NextResponse.json({ error: 'compression_ratio must be a number between 0 and 1' }, { status: 422 });
-  }
-  if (typeof tokens_saved !== 'number' || tokens_saved < 0) {
-    return NextResponse.json({ error: 'tokens_saved must be a non-negative number' }, { status: 422 });
+    return NextResponse.json(
+      { error: 'compressed_chars must be a non-negative number' },
+      { status: 422 },
+    );
   }
 
-  const serviceClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  logKcp90Event({
+    product: product as Kcp90Product,
+    userId: null,
+    sessionId: typeof session_id === 'string' ? session_id.slice(0, 128) : null,
+    tokensIn: 0,
+    tokensOut: 0,
+    bytesRaw: Math.round(original_chars),
+    bytesCompressed: Math.round(compressed_chars),
+    layerUsed: typeof encoder_used === 'string' ? encoder_used : null,
+    success: true,
+    meta: {
+      tokensSaved:
+        typeof tokens_saved === 'number' ? Math.round(tokens_saved) : null,
+      ingestVia: 'kcp90/stats POST',
+    },
+  });
 
-  const { data, error } = await serviceClient
-    .from('kcp90_stats')
-    .insert({
-      product:           String(product).trim(),
-      encoder_used:      encoder_used as EncoderUsed,
-      original_chars:    Math.round(original_chars as number),
-      compressed_chars:  Math.round(compressed_chars as number),
-      compression_ratio: compression_ratio as number,
-      tokens_saved:      Math.round(tokens_saved as number),
-      ...(typeof session_id === 'string' && session_id ? { session_id } : {}),
-    })
-    .select('id, created_at')
-    .single();
-
-  if (error) {
-    console.error('[kcp90/stats POST]', error);
-    return NextResponse.json({ error: 'Insert failed' }, { status: 500 });
-  }
-
-  return NextResponse.json({ ok: true, id: data.id, created_at: data.created_at }, { status: 201 });
+  return NextResponse.json({ ok: true }, { status: 202 });
 }
 
-// ─── GET — dashboard data ─────────────────────────────────────────────────────
+// ─── GET — admin dashboard aggregation ───────────────────────────────────────
+
+type Window = '24h' | '7d' | '30d';
+interface ProductCounters {
+  events: number;
+  tokensIn: number;
+  tokensOut: number;
+  bytesRaw: number;
+  bytesCompressed: number;
+  successes: number;
+}
+
+const WINDOW_HOURS: Record<Window, number> = {
+  '24h': 24,
+  '7d': 24 * 7,
+  '30d': 24 * 30,
+};
+
+function emptyByProduct(): Record<Kcp90Product, ProductCounters> {
+  return {
+    'void-chat':   { events: 0, tokensIn: 0, tokensOut: 0, bytesRaw: 0, bytesCompressed: 0, successes: 0 },
+    'quantum':     { events: 0, tokensIn: 0, tokensOut: 0, bytesRaw: 0, bytesCompressed: 0, successes: 0 },
+    'trading-bot': { events: 0, tokensIn: 0, tokensOut: 0, bytesRaw: 0, bytesCompressed: 0, successes: 0 },
+    'break-room':  { events: 0, tokensIn: 0, tokensOut: 0, bytesRaw: 0, bytesCompressed: 0, successes: 0 },
+  };
+}
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll: () => cookieStore.getAll() } }
-  );
-
+  const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  const serviceClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  const { data: profile } = await serviceClient
+  const { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('role')
     .eq('id', user.id)
@@ -109,23 +145,47 @@ export async function GET() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const [summaryRes, dailyRes, recentRes] = await Promise.all([
-    serviceClient.from('kcp90_summary').select('*').single(),
-    serviceClient
-      .from('kcp90_daily_stats')
-      .select('*')
-      .order('day', { ascending: true })
-      .limit(30),
-    serviceClient
-      .from('kcp90_stats')
-      .select('id, product, encoder_used, original_chars, compressed_chars, compression_ratio, tokens_saved, created_at')
-      .order('created_at', { ascending: false })
-      .limit(20),
-  ]);
+  const now = Date.now();
+  const windows: Record<Window, Record<Kcp90Product, ProductCounters>> = {
+    '24h': emptyByProduct(),
+    '7d':  emptyByProduct(),
+    '30d': emptyByProduct(),
+  };
+
+  for (const label of Object.keys(WINDOW_HOURS) as Window[]) {
+    const since = new Date(now - WINDOW_HOURS[label] * 3600 * 1000).toISOString();
+    const { data, error } = await supabaseAdmin
+      .from('kcp90_compression_events')
+      .select('product, tokens_in, tokens_out, bytes_raw, bytes_compressed, success')
+      .gte('ts', since);
+
+    if (error) {
+      console.error('[kcp90/stats GET] window', label, 'error:', error.message);
+      continue;
+    }
+
+    for (const row of data ?? []) {
+      const p = row.product as Kcp90Product;
+      if (!windows[label][p]) continue;
+      const c = windows[label][p];
+      c.events += 1;
+      c.tokensIn += row.tokens_in ?? 0;
+      c.tokensOut += row.tokens_out ?? 0;
+      c.bytesRaw += row.bytes_raw ?? 0;
+      c.bytesCompressed += row.bytes_compressed ?? 0;
+      if (row.success) c.successes += 1;
+    }
+  }
+
+  const { data: recent } = await supabaseAdmin
+    .from('kcp90_compression_events')
+    .select('id, ts, product, tokens_in, tokens_out, bytes_raw, bytes_compressed, compression_ratio, layer_used, success')
+    .order('ts', { ascending: false })
+    .limit(20);
 
   return NextResponse.json({
-    summary: summaryRes.data,
-    daily: dailyRes.data ?? [],
-    recent: recentRes.data ?? [],
+    generatedAt: new Date().toISOString(),
+    windows,
+    recent: recent ?? [],
   });
 }
