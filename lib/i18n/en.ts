@@ -36,6 +36,7 @@ export const en: Dict = {
       '/game/hauling':              { label: 'Hauling',   description: 'Cargo contracts & route encounters' },
       '/game/battle':               { label: 'Battle',    description: 'PvE card duels, Tier 1–5' },
       '/shop':         { label: 'Shop',         description: 'Skins & card packs' },
+      '/inventory':    { label: 'Inventory',    description: 'Your cards & cosmetics' },
       '/achievements': { label: 'Achievements', description: 'Hall of records' },
       '/team':        { label: 'Team',        description: 'Meet the crew' },
       '/station':     { label: 'Station',     description: 'Content hub' },

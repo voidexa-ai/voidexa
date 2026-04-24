@@ -36,6 +36,7 @@ export const da: Dict = {
       '/game/hauling':              { label: 'Hauling',   description: 'Fragtkontrakter & rute-opgør' },
       '/game/battle':               { label: 'Kamp',      description: 'PvE kortduel, Tier 1-5' },
       '/shop':         { label: 'Butik',        description: 'Skins & kortpakker' },
+      '/inventory':    { label: 'Beholdning',   description: 'Dine kort & kosmetik' },
       '/achievements': { label: 'Bedrifter',    description: 'Mindehallen' },
       '/team':        { label: 'Hold',          description: 'Mød besætningen' },
       '/station':     { label: 'Station',       description: 'Indholds-hub' },

@@ -75,6 +75,7 @@ export default function Navigation() {
         { href: '/achievements',    label: tLink('/achievements', 'Achievements'),        description: tDesc('/achievements') },
         { href: '/assembly-editor', label: tLink('/assembly-editor', 'Assembly Editor'),  description: tDesc('/assembly-editor') },
         { href: '/break-room',      label: tLink('/break-room', 'Break Room'),            description: tDesc('/break-room') },
+        { href: '/inventory',       label: tLink('/inventory', 'Inventory'),              description: tDesc('/inventory') },
       ],
     },
     {
