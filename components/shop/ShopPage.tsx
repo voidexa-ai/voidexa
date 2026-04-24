@@ -13,6 +13,7 @@ import { useT } from '@/lib/i18n/context'
 import type { Dict } from '@/lib/i18n/types'
 import { MODEL_URLS } from '@/lib/config/modelUrls'
 import { formatCentsAsGhai, formatUsdAsGhai } from '@/lib/ghai/format'
+import ItemBuyButton from './ItemBuyButton'
 
 const ShopItemPreviewCanvas = dynamic(() => import('./ShopItemPreviewCanvas'), {
   ssr: false,
@@ -504,23 +505,7 @@ function ItemModal({ item, onClose }: { item: ShopItem; onClose: () => void }) {
             }}>
               {formatPrice(item.price)}
             </span>
-            <button
-              disabled
-              style={{
-                padding: '12px 26px',
-                background: `linear-gradient(135deg, ${color}33, ${color}22)`,
-                border: `1px solid ${color}77`,
-                borderRadius: 999,
-                color: 'rgba(255,255,255,0.7)',
-                fontFamily: 'var(--font-space, monospace)',
-                fontSize: 13,
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
-                cursor: 'not-allowed',
-              }}
-            >
-              {t.shop.comingSoonStripe}
-            </button>
+            <ItemBuyButton item={item} accent={color} onSuccess={onClose} />
           </div>
         </div>
       </div>
