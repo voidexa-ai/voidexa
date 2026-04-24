@@ -14,6 +14,7 @@ import type { Dict } from '@/lib/i18n/types'
 import { MODEL_URLS } from '@/lib/config/modelUrls'
 import { formatCentsAsGhai, formatUsdAsGhai } from '@/lib/ghai/format'
 import ItemBuyButton from './ItemBuyButton'
+import ShopCrossNav from './ShopCrossNav'
 
 const ShopItemPreviewCanvas = dynamic(() => import('./ShopItemPreviewCanvas'), {
   ssr: false,
@@ -606,6 +607,7 @@ export default function ShopPage() {
           }}>
             {t.shop.subtitle}
           </p>
+          <ShopCrossNav />
         </header>
 
         {/* Starter pack banner */}
