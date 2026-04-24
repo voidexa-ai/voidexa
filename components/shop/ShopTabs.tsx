@@ -14,7 +14,7 @@ export default function ShopTabs({ activeTab }: Props) {
   function go(tab: string) {
     const next = new URLSearchParams(params.toString())
     next.set('tab', tab)
-    router.push(`/shop?${next.toString()}`)
+    router.push(`/shop/cosmetics?${next.toString()}`)
   }
 
   return (
