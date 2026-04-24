@@ -17,7 +17,7 @@ export default function ShopCosmeticsClient({ tab }: Props) {
     <div style={S.page}>
       <main style={S.main}>
         <header style={S.header}>
-          <Link href="/" style={S.backLink}>← voidexa</Link>
+          <Link href="/shop" style={S.backLink}>← Shop</Link>
           <span style={S.eyebrow}>SHOP · COSMETICS</span>
           <h1 style={S.title}>Shop</h1>
         </header>
