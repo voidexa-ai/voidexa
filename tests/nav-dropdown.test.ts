@@ -75,12 +75,15 @@ describe('Nav Universe dropdown — sprint 13e Break Room restore', () => {
     expect(breakRoomIdx).toBeGreaterThan(freeFlightIdx)
   })
 
-  it('Break Room is the LAST item in the Universe dropdown', () => {
+  it('Inventory is the LAST item in the Universe dropdown (AFS-6a-fix)', () => {
+    // Sprint 13e originally asserted Break Room last. AFS-6a-fix moved it to
+    // second-to-last and appended Inventory as the 9th canonical item.
     const hrefs = Array.from(universeBlock.matchAll(/href:\s*['"]([^'"]+)['"]/g)).map(
       m => m[1],
     )
     expect(hrefs.length).toBeGreaterThan(0)
-    expect(hrefs[hrefs.length - 1]).toBe('/break-room')
+    expect(hrefs[hrefs.length - 1]).toBe('/inventory')
+    expect(hrefs[hrefs.length - 2]).toBe('/break-room')
   })
 
   it('Break Room is NOT present as a standalone top-level nav group', () => {
