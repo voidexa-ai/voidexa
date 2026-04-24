@@ -73,7 +73,7 @@ export default function PackShopClient() {
       <header style={S.header}>
         <div style={S.headerInner}>
           <Link href="/shop" style={S.backLink}>← Shop</Link>
-          <span style={S.eyebrow}>BOOSTER PACKS · 257-CARD LIBRARY</span>
+          <span style={S.eyebrow}>BOOSTER PACKS · ALPHA LIBRARY</span>
           <h1 style={S.title}>Open Something New</h1>
           <p style={S.subtitle}>
             Every pack has a 0.1% Mythic chance in its best slot. Mythic cards have a universe-wide
