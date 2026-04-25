@@ -90,10 +90,83 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6a-fix complete** | `6144e08` | **1014** | **Post-ship bugfixes — Universe nav +Inventory, back-link, cross-nav, Alpha copy, pack Coming Soon lockdown** |
 | **AFS-6d complete** | `bdc6f3f` | **1087** | **Cards Premium Rebuild — 1000 Alpha cards in DB, paginated catalog, deck builder, 5 saved slots** |
 | **AFS-6g complete** | `sprint-afs-6g-complete` | **1141** | **Battle Scene v2 — SpaceSkybox (battle + freeflight), WoW-style orbit camera, footer hotfix, 27 CVEs deferred** |
+| **afs-6g-skybox-fix complete** | `21c5db7` | **1150** | **Canvas alpha buffer fix — `gl.alpha=false` on BattleCanvas + FreeFlightCanvas; skybox no longer renders transparent** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — Bugfix afs-6g-skybox-fix COMPLETE (Canvas alpha buffer)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-complete` pushed, build clean, 1150/1150 tests green. Live visual verify pending Jix browser check.
+**Tag:** `afs-6g-skybox-fix-complete`
+**Backup:** `backup/pre-afs-6g-skybox-fix-20260426` → `7f09077`
+**Tests:** 1150/1150 green (was 1141, +9 new skybox-fix assertions — target was 6-8)
+**Final HEAD:** `21c5db7`
+
+**Commit chain (1 SKILL + 1 fix):**
+```
+21c5db7 fix(afs-6g): canvas alpha buffer drops skybox to transparent
+0b01dd2 chore(afs-6g-fix): add skybox-fix SKILL documentation
+```
+
+**Root cause (per live diagnostic Apr 26):**
+Production `/game/battle` showed `avgAlpha 0.5/255` and `coloredPercent 5.4%` across 425 sample points. SpaceSkybox renders correct nebula colors but the canvas reads as near-fully transparent — body `rgb(7,7,13)` shines through making the scene look like solid black. SKILL identified two compounding issues; pre-flight only confirmed one.
+
+**Fix shipped:**
+- `components/game/battle/BattleCanvas.tsx`: added `alpha: false` to `gl` prop. Forces opaque framebuffer; WebGL clears to opaque each frame so post-processing chain (Bloom + ChromaticAberration + Vignette) can no longer drop the alpha contribution from `<color attach="background" args={['#04030b']} />` on `BattleScene.tsx:33`.
+- `components/freeflight/FreeFlightCanvas.tsx`: same `alpha: false` for parity. FF was already masked by inline `style.background='#02030a'` on the canvas element so the visual change there is nil — but the underlying alpha-buffer behavior now matches battle.
+- `tests/afs-6g-skybox-fix.test.ts` — 9 source-level invariants across three describe blocks: alpha buffer config, wrapper opacity regression guard, SpaceSkybox component intact.
+
+**Sprint deviation from SKILL (documented):**
+1. **Task 4 — `opacity: 0.8` removal — NO-OP.** Pre-flight Task 0.1 ran exhaustive grep across `**/*.{tsx,ts,jsx,js,css}` for `opacity: 0.8`, `opacity:0.8`, `opacity-80`, `opacity.*\.8`, `opacity.*0?\.80`. Returned 40+ hits — none on the battle canvas, its wrapper stack (`S.wrap`/`S.canvasLayer` in `BattleController.tsx:225-226`), or any global `canvas { ... }` rule in `app/globals.css`. The Chrome diagnostic that reported `canvas opacity (computed): 0.8` was likely misattributed (hover state, wrong sample target, or computed-style fortolkningsfejl). Replaced Task 4 with regression-guard tests in Task 5 that fail if opacity is ever introduced on the wrapper styles.
+2. **Test overshoot** — 9 assertions vs SKILL target of 6-8.
+3. **Live verify** — automation bridge (Playwright extension) not connected this session, so the diagnostic re-run from Task 7 must be performed by Jix in Chrome. Source-level proof of fix is in place; visual proof pending.
+
+**Files added:**
+- `tests/afs-6g-skybox-fix.test.ts` (9 assertions across 3 describe blocks)
+
+**Files modified:**
+- `components/game/battle/BattleCanvas.tsx` (added `alpha: false` to `gl` prop + 4-line comment block explaining the alpha-buffer rationale)
+- `components/freeflight/FreeFlightCanvas.tsx` (added `alpha: false` to `gl` prop)
+
+**Live verification command for Jix (paste into DevTools console on `/game/battle` Tier 1):**
+```js
+(() => {
+  const canvas = document.querySelector('canvas');
+  const off = document.createElement('canvas');
+  off.width = canvas.width; off.height = canvas.height;
+  const ctx = off.getContext('2d');
+  ctx.drawImage(canvas, 0, 0);
+  let coloredPixels = 0; let alphaSum = 0;
+  const step = 50;
+  for (let y = 0; y < canvas.height; y += step) {
+    for (let x = 0; x < canvas.width; x += step) {
+      const d = ctx.getImageData(x, y, 1, 1).data;
+      alphaSum += d[3];
+      if (d[0] + d[1] + d[2] > 30) coloredPixels++;
+    }
+  }
+  const total = Math.floor(canvas.height/step) * Math.floor(canvas.width/step);
+  return { coloredPercent: (coloredPixels/total*100).toFixed(1), avgAlpha: (alphaSum/total).toFixed(1) };
+})()
+```
+**Expected after fix:** `coloredPercent` > 60%, `avgAlpha` > 200. Pre-fix baseline was 5.4% / 0.5.
+
+**Known items out-of-scope (unchanged):**
+- AFS-6h Battle Scene v3 visual layer (camera reframing per `docs/design/battle_scene_v3_reference.png`) — pre-flight done same session, awaiting Option A/B decision
+- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight` — source-level test only
+- Any actual CSS opacity rule discovery (none found, treated as misattributed diagnostic)
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-afs-6g-skybox-fix-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-6g-skybox-fix-complete
+git tag -d afs-6g-skybox-fix-complete
+```
+
+---
 
 ### Session 2026-04-25 — Sprint AFS-6g COMPLETE (Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep)
 
