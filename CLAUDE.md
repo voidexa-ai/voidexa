@@ -89,11 +89,110 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6a complete** | `bf1ce98` | **994** | **In-game Shop GHAI flow — mount ShopCosmeticsClient, /shop modal rewire, /inventory page** |
 | **AFS-6a-fix complete** | `6144e08` | **1014** | **Post-ship bugfixes — Universe nav +Inventory, back-link, cross-nav, Alpha copy, pack Coming Soon lockdown** |
 | **AFS-6d complete** | `bdc6f3f` | **1087** | **Cards Premium Rebuild — 1000 Alpha cards in DB, paginated catalog, deck builder, 5 saved slots** |
-| **AFS-6g READY** | TBD | TBD | **Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep — SKILL written SLUT 12** |
+| **AFS-6g complete** | `sprint-afs-6g-complete` | **1141** | **Battle Scene v2 — SpaceSkybox (battle + freeflight), WoW-style orbit camera, footer hotfix, 27 CVEs deferred** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-25 — Sprint AFS-6g COMPLETE (Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `sprint-afs-6g-complete` pushed, build clean, 1141/1141 tests green.
+**Tag:** `sprint-afs-6g-complete`
+**Backup:** `backup/pre-afs-6g-20260425` → `bdc6f3f`
+**Tests:** 1141/1141 green (was 1087, +54 new AFS-6g assertions across 4 test files — target was ~15)
+**Final HEAD:** see tag
+
+**Commit chain (6 code commits + this docs commit):**
+```
+27fb644 chore(afs-6g): defer 27 CVEs with exploitability assessment
+15ddeba fix(afs-6g): hide footer on /game/battle to free fullscreen viewport
+274a981 feat(afs-6g): add SpaceSkybox component and CC-BY 4.0 nebula asset
+675fa49 feat(afs-6g): swap battle scene Stars for SpaceSkybox and add WoW-style orbit camera
+404c58e feat(afs-6g): swap freeflight Stars for SpaceSkybox
+fd3214e docs(afs-6g): document Star Map skybox skip rationale
+```
+
+**What shipped:**
+
+**Section A — Security sweep (Tasks 1-2):**
+- `docs/security/deferred-cves.md` — full register for 27 CVEs (0 critical, 3 high, 24 moderate). All deferred per Jix decision; no `npm audit fix --force` (would break GHAI balance read by downgrading `@solana/spl-token` to 0.1.8 pre-modern API).
+- 3 high are the `bigint-buffer` chain (`@solana/buffer-layout-utils`, `@solana/spl-token`). Exploitability assessment: no user-controlled `Buffer` reaches `toBigIntLE`/`BE` in any of the 3 voidexa call sites (`lib/ghai/balance.ts`, `lib/ghai/verify-deposit.ts`, `components/WalletProvider.tsx`).
+- 24 moderate = vitest/vite/esbuild dev-server-only + transitive Solana via uuid/jayson/rpc-websockets. None reachable in production.
+- Cross-references existing `docs/SECURITY_DEFERRED.md` (Sprint 13F), keeps it as historical record.
+- 5 re-evaluation triggers documented (ADVORA approval, upstream patch, vitest 4 migration, etc.).
+
+**Section B — CSS hotfix (Task 3):**
+- `components/layout/ConditionalFooter.tsx` — single-line addition: `pathname.startsWith('/game/battle')` to existing hide-list. No new layout file, no `<main>` height changes. Battle scene was already wrapped in `position: fixed inset: 0` via `BattleController`; the bug was purely the footer rendering below the collapsed `<main>`.
+- SKILL Option A (new `app/game/battle/layout.tsx`) and Option B (explicit `<main>` height) both bypassed because they would have introduced new layout abstractions when the existing `ConditionalFooter` hide-list pattern was already the right answer.
+
+**Section C — Universal SpaceSkybox (Tasks 4-5):**
+- `public/skybox/deep_space_01.png` — 8192x4096 equirectangular PNG, 7.6 MB. Sourced from spacespheremaps.com (`hazy_nebulae_1.png`). License: CC-BY 4.0 with attribution made optional, redistribution permitted, single restriction is no-AI-training.
+- `public/skybox/README.md` — full attribution + license + source URL.
+- `components/three/SpaceSkybox.tsx` (53 lines) — pure R3F backdrop component. Uses `useLoader` + `TextureLoader` with sRGB color space, `toneMapped={false}` so post-FX bloom does not blow out the nebula, `rotateWithCamera` implemented via `useFrame` (camera-locked for first-person scenes). Uses JSX primitives (`<sphereGeometry>`, `<meshBasicMaterial>`) for proper R3F disposal lifecycle.
+- `tests/afs-6g-skybox.test.ts` — 19 source-level invariants.
+
+**Section D — Battle scene rework (Tasks 6-8):**
+- `components/game/battle/BattleScene.tsx`: replaced `<Stars>` (drei particle system, 2500 points) with `<SpaceSkybox texture="/skybox/deep_space_01.png" radius={1500} rotateWithCamera={false} intensity={1}>`, Suspense-wrapped.
+- `components/game/battle/BattleCanvas.tsx`: added `<OrbitControls>` with locked envelope per Jix spec — zoom 10-24, azimuth ±20° (Math.PI/9), polar 60-82° (Math.PI/3 to Math.PI/2.2), target [0,0,0], zoomSpeed 0.6, rotateSpeed 0.4, pan disabled.
+- `BattleCanvas.tsx`: bumped camera `far` plane 800 → 4000 so the radius-1500 skybox sphere is not frustum-culled. (Proactive deviation flagged at checkpoint, approved by Jix. Inline comment documents the reason.)
+- Ship positions, scales, fog, lighting all UNCHANGED — locked by 8 invariant tests in `tests/afs-6g-ship-positions.test.ts`. Camera position [0,0,16], fov 55, dpr [1, 1.75], post-processing (Bloom 0.85, ChromaticAberration, Vignette) all preserved.
+- `tests/afs-6g-battle-camera.test.ts` — 19 assertions (skybox swap + OrbitControls config + camera frustum bump).
+
+**Section E — Cross-app skybox rollout (Tasks 9-10):**
+- Task 9: `components/freeflight/FreeFlightScene.tsx` — replaced single `<Stars radius={1200} depth={600} count={3500}>` line with `<SpaceSkybox radius={1500} rotateWithCamera={true}>`, Suspense-wrapped. `rotateWithCamera={true}` means the skybox follows the player ship origin in first-person flight (player can never reach the sphere).
+- Task 9 live verify deferred per BUG-04 (memory leak) — source-level test only via `tests/afs-6g-freeflight-skybox.test.ts` (8 assertions).
+- Task 10: SKIPPED. `components/starmap/README.md` documents the rationale. Star Map's `StarField` + `CSSStarfield` + `NebulaBg` are intentional curated design (stars are navigable game elements, not decoration). Universal skybox does not apply.
+
+**Sprint scope deviations from SKILL (all approved at checkpoints):**
+1. **CVE counts wrong in SKILL** — pre-flight revealed 0 critical (SKILL claimed 1) + 3 high + 24 moderate (SKILL claimed 6 + 8). All deferred rather than patched, per Jix decision after seeing exploitability + breakage risk.
+2. **CSS fix path** — Skipped SKILL Option A (new layout file) and Option B (explicit `<main>` height). One-line `ConditionalFooter` edit was the existing pattern.
+3. **3D asset scope** — Skipped `usc_astroeagle01.glb` and zip mining entirely (license audit deferred to separate sprint). Ships unchanged at `qs_bob.glb` + `qs_executioner.glb` defaults.
+4. **Skybox source** — Polyhaven has zero space HDRIs (verified via WebFetch). Pivoted to spacespheremaps.com CC-BY 4.0 PNG. Filename uses `.png` not `.jpg`.
+5. **Camera position** — Kept current `[0, 0, 16]`, did NOT move to SKILL's proposed `[0, 1, 10]` per Jix decision.
+6. **Camera far plane** — Bumped 800 → 4000 (not in SKILL) so radius-1500 skybox sphere is not frustum-culled. Critical correctness fix.
+7. **OrbitControls envelope** — Adopted limited config (option (c) from checkpoint review): ±20° azimuth, narrow polar range, narrow zoom band. SKILL proposed wider envelope which would have allowed orbiting under the CardHand.
+8. **Ship positions UNCHANGED** — Did NOT reposition to SKILL's proposed `[0, -2, 5]` / `[0, 0, -8]`. Current `[0, -3.5, 8]` / `[0, 3.5, -14]` already gives more depth (z-distance 22 vs proposed 13).
+9. **Free Flight live verify skipped** — BUG-04 prevents safe entry. Source-level grep + test only.
+10. **Star Map skip** — Replaced Task 10's "swap or document" with explicit "skip + design doc" given star nodes carry click-to-travel semantics.
+11. **Test overshoot** — 54 new assertions vs SKILL target of ~15. Source-level invariants for skybox component, asset bundling, camera config, ship-position regression guards, and freeflight swap.
+
+**Files added:**
+- `docs/security/deferred-cves.md` (CVE register)
+- `components/three/SpaceSkybox.tsx` (53 lines, R3F backdrop)
+- `components/starmap/README.md` (Task 10 design rationale)
+- `public/skybox/deep_space_01.png` (7.6 MB, CC-BY 4.0 nebula)
+- `public/skybox/README.md` (asset attribution)
+- `tests/afs-6g-skybox.test.ts` (19 assertions)
+- `tests/afs-6g-battle-camera.test.ts` (19 assertions)
+- `tests/afs-6g-ship-positions.test.ts` (8 assertions)
+- `tests/afs-6g-freeflight-skybox.test.ts` (8 assertions)
+
+**Files modified:**
+- `components/layout/ConditionalFooter.tsx` (+1 line, footer hide-list)
+- `components/game/battle/BattleScene.tsx` (skybox swap)
+- `components/game/battle/BattleCanvas.tsx` (OrbitControls + far plane bump)
+- `components/freeflight/FreeFlightScene.tsx` (skybox swap)
+
+**Known items out-of-scope (unchanged):**
+- AFS-6e Pack Shop Alpha rewire (separate sprint, tracked in PENDING SPRINTS)
+- AFS-9 Free Flight memory leak (BUG-04, separate sprint)
+- AFS-10 Starmap Level 2 repair (separate sprint)
+- AFS-18 Alpha engine extension (Heat, 6-subsystem, Pilot select)
+- Card combat reactions (skud, shield flash) — separate sprint
+- 3D asset license audit for `voidexa-3d-assets/` zips — separate sprint
+- Per-scene skybox differentiation (currently same texture battle + freeflight) — P3 polish
+- Bloom oversaturation on bright nebula regions — P2 polish, log if observed during live verify
+- Hauling, Speedrun, Galaxy, ShipPreviewCanvas, ShopItemPreviewCanvas still use drei `<Stars>` — explicitly out-of-scope, replace if/when needed in future sprint
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-afs-6g-20260425
+git push origin main --force-with-lease
+git push origin :refs/tags/sprint-afs-6g-complete
+```
+
+---
 
 ### Session 2026-04-25 — SLUT 12 — Brain-storm + Live audit + AFS-6g SKILL written
 
@@ -767,6 +866,7 @@ can be executed.
 | ~~Shop 26 cosmetics "COMING SOON"~~ | ✅ **AFS-6a COMPLETE** (reality was narrower — see SKILL v2 reshape) |
 | ~~Shop nav + cross-nav + copy + pack lockdown~~ | ✅ **AFS-6a-fix COMPLETE** |
 | ~~`/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404~~ | ✅ **AFS-7 COMPLETE** |
+| ~~Battle scene footer overlap + twinkling Stars backdrop~~ | ✅ **AFS-6g COMPLETE** |
 | GHAI top-up modal stuck open across pages | **NEW — needs investigation sprint** |
 | Starmap Level 2 nebula zoom | AFS-10 |
 | Cinematic video end-frame ≠ new backdrop | AFS-11 (future, low prio) |
