@@ -17,7 +17,8 @@ export default function ConditionalFooter() {
     pathname === '/starmap' ||
     pathname.startsWith('/starmap/') ||
     pathname.startsWith('/void-chat') ||
-    pathname.startsWith('/quantum/chat')
+    pathname.startsWith('/quantum/chat') ||
+    pathname.startsWith('/game/battle')
   ) return null
   return <Footer />
 }
