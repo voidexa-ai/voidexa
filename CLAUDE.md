@@ -92,10 +92,95 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6g complete** | `sprint-afs-6g-complete` | **1141** | **Battle Scene v2 — SpaceSkybox (battle + freeflight), WoW-style orbit camera, footer hotfix, 27 CVEs deferred** |
 | **afs-6g-skybox-fix complete** | `21c5db7` | **1150** | **Canvas alpha buffer fix — `gl.alpha=false` on BattleCanvas + FreeFlightCanvas; skybox no longer renders transparent** |
 | **afs-6g-skybox-fix-2 complete** | `191eede` | **1152** | **Vignette darkness 0.78 → 0.55 — unblocks nebula midtones that post-processing crushed below fallback color** |
+| **afs-6g-skybox-fix-3 complete** | `8d8021a` | **1157** | **`brightness` prop on SpaceSkybox + battle uses 2.5x — boosts dim nebula past Bloom threshold and over scene.background fallback** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-3 COMPLETE (SpaceSkybox brightness prop)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-3-complete` pushed, build clean, 1157/1157 tests green. Live visual verify pending Jix browser check.
+**Tag:** `afs-6g-skybox-fix-3-complete`
+**Backup:** `backup/pre-afs-6g-skybox-fix-3-20260426` → `abf9ff7`
+**Tests:** 1157/1157 green (was 1152, +5 brightness assertions appended to `tests/afs-6g-skybox-fix.test.ts`)
+**Final HEAD:** `8d8021a`
+
+**Why a third fix on the same skybox:**
+- `fix-1` opened the canvas (`gl.alpha=false`) — necessary, not sufficient
+- `fix-2` lowered Vignette (0.78 → 0.55) — cosmetic edge correction, not the dim-midtones cause
+- `fix-3` raises the texture's effective brightness — addresses the actual root cause (hazy_nebulae_1 native midtones too dim for Battle's lighting + Bloom config)
+
+Each step revealed the next layer of the bug via empirical pixel sampling. Three commits keep the rollback granularity clean: if brightness 2.5 reads "too washed out" we can revert ONLY fix-3 without losing the alpha + vignette work.
+
+**Root cause (per pixel sampling on prod after fix-2):**
+- 23.7% of canvas had skybox activity (not fallback) — proves SpaceSkybox WAS rendering
+- All those pixels in `sum=8-12` range — DARKER than scene.background fallback `rgb(4,3,11)` `sum=18`
+- `hazy_nebulae_1.png` native midtones are intentionally subtle ("hazy")
+- Free Flight reads correctly because of brighter directional light + Bloom `intensity=1.2`
+- Battle has subdued lighting + Bloom `intensity=0.85` + `luminanceThreshold=0.25` → skips dim midtones entirely
+- Result: skybox geometry rendered, but visually below the fallback color, indistinguishable from "missing skybox"
+
+**Fix shipped:**
+- `components/three/SpaceSkybox.tsx`: added optional `brightness?: number` prop (default 1.0). Memoized `THREE.Color(b, b, b)` passed to `<meshBasicMaterial color={...}>`. With existing `toneMapped={false}` from AFS-6g, the multiplier > 1 takes effect — nebula colors brighten linearly until clamped at framebuffer write (≤ white).
+- `components/game/battle/BattleScene.tsx`: `<SpaceSkybox ... brightness={2.5} />`. 2.5× chosen as starting point — pixel sampling math suggested 2-3× minimum to clear the fallback floor; 2.5 leaves headroom for live tuning up or down.
+- `components/freeflight/FreeFlightScene.tsx`: NOT touched. Default `brightness=1` preserves Free Flight visuals (already reads correctly).
+
+**Sprint deviations from convention (documented):**
+1. **No SKILL.md committed** (third time same pattern) — 3-line architectural change on documented hypothesis. Commit message + this CLAUDE.md entry are the trail.
+2. **Test consolidation** — appended fix-3 describe block to existing `tests/afs-6g-skybox-fix.test.ts` rather than creating fix-3 file. Same skybox bug-cluster.
+3. **`color={colorMul}` instead of `color={[b,b,b]}` shorthand** — explicit `THREE.Color` instance is memoized via `useMemo` so we don't allocate a new color each render frame. R3F would otherwise reconstruct the array prop every render.
+4. **Free Flight asymmetry intentional** — same skybox texture, different scenes render it differently. Per-scene brightness is the correct architectural answer. Documented in code comment.
+
+**Files modified:**
+- `components/three/SpaceSkybox.tsx` (+ `Color` import, + `brightness` prop interface, + `colorMul` memo, + `color={colorMul}` on material — 6 logical lines added, 1 modified)
+- `components/game/battle/BattleScene.tsx` (1 line: `brightness={2.5}` added to SpaceSkybox usage)
+- `tests/afs-6g-skybox-fix.test.ts` (added battleSceneSrc + freeFlightSceneSrc reads at top, + 5 assertions in new describe block)
+
+**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
+```js
+(() => {
+  const canvas = document.querySelectorAll('canvas')[1];
+  const points = [
+    [0.5, 0.5], [0.5, 0.35], [0.35, 0.5], [0.65, 0.5], [0.5, 0.65],
+    [0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]  // closer to corners
+  ];
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      const off = document.createElement('canvas');
+      off.width = canvas.width; off.height = canvas.height;
+      off.getContext('2d').drawImage(canvas, 0, 0);
+      const ctx = off.getContext('2d');
+      resolve(points.map(([nx, ny]) => {
+        const x = Math.floor(nx * canvas.width);
+        const y = Math.floor(ny * canvas.height);
+        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+        return { pos: `${(nx*100)|0}%,${(ny*100)|0}%`, rgb: `(${r},${g},${b})`, sum: r+g+b };
+      }));
+    });
+  });
+})()
+```
+**Expected after fix-3:** non-edge `sum > 50`, ideally with channel imbalance showing nebula tint (purple `b > r > g`, red `r > g`, blue `b > g`). Fix-2 baseline was `sum=8-12`. Fix-3 target is 2.5× that minimum = `sum > 20-30` with nebula-shaped color distribution.
+
+**Next decision points:**
+- If `sum < 50` everywhere → tune brightness up to 3.5 in fix-4 (one-line change)
+- If looks washed out / too white → tune down to 2.0
+- If reads correctly → close skybox bug-cluster, proceed to AFS-6h Battle Scene v3 camera reframing
+
+**Known items out-of-scope (unchanged):**
+- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
+- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight` (source-level test only)
+
+**Rollback (reverts ONLY brightness, keeps alpha + vignette fixes):**
+```bash
+git reset --hard backup/pre-afs-6g-skybox-fix-3-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-6g-skybox-fix-3-complete
+git tag -d afs-6g-skybox-fix-3-complete
+```
+
+---
 
 ### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-2 COMPLETE (Vignette midtone crush)
 
