@@ -54,3 +54,24 @@ describe('afs-6g-skybox-fix — SpaceSkybox component intact', () => {
     expect(skyboxSrc).toMatch(/toneMapped=\{false\}/)
   })
 })
+
+describe('afs-6g-skybox-fix-2 — vignette no longer crushes nebula midtones', () => {
+  // Pixel sampling on prod (afs-6g-skybox-fix-2) showed center pixels at
+  // (3,3,9) — barely above fallback #04030b — because Vignette darkness=0.78
+  // multiplied dim nebula colors below the visible threshold. 0.55 matches
+  // FreeFlightCanvas parity and lets nebula midtones come through.
+  it('Battle Vignette darkness <= 0.6 so nebula midtones survive', () => {
+    const vignetteMatch = battleCanvasSrc.match(/<Vignette[^/>]*darkness=\{([\d.]+)\}/)
+    expect(vignetteMatch).toBeTruthy()
+    const darkness = parseFloat(vignetteMatch![1])
+    expect(darkness).toBeLessThanOrEqual(0.6)
+  })
+
+  it('Battle Vignette parity with FreeFlight (both use the same darkness)', () => {
+    const battleVignette = battleCanvasSrc.match(/<Vignette[^/>]*darkness=\{([\d.]+)\}/)
+    const freeFlightVignette = freeFlightCanvasSrc.match(/<Vignette[^/>]*darkness=\{([\d.]+)\}/)
+    expect(battleVignette).toBeTruthy()
+    expect(freeFlightVignette).toBeTruthy()
+    expect(parseFloat(battleVignette![1])).toBe(parseFloat(freeFlightVignette![1]))
+  })
+})

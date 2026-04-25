@@ -51,7 +51,7 @@ export default function BattleCanvas(props: Props) {
       <EffectComposer multisampling={0}>
         <Bloom intensity={0.85} luminanceThreshold={0.25} mipmapBlur />
         <ChromaticAberration offset={new THREE.Vector2(0.0007, 0.0007)} radialModulation={false} modulationOffset={0} />
-        <Vignette eskil={false} offset={0.22} darkness={0.78} />
+        <Vignette eskil={false} offset={0.22} darkness={0.55} />
       </EffectComposer>
     </Canvas>
   )
