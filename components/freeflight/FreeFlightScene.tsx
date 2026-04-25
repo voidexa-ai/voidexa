@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { Stars } from '@react-three/drei'
+import { SpaceSkybox } from '@/components/three/SpaceSkybox'
 import ShipLoader from './ships/ShipLoader'
 import BoostTrail from './ships/BoostTrail'
 import FlightControls from './controls/FlightControls'
@@ -83,7 +83,14 @@ export default function FreeFlightScene({
       <ambientLight intensity={0.25} />
       <directionalLight position={[50, 40, 30]} intensity={0.8} color="#ffe6c8" />
 
-      <Stars radius={1200} depth={600} count={3500} factor={4} saturation={0} fade speed={0.5} />
+      <Suspense fallback={null}>
+        <SpaceSkybox
+          texture="/skybox/deep_space_01.png"
+          radius={1500}
+          rotateWithCamera={true}
+          intensity={1}
+        />
+      </Suspense>
 
       {PLANETS.map(p => (
         <group key={p.id} position={p.position.toArray()}>
