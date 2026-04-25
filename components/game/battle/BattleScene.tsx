@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
-import { Stars } from '@react-three/drei'
+import { SpaceSkybox } from '@/components/three/SpaceSkybox'
 import BattleShip from './BattleShip'
 import AbilityEffects from './AbilityEffects'
 import type { BattleEffect } from '@/lib/game/battle/types'
@@ -32,7 +32,14 @@ export default function BattleScene({
     <>
       <color attach="background" args={['#04030b']} />
       <fog attach="fog" args={['#04030b', 40, 160]} />
-      <Stars radius={140} depth={60} count={2500} factor={4} fade saturation={0.4} />
+      <Suspense fallback={null}>
+        <SpaceSkybox
+          texture="/skybox/deep_space_01.png"
+          radius={1500}
+          rotateWithCamera={false}
+          intensity={1}
+        />
+      </Suspense>
 
       <ambientLight intensity={0.35} />
       <directionalLight position={[8, 14, 6]} intensity={0.9} color="#b4cfff" />
