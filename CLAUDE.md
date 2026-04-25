@@ -91,10 +91,90 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6d complete** | `bdc6f3f` | **1087** | **Cards Premium Rebuild — 1000 Alpha cards in DB, paginated catalog, deck builder, 5 saved slots** |
 | **AFS-6g complete** | `sprint-afs-6g-complete` | **1141** | **Battle Scene v2 — SpaceSkybox (battle + freeflight), WoW-style orbit camera, footer hotfix, 27 CVEs deferred** |
 | **afs-6g-skybox-fix complete** | `21c5db7` | **1150** | **Canvas alpha buffer fix — `gl.alpha=false` on BattleCanvas + FreeFlightCanvas; skybox no longer renders transparent** |
+| **afs-6g-skybox-fix-2 complete** | `191eede` | **1152** | **Vignette darkness 0.78 → 0.55 — unblocks nebula midtones that post-processing crushed below fallback color** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-2 COMPLETE (Vignette midtone crush)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-2-complete` pushed, build clean, 1152/1152 tests green. Live visual verify pending Jix browser check.
+**Tag:** `afs-6g-skybox-fix-2-complete`
+**Backup:** `backup/pre-afs-6g-skybox-fix-2-20260426` → `6afcf22`
+**Tests:** 1152/1152 green (was 1150, +2 vignette assertions appended to existing `tests/afs-6g-skybox-fix.test.ts` since same bug-cluster)
+**Final HEAD:** `191eede`
+
+**Why a separate sprint and not amend:**
+`afs-6g-skybox-fix` (`21c5db7`) was already pushed + tagged + referenced in this CLAUDE.md sprint history. Amending would have forced a destructive rewrite of published main. New commit gives clean granular rollback if the vignette change reads worse than 0.78 looked.
+
+**Root cause (per pixel sampling on prod after fix-1 landed):**
+Alpha buffer fix correctly opened the canvas, but pixel sampling showed:
+- Corner pixels: `(1, 0, 2)` — Vignette `darkness=0.78` × fallback `#04030b` = exactly what we got
+- Center pixels: `(3, 3, 9)` — barely above scene.background fallback `rgb(4, 3, 11)`, no nebula saturation
+- `performance.getEntriesByType` confirmed `deep_space_01.png` decoded in 115ms (cached), status 200, GPU upload complete
+
+So the skybox WAS rendering — but Vignette darkness 0.78 was multiplying the dim `hazy_nebulae_1` nebula midtones below the visible threshold. Combined with `Bloom luminanceThreshold=0.25` filtering most of the nebula out of the bright pass, the post-FX chain crushed the texture back to fallback-color flat black.
+
+**Fix shipped (single line):**
+- `components/game/battle/BattleCanvas.tsx:54`: `<Vignette eskil={false} offset={0.22} darkness={0.55} />` (was `0.78`)
+
+`0.55` matches `FreeFlightCanvas.tsx:55` — Free Flight was already at this darkness and the nebula reads correctly there. Battle was the outlier.
+
+**Sprint deviations from convention (documented):**
+1. **No SKILL.md committed.** Single-line cosmetic tuning on a hypothesis already documented via `afs-6g-skybox-fix` SKILL + diagnostic log. SKILL overhead not warranted; commit message + this CLAUDE.md entry are the documentation trail.
+2. **Test placement** — appended 2 assertions to existing `tests/afs-6g-skybox-fix.test.ts` rather than creating fix-2 file. Same bug-cluster (canvas-alpha + post-FX visibility) reads better as one consolidated test surface than scattered files.
+3. **Tag naming** — `afs-6g-skybox-fix-2-complete` not `afs-6g-skybox-fix-fix-complete` to keep the increment-counter convention readable.
+
+**Files modified:**
+- `components/game/battle/BattleCanvas.tsx` (1 line: vignette darkness 0.78 → 0.55)
+- `tests/afs-6g-skybox-fix.test.ts` (appended new describe block with 2 assertions: vignette ≤ 0.6 + battle/freeflight parity)
+
+**Live verification command for Jix (paste into DevTools console on `/game/battle` Tier 1, AFTER hard-refresh + 5s wait for skybox decode):**
+```js
+(() => {
+  const canvas = document.querySelectorAll('canvas')[1];
+  // Sample center + 4 inner-ring (avoid extreme vignette zone)
+  const points = [
+    [0.5, 0.5],   // dead center
+    [0.5, 0.35],  // above ship
+    [0.35, 0.5],  // left of ship
+    [0.65, 0.5],  // right of ship
+    [0.5, 0.65],  // below ship
+  ];
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      const off = document.createElement('canvas');
+      off.width = canvas.width; off.height = canvas.height;
+      off.getContext('2d').drawImage(canvas, 0, 0);
+      const ctx = off.getContext('2d');
+      resolve(points.map(([nx, ny]) => {
+        const x = Math.floor(nx * canvas.width);
+        const y = Math.floor(ny * canvas.height);
+        const [r, g, b, a] = ctx.getImageData(x, y, 1, 1).data;
+        return { pos: `${(nx*100)|0}%,${(ny*100)|0}%`, rgb: `(${r},${g},${b})`, sum: r+g+b };
+      }));
+    });
+  });
+})()
+```
+**Expected after fix:** non-edge samples should show `sum > 100` with at least one channel showing nebula tint (purple `b > r`, red `r > g`, blue `b > g`). Pre-fix baseline was `sum < 15` everywhere.
+
+**Known items out-of-scope (unchanged):**
+- AFS-6h Battle Scene v3 visual layer — pre-flight done, awaiting Option A/B decision; can now actually be live-evaluated against the reference image since the scene renders properly
+- Free Flight live verify still blocked by BUG-04 memory leak
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-afs-6g-skybox-fix-2-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-6g-skybox-fix-2-complete
+git tag -d afs-6g-skybox-fix-2-complete
+```
+
+Reverts ONLY the vignette change. `afs-6g-skybox-fix` (alpha buffer) stays in place.
+
+---
 
 ### Session 2026-04-26 — Bugfix afs-6g-skybox-fix COMPLETE (Canvas alpha buffer)
 
