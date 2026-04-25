@@ -21,13 +21,17 @@ interface Props {
 // (radius 1500) renders. minDistance/maxDistance keep the existing
 // camera at z=16 inside a narrow zoom envelope (10-24); azimuth limited
 // to ±20° so right-click rotation can't fight CardHand at the bottom.
+// AFS-6g-skybox-fix — gl.alpha=false forces opaque framebuffer; without
+// it WebGL clears to alpha 0 each frame and post-processing chain
+// (Bloom/CA/Vignette) drops scene.background's alpha contribution,
+// making the canvas read as transparent (avg alpha 0.5/255 in live audit).
 export default function BattleCanvas(props: Props) {
   return (
     <Canvas
       camera={{ position: [0, 0, 16], fov: 55, near: 0.1, far: 4000 }}
       style={{ position: 'absolute', inset: 0 }}
       dpr={[1, 1.75]}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
+      gl={{ alpha: false, antialias: true, powerPreference: 'high-performance' }}
     >
       <BattleScene {...props} />
       <OrbitControls

@@ -35,7 +35,7 @@ export default function FreeFlightCanvas(props: Props) {
   return (
     <Canvas
       camera={{ position: [60, 15, 80], fov: 72, near: 0.1, far: 3000 }}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
+      gl={{ alpha: false, antialias: true, powerPreference: 'high-performance' }}
       style={{ width: '100vw', height: '100vh', background: '#02030a' }}
     >
       <Suspense fallback={null}>
