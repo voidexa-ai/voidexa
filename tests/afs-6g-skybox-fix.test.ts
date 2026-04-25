@@ -3,7 +3,9 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 const battleCanvasSrc = readFileSync(resolve('components/game/battle/BattleCanvas.tsx'), 'utf-8')
+const battleSceneSrc = readFileSync(resolve('components/game/battle/BattleScene.tsx'), 'utf-8')
 const freeFlightCanvasSrc = readFileSync(resolve('components/freeflight/FreeFlightCanvas.tsx'), 'utf-8')
+const freeFlightSceneSrc = readFileSync(resolve('components/freeflight/FreeFlightScene.tsx'), 'utf-8')
 const battleControllerSrc = readFileSync(resolve('components/game/battle/BattleController.tsx'), 'utf-8')
 const skyboxSrc = readFileSync(resolve('components/three/SpaceSkybox.tsx'), 'utf-8')
 
@@ -73,5 +75,37 @@ describe('afs-6g-skybox-fix-2 — vignette no longer crushes nebula midtones', (
     expect(battleVignette).toBeTruthy()
     expect(freeFlightVignette).toBeTruthy()
     expect(parseFloat(battleVignette![1])).toBe(parseFloat(freeFlightVignette![1]))
+  })
+})
+
+describe('afs-6g-skybox-fix-3 — brightness prop boosts dim nebula past Bloom threshold', () => {
+  // Pixel sampling after fix-2 showed skybox renders but at sum=8-12 (below
+  // scene.background fallback rgb(4,3,11) sum=18). hazy_nebulae_1 midtones
+  // are too dim natively; with toneMapped={false} we can multiply material
+  // color > 1 and let WebGL clamp at framebuffer write — boosts visible
+  // brightness without breaking other scenes.
+  it('SpaceSkybox declares optional brightness prop in its interface', () => {
+    expect(skyboxSrc).toMatch(/brightness\?:\s*number/)
+  })
+
+  it('SpaceSkybox brightness defaults to 1 (no change for existing callers)', () => {
+    expect(skyboxSrc).toMatch(/brightness\s*=\s*1\s*[,)]/)
+  })
+
+  it('SpaceSkybox passes brightness as material color multiplier', () => {
+    expect(skyboxSrc).toMatch(/new Color\(brightness,\s*brightness,\s*brightness\)/)
+    expect(skyboxSrc).toMatch(/<meshBasicMaterial[\s\S]*?color=\{colorMul\}/)
+  })
+
+  it('Battle scene passes brightness > 1 to compensate for dim nebula texture', () => {
+    const brightnessMatch = battleSceneSrc.match(/<SpaceSkybox[\s\S]*?brightness=\{([\d.]+)\}/)
+    expect(brightnessMatch).toBeTruthy()
+    expect(parseFloat(brightnessMatch![1])).toBeGreaterThan(1)
+  })
+
+  it('Free Flight does NOT pass brightness (uses default 1.0, scene already reads correctly)', () => {
+    const freeFlightSkyboxBlock = freeFlightSceneSrc.match(/<SpaceSkybox[\s\S]*?\/>/)
+    expect(freeFlightSkyboxBlock).toBeTruthy()
+    expect(freeFlightSkyboxBlock![0]).not.toMatch(/brightness/)
   })
 })

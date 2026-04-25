@@ -2,7 +2,7 @@
 
 import { useLoader, useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
-import { TextureLoader, BackSide, SRGBColorSpace, type Mesh } from 'three'
+import { Color, TextureLoader, BackSide, SRGBColorSpace, type Mesh } from 'three'
 
 interface SpaceSkyboxProps {
   /** Path to equirectangular texture in /public. Defaults to /skybox/deep_space_01.png. */
@@ -13,6 +13,8 @@ interface SpaceSkyboxProps {
   rotateWithCamera?: boolean
   /** Texture intensity 0-1. Anything below 1 enables transparency. */
   intensity?: number
+  /** Multiplier on material color. 1.0 = unchanged. Values > 1 boost dim textures past Bloom luminanceThreshold and over the scene.background fallback. With toneMapped={false} the boosted color is clamped at framebuffer write so visible cap is white. */
+  brightness?: number
 }
 
 const DEFAULT_TEXTURE = '/skybox/deep_space_01.png'
@@ -22,6 +24,7 @@ export function SpaceSkybox({
   radius = 1000,
   rotateWithCamera = false,
   intensity = 1,
+  brightness = 1,
 }: SpaceSkyboxProps) {
   const tex = useLoader(TextureLoader, texture)
   const meshRef = useRef<Mesh>(null)
@@ -31,6 +34,10 @@ export function SpaceSkybox({
     tex.colorSpace = SRGBColorSpace
     tex.needsUpdate = true
   }, [tex])
+
+  // Memoize the brightness color so it is allocated once per brightness change,
+  // not per render. THREE.Color accepts r,g,b > 1 with toneMapped=false.
+  const colorMul = useMemo(() => new Color(brightness, brightness, brightness), [brightness])
 
   // For first-person scenes, lock the skybox to the camera origin every frame
   // so the player can never approach the sphere.
@@ -44,6 +51,7 @@ export function SpaceSkybox({
       <sphereGeometry args={[radius, 60, 40]} />
       <meshBasicMaterial
         map={tex}
+        color={colorMul}
         side={BackSide}
         depthWrite={false}
         opacity={intensity}
