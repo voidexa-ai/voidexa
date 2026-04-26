@@ -94,10 +94,69 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **afs-6g-skybox-fix-2 complete** | `191eede` | **1152** | **Vignette darkness 0.78 → 0.55 — unblocks nebula midtones that post-processing crushed below fallback color** |
 | **afs-6g-skybox-fix-3 complete** | `8d8021a` | **1157** | **`brightness` prop on SpaceSkybox + battle uses 2.5x — boosts dim nebula past Bloom threshold and over scene.background fallback** |
 | **afs-6g-skybox-fix-4 complete** | `26cbde1` | **1158** | **Imperative `matRef.current.color.setRGB()` replaces prop-based color — fix-3 prop did not reach shader; ref-based mutation guaranteed to apply** |
+| **afs-6g-skybox-fix-5 complete** | `3a18aa6` | **1159** | **Skybox material `fog={false}` — scene fog (far=160) was masking sphere (radius 1500) at fogFactor=0, overwriting all earlier fixes with fogColor=scene.background** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-5 COMPLETE (Scene fog masking skybox)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-5-complete` pushed, build clean, 1159/1159 tests green. Live visual verify pending Jix browser check.
+**Tag:** `afs-6g-skybox-fix-5-complete`
+**Backup:** `backup/pre-afs-6g-skybox-fix-5-20260426` → `c7dabf9`
+**Tests:** 1159/1159 green (was 1158, +1 fog={false} regression guard)
+**Final HEAD:** `3a18aa6`
+
+**Why a fifth fix on the same skybox — and why it's the actual root cause:**
+After fix-4 (imperative ref-based color setter) ALSO produced zero visual change, pixel sampling showed:
+- avgSum 16.4 (identical to fix-3, identical to fix-2 baseline)
+- range 5 across 41 samples
+- ALL pixels matched scene.background `#04030b` modulo vignette
+
+This ruled out the entire investigation chain so far: alpha buffer, vignette aggression, brightness prop value, color-prop reconciliation, ref-based mutation — none of those were the dominant issue. The fog hypothesis emerged from the math: pixel range floor 12 matches `#04030b` × vignette 0.55 ≈ 8 (corners) to 18 (center). NO nebula colors were ever reaching the framebuffer.
+
+**Root cause:**
+`BattleScene.tsx:34`: `<fog attach="fog" args={['#04030b', 40, 160]} />` was added in AFS-6g for atmospheric depth on near-mid range ships. THREE's `meshBasicMaterial.fog` defaults to `true`. The skybox sphere (radius 1500) sits at distance ~1484 from the camera (z=16). With fog far=160, distance >> far means `fogFactor = 0` → `finalColor = mix(fogColor, materialColor, 0) = fogColor`. The skybox texture × brightness × everything else was being 100% replaced by fog color (= scene.background) before reaching the framebuffer.
+
+In other words: AFS-6g introduced fog and skybox in the same commit. The skybox has been visually broken since AFS-6g shipped — what users saw was always scene.background painted before meshes, plus skybox sphere fragments overwritten with the same color by fog. The earlier "23.7% skybox activity" reported in fix-2 was vignette modulation of fog-replaced skybox pixels, not actual nebula color.
+
+**Fix shipped (single prop):**
+- `components/three/SpaceSkybox.tsx`: added `fog={false}` to `<meshBasicMaterial>`. Skybox material now opts out of scene fog. Other meshes (ships, asteroids, ability effects) keep fog applied unchanged.
+
+**Sprint deviations from convention (documented):**
+1. **Fifth fix in same bug-cluster** — investigation sequence taught us five distinct things about R3F + post-processing + scene config interactions. Granular commits keep the diagnostic narrative intact for future cluster regressions.
+2. **No SKILL.md** (fifth time in this cluster). Commit message + this CLAUDE.md entry are the documentation trail.
+3. **Diagnostic-first methodology validated** — each fix shipped only after the previous one's failure was empirically verified via pixel sampling. Without that data, fix-5 would have been guessed at fix-2.
+
+**Files modified:**
+- `components/three/SpaceSkybox.tsx` (+1 line: `fog={false}` on meshBasicMaterial)
+- `tests/afs-6g-skybox-fix.test.ts` (+1 assertion + comment block explaining root cause for future cluster regressions)
+
+**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
+Same 41-sample script as fix-4. Expected after fix-5:
+- `range > 50` (vs fix-4 range 5)
+- `over50 > 5` of 41 samples
+- Channel imbalance — purple `b > r > g` if camera angled toward purple nebula region, red `r > g > b` toward red region, etc.
+- avgSum ~80-150 (vs fix-4 avg 16.4)
+
+**If those numbers land:** skybox bug-cluster CLOSED. brightness=2.5 + alpha=false + vignette=0.55 + ref-color + fog=false work in concert. Proceed to AFS-6h camera reframing.
+
+**If still uniform:** texture itself is too dim natively (hazy_nebulae_1 is the dimmest of the spacespheremaps catalog). Next move would be either (a) bump brightness to 4.0+ in BattleScene, or (b) swap to a brighter texture from spacespheremaps (e.g., `nebulae_2.png`). Architecture is now correct; only tuning remains.
+
+**Known items out-of-scope (unchanged):**
+- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
+- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`. Note: Free Flight uses the same SpaceSkybox component, so fog={false} also lands there. Free Flight has `<fog>` only via NebulaZones (per-zone), so this fix is harmless if no nebula zone is active and correct if one is
+
+**Rollback (reverts ONLY fog disable, keeps everything else):**
+```bash
+git reset --hard backup/pre-afs-6g-skybox-fix-5-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-6g-skybox-fix-5-complete
+git tag -d afs-6g-skybox-fix-5-complete
+```
+
+---
 
 ### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-4 COMPLETE (Imperative color setter)
 
