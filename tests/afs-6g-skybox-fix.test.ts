@@ -121,6 +121,18 @@ describe('afs-6g-skybox-fix-3 — brightness prop boosts dim nebula past Bloom t
     expect(parseFloat(brightnessMatch![1])).toBeGreaterThan(1)
   })
 
+  // fix-6: empirical tuning. After fog={false} (fix-5) lifted skybox to
+  // avgSum 28.7 / max 39, brightness was bumped from 2.5 to 4.0 to push
+  // nebula midtones past sum 50 (visible on top of scene.background sum 18
+  // and clearly above vignette modulation floor). Lower-bound guard
+  // prevents accidental regression to a value that historically tested as
+  // too dim on hazy_nebulae_1.png.
+  it('Battle scene brightness >= 4.0 (fix-6 empirical floor on hazy_nebulae_1)', () => {
+    const brightnessMatch = battleSceneSrc.match(/<SpaceSkybox[\s\S]*?brightness=\{([\d.]+)\}/)
+    expect(brightnessMatch).toBeTruthy()
+    expect(parseFloat(brightnessMatch![1])).toBeGreaterThanOrEqual(4.0)
+  })
+
   it('Free Flight does NOT pass brightness (uses default 1.0, scene already reads correctly)', () => {
     const freeFlightSkyboxBlock = freeFlightSceneSrc.match(/<SpaceSkybox[\s\S]*?\/>/)
     expect(freeFlightSkyboxBlock).toBeTruthy()

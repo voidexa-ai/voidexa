@@ -38,7 +38,7 @@ export default function BattleScene({
           radius={1500}
           rotateWithCamera={false}
           intensity={1}
-          brightness={2.5}
+          brightness={4.0}
         />
       </Suspense>
 
