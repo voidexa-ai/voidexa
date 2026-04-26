@@ -55,6 +55,16 @@ describe('afs-6g-skybox-fix — SpaceSkybox component intact', () => {
   it('material preserves toneMapped={false} for nebula color fidelity', () => {
     expect(skyboxSrc).toMatch(/toneMapped=\{false\}/)
   })
+
+  // fix-5 root-cause assertion: scene fog (THREE.Material.fog defaults to true)
+  // was multiplying skybox sphere fragments by fogFactor=0 because sphere
+  // distance ~1484 >> fog.far=160 in BattleScene. Result: 100% fog color
+  // overwrote nebula texture, masking all earlier fixes (alpha buffer,
+  // vignette, brightness, ref-based color setter). fog={false} on the
+  // skybox material exempts it from scene fog without affecting other meshes.
+  it('material disables fog so distant skybox is not fog-overwritten', () => {
+    expect(skyboxSrc).toMatch(/fog=\{false\}/)
+  })
 })
 
 describe('afs-6g-skybox-fix-2 — vignette no longer crushes nebula midtones', () => {

@@ -65,6 +65,7 @@ export function SpaceSkybox({
         opacity={intensity}
         transparent={intensity < 1}
         toneMapped={false}
+        fog={false}
       />
     </mesh>
   )
