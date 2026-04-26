@@ -34,11 +34,10 @@ export default function BattleScene({
       <fog attach="fog" args={['#04030b', 40, 160]} />
       <Suspense fallback={null}>
         <SpaceSkybox
-          texture="/skybox/deep_space_01.png"
+          texture="/skybox/deep_space_universe.png"
           radius={1500}
           rotateWithCamera={false}
           intensity={1}
-          brightness={4.0}
         />
       </Suspense>
 

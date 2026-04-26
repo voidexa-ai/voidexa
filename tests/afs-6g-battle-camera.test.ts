@@ -31,8 +31,11 @@ describe('AFS-6g BattleScene — Task 6 skybox swap', () => {
     expect(SCENE_SRC).not.toMatch(/<Stars\b/)
   })
 
-  it('renders SpaceSkybox with the bundled deep_space_01.png texture', () => {
-    expect(SCENE_SRC).toMatch(/<SpaceSkybox\b[\s\S]*?texture="\/skybox\/deep_space_01\.png"/)
+  it('renders SpaceSkybox with the bundled deep_space_universe.png texture (post fix-7)', () => {
+    // fix-7 swapped to custom AI-generated equirectangular nebula. The earlier
+    // hazy_nebulae_1.png path is now the SpaceSkybox component default and is
+    // used by Free Flight only.
+    expect(SCENE_SRC).toMatch(/<SpaceSkybox\b[\s\S]*?texture="\/skybox\/deep_space_universe\.png"/)
   })
 
   it('renders SpaceSkybox with radius 1500 (matches camera far plane)', () => {

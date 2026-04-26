@@ -115,27 +115,33 @@ describe('afs-6g-skybox-fix-3 — brightness prop boosts dim nebula past Bloom t
     expect(skyboxSrc).not.toMatch(/color=\{colorMul\}/)
   })
 
-  it('Battle scene passes brightness > 1 to compensate for dim nebula texture', () => {
-    const brightnessMatch = battleSceneSrc.match(/<SpaceSkybox[\s\S]*?brightness=\{([\d.]+)\}/)
-    expect(brightnessMatch).toBeTruthy()
-    expect(parseFloat(brightnessMatch![1])).toBeGreaterThan(1)
-  })
-
-  // fix-6: empirical tuning. After fog={false} (fix-5) lifted skybox to
-  // avgSum 28.7 / max 39, brightness was bumped from 2.5 to 4.0 to push
-  // nebula midtones past sum 50 (visible on top of scene.background sum 18
-  // and clearly above vignette modulation floor). Lower-bound guard
-  // prevents accidental regression to a value that historically tested as
-  // too dim on hazy_nebulae_1.png.
-  it('Battle scene brightness >= 4.0 (fix-6 empirical floor on hazy_nebulae_1)', () => {
-    const brightnessMatch = battleSceneSrc.match(/<SpaceSkybox[\s\S]*?brightness=\{([\d.]+)\}/)
-    expect(brightnessMatch).toBeTruthy()
-    expect(parseFloat(brightnessMatch![1])).toBeGreaterThanOrEqual(4.0)
-  })
-
   it('Free Flight does NOT pass brightness (uses default 1.0, scene already reads correctly)', () => {
     const freeFlightSkyboxBlock = freeFlightSceneSrc.match(/<SpaceSkybox[\s\S]*?\/>/)
     expect(freeFlightSkyboxBlock).toBeTruthy()
     expect(freeFlightSkyboxBlock![0]).not.toMatch(/brightness/)
+  })
+})
+
+describe('afs-6g-skybox-fix-7 — battle uses custom AI-generated texture, brightness reset', () => {
+  // Cluster-closer. Six prior fixes worked but never produced visible nebula
+  // because hazy_nebulae_1.png is fundamentally too dim for Battle's lighting
+  // setup. Custom AI-generated equirectangular replaces it, naturally
+  // saturated so brightness multiplier is no longer needed.
+  it('Battle scene uses /skybox/deep_space_universe.png texture path', () => {
+    expect(battleSceneSrc).toMatch(/texture="\/skybox\/deep_space_universe\.png"/)
+  })
+
+  it('Battle scene does NOT pass explicit brightness prop (default 1.0 sufficient)', () => {
+    const battleSkyboxBlock = battleSceneSrc.match(/<SpaceSkybox[\s\S]*?\/>/)
+    expect(battleSkyboxBlock).toBeTruthy()
+    expect(battleSkyboxBlock![0]).not.toMatch(/brightness/)
+  })
+
+  it('Battle scene no longer references the dim hazy_nebulae_1 texture path', () => {
+    expect(battleSceneSrc).not.toMatch(/deep_space_01\.png/)
+  })
+
+  it('Free Flight still uses /skybox/deep_space_01.png (fix-7 is battle-only)', () => {
+    expect(freeFlightSceneSrc).toMatch(/texture="\/skybox\/deep_space_01\.png"/)
   })
 })
