@@ -207,9 +207,16 @@ describe('Sprint 16 Task 6 — Starmap HUD declutter', () => {
     expect(STARMAP_SRC).toMatch(/data-testid="kcp-collapsed-icon"/)
   })
 
-  it('Jarvis assistant moved to bottom-LEFT with higher z-index than KCP', () => {
-    expect(JARVIS_SRC).toMatch(/fixed bottom-6 left-6 z-\[60\]/)
-    expect(JARVIS_SRC).not.toMatch(/fixed bottom-6 right-6/)
+  it('Jarvis avoids the KCP-90 terminal on /starmap (route-skip after CommBubble Hotfix Apr 26 2026)', () => {
+    // Sprint 16 Task 6 originally moved Jarvis to bottom-LEFT to avoid the
+    // KCP-90 terminal at bottom-right on /starmap. CommBubble Hotfix
+    // (docs/skills/bugfix-commbubble-position.md) moved Jarvis back to
+    // bottom-right to clear the UniverseChat overlap on 9 other routes,
+    // and instead returns null on /starmap (+/dk/starmap) to keep the
+    // KCP-90 terminal unblocked. Both protections are now active.
+    expect(JARVIS_SRC).toMatch(/fixed bottom-6 right-6 z-\[60\]/)
+    expect(JARVIS_SRC).toContain('/^\\/(?:dk\\/)?starmap(?:\\/|$)/')
+    expect(JARVIS_SRC).toMatch(/z-\[60\]/)
   })
 
   it('Level 2 company footer is a thin full-width strip at z:10', () => {

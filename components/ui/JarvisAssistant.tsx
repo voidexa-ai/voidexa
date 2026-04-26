@@ -58,6 +58,11 @@ export default function JarvisAssistant() {
 
   // Hide on star map homepage and fullscreen editor routes
   if (pathname === '/' || pathname === '/freeflight' || pathname === '/assembly-editor') return null
+  // Hide on /starmap (+/dk/starmap) so the KCP-90 terminal at bottom-right does
+  // not collide with the orb. Sprint 16 Task 6 originally moved Jarvis to the
+  // left to avoid this; CommBubble Hotfix moved it back to the right and now
+  // skips the route instead. See: docs/skills/bugfix-commbubble-position.md
+  if (/^\/(?:dk\/)?starmap(?:\/|$)/.test(pathname ?? '')) return null
 
   function send() {
     const text = input.trim()
@@ -79,9 +84,13 @@ export default function JarvisAssistant() {
 
   return (
     <>
-      {/* Sprint 16 Task 6 — moved from bottom-right to bottom-LEFT so the KCP-90
-          terminal (bottom-right on star-map) no longer collides with the orb. */}
-      <div className="fixed bottom-6 left-6 z-[60]">
+      {/* CommBubble Hotfix (Apr 26 2026) — Jarvis sits bottom-right while
+          UniverseChat keeps bottom-left, eliminating the z-[60] vs z-50 overlap
+          observed on /cards, /shop, /break-room, /wallet, /quantum/chat,
+          /about, /home and /cards/alpha/deck-builder. The earlier Sprint 16
+          Task 6 left-side workaround for the KCP-90 terminal is preserved by
+          the route-skip above (returns null on /starmap and /dk/starmap). */}
+      <div className="fixed bottom-6 right-6 z-[60]">
         {/* Outer breathing ring */}
         <motion.div
           className="absolute inset-0 rounded-full"
@@ -177,7 +186,7 @@ export default function JarvisAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 left-6 z-[60] w-80 sm:w-96 rounded-2xl overflow-hidden"
+            className="fixed bottom-24 right-6 z-[60] w-80 sm:w-96 rounded-2xl overflow-hidden"
             style={{
               background: 'rgba(7,4,18,0.97)',
               border: '1px solid rgba(0,212,255,0.22)',

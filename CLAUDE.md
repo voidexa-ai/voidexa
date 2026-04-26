@@ -97,10 +97,67 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **afs-6g-skybox-fix-5 complete** | `3a18aa6` | **1159** | **Skybox material `fog={false}` — scene fog (far=160) was masking sphere (radius 1500) at fogFactor=0, overwriting all earlier fixes with fogColor=scene.background** |
 | **afs-6g-skybox-fix-6 complete** | `9cd590d` | **1160** | **Empirical brightness tuning 2.5 → 4.0 — fog disable lifted skybox to avgSum 28.7, brightness bump pushes nebula past sum 50 visibility threshold** |
 | **afs-6g-skybox-fix-7 complete** | `8aedc1a` | **1162** | **Texture swap to custom AI-generated `deep_space_universe.png` — closes 7-fix skybox bug-cluster; asset quality > pipeline tuning** |
+| **commbubble-hotfix complete** | `commbubble-hotfix-complete` | **1168** | **Move Jarvis bubble to bottom-right + route-skip on /starmap and /dk/starmap — fixes z-[60] vs z-50 overlap with UniverseChat on 9 ruter while preserving Sprint 16 Task 6 KCP-90 collision avoidance** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — CommBubble Hotfix COMPLETE (Jarvis → bottom-right + /starmap route-skip)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `commbubble-hotfix-complete` pushed, build clean, 1168/1168 tests green. Live verify pending Jix browser check on 3 ruter (incognito + hard reload).
+**Tag:** `commbubble-hotfix-complete`
+**Backup:** `backup/pre-commbubble-hotfix-20260426` → `3683d52`
+**Tests:** 1168/1168 green (was 1162, +6 new commbubble-position assertions). Pre-existing `tests/sprint-16-performance-and-asset-pipeline.test.ts` flipped one assertion to track new state (same pattern as AFS-3 nav-dropdown flip).
+**SKILL:** `docs/skills/bugfix-commbubble-position.md` (already committed at `3683d52`)
+
+**Bug:** Live audit SLUT 11 (Apr 25) confirmed Jarvis (`z-[60]`) sat ON TOP of UniverseChat (`z-50`) — both at `fixed bottom-6 left-6` — blocking Universe Chat clicks on `/cards`, `/cards/alpha`, `/shop`, `/break-room`, `/wallet`, `/quantum/chat`, `/about`, `/home`, `/cards/alpha/deck-builder`. Pre-flight Task 0 confirmed exact identical positions, no `md:` responsive variants to chase.
+
+**Fix shipped (option (b) — route-conditional render):**
+- `components/ui/JarvisAssistant.tsx`:
+  1. Trigger bubble div: `fixed bottom-6 left-6 z-[60]` → `fixed bottom-6 right-6 z-[60]`
+  2. Chat panel motion.div: `fixed bottom-24 left-6 z-[60]` → `fixed bottom-24 right-6 z-[60]` (mirrors trigger so panel pops up next to bubble)
+  3. New route-skip: `if (/^\/(?:dk\/)?starmap(?:\/|$)/.test(pathname ?? '')) return null` — preserves Sprint 16 Task 6 fix (Jarvis was originally moved bottom-left to dodge KCP-90 terminal at bottom-right on `/starmap`; we move back to right but skip /starmap entirely)
+  4. Existing skips preserved (`/`, `/freeflight`, `/assembly-editor`)
+- UniverseChat stays at `fixed bottom-6 left-6 z-50` — UNCHANGED, still alone on bottom-left
+
+**Why option (b) over SKILL's option (a):** the SKILL as written would have re-introduced the Sprint 16 Task 6 collision on `/starmap` (KCP-90 terminal vs Jarvis at bottom-right). Pre-flight reading of the comment block on `JarvisAssistant.tsx:82-83` flagged this. Option (b) preserves both prior fixes — overlap on 9 routes goes away AND the KCP-90 terminal stays unblocked on /starmap.
+
+**Sprint deviations from SKILL (documented):**
+1. **Three className edits, not one** — SKILL flagged only the trigger bubble. Reading the file revealed the chat panel (`bottom-24 left-6`) also needed the `right-6` swap so the panel doesn't pop up away from the trigger. Caught at Task 0; no checkpoint surprise.
+2. **Test count overshoot** — 6 new assertions vs SKILL target of 3. Added coverage for chat panel position parity, route-skip regex presence, and existing route-skip preservation guard.
+3. **Pre-existing test flipped** — `tests/sprint-16-performance-and-asset-pipeline.test.ts:210` asserted `bottom-6 left-6 z-[60]` (the Sprint 16 Task 6 state). Updated to assert `bottom-6 right-6 z-[60]` AND the new `/starmap` route-skip is present, with comment block explaining both fixes are now active. Same pattern AFS-3 used for the Break Room/Inventory nav order flip.
+4. **SKILL Task 2 was a no-op** — SKILL was already committed at `3683d52` (HEAD) before this session started. Skipped re-commit.
+
+**Files modified:**
+- `components/ui/JarvisAssistant.tsx` (trigger position + chat panel position + new route-skip + comment block rewrite)
+- `tests/sprint-16-performance-and-asset-pipeline.test.ts` (one assertion flipped)
+- `CLAUDE.md` (this entry + sprint history row + P0 bug row update)
+
+**Files added:**
+- `tests/commbubble-position.test.ts` (6 assertions across 2 describe blocks)
+
+**Known items out-of-scope (tracked for AFS-13 CommBubble Merge):**
+- Chat-close-bubble-disappears (P0)
+- Chat cannot fold to bubble (P1)
+- Jarvis missing on `/` homepage (intentional skip — preserved in route-skip list)
+- `hello@voidexa.com` typo in JARVIS contact response copy
+- Two separate widgets → proper merge to ONE bubble with tabs
+
+**Live verification (pending Jix):**
+- Hard-reload + incognito on `/cards/alpha/deck-builder` — Jarvis bottom-right, Universe Chat bottom-left, both clickable separately, no overlap
+- `/starmap` Level 1 + Level 2 — Jarvis NOT visible (route-skip), KCP-90 terminal at bottom-right unblocked
+- One sample route from the original 9 (e.g. `/break-room`, `/wallet`) — Jarvis bottom-right, Universe Chat bottom-left
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-commbubble-hotfix-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/commbubble-hotfix-complete
+git tag -d commbubble-hotfix-complete
+```
+
+---
 
 ### Session 2026-04-26 — afs-6g-skybox-fix-7 COMPLETE (cluster closure)
 
@@ -1422,6 +1479,7 @@ can be executed.
 | ~~Shop nav + cross-nav + copy + pack lockdown~~ | ✅ **AFS-6a-fix COMPLETE** |
 | ~~`/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404~~ | ✅ **AFS-7 COMPLETE** |
 | ~~Battle scene footer overlap + twinkling Stars backdrop~~ | ✅ **AFS-6g COMPLETE** |
+| ~~Jarvis bubble overlapping UniverseChat on 9 ruter~~ | ✅ **CommBubble Hotfix COMPLETE** (proper merge in AFS-13) |
 | GHAI top-up modal stuck open across pages | **NEW — needs investigation sprint** |
 | Starmap Level 2 nebula zoom | AFS-10 |
 | Cinematic video end-frame ≠ new backdrop | AFS-11 (future, low prio) |
