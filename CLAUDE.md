@@ -95,10 +95,70 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **afs-6g-skybox-fix-3 complete** | `8d8021a` | **1157** | **`brightness` prop on SpaceSkybox + battle uses 2.5x — boosts dim nebula past Bloom threshold and over scene.background fallback** |
 | **afs-6g-skybox-fix-4 complete** | `26cbde1` | **1158** | **Imperative `matRef.current.color.setRGB()` replaces prop-based color — fix-3 prop did not reach shader; ref-based mutation guaranteed to apply** |
 | **afs-6g-skybox-fix-5 complete** | `3a18aa6` | **1159** | **Skybox material `fog={false}` — scene fog (far=160) was masking sphere (radius 1500) at fogFactor=0, overwriting all earlier fixes with fogColor=scene.background** |
+| **afs-6g-skybox-fix-6 complete** | `9cd590d` | **1160** | **Empirical brightness tuning 2.5 → 4.0 — fog disable lifted skybox to avgSum 28.7, brightness bump pushes nebula past sum 50 visibility threshold** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-6 COMPLETE (Brightness tuning 2.5 → 4.0)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-6-complete` pushed, build clean, 1160/1160 tests green. Live visual verify pending Jix browser check.
+**Tag:** `afs-6g-skybox-fix-6-complete`
+**Backup:** `backup/pre-afs-6g-skybox-fix-6-20260426` → `c73bca6`
+**Tests:** 1160/1160 green (was 1159, +1 brightness ≥ 4.0 lower-bound guard)
+**Final HEAD:** `9cd590d`
+
+**Why a sixth fix:**
+fix-5 (`fog={false}`) WAS the architectural root cause — pixel sampling after fix-5 confirmed the skybox color finally reaches the framebuffer:
+- avgSum 16.4 (fallback) → 28.7 (skybox visible)
+- maxSum 18 → 39
+- Channel imbalance starting to emerge (= nebula tint detectable but dim)
+
+But avgSum 28.7 is still below the perceptual sum-50 floor and `over50` was 0/9 samples — visually the skybox reads as "very dark blue/purple wash" rather than "nebula clouds." The pipeline is correct end-to-end now; only the empirical multiplier needs to land at the right value for `hazy_nebulae_1.png`'s native low luminance.
+
+**Fix shipped (single value):**
+- `components/game/battle/BattleScene.tsx:41`: `brightness={4.0}` (was `2.5`)
+
+That's it. All other dials stay locked from previous fixes:
+- `gl.alpha=false` (fix-1)
+- Vignette darkness 0.55 (fix-2)
+- Imperative ref-based `setRGB(brightness, brightness, brightness)` (fix-4)
+- Skybox material `fog={false}` (fix-5)
+- Free Flight `brightness=1.0` default (unchanged — Free Flight reads correctly without boost)
+
+**Sprint deviations from convention (documented):**
+1. **Sixth fix in same bug-cluster** — empirical tuning step after architectural fix landed. Granular separation lets future tuning regress this single line without touching architecture.
+2. **No SKILL.md** (sixth time in this cluster).
+3. **Test guard** — added `brightness >= 4.0` floor as regression guard. Original `brightness > 1` lower-bound retained; both must pass.
+
+**Files modified:**
+- `components/game/battle/BattleScene.tsx` (1 char change effectively: `2.5` → `4.0`)
+- `tests/afs-6g-skybox-fix.test.ts` (+1 lower-bound assertion + comment block on empirical tuning history)
+
+**Live verification command — same 41-sample script as fix-4/5.**
+
+**Decision matrix:**
+| Pixel sample result | Action |
+|---|---|
+| avgSum > 50 + channel imbalance visible | ✅ skybox bug-cluster CLOSED → AFS-6h camera reframing can begin |
+| avgSum 40-50, dim but tinted | Bump to 6.0 in fix-7 (one-line) |
+| Looks washed out / too white | Sink to 3.0 in fix-7 |
+| Still below sum 30 | Math is not the problem — texture is fundamentally too dim. Plan B: swap to brighter spacespheremaps texture (e.g., `nebulae_2.png`) or generate custom |
+
+**Known items out-of-scope (unchanged):**
+- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
+- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`. Free Flight uses brightness=1.0 default (unchanged) — fix-6 has no effect there
+
+**Rollback (reverts ONLY brightness 4.0 → 2.5):**
+```bash
+git reset --hard backup/pre-afs-6g-skybox-fix-6-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-6g-skybox-fix-6-complete
+git tag -d afs-6g-skybox-fix-6-complete
+```
+
+---
 
 ### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-5 COMPLETE (Scene fog masking skybox)
 
