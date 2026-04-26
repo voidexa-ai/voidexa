@@ -93,10 +93,107 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **afs-6g-skybox-fix complete** | `21c5db7` | **1150** | **Canvas alpha buffer fix — `gl.alpha=false` on BattleCanvas + FreeFlightCanvas; skybox no longer renders transparent** |
 | **afs-6g-skybox-fix-2 complete** | `191eede` | **1152** | **Vignette darkness 0.78 → 0.55 — unblocks nebula midtones that post-processing crushed below fallback color** |
 | **afs-6g-skybox-fix-3 complete** | `8d8021a` | **1157** | **`brightness` prop on SpaceSkybox + battle uses 2.5x — boosts dim nebula past Bloom threshold and over scene.background fallback** |
+| **afs-6g-skybox-fix-4 complete** | `26cbde1` | **1158** | **Imperative `matRef.current.color.setRGB()` replaces prop-based color — fix-3 prop did not reach shader; ref-based mutation guaranteed to apply** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-4 COMPLETE (Imperative color setter)
+
+**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-4-complete` pushed, build clean, 1158/1158 tests green. Live visual verify pending Jix browser check.
+**Tag:** `afs-6g-skybox-fix-4-complete`
+**Backup:** `backup/pre-afs-6g-skybox-fix-4-20260426` → `ecb0703`
+**Tests:** 1158/1158 green (was 1157, +1 net — 2 added asserting ref+setRGB pattern, 1 removed asserting old prop pattern)
+**Final HEAD:** `26cbde1`
+
+**Why a fourth fix on the same skybox:**
+Empirical pixel sampling after fix-3 deployed showed brightness=2.5 had ZERO visual effect:
+- Average sum 16.4 across 41 horizontal samples (var. range 6, all in 12-18)
+- Pre-fix-3 baseline (fix-2): 23.7% of canvas in sum 8-12 = active skybox zone
+- Post-fix-3: skybox-active zone GONE — entire row reads as fallback `#04030b` (sum 18) modulated by vignette
+
+Verification ruled out three alternative theories:
+- Source code correct (color={colorMul}, brightness={2.5}, radius=1500) ✓
+- Camera at z=16 inside sphere of radius 1500 (BackSide rendrers correctly) ✓
+- Vercel deploy confirmed: commit ecb0703 → deploy `dpl_3mKp7oWJoJTfzMjamgpSYmVHF1dJ` → success ✓
+
+Conclusion: R3F's prop reconciliation for `color={ColorInstance}` with `r/g/b > 1` silently clamped or no-op'd the update on production. The implementation pattern itself was the bug, not the values.
+
+**Fix shipped:**
+- `components/three/SpaceSkybox.tsx`:
+  - Removed `Color` import; added `MeshBasicMaterial` type + `useEffect` from react
+  - Removed `colorMul` `useMemo` and `color={colorMul}` prop
+  - Added `matRef = useRef<MeshBasicMaterial>(null)` on the material
+  - Added `useEffect([brightness])` that calls `matRef.current.color.setRGB(brightness, brightness, brightness)` — direct mutation of `THREE.Color`'s raw r/g/b properties bypasses R3F prop reconciliation entirely
+- `components/game/battle/BattleScene.tsx`: NOT touched (still passes `brightness={2.5}`)
+
+**Sprint deviations from convention (documented):**
+1. **Fourth fix in same bug-cluster** — diagnostic-driven sequence: alpha buffer (fix-1) → vignette crush (fix-2) → brightness prop (fix-3) → imperative ref (fix-4). Each step revealed the next via empirical pixel sampling. Granular commits keep rollback surgical.
+2. **No SKILL.md committed** (fourth time in this cluster). Commit message + this CLAUDE.md entry are the documentation trail.
+3. **Test pattern swap** — replaced fix-3's `color={colorMul}` and `new Color(brightness, ...)` matchers with fix-4's `matRef.current.color.setRGB(brightness, ...)` and `<meshBasicMaterial ref={matRef}` matchers. Net +1 test.
+4. **Why ref over prop:** `meshBasicMaterial.color` is a `THREE.Color` instance with raw float `r/g/b` properties. Setting them directly via `setRGB(2.5, 2.5, 2.5)` stores values 1:1; the only clamping happens later at sRGB framebuffer encoding (which is the desired behavior — values > 1 clamp visually to white at the bright end). R3F's prop path may apply Color via `.set(value)` which internally branches on the value type and was apparently dropping our values somewhere.
+
+**Files modified:**
+- `components/three/SpaceSkybox.tsx` (- `Color` import, + `useEffect` import, + `MeshBasicMaterial` type import, - `colorMul` memo, - `color={colorMul}` prop, + `matRef` useRef, + `useEffect` for setRGB, + `ref={matRef}` on material)
+- `tests/afs-6g-skybox-fix.test.ts` (- 1 prop matcher, + 2 ref/setRGB matchers + regression guard)
+
+**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
+```js
+(() => {
+  const canvas = document.querySelectorAll('canvas')[1];
+  // 41 samples along Y=200 (background area, above ship)
+  const samples = [];
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      const off = document.createElement('canvas');
+      off.width = canvas.width; off.height = canvas.height;
+      off.getContext('2d').drawImage(canvas, 0, 0);
+      const ctx = off.getContext('2d');
+      const y = 200;
+      const step = Math.floor(canvas.width / 41);
+      for (let i = 0; i < 41; i++) {
+        const x = i * step;
+        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+        samples.push({ x, rgb: `(${r},${g},${b})`, sum: r+g+b });
+      }
+      const sums = samples.map(s => s.sum);
+      resolve({
+        avg: (sums.reduce((a,b)=>a+b,0)/sums.length).toFixed(1),
+        min: Math.min(...sums),
+        max: Math.max(...sums),
+        range: Math.max(...sums) - Math.min(...sums),
+        over50: sums.filter(s => s > 50).length,
+        over100: sums.filter(s => s > 100).length,
+        peakSamples: samples.filter(s => s.sum > 50).slice(0, 5)
+      });
+    });
+  });
+})()
+```
+
+**Expected after fix-4 if implementation was the bug:**
+- `range > 30` (vs fix-3's 6)
+- `over50 > 0` (vs fix-3's 0)
+- Some samples showing nebula tint (channel imbalance: purple b>r>g, red r>g, blue b>g)
+
+**If still range < 10 and 0 over 50:** the texture's native dim values × 2.5 are insufficient. Fix-5 bumps brightness to 4.0 or 5.0 (one-line change in `BattleScene.tsx:41`). The architecture (ref-based) stays.
+
+**If range > 30 and over50 > 0:** R3F prop was the bug, math holds, skybox bug-cluster CLOSED. Proceed to AFS-6h.
+
+**Known items out-of-scope (unchanged):**
+- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
+- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`
+
+**Rollback (reverts ONLY ref pattern, keeps brightness=2.5 prop wiring + vignette + alpha):**
+```bash
+git reset --hard backup/pre-afs-6g-skybox-fix-4-20260426
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-6g-skybox-fix-4-complete
+git tag -d afs-6g-skybox-fix-4-complete
+```
+
+---
 
 ### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-3 COMPLETE (SpaceSkybox brightness prop)
 
