@@ -1,8 +1,8 @@
 'use client'
 
 import { useLoader, useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
-import { Color, TextureLoader, BackSide, SRGBColorSpace, type Mesh } from 'three'
+import { useEffect, useMemo, useRef } from 'react'
+import { TextureLoader, BackSide, SRGBColorSpace, type Mesh, type MeshBasicMaterial } from 'three'
 
 interface SpaceSkyboxProps {
   /** Path to equirectangular texture in /public. Defaults to /skybox/deep_space_01.png. */
@@ -28,6 +28,7 @@ export function SpaceSkybox({
 }: SpaceSkyboxProps) {
   const tex = useLoader(TextureLoader, texture)
   const meshRef = useRef<Mesh>(null)
+  const matRef = useRef<MeshBasicMaterial>(null)
 
   // Cache sRGB encoding on the texture itself so swaps don't reset it.
   useMemo(() => {
@@ -35,9 +36,16 @@ export function SpaceSkybox({
     tex.needsUpdate = true
   }, [tex])
 
-  // Memoize the brightness color so it is allocated once per brightness change,
-  // not per render. THREE.Color accepts r,g,b > 1 with toneMapped=false.
-  const colorMul = useMemo(() => new Color(brightness, brightness, brightness), [brightness])
+  // Imperative color setter — bypasses R3F's prop reconciliation which can
+  // clamp/no-op THREE.Color instances with values > 1. We mutate the existing
+  // material.color directly via setRGB so values > 1 reach the shader and,
+  // combined with toneMapped=false, brighten the dim hazy_nebulae_1 midtones
+  // past Bloom luminanceThreshold and over the scene.background fallback.
+  useEffect(() => {
+    if (matRef.current) {
+      matRef.current.color.setRGB(brightness, brightness, brightness)
+    }
+  }, [brightness])
 
   // For first-person scenes, lock the skybox to the camera origin every frame
   // so the player can never approach the sphere.
@@ -50,8 +58,8 @@ export function SpaceSkybox({
     <mesh ref={meshRef} renderOrder={-1}>
       <sphereGeometry args={[radius, 60, 40]} />
       <meshBasicMaterial
+        ref={matRef}
         map={tex}
-        color={colorMul}
         side={BackSide}
         depthWrite={false}
         opacity={intensity}

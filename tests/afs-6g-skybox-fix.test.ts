@@ -92,9 +92,17 @@ describe('afs-6g-skybox-fix-3 — brightness prop boosts dim nebula past Bloom t
     expect(skyboxSrc).toMatch(/brightness\s*=\s*1\s*[,)]/)
   })
 
-  it('SpaceSkybox passes brightness as material color multiplier', () => {
-    expect(skyboxSrc).toMatch(/new Color\(brightness,\s*brightness,\s*brightness\)/)
-    expect(skyboxSrc).toMatch(/<meshBasicMaterial[\s\S]*?color=\{colorMul\}/)
+  it('SpaceSkybox uses imperative ref-based color setter (fix-4: bypass R3F prop reconciliation)', () => {
+    // Direct mutation of material.color via setRGB so values > 1 reach the
+    // shader. Earlier fix-3 used `color={Color}` prop which appeared to
+    // no-op on production for values > 1.
+    expect(skyboxSrc).toMatch(/matRef\s*=\s*useRef<MeshBasicMaterial>/)
+    expect(skyboxSrc).toMatch(/matRef\.current\.color\.setRGB\(brightness,\s*brightness,\s*brightness\)/)
+    expect(skyboxSrc).toMatch(/<meshBasicMaterial[\s\S]*?ref=\{matRef\}/)
+  })
+
+  it('SpaceSkybox no longer uses the prop-based color={colorMul} pattern', () => {
+    expect(skyboxSrc).not.toMatch(/color=\{colorMul\}/)
   })
 
   it('Battle scene passes brightness > 1 to compensate for dim nebula texture', () => {
