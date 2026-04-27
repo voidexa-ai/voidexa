@@ -1,12 +1,34 @@
-# SKILL — AFS-18: Alpha 1000 Cards Deploy + V3 Removal
+# SKILL — AFS-18: Alpha 1000 Cards Image Wiring + V3 Replacement (v2)
 
 **Sprint:** AFS-18
 **Priority:** P1
-**Status:** v1 (pre-flight required before Task 0)
+**Version:** v2 (reshape after pre-flight revealed AFS-6d already shipped frame + tables + routes)
 **Backup tag:** `backup/pre-afs-18-{YYYYMMDD}` (set at Task 0)
 **Sprint tag (on completion):** `sprint-afs-18-complete`
-**Depends on:** AFS-5 ✅ COMPLETE (1000 alpha PNGs on Jix PC)
-**Unblocks:** AFS-17 (LoRA pipeline can train against deployed set)
+**Depends on:** AFS-5 ✅ (1000 PNGs exist), AFS-6d ✅ (Alpha pages + DB shipped)
+**Unblocks:** AFS-17 (LoRA training set complete), `/cards` page no longer broken
+
+---
+
+## V1 → V2 RESHAPE RATIONALE
+
+Pre-flight discovered most of v1 SKILL was already shipped under AFS-6d (commit `b5d6161`):
+
+- ✅ `alpha_cards` table populated in Supabase
+- ✅ `user_decks` table with 5-slot save
+- ✅ `AlphaCardFrame.tsx` component shipped
+- ✅ `AlphaCatalog.tsx` paginated grid + 9 type tabs
+- ✅ `AlphaDeckBuilder.tsx` + supporting components
+- ✅ Routes `/cards/alpha` + `/cards/alpha/deck-builder` (EN + DK)
+
+**Actual remaining gap (the real AFS-18 work):**
+
+1. AlphaCardFrame uses **9 generic category PNGs** instead of the 1000 unique renders Jix paid $41.52 for
+2. `/cards` and `/dk/cards` still render V3 (broken frames, missing cards)
+3. The 1000 PNGs are not in Supabase Storage yet
+4. No image URL mapping between manifest IDs and Supabase paths
+
+V2 narrows AFS-18 to wiring the existing infrastructure to the real assets.
 
 ---
 
@@ -14,215 +36,118 @@
 
 `claude --dangerously-skip-permissions` mode for sprint execution.
 
-**Stop checkpoints:** Pre-flight, Task 1 backup verify, Task 2 asset migration, Task 7 final test, Task 8 live verify.
+**Stop checkpoints:** Task 0 SKILL commit, Task 1 backup verify (DONE), Task 4 webp conversion review, Task 5 SQL migration apply, Task 11 live verify.
 
 ---
 
 ## SCOPE
 
-Deploy 1000 Alpha card images to /cards page. Remove V3 First Edition surface from /cards rendering (V3 missing cards + wrong images per Jix Apr 28). Apply single thin premium frame styling. Use Supabase Storage bucket for asset hosting. Convert PNG → webp for ~70% size reduction.
-
 ### IN SCOPE
 
-- Convert 1000 PNG → webp (Jix local, before push)
-- Upload converted webp to Supabase Storage bucket `cards` (public read)
-- Wire `/cards` to render only Alpha 1000 (read from bucket)
-- Apply thin premium frame (rarity → frame color)
-- Pagination 20 per page, filter by type (9 types)
-- Remove V3 from /cards rendering path (keep V3 files in repo, do not delete)
-- Update `app/cards/alpha/deck-builder` to read alpha set
-- Tests: frame consistency, asset path resolution, type filter, pagination, regression on V3 file existence (still on disk)
+- Convert 1000 PNG → webp (Jix local, ~70% size reduction)
+- Create Supabase Storage bucket `cards` with public read RLS
+- Upload 1000 webp to bucket at deterministic path: `cards/alpha/{rarity}/{filename}.webp`
+- Modify `AlphaCardFrame.tsx` to render unique image per card (replace 9 generic category PNGs with deterministic Supabase URL)
+- Replace V3 rendering on `/cards` with `<AlphaCatalog />` component (in-place, keep `/cards/alpha` also live for backward compat)
+- Replace V3 rendering on `/dk/cards` same way
+- Redirect `/cards/deck-builder` (V3) → `/cards/alpha/deck-builder` via 308
+- Redirect `/dk/cards/deck-builder` → `/dk/cards/alpha/deck-builder` via 308
+- Tests: image URL resolution, V3 imports removed from `/cards`, redirects in place
+- V3 files stay on disk (NOT deleted)
 
 ### OUT OF SCOPE
 
 - V3 file deletion from repo (keep, just stop rendering)
-- Game Hub migration (separate sprint, not yet planned)
+- New `image_url` DB column (using deterministic URL pattern instead, no migration)
+- AlphaCardFrame visual redesign (RARITY_GLOW stays — AFS-6d "do not touch")
 - Pack BUY flow re-enable (`/shop/packs` stays "Coming Soon" — AFS-6a domain)
-- Card text/stats/abilities authoring (data exists in `alpha_set_master.md` + `batch_*.json`)
 - LoRA fine-tuning (AFS-17)
-- DK route `/dk/cards` (AFS-26 scope)
+- DK route `/dk/cards/alpha/deck-builder` rebuild (AFS-26 scope)
 - Battle scene cards (AFS-6h scope)
-- /shop/packs library count copy (still "ALPHA LIBRARY" without count, per AFS-6a-fix lockdown)
+- Save-deck schema changes (AFS-6d already shipped)
 
 ---
 
-## LOCKED DECISIONS (Apr 28)
+## LOCKED DECISIONS (Apr 28, post pre-flight)
 
 | Item | Locked value |
 |---|---|
-| Cleanup level | (a) slet V3 fra /cards rendering, behold filer i repo |
+| Backup status | ✅ DONE — D:\krypteret USB + Proton Drive both 1001 files |
 | Asset hosting | Supabase Storage bucket `cards` (public read RLS) |
-| Asset format | webp (converted from source PNG) |
-| Tab structure | NONE — single Alpha view, no tabs |
-| Page size | 20 cards per page |
-| Filter | By card type (9 types from ETAPE 3) |
-| Frame | Single thin premium frame, rarity → color |
-| Frame colors | Common grey, Uncommon green, Rare cyan, Epic purple, Legendary gold, Mythic magenta |
-| Public name | "Alpha Premium" (under Universe → Cards in nav) |
-| Total cards | 1000 (399c + 280u + 160r + 90e + 50l + 20m) |
-| Asset size budget | ~450 MB after webp conversion (down from 1.5 GB PNG) |
+| Asset format | webp quality 85 (converted from source PNG) |
+| Image URL pattern | Deterministic: `cards/alpha/{rarity}/{nnnn}_{rarity}_{name}.webp` |
+| /cards strategy | Replace V3 import with `<AlphaCatalog />`, keep `/cards/alpha` also live |
+| V3 deck-builder | 308 redirect → Alpha deck-builder |
+| Frame colors | KEEP existing RARITY_GLOW (per AFS-6d "do not touch") |
+| Migration | Jix applies SQL manually in Supabase Editor (project rule) |
+| V3 files | KEEP on disk — only stop rendering |
+| Manifest field mapping | `rarity` (not tier), `name` (not card_name), `prompt_field` (not prompt_version) |
 
 ---
 
-## PRE-FLIGHT (mandatory — STOP after for Jix approval)
-
-Per AFS-6b SKILL v2 reshape lesson: SKILL.md written from INDEX context can be wrong. Verify against actual repo state before any code.
-
-### Step 0.1 — /cards route inventory
+## TASK 0 — SKILL v2 commit (mandatory rule)
 
 ```bash
-find app/cards -type f | sort
-find app/dk/cards -type f 2>/dev/null | sort
-ls public/cards/ 2>/dev/null
+# v2 SKILL must be committed before any other code changes
+git add docs/skills/sprint-afs-18-alpha-deploy.md
+git commit -m "chore(afs-18): SKILL v2 reshape — narrow scope after pre-flight"
+git push origin main
+
+# Backup tag
+git tag backup/pre-afs-18-{YYYYMMDD}
+git push origin backup/pre-afs-18-{YYYYMMDD}
 ```
-
-Expected unknowns:
-- Does `app/cards/page.tsx` exist? Or is it nested?
-- Does `app/cards/alpha/deck-builder/page.tsx` exist? (SLUT 16 verified yes)
-- Where do the bad V3 frames render today?
-- What's in `public/cards/` currently?
-
-### Step 0.2 — V3 frame implementation
-
-```bash
-grep -rn "frame" components/cards/ lib/cards/ app/cards/ 2>/dev/null | head -50
-grep -rn "card_frame\|cardFrame\|CardFrame" --include="*.tsx" --include="*.ts" | head -30
-git log --oneline --all -- "**/CardFrame*" "**/card-frame*" "**/cardframe*" 2>/dev/null | head -20
-```
-
-Goal: locate (a) the broken custom frames laid over V3 and (b) any earlier thin-frame variant before custom-frame attempts.
-
-### Step 0.3 — Card data sources
-
-```bash
-ls lib/cards/ 2>/dev/null
-ls docs/alpha_set/ 2>/dev/null
-test -f lib/cards/full_card_library.json && echo "V3 data: yes" || echo "V3 data: no"
-test -f docs/alpha_set/alpha_set_master.md && echo "Alpha master: yes" || echo "Alpha master: no"
-ls docs/alpha_set/batch_*.json 2>/dev/null | wc -l
-```
-
-### Step 0.4 — Supabase Storage state
-
-```bash
-# Via Supabase CLI or admin client — check if bucket "cards" exists
-# (Jix may need to apply migration manually per project rule)
-```
-
-Expected: bucket does not exist yet. Migration creates bucket + RLS policy for public read.
-
-### Step 0.5 — Manifest + asset path
-
-Verify Jix PC location:
-```
-C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_tiered\manifest.json
-C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_tiered\*.png
-```
-
-Manifest format check: does each entry have `id`, `tier`, `card_name`, `prompt_version`?
-
-### Step 0.6 — Backup status check
-
-Per Apr 27 SLUT 17 backup risk note: `images_tiered/` is single-disk SPOF.
-
-**Question for Jix:** Has `images_tiered/` been copied to Google Drive or D:\krypteret USB yet? If NO, Task 1 below is blocking.
-
-### STOP CHECKPOINT — Pre-flight findings report
-
-Claude Code reports findings to Jix in this format:
-
-```
-PRE-FLIGHT FINDINGS
-
-1. /cards route: [actual structure]
-2. V3 frame: located at [paths], rendering pattern is [X]
-3. Pre-custom thin frame: [found at commit X / not found]
-4. Card data: V3 [Y/N], Alpha master [Y/N], batches [N/10]
-5. Supabase bucket "cards": [exists / does not exist]
-6. Manifest format: [matches expected / differs in: ...]
-7. Backup status: [done / NOT DONE — blocking Task 1]
-
-PROPOSED SKILL v2 RESHAPE (if any):
-- [bullet list of corrections needed]
-
-WAITING FOR JIX APPROVAL TO PROCEED.
-```
-
-If reshape needed: write SKILL v2, commit, then proceed. Do NOT execute v1 if pre-flight reveals premise wrong.
 
 ---
 
-## TASK 1 — Backup verification (BLOCKING)
+## TASK 1 — Backup verification ✅ COMPLETE
 
-**Owner:** Jix (manual)
+Verified Apr 28:
+- Source: `C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_tiered\` — 1001 files
+- D:\krypteret USB: `D:\krypteret usb\afs-5-alpha-1000-backup-20260428\` — 1001 files
+- Proton Drive: `C:\Users\Jixwu\Proton Drive\jix.wulff\My files\afs-5-alpha-1000-backup-20260428\` — 1001 files
 
-Single-disk SPOF on 1.5 GB images_tiered/ must be resolved before any conversion that overwrites or moves source files.
-
-**Required before Task 2:**
-1. Copy entire `images_tiered/` folder to Google Drive
-2. Copy entire `images_tiered/` folder to D:\krypteret USB
-3. Verify both copies have correct file count (1001 files including manifest.json)
-4. Confirm to Claude Code: "Backup done"
-
-**Test:**
-```powershell
-# Verify file count
-(Get-ChildItem "C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_tiered\" -File).Count
-# Should be ~1001 (1000 PNGs + manifest.json)
-```
-
-DO NOT PROCEED to Task 2 without explicit "backup done" from Jix.
+No further action.
 
 ---
 
-## TASK 2 — PNG → webp conversion (Jix local + Claude Code script)
+## TASK 2 — PNG → webp conversion (Jix local)
 
-**Goal:** Convert 1000 PNG files to webp, ~70% size reduction (1.5 GB → ~450 MB).
-
-### Sub-task 2.1: Install conversion tooling
+### Sub-task 2.1: Install cwebp
 
 ```powershell
-# On Jix PC, install ImageMagick or use cwebp directly
-# cwebp comes with libwebp — recommended for batch
 winget install Google.LibWebP
-```
-
-Verify:
-```powershell
 cwebp -version
 ```
+
+If winget unavailable, fallback: download `libwebp` release from Google.
 
 ### Sub-task 2.2: Conversion script
 
 Claude Code writes: `scripts/convert_alpha_to_webp.ps1`
 
-Script behavior:
-- Read source dir: `C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_tiered\`
-- Output dir: `C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_webp\`
-- Quality: 85 (good balance, premium look preserved)
-- Preserve naming: `{id}_{tier}_{card_name}.png` → `{id}_{tier}_{card_name}.webp`
-- Log per-file: source size, output size, ratio
+Behavior:
+- Source: `C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_tiered\`
+- Output: `C:\Users\Jixwu\Downloads\soil_1000_voidexa_gpt_image_prompts_v4\images_webp\`
+- Quality: 85
+- Naming: `{nnnn}_{rarity}_{name}.png` → `{nnnn}_{rarity}_{name}.webp`
+- Skip files already converted (resume safe)
+- Per-file log: source size, output size, ratio
 - Final report: total source MB, total output MB, ratio
 
-### Sub-task 2.3: Run conversion + spot check
+### Sub-task 2.3: Run + spot check
 
 ```powershell
 .\scripts\convert_alpha_to_webp.ps1
 ```
 
-Spot check 6 sample webp (1 per tier) — open, verify quality acceptable, no compression artifacts.
+Spot check 6 webp (1 per rarity tier) — visual quality acceptable, no compression artifacts. Especially mythic + legendary (most detail).
 
-### Stop checkpoint
-
-Jix confirms quality OK before Task 3 upload.
+**STOP CHECKPOINT:** Jix confirms quality OK before Task 3.
 
 ---
 
-## TASK 3 — Supabase Storage bucket setup
-
-**Owner:** Jix manually applies migration (project rule: Claude does not run migrations).
-
-### Sub-task 3.1: Migration SQL
+## TASK 3 — Supabase Storage bucket migration
 
 Claude Code writes: `supabase/migrations/{timestamp}_create_cards_bucket.sql`
 
@@ -238,220 +163,263 @@ ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "cards_public_read"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'cards');
-
--- RLS: only authenticated admins can insert (initial seeding via service key bypass)
-CREATE POLICY "cards_admin_insert"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (bucket_id = 'cards' AND public.is_admin());
 ```
 
-### Sub-task 3.2: Jix applies migration
+No INSERT policy — uploads happen via SUPABASE_SERVICE_ROLE_KEY which bypasses RLS.
 
-Jix runs in Supabase SQL Editor (Results tab, single statement at a time if needed).
+**Jix applies migration manually in Supabase SQL Editor (Results tab).**
 
-Verify bucket exists:
+Verify after apply:
 ```sql
 SELECT id, name, public FROM storage.buckets WHERE id = 'cards';
 ```
 
-### Sub-task 3.3: Upload script
+---
+
+## TASK 4 — Upload script
 
 Claude Code writes: `scripts/upload_alpha_to_supabase.ts`
 
 Behavior:
 - Read all webp from `images_webp/`
-- Upload to bucket `cards` with path: `alpha/{tier}/{filename}.webp`
-- Use SUPABASE_SERVICE_ROLE_KEY (bypasses RLS for seeding)
+- For each file, parse rarity from filename: `{nnnn}_{rarity}_{name}.webp`
+- Upload to bucket `cards` with path: `alpha/{rarity}/{filename}.webp`
+- Use `SUPABASE_SERVICE_ROLE_KEY` from env
 - Concurrency: 10 parallel uploads
-- Resume capability: skip files already in bucket
-- Final report: total uploaded, total skipped, total failed
+- Resume safe: skip files already in bucket (use `head` request)
+- Final report: uploaded, skipped, failed
 
-### Sub-task 3.4: Run upload
+Required env (in `.env.local`):
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
 
+Run:
 ```bash
-node scripts/upload_alpha_to_supabase.ts
+npx tsx scripts/upload_alpha_to_supabase.ts
 ```
 
-Verify via Supabase dashboard: bucket "cards" → folder "alpha" → 6 tier folders, ~1000 files total.
+**Verify via Supabase Dashboard:** bucket `cards` → folder `alpha` → 6 rarity folders → 1000 total files.
 
 ---
 
-## TASK 4 — Manifest seeding to repo
+## TASK 5 — Image URL helper
 
-Claude Code:
-- Copy `manifest.json` from Jix PC to `lib/cards/alpha_manifest.json`
-- Validate: 1000 entries, all have id+tier+card_name+prompt_version
-- Add helper `lib/cards/alpha-loader.ts` exposing:
-  - `getAllAlpha()` returns 1000 cards
-  - `getByType(type)` filters by card type
-  - `getByTier(tier)` filters by rarity
-  - `getCardImageUrl(id)` returns Supabase public URL
+Claude Code writes: `lib/cards/alpha-image-url.ts`
 
-URL pattern:
+```typescript
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const PUBLIC_BUCKET_BASE = `${SUPABASE_URL}/storage/v1/object/public/cards`;
+
+/**
+ * Returns deterministic public URL for an Alpha card webp.
+ * Pattern: {SUPABASE_URL}/storage/v1/object/public/cards/alpha/{rarity}/{nnnn}_{rarity}_{name}.webp
+ *
+ * Inputs come from alpha_cards row (already in DB):
+ *   - id (number 0-999)
+ *   - rarity ('common'|'uncommon'|'rare'|'epic'|'legendary'|'mythic')
+ *   - name (snake_case from manifest)
+ */
+export function getAlphaCardImageUrl(
+  id: number,
+  rarity: string,
+  name: string
+): string {
+  const padded = String(id).padStart(4, '0');
+  const filename = `${padded}_${rarity}_${name}.webp`;
+  return `${PUBLIC_BUCKET_BASE}/alpha/${rarity}/${filename}`;
+}
+
+/** Fallback if card image fails to load (404) — return generic category PNG. */
+export function getAlphaCardFallbackUrl(type: string): string {
+  // Existing 9 generic PNGs in public/cards/category-art/
+  return `/cards/category-art/${type}.png`;
+}
 ```
-https://{project}.supabase.co/storage/v1/object/public/cards/alpha/{tier}/{filename}.webp
+
+**Reconciliation note:** alpha_cards row column names must match manifest. Pre-flight inferred id+rarity+name fields exist. Claude Code verifies actual column names in Task 5.5 before writing helper.
+
+### Sub-task 5.5: Verify alpha_cards schema
+
+```sql
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'alpha_cards'
+ORDER BY ordinal_position;
 ```
 
-Use existing Supabase client from `lib/supabase-server.ts` if needed for signed URLs (probably not — public read).
+If actual column for snake_name is different (e.g. `card_name`, `name`, `internal_name`), adjust `getAlphaCardImageUrl` parameters to match.
 
 ---
 
-## TASK 5 — Frame component
+## TASK 6 — AlphaCardFrame image wiring
 
-Claude Code:
+Modify `components/cards/AlphaCardFrame.tsx`:
 
-1. Locate broken custom V3 frame layer (per pre-flight finding)
-2. Either restore pre-custom thin frame OR write fresh thin frame component if pre-custom doesn't exist in git history
-3. Component: `components/cards/AlphaFrame.tsx`
-4. Props: `rarity`, `cardId`, `imageUrl`, `name`, `type`, `text` (optional for catalog vs full card view)
-5. Style: thin border (~2-3px), color from rarity map, subtle premium gradient/shadow
-6. Single shared frame — no per-tier custom geometry, only color shift
+**Current behavior (per pre-flight):** uses `TYPE_TO_IMAGE` map to pick 1 of 9 generic category PNGs.
 
-Rarity → color map (locked):
+**New behavior:** receive `imageUrl` prop, fall back to category PNG only if image fails to load.
+
+Changes:
+1. Add `imageUrl?: string` to component props
+2. Render `<img src={imageUrl ?? fallbackUrl} onError={swapToFallback} />` for the art slot
+3. Keep all RARITY_GLOW logic untouched
+4. Keep all existing styling untouched
+
+Update callers (`AlphaCatalog.tsx`):
+- Import `getAlphaCardImageUrl` from `lib/cards/alpha-image-url.ts`
+- Pass `imageUrl={getAlphaCardImageUrl(card.id, card.rarity, card.name)}` to each `<AlphaCardFrame />`
+
+Update other callers (AlphaDeckBuilder, AlphaDeckBar, AlphaDeckSlots if they render cards).
+
+---
+
+## TASK 7 — Replace V3 on /cards (EN)
+
+Modify `app/cards/page.tsx`:
+
+**Current:** imports + renders `<CardCollection />` (V3, from `components/combat/CardCollection.tsx`)
+
+**New:** import + render `<AlphaCatalog />` (already shipped under AFS-6d)
+
+Add comment block at the change point:
+```tsx
+// AFS-18 (Apr 28): /cards now renders Alpha 1000 instead of V3 First Edition.
+// V3 had missing cards + broken custom frames per Jix audit. V3 components
+// (components/combat/CardCollection.tsx, lib/cards/full_library.ts) remain
+// in repo for possible future restoration. Do not re-import without explicit
+// approval. /cards/alpha route stays live as backward-compat alias.
+```
+
+Page metadata: update title from V3-specific to Alpha-focused.
+
+---
+
+## TASK 8 — Replace V3 on /dk/cards
+
+Same change as Task 7 applied to `app/dk/cards/page.tsx`. Title in DK if applicable.
+
+---
+
+## TASK 9 — Redirect V3 deck-builder routes
+
+Modify `next.config.ts` to add 308 redirects:
+
 ```ts
-export const RARITY_FRAME_COLORS = {
-  common: 'border-slate-400',      // grey
-  uncommon: 'border-emerald-500',   // green
-  rare: 'border-cyan-400',          // cyan/blue
-  epic: 'border-purple-500',        // purple
-  legendary: 'border-amber-400',    // gold
-  mythic: 'border-fuchsia-500',     // magenta
-} as const;
+// AFS-18: V3 deck-builder is broken. Redirect to Alpha deck-builder.
+{
+  source: '/cards/deck-builder',
+  destination: '/cards/alpha/deck-builder',
+  permanent: true,
+},
+{
+  source: '/dk/cards/deck-builder',
+  destination: '/dk/cards/alpha/deck-builder',
+  permanent: true,
+},
 ```
 
-Tailwind v4 — verify these tokens render in current build.
+(If V3 deck-builder route doesn't exist as a redirect target — pre-flight implied it does — verify and adjust.)
 
 ---
 
-## TASK 6 — /cards page rewrite
+## TASK 10 — Tests
 
-### Sub-task 6.1: Page structure
+Target: ~+20-30 assertions
 
-`app/cards/page.tsx`:
-- Header: "Alpha Premium · 1000 Cards"
-- Filter bar: 9 type pills (Weapon / Drone / Defense / Maneuver / AI Routine / Module / Equipment / Field / Ship Core) + "All"
-- Card grid: 20 per page (4×5 or 5×4 responsive)
-- Pagination controls (page N of 50)
-- Each card: AlphaFrame with image + name + type + tier label
+### tests/cards/alpha-image-url.test.ts
+- `getAlphaCardImageUrl(0, 'common', 'spark_discharge')` returns expected pattern
+- All 6 rarities produce valid URLs
+- Padding: id=42 → "0042"
+- Edge case: id=999 → "0999"
 
-### Sub-task 6.2: Remove V3 rendering
+### tests/cards/cards-page-afs18.test.ts (walker pattern)
+- `app/cards/page.tsx` does NOT import `CardCollection`
+- `app/cards/page.tsx` DOES import `AlphaCatalog`
+- `app/dk/cards/page.tsx` same checks
+- `next.config.ts` contains the two new 308 redirects
 
-- Identify V3 render entry (likely something like `<V3CardLibrary />` or similar)
-- Remove from `/cards` rendering only (keep file)
-- Add comment block at removed line:
-  ```tsx
-  // V3 First Edition removed from /cards Apr 28 (AFS-18) — missing
-  // cards + wrong images per Jix. V3 data + components remain in repo
-  // (lib/cards/full_card_library.json, components/cards/v3/*) for
-  // possible future restoration. Do not re-import without Jix approval.
-  ```
+### tests/cards/alpha-frame-image.test.ts
+- AlphaCardFrame accepts `imageUrl` prop
+- Fallback to category PNG when imageUrl undefined
+- Fallback triggers on `onError`
 
-### Sub-task 6.3: Filter + pagination logic
-
-Server component if possible (no useState needed for static filter), or thin client component with URL search params (`?type=weapon&page=3`).
-
----
-
-## TASK 7 — Deck builder Alpha wire
-
-`app/cards/alpha/deck-builder/page.tsx`:
-- Verify it currently exists (per SLUT 16 audit, yes)
-- Wire to alpha-loader.ts (replace whatever data source it uses today)
-- Inventory pane (bottom): all 1000 alpha cards, filterable by type
-- Active deck pane (top): horizontal bar, drag cards up
-- Toggle 5/10/15 cards (per SLUT 9 lock)
-- 5 saved decks per user (per SLUT 9 lock — schema check needed: does `user_decks` table exist?)
-
-If `user_decks` table doesn't exist: defer save-deck functionality to follow-up sprint, ship view-only deck builder in AFS-18.
+### Regression
+- V3 files still on disk: `components/combat/CardCollection.tsx`, `lib/cards/full_library.ts`
+- `alpha_cards` schema unchanged (no migration this sprint)
+- `user_decks` schema unchanged
 
 ---
 
-## TASK 8 — Tests
-
-Target: +20-30 assertions
-
-### Unit tests
-- `tests/cards/alpha-loader.test.ts`
-  - 1000 cards loadable
-  - All 9 types represented
-  - All 6 tiers represented
-  - Tier counts: 399 / 280 / 160 / 90 / 50 / 20
-
-- `tests/cards/alpha-frame.test.ts`
-  - Each rarity renders with correct border color class
-  - Frame component accepts all 6 rarity values
-  - Image src maps to Supabase URL pattern
-
-- `tests/cards/cards-page.test.ts` (walker pattern per AFS-6b lesson)
-  - `/cards` page does NOT import V3 components
-  - `/cards` page DOES import alpha-loader
-  - Filter pills count = 10 (9 types + All)
-
-### Regression tests
-- V3 files still exist on disk (`lib/cards/full_card_library.json` present)
-- V3 components still in repo (no accidental delete)
-
-### Live verify (Task 9)
-- /cards loads, shows Alpha grid
-- Tier color visible on cards (sample: 1 common + 1 mythic)
-- Filter by "Weapon" reduces grid
-- Pagination works (page 2 → different cards)
-- Deck builder loads Alpha cards
-
----
-
-## TASK 9 — Live verification (Claude in Chrome bridge)
+## TASK 11 — Live verification (Claude in Chrome bridge)
 
 Requires Jix click "Connect" in Chrome extension.
 
-Routes to verify:
-- `/cards` — Alpha 1000 visible, filter works, pagination works
-- `/cards/alpha/deck-builder` — inventory shows Alpha cards
-- One sample card detail view (if route exists)
-- `/dk/cards` — should still work (currently mirrors EN, AFS-26 owns DK build)
+Routes:
+- `/cards` — renders Alpha 1000 (not V3), pagination works, type filter works, sample card shows unique art (not generic category PNG)
+- `/cards/alpha` — still works (backward compat)
+- `/cards/deck-builder` — 308 redirects to `/cards/alpha/deck-builder`
+- `/cards/alpha/deck-builder` — Alpha cards visible with unique art, deck save works
+- `/dk/cards` — same as `/cards`
+
+Spot check 6 cards (1 per rarity) — verify each shows its unique art, not a fallback generic PNG.
 
 Screenshot evidence stored in session log.
 
 ---
 
-## TASK 10 — Sprint close
+## TASK 12 — Sprint close
 
-- Tag: `sprint-afs-18-complete`
-- Backup tag: `backup/pre-afs-18-{date}`
-- Update `CLAUDE.md` with sprint history row
-- Update INDEX deltas at SLUT
-- Commit count expected: ~8-10
+```bash
+# Tag
+git tag sprint-afs-18-complete
+git push origin sprint-afs-18-complete
+
+# CLAUDE.md sprint history row
+# (update with HEAD, tests count, test delta, key files changed)
+
+# Push final state
+git status  # clean
+git log origin/main --oneline -5
+```
+
+Update `CLAUDE.md`:
+- Add SLUT 18 entry with sprint summary
+- Update test count
+- Mark AFS-18 ✅ in P0 bug table
 
 ---
 
 ## DEFINITION OF DONE
 
-- [ ] 1000 webp files in Supabase Storage `cards/alpha/{tier}/`
-- [ ] Manifest in `lib/cards/alpha_manifest.json` (1000 entries)
-- [ ] AlphaFrame component renders with rarity colors
-- [ ] /cards renders only Alpha (V3 not visible)
-- [ ] Filter + pagination working
-- [ ] Deck builder loads Alpha
+- [x] Backup verified (Task 1 — DONE pre-execution)
+- [ ] 1000 webp files in Supabase Storage `cards/alpha/{rarity}/`
+- [ ] AlphaCardFrame renders unique image per card with category-PNG fallback
+- [ ] `/cards` renders AlphaCatalog (no V3 imports in page)
+- [ ] `/dk/cards` same
+- [ ] V3 deck-builder routes 308 to Alpha deck-builder
+- [ ] V3 files still on disk
 - [ ] Tests +20-30, all green
-- [ ] Live verified
+- [ ] Live verified — 6 sample cards show unique art on each rarity
 - [ ] Tagged + pushed
-- [ ] V3 files still on disk (not deleted)
-- [ ] Backup confirmed (Google Drive + USB) before any source-touching task
+- [ ] CLAUDE.md updated
 
 ---
 
 ## ROLLBACK
 
 ```bash
-git reset --hard backup/pre-afs-18-{date}
+git reset --hard backup/pre-afs-18-{YYYYMMDD}
 git push origin main --force-with-lease
 git push origin :refs/tags/sprint-afs-18-complete
 ```
 
-Supabase Storage rollback (optional, if needed):
-- Bucket can stay (no harm)
-- Or empty alpha/ folder via Supabase dashboard
+Supabase Storage rollback (optional):
+- Bucket can stay empty (no harm)
+- Or empty alpha/ folder via Supabase Dashboard
 
 ---
 
@@ -459,22 +427,21 @@ Supabase Storage rollback (optional, if needed):
 
 | Risk | Mitigation |
 |---|---|
-| Backup not done before conversion | Task 1 BLOCKING — verify before Task 2 |
-| webp quality unacceptable on premium tiers | Quality 85 spot check Task 2.3, can re-run with 90+ |
-| Supabase bucket egress cost | Public bucket has free egress for fair use; monitor |
-| /cards regression breaks /cards/alpha/deck-builder | Test 7 covers, regression catch |
-| V3 files accidentally deleted | DoD explicit: V3 files still on disk |
-| `user_decks` table missing | Defer save-deck to follow-up, ship view-only |
-| Pre-flight reveals broken assumption | SKILL v2 reshape protocol (per AFS-6b lesson) |
+| webp quality unacceptable on mythic/legendary | Quality 85 spot check Task 2.3, can re-run with 90+ |
+| alpha_cards schema column names differ from manifest | Task 5.5 verifies before helper code |
+| Image URL 404 if name mismatch between DB and webp filename | onError fallback to category PNG, log to console for debugging |
+| Vercel deploy size if any large file accidentally committed | Spot check git diff before push — only code changes, no PNGs/webp |
+| V3 imports still pulled by some test harness | Walker pattern test catches |
+| Pre-flight missed something else | Continue STOP-checkpoint discipline at Task 4, 5, 11 |
 
 ---
 
 ## NOTES FOR CLAUDE CODE
 
-1. **Pre-flight is mandatory** — STOP at Step 0.6 checkpoint, report findings.
-2. **Backup verification is BLOCKING** — Task 2 requires Jix "backup done" confirmation.
+1. **V2 SKILL is locked.** No further reshape unless Task 5.5 reveals schema surprise.
+2. **Backup confirmed DONE.** Safe to convert PNGs.
 3. **Migration applied by Jix manually** — Claude does not run Supabase migrations.
-4. **Single thin frame, no per-tier geometry** — only color shift.
-5. **V3 stays on disk** — only stop rendering, don't delete.
-6. **CLAUDE.md update at end** — sprint history row required.
-7. **No new Stripe/payment code** — pack BUY stays "Coming Soon" (AFS-6a domain).
+4. **V3 stays on disk** — only stop rendering.
+5. **CLAUDE.md update at end** — sprint history row required.
+6. **No new Stripe/payment code.**
+7. **Frame colors UNCHANGED** — RARITY_GLOW stays per AFS-6d "do not touch".
