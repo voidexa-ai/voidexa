@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 import WalletBar from '@/components/quantum/WalletBar'
 
 export interface WalletTransaction {
@@ -46,6 +47,45 @@ export default function WalletPageClient({
 }: WalletPageClientProps) {
   const balanceNum = typeof balance === 'string' ? parseFloat(balance) : balance
   const hasBalance = balanceNum > 0
+
+  const pathname = usePathname()
+  const isDanish = pathname?.startsWith('/dk/') ?? false
+
+  const ghaiScope = isDanish
+    ? {
+        heading: 'Hvad kan jeg bruge GHAI til?',
+        canUseLabel: 'GHAI kan bruges til:',
+        canUse: [
+          'In-game kosmetiske pakker (booster packs, ship skins, pilot avatars)',
+          'Pay-per-use AI-tjenester (Void Chat sessions, Quantum Chat debates)',
+          'Wallet top-up via Stripe ($5 / $10 / $25 / $50)',
+        ],
+        cannotUseLabel: 'GHAI kan IKKE bruges til:',
+        cannotUse: [
+          'Fysiske produkter (AEGIS Monitor, Comlink Node, Website Builder, AI Consulting)',
+          'Abonnement',
+          'Trading bot gebyrer',
+        ],
+        trailingPre: 'Til fysiske produkter, se ',
+        trailingPost: ' — betaling i DKK/EUR via Stripe.',
+      }
+    : {
+        heading: 'What can I use GHAI for?',
+        canUseLabel: 'GHAI can be used for:',
+        canUse: [
+          'In-game cosmetic packs (booster packs, ship skins, pilot avatars)',
+          'Pay-per-use AI services (Void Chat sessions, Quantum Chat debates)',
+          'Wallet top-ups via Stripe ($5 / $10 / $25 / $50 tiers)',
+        ],
+        cannotUseLabel: 'GHAI cannot be used for:',
+        cannotUse: [
+          'Real-world products (AEGIS Monitor, Comlink Node, Website Builder, AI Consulting)',
+          'Subscription billing',
+          'Trading bot fees',
+        ],
+        trailingPre: 'For real-world products, see ',
+        trailingPost: ' — payment in DKK/EUR via Stripe.',
+      }
 
   return (
     <div className="min-h-screen">
@@ -96,6 +136,37 @@ export default function WalletPageClient({
                 to see how top-ups power Quantum chat and in-game purchases.
               </p>
             )}
+          </motion.div>
+
+          {/* GHAI scope clarification */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.075 }}
+            style={cardStyle}
+            data-testid="ghai-scope-clarification"
+            data-locale={isDanish ? 'da' : 'en'}
+          >
+            <h2 className="text-sm font-semibold text-[#e2e8f0] mb-4">{ghaiScope.heading}</h2>
+            <div className="space-y-4 text-sm leading-relaxed" style={{ color: '#94a3b8' }}>
+              <div>
+                <p className="mb-2" style={{ color: '#cbd5e1' }}>{ghaiScope.canUseLabel}</p>
+                <ul className="space-y-1.5 pl-5" style={{ listStyleType: 'disc' }}>
+                  {ghaiScope.canUse.map(item => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+              <div>
+                <p className="mb-2" style={{ color: '#cbd5e1' }}>{ghaiScope.cannotUseLabel}</p>
+                <ul className="space-y-1.5 pl-5" style={{ listStyleType: 'disc' }}>
+                  {ghaiScope.cannotUse.map(item => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+              <p>
+                {ghaiScope.trailingPre}
+                <a href="/products" className="underline" style={{ color: '#00d4ff' }}>/products</a>
+                {ghaiScope.trailingPost}
+              </p>
+            </div>
           </motion.div>
 
           {/* Transaction history */}
