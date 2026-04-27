@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Code2, BarChart3, Lightbulb, CheckCircle2 } from 'lucide-react'
+import { RealWorldPaymentNotice } from '@/components/shop/RealWorldPaymentNotice'
 
 const services = [
   {
@@ -85,6 +86,8 @@ export default function ServicesPage() {
             just the work, scoped and delivered.
           </p>
         </motion.div>
+
+        <RealWorldPaymentNotice />
 
         {/* Service cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-24">

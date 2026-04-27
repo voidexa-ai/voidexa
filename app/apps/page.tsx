@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { RealWorldPaymentNotice } from '@/components/shop/RealWorldPaymentNotice'
 
 const deploymentTiers = [
   {
@@ -66,6 +67,8 @@ export default function AppsPage() {
             their intelligence — and their privacy.
           </p>
         </motion.div>
+
+        <RealWorldPaymentNotice />
 
         {/* Comlink — compact card */}
         <motion.div

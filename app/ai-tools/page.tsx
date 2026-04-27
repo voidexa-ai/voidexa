@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, BookOpen, Globe, Lightbulb } from 'lucide-react'
+import { RealWorldPaymentNotice } from '@/components/shop/RealWorldPaymentNotice'
 
 function WaitlistInput({ label }: { label: string }) {
   const [email, setEmail] = useState('')
@@ -57,6 +58,8 @@ export default function AIToolsPage() {
       {/* ── AI Tools — compact cards ── */}
       <section className="section-pad">
         <div className="max-w-7xl mx-auto px-6">
+          <RealWorldPaymentNotice />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
 
             {/* AI Book Creator */}

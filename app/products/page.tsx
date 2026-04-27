@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { TrendingUp, Shield, BookOpen, Wrench, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { RealWorldPaymentNotice } from '@/components/shop/RealWorldPaymentNotice'
 
 const products = [
   {
@@ -122,6 +123,8 @@ export default function ProductsPage() {
             Set it up once, let it work.
           </p>
         </motion.div>
+
+        <RealWorldPaymentNotice />
 
         {/* Products */}
         <div className="space-y-8">
