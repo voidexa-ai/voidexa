@@ -7,13 +7,14 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/components/AuthProvider'
 
 const INTERESTS = [
-  { value: 'ai-trading',  label: 'AI Trading Bot'    },
-  { value: 'ghost-ai',    label: 'Ghost AI Chat'      },
-  { value: 'quantum',     label: 'Quantum'            },
-  { value: 'trading-hub', label: 'Trading Hub'        },
-  { value: 'node-system', label: 'Node System'        },
-  { value: 'comlink',     label: 'Comlink'            },
-  { value: 'apps',        label: 'Apps'               },
+  { value: 'ai-trading',  label: 'AI Trading Bot'                 },
+  { value: 'ghost-ai',    label: 'Ghost AI Services (GHAI Token)' },
+  { value: 'void-chat',   label: 'Void Chat'                      },
+  { value: 'quantum',     label: 'Quantum'                        },
+  { value: 'trading-hub', label: 'Trading Hub'                    },
+  { value: 'node-system', label: 'Node System'                    },
+  { value: 'comlink',     label: 'Comlink'                        },
+  { value: 'apps',        label: 'Apps'                           },
 ]
 
 const inputStyle = {
