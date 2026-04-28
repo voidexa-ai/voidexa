@@ -19,7 +19,7 @@ const TECH_STACK: StackItem[] = [
   },
   {
     title: 'voidexa.com surface',
-    description: 'A unified web client — Void Chat, Star System, Free Flight, Trading Hub, and the Break Room — sitting on the same auth and wallet.',
+    description: 'A unified web client — Void Pro AI, Star System, Free Flight, Trading Hub, and the Break Room — sitting on the same auth and wallet.',
   },
   {
     title: 'All sovereign, all in-house',

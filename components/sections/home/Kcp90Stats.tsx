@@ -146,7 +146,7 @@ export default function Kcp90Stats() {
           textAlign: 'center',
           fontWeight: 500,
         }}>
-          Powered by KCP-90 — Integrated in: Quantum · Trading Bot · Void Chat
+          Powered by KCP-90 — Integrated in: Quantum · Trading Bot · Void Pro AI
         </div>
       </div>
 

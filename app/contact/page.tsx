@@ -9,7 +9,7 @@ import { useAuth } from '@/components/AuthProvider'
 const INTERESTS = [
   { value: 'ai-trading',  label: 'AI Trading Bot'                 },
   { value: 'ghost-ai',    label: 'Ghost AI Services (GHAI Token)' },
-  { value: 'void-chat',   label: 'Void Chat'                      },
+  { value: 'void-chat',   label: 'Void Pro AI'                    },
   { value: 'quantum',     label: 'Quantum'                        },
   { value: 'trading-hub', label: 'Trading Hub'                    },
   { value: 'node-system', label: 'Node System'                    },

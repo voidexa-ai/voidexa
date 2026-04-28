@@ -47,7 +47,7 @@ const BEHIND_THE_SCENES = [
   },
   {
     date: 'Mar 2026',
-    update: 'Void Chat deployed to production.',
+    update: 'Void Pro AI deployed to production.',
   },
   {
     date: 'Mar 2026',
