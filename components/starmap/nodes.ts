@@ -149,7 +149,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     emissiveIntensity: 2.8,
     size: 0.32,
     isCenter: false,
-    sublabel: 'Live — 960 Tests Passed',
+    sublabel: 'Live — 1324 Tests Passed',
     isDiscovered: true,
     planetType: 'gas',
   },
