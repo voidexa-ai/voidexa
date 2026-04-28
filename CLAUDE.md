@@ -92,10 +92,105 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6g complete** | `7f09077` | **1141** | **Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep** |
 | **AFS-18 complete** | `fdfca34` | **1240** | **Alpha 1000 Cards Deploy — Storage bucket + 1000 webp uploaded + per-card image wiring + /cards V3→Alpha swap + V3 deck-builder 308 redirects** |
 | **AFS-18b complete** | `f1c2cef` | **1286** | **Rarity UX + Mythic Iridescent Frame + TCG Layout Overhaul — rarity filter pill row, mythic conic-gradient border (magenta · cyan · metallic gold), full TCG-grammar restructure (name+cost header, type-line below image, ATK/DEF opposite footer corners)** |
+| **AFS-18c complete** | `66b81b0` | **1324** | **Voidexa User Manual Deploy — 12 routes (6 EN + 6 DK), sticky-sidebar layout, react-markdown + remark-gfm renderer, etape 03 cross-links into /cards?type=X, "Read the rules" button on /cards, "How to Play" entry in Universe nav** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-28 — AFS-18c COMPLETE (Voidexa User Manual Deploy)
+
+**Status:** ✅ SHIPPED to `origin/main`, live-verified on voidexa.com — 12 manual routes (6 EN + 6 DK) render the existing 5-etape user manual at `docs/VOIDEXA_USER_MANUAL/`. Etape 03 prose cross-links into `/cards?type={slug}` for all 9 card types. "📖 Read the rules" / "📖 Læs reglerne" pill button on `/cards` top-right. "How to Play" entry slotted into Universe dropdown nav between Cards and Achievements.
+**Tag:** `sprint-afs-18c-complete`
+**Backup:** `backup/pre-afs-18c-20260428` → `67a0572` (SKILL v2 commit, before any code change)
+**Tests:** 1324/1324 green (was 1286, +38 new AFS-18c assertions)
+**Final HEAD:** `66b81b0` (test commit; CLAUDE.md docs commit lands on top after tag, per AFS-18 / AFS-18b precedent)
+
+**Commit chain:**
+```
+66b81b0 test(afs-18c): coverage for manual routes + cross-links + etape03 typelinks (T8)
+d36c4f0 feat(afs-18c): "Read the rules" button + Universe nav "How to Play" + i18n (T5-T6)
+7ce6e67 feat(afs-18c): user manual routes + lib + components + sitemap (T2-T4 + T7)
+938fcb7 chore(afs-18c): install remark-gfm@4 for GFM tables in manual content
+67a0572 chore(afs-18c): SKILL v2 - locked decisions + pre-flight findings
+4b43547 chore(afs-18c): SKILL v1 - user manual deploy plan
+```
+
+**v1 → v2 reshape (caught by mandatory pre-flight 1.1-1.7):** Two material findings:
+
+1. **All 5 etape markdown files share an identical H1** (`# VOIDEXA — USER MANUAL & UNIVERSE GUIDE`). v1 plan to "derive title from etape H1" was unworkable. Correction A: hard-coded per-slug `{ title, description, file }` triplet in `lib/manual/etapes.ts` `ETAPE_META` map, and the shared H1 is stripped via exact-line regex in `loadEtapeMarkdown` before render so each route's hard-coded H1 wins.
+2. **Manual contains zero image references** (`grep -E '\.png|\.jpg|\.gif|\.svg|!\['` returned no matches across all 5 files). Q10 image-copy work was a no-op. Correction B: dropped the image-copy task + risk-row + DoD bullet entirely.
+
+Other pre-flight confirmations (no reshape needed): `react-markdown@10.1.0` already installed, `next-intl` not installed (mirror-route pattern locked), Universe dropdown insertion at idx 5 keeps Inventory last, `/cards` header `<header className="mb-8">` is a clean flex-restructure target, `app/sitemap.ts` AFS-7 format additive.
+
+D1 cross-link strategy locked at pre-flight ack: link **every** titlecase whole-word match in etape 03 prose, case-sensitive, skipping code blocks + headings + existing markdown links. Visual density acceptable.
+
+**What shipped:**
+
+**Section A — Lib helpers (T2):**
+- `lib/manual/etapes.ts` — `ETAPE_META` (5 hard-coded slug → `{ title, description, file }` triplets), `EtapeSlug` type, `ETAPE_ORDER` array, `isValidEtapeSlug` type guard
+- `lib/manual/load-markdown.ts` — `loadEtapeMarkdown(filename)` reads from `docs/VOIDEXA_USER_MANUAL/` at request time, strips the shared H1 via exact-line regex
+- `lib/manual/cross-links.ts` — `injectTypeCrossLinks(markdown)` for etape 03 only. Tokenizes code blocks via `__VOIDEXA_CB_n__` sentinels (replaces fenced blocks + inline code spans), skips heading lines, runs case-sensitive boundary regex per type (compound names "AI Routine" / "Ship Core" first), restores tokens. 9-type → slug map exposed as `CARD_TYPE_LINKS` for the test file
+
+**Section B — Components (T4 layout):**
+- `components/manual/ManualLayout.tsx` — `md:grid-cols-[220px_1fr]` shell, server component
+- `components/manual/ManualSidebar.tsx` — sticky-on-md+ nav with active highlight via `currentSlug` prop. "Overview" + 5 etapes in power order
+- `components/manual/ManualContent.tsx` — `react-markdown` wrapper with Tailwind component map (h1-h4, p, ul/ol/li, code, pre, table/thead/th/td, a, blockquote, hr, strong, em). Internal links route via `next/link`; external open in new tab. `remark-gfm` enabled
+- `components/manual/ManualEtape.tsx` — composes layout + per-slug header (eyebrow "Etape N of 5" + hard-coded title + description) + content. Applies `injectTypeCrossLinks` only when `slug === 'cards'`
+- `components/manual/ManualLanding.tsx` — `/manual` overview block + 5 etape cards in 2-col grid
+
+**Section C — Routes (T2-T3, 12 total):**
+- `app/manual/page.tsx` (landing) + 5 etape pages (`foundation`, `battle`, `cards`, `pilots`, `glossary`)
+- `app/dk/manual/page.tsx` + 5 etape mirrors with DK metadata + EN content per AFS-26 deferral
+- Each etape page is ~25 lines: declares `SLUG` const, sets metadata (canonical + alternates locked), renders `<ManualEtape>` with the right `basePath`
+- All 12 routes prerender as static (○) in `next build` output — zero runtime DB / network dependencies
+
+**Section D — Cross-surface integration (T5-T6):**
+- `components/cards/AlphaCatalog.tsx` — restructured the existing `<header className="mb-8">` into a flex row so the H1 + intro paragraph sit on the left and a locale-aware "Read the rules" / "Læs reglerne" Link sits on the right. Both label strings present in source. `data-testid="read-the-rules"`. 📖 emoji in label per Q8 explicit request
+- `components/layout/Navigation.tsx` — inserted `{ href: '/manual', label: tLink('/manual', 'How to Play'), description: tDesc('/manual') }` at Universe dropdown idx 5 (between `/cards` and `/achievements`). Inventory still last
+- `lib/i18n/en.ts` — added `'/manual': { label: 'How to Play', description: '5-etape player manual' }`
+- `lib/i18n/da.ts` — added `'/manual': { label: 'Sådan spiller du', description: '5-etape spiller-manual' }`
+
+**Section E — Sitemap + dep:**
+- `app/sitemap.ts` — 12 new routes (6 EN + 6 DK), sitemap total goes 47 → 59
+- `package.json` + `package-lock.json` — `remark-gfm@^4.0.1` installed for GFM tables (etapes 03 + 05 use pipe-tables heavily)
+
+**Section F — Tests (+38 assertions across 3 files):**
+- `tests/afs-18c-manual-routes.test.ts` (16) — all 12 page.tsx files exist, SLUG matches directory, basePath correct (EN + DK), sitemap contains all 12 routes, landing-page metadata canonicals
+- `tests/afs-18c-cross-links.test.ts` (9) — AlphaCatalog has both label strings + locale-aware href + emoji + testid; Navigation has /manual entry between /cards and /achievements via string-index ordering; EN + DK i18n keys; regression that /inventory is still last in nav
+- `tests/afs-18c-etape03-typelinks.test.ts` (13 — runtime, not walker) — `CARD_TYPE_LINKS` shape, compound-first ordering, single-prose match, link-every-match (D1), AI Routine / Ship Core compound mapping, parametric loop over all 9 types, skip rules: heading lines untouched, fenced code blocks untouched, inline code spans untouched, existing markdown links not re-linked, "Droneship" word-mid not linked, lowercase "weapon hardpoint" left plain
+
+**Sprint deviations from SKILL v2:**
+1. Mid-sprint test update — `tests/afs-6a-fix.test.ts` "Universe dropdown has exactly 9 children" assertion was bumped to 10 with explicit comment + new assertions ensuring `/manual` is in the list AND `/inventory` is still last. Same precedent as AFS-6a-fix updating the sprint-13e Break-Room-last assertion when intentionally extending the dropdown
+2. Test count overshoot — 38 vs target 15-20 (16/9/13 split, all source-level invariants + runtime cross-link tests)
+3. `tsx -e` smoke test of `injectTypeCrossLinks` failed at module-resolution time (separate from real build/test runs); skipped in favour of vitest runtime tests, which pass cleanly
+
+**New patterns AFS-18c establishes in the codebase (first usages):**
+1. **`react-markdown` server-component rendering** — works in Next.js 16 / React 19 without `'use client'` for the wrapper, since the components map contains only stateless functions
+2. **`remark-gfm` plugin** — first time the project renders user-authored markdown content with GFM tables. Establishes the plugin choice for any future markdown surfaces
+3. **Markdown-in-`docs/` rendered at request time** — first time a `docs/*.md` file is read by a route handler via `fs.readFileSync` rather than only consumed by tooling. Pattern usable for future docs-driven pages (changelog, FAQ, etc.)
+4. **Locale-aware Link helper inside a client component** — `basePath.startsWith('/dk/')` pattern for picking EN vs DK targets without going through `next-intl` infrastructure. Reusable for any future cross-link from a localized surface
+
+**Live verified by Jix (Apr 28):** all 12 verification points passed — landing page renders with sticky sidebar + 5-etape grid, all 5 EN + 5 DK etapes render with proper sidebar highlight, etape 03 cross-links work end-to-end (clicking "Drone" / "Weapon" / "AI Routine" lands at `/cards?type={slug}`), `/cards` "📖 Read the rules" button works, `/dk/cards` "📖 Læs reglerne" button works, Universe dropdown contains "How to Play" between Cards and Achievements, mobile (375px) responsive layout OK, etape 03 tables render with proper headers/borders, D1 cross-link density feels appropriate.
+
+**Known items out-of-scope (carried forward):**
+- Search functionality (Q11 deferred — markdown headings provide in-page scroll nav)
+- PDF / Print download (Q12 deferred to AFS-18d if ever requested)
+- Real DK translation of manual content (AFS-26 owns)
+- Edit-on-GitHub buttons / annotations / contributor flow
+- Tutorial overlays / interactive walkthrough
+- Audit of remaining `docs/*.md` content for additional candidate routes (changelog, FAQ, etc.) — separate sprint if requested
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-afs-18c-20260428
+git push origin main --force-with-lease
+git push origin :refs/tags/sprint-afs-18c-complete
+```
+
+No Supabase changes in this sprint — DB rollback unnecessary.
+
+---
 
 ### Session 2026-04-28 — AFS-18b COMPLETE (Rarity UX + Mythic Iridescent + TCG Layout Overhaul)
 
