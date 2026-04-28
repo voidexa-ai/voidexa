@@ -37,6 +37,7 @@ export const da: Dict = {
       '/game/battle':               { label: 'Kamp',      description: 'PvE kortduel, Tier 1-5' },
       '/shop':         { label: 'Butik',        description: 'Skins & kortpakker' },
       '/inventory':    { label: 'Beholdning',   description: 'Dine kort & kosmetik' },
+      '/manual':       { label: 'Sådan spiller du', description: '5-etape spiller-manual' },
       '/achievements': { label: 'Bedrifter',    description: 'Mindehallen' },
       '/team':        { label: 'Hold',          description: 'Mød besætningen' },
       '/station':     { label: 'Station',       description: 'Indholds-hub' },

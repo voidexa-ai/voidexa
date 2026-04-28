@@ -44,9 +44,15 @@ describe('AFS-6a-fix Bug 1 — Universe dropdown has 9 canonical items incl. Inv
     expect(block).toMatch(/href:\s*['"]\/inventory['"]/)
   })
 
-  it('Universe dropdown has exactly 9 children', () => {
+  it('Universe dropdown has exactly 10 children (AFS-18c added /manual)', () => {
+    // AFS-6a-fix originally locked 9 items. AFS-18c inserted "How to Play"
+    // (/manual) at idx 5 between /cards and /achievements, raising the
+    // total to 10 while keeping /inventory last.
     const hrefs = Array.from(block.matchAll(/href:\s*['"]([^'"]+)['"]/g)).map(m => m[1])
-    expect(hrefs).toHaveLength(9)
+    expect(hrefs).toHaveLength(10)
+    expect(hrefs).toContain('/manual')
+    // Inventory still last (regression):
+    expect(hrefs[hrefs.length - 1]).toBe('/inventory')
   })
 
   it('English i18n has an /inventory entry', () => {

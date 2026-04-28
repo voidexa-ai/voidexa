@@ -72,6 +72,7 @@ export default function Navigation() {
         { href: '/freeflight',      label: tLink('/freeflight', 'Free Flight'),           description: tDesc('/freeflight') },
         { href: '/shop',            label: tLink('/shop', 'Shop'),                        description: tDesc('/shop') },
         { href: '/cards',           label: tLink('/cards', 'Cards'),                      description: tDesc('/cards') },
+        { href: '/manual',          label: tLink('/manual', 'How to Play'),               description: tDesc('/manual') },
         { href: '/achievements',    label: tLink('/achievements', 'Achievements'),        description: tDesc('/achievements') },
         { href: '/assembly-editor', label: tLink('/assembly-editor', 'Assembly Editor'),  description: tDesc('/assembly-editor') },
         { href: '/break-room',      label: tLink('/break-room', 'Break Room'),            description: tDesc('/break-room') },

@@ -97,16 +97,32 @@ export default function AlphaCatalog({
     ? ALPHA_RARITY_LABELS[activeRarity]
     : null
 
+  // AFS-18c: locale-aware link to the user manual. basePath comes from the
+  // server page, so /dk/cards picks up /dk/manual and EN /cards picks up
+  // /manual without any client-side locale lookup.
+  const isDk = basePath.startsWith('/dk/')
+  const manualHref = isDk ? '/dk/manual' : '/manual'
+  const manualLabel = isDk ? 'Læs reglerne' : 'Read the rules'
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 text-zinc-100">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Alpha Card Library
-        </h1>
-        <p className="mt-2 text-base opacity-80">
-          1000 cards across 9 types and 6 rarities — the premium voidexa set.
-          Cards shown {ALPHA_PAGE_SIZE} per page.
-        </p>
+      <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Alpha Card Library
+          </h1>
+          <p className="mt-2 text-base opacity-80">
+            1000 cards across 9 types and 6 rarities — the premium voidexa set.
+            Cards shown {ALPHA_PAGE_SIZE} per page.
+          </p>
+        </div>
+        <Link
+          href={manualHref}
+          data-testid="read-the-rules"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-zinc-800 px-4 py-2 text-sm font-semibold text-zinc-100 transition-colors hover:bg-zinc-700"
+        >
+          📖 {manualLabel}
+        </Link>
       </header>
 
       <nav
