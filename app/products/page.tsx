@@ -21,7 +21,7 @@ const products = [
       'Multi-agent architecture (Scanner, Season, Futures, Portfolio)',
       'Telegram notifications + paper trading simulator',
       'KuCoin integration — spot + futures read/write',
-      '+313% backtest return over 12 months vs buy-and-hold -6%',
+      '+194.79% backtest return over 12 months vs buy-and-hold -6%',
     ],
     href: '/contact',
     cta: 'Request access',
