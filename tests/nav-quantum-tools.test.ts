@@ -40,8 +40,8 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     expect(hrefs).toHaveLength(3)
   })
 
-  it('Quantum Tools items are in order: Void Chat, Quantum Chat, Quantum Forge', () => {
-    const voidIdx = quantumToolsBlock.indexOf("'Void Chat'")
+  it('Quantum Tools items are in order: Void Pro AI, Quantum Chat, Quantum Forge', () => {
+    const voidIdx = quantumToolsBlock.indexOf("'Void Pro AI'")
     const quantumIdx = quantumToolsBlock.indexOf("'Quantum Chat'")
     const forgeIdx = quantumToolsBlock.indexOf("'Quantum Forge'")
     expect(voidIdx).toBeGreaterThan(-1)
@@ -49,9 +49,9 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     expect(forgeIdx).toBeGreaterThan(quantumIdx)
   })
 
-  it('Void Chat uses the internal route /void-chat', () => {
+  it('Void Pro AI uses the internal route /void-pro-ai (formerly /void-chat)', () => {
     expect(quantumToolsBlock).toMatch(
-      /href:\s*['"]\/void-chat['"][\s\S]*?label:\s*['"]Void Chat['"]/,
+      /href:\s*['"]\/void-pro-ai['"][\s\S]*?label:\s*['"]Void Pro AI['"]/,
     )
   })
 
@@ -93,6 +93,6 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     expect(universe).not.toBeNull()
     expect(universe![1]).not.toMatch(/Quantum Forge/)
     expect(universe![1]).not.toMatch(/['"]\/quantum\/chat['"]/)
-    expect(universe![1]).not.toMatch(/['"]\/void-chat['"]/)
+    expect(universe![1]).not.toMatch(/['"]\/void-pro-ai['"]/)
   })
 })

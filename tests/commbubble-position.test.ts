@@ -34,10 +34,9 @@ describe('CommBubble position invariants', () => {
 
 describe('CommBubble route-skip invariants', () => {
   it('Jarvis hides on /starmap and /dk/starmap to avoid KCP-90 terminal collision', () => {
-    // Regex pattern must be present in source so the bubble returns null on
-    // these routes. Boundary `(?:\/|$)` prevents matching unrelated routes
-    // like /starmaps that may exist in the future.
-    expect(JARVIS_SRC).toContain('/^\\/(?:dk\\/)?starmap(?:\\/|$)/')
+    // AFS-OVERLAY-FIX-V2 widened the regex to also cover /break-room. Boundary
+    // `(?:\/|$)` still prevents matching unrelated routes like /starmaps.
+    expect(JARVIS_SRC).toContain('/^\\/(?:dk\\/)?(?:starmap|break-room)(?:\\/|$)/')
   })
 
   it('Jarvis preserves existing route skips (/, /freeflight, /assembly-editor)', () => {

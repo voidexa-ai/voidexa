@@ -215,7 +215,8 @@ describe('Sprint 16 Task 6 — Starmap HUD declutter', () => {
     // and instead returns null on /starmap (+/dk/starmap) to keep the
     // KCP-90 terminal unblocked. Both protections are now active.
     expect(JARVIS_SRC).toMatch(/fixed bottom-6 right-6 z-\[60\]/)
-    expect(JARVIS_SRC).toContain('/^\\/(?:dk\\/)?starmap(?:\\/|$)/')
+    // AFS-OVERLAY-FIX-V2 widened the regex to also cover /break-room.
+    expect(JARVIS_SRC).toContain('/^\\/(?:dk\\/)?(?:starmap|break-room)(?:\\/|$)/')
     expect(JARVIS_SRC).toMatch(/z-\[60\]/)
   })
 

@@ -26,9 +26,11 @@ const WISHES_SRC          = read('docs', 'wishes-pending.md')
 // ---------------------------------------------------------------------------
 
 describe('AFS-6b Task 1 — contact page pills', () => {
-  it('renders Ghost AI Services + Void Chat as separate INTERESTS entries', () => {
+  it('renders Ghost AI Services + Void Pro AI as separate INTERESTS entries', () => {
     expect(CONTACT_SRC).toContain("label: 'Ghost AI Services (GHAI Token)'")
-    expect(CONTACT_SRC).toContain("label: 'Void Chat'")
+    // AFS-OVERLAY-FIX-V2: label renamed to 'Void Pro AI'; value stays 'void-chat' per Q6
+    // so existing inbox automation that filters by interest slug still works.
+    expect(CONTACT_SRC).toContain("label: 'Void Pro AI'")
     expect(CONTACT_SRC).toContain("value: 'ghost-ai'")
     expect(CONTACT_SRC).toContain("value: 'void-chat'")
   })
@@ -45,9 +47,10 @@ describe('AFS-6b Task 1 — contact page pills', () => {
 })
 
 describe('AFS-6b Task 1 — GetInTouchModal pills', () => {
-  it('renders Ghost AI Services + Void Chat as separate INTERESTS entries', () => {
+  it('renders Ghost AI Services + Void Pro AI as separate INTERESTS entries', () => {
     expect(MODAL_SRC).toContain("label: 'Ghost AI Services (GHAI Token)'")
-    expect(MODAL_SRC).toContain("label: 'Void Chat'")
+    // AFS-OVERLAY-FIX-V2: label renamed; value stays 'void-chat' per Q6.
+    expect(MODAL_SRC).toContain("label: 'Void Pro AI'")
     expect(MODAL_SRC).toContain("value: 'ghost-ai'")
     expect(MODAL_SRC).toContain("value: 'void-chat'")
   })
