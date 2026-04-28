@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { VoidChatShell } from '@/components/ghost-ai/VoidChatShell';
 
 export const metadata = {
-  title: 'voidexa Void Chat — Multi-AI Chat',
+  title: 'voidexa Void Pro AI — Premium AI Access',
 }
 
 export default async function ChatLayout({
@@ -24,7 +24,7 @@ export default async function ChatLayout({
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    redirect('/auth/login?redirect=/void-chat');
+    redirect('/auth/login?redirect=/void-pro-ai');
   }
 
   return <VoidChatShell>{children}</VoidChatShell>;

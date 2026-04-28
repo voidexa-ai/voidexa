@@ -10,7 +10,7 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white py-20 px-4">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-4">Void Chat Pricing</h1>
+        <h1 className="text-4xl font-bold text-center mb-4">Void Pro AI Pricing</h1>
         <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
           Access the world&apos;s best AI models. Subscribe for unlimited access,
           or pay per message with USD.
@@ -23,7 +23,7 @@ export default function PricingPage() {
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-sm px-3 py-1 rounded-full">
               Recommended
             </span>
-            <h3 className="text-xl font-semibold mb-2">Void Chat Pro</h3>
+            <h3 className="text-xl font-semibold mb-2">Pro</h3>
             <p className="text-3xl font-bold mb-1">${STRIPE_PRO.pricePerMonth / 100}</p>
             <p className="text-gray-500 mb-6">per month</p>
             <ul className="space-y-3 text-gray-300 mb-8">

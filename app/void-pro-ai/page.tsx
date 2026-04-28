@@ -46,7 +46,7 @@ export default function ChatPage() {
         return;
       }
       const data = await res.json();
-      router.push(`/void-chat/${data.conversation.id}?provider=${provider}&model=${model}`);
+      router.push(`/void-pro-ai/${data.conversation.id}?provider=${provider}&model=${model}`);
     } catch {
       setError('Network error — please try again');
     } finally {
@@ -68,15 +68,15 @@ export default function ChatPage() {
           }}
         >
           <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(139,92,246,0.6)', display: 'inline-block' }} />
-          Preview — You&apos;re among the first to experience Void Chat
+          Preview — You&apos;re among the first to experience Void Pro AI
         </span>
       </div>
 
       {/* Welcome hero */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-10 max-w-2xl mx-auto w-full">
-        <h1 className="text-3xl font-bold mb-2 text-center">Void Chat</h1>
+        <h1 className="text-3xl font-bold mb-2 text-center">Void Pro AI</h1>
         <p className="text-gray-400 text-center mb-10 text-sm">
-          Choose a provider and model, then start chatting.
+          Premium access to Claude, ChatGPT, and Gemini. Pay per message.
         </p>
 
         {/* Provider cards */}

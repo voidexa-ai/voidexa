@@ -49,7 +49,7 @@ export function ChatSidebar({
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
-        <h2 className="text-lg font-semibold mb-3">Void Chat</h2>
+        <h2 className="text-lg font-semibold mb-3">Void Pro AI</h2>
         <button
           onClick={handleNewChat}
           className="w-full px-4 py-2.5 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium text-sm transition-colors"
