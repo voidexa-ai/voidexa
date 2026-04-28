@@ -46,6 +46,14 @@ const nextConfig: NextConfig = {
     // the redirect intercepts before Next routes to the V3 page.
     { source: '/cards/deck-builder',    destination: '/cards/alpha/deck-builder',    permanent: true },
     { source: '/dk/cards/deck-builder', destination: '/dk/cards/alpha/deck-builder', permanent: true },
+
+    // AFS-OVERLAY-FIX-V2 — Void Chat renamed to Void Pro AI. The product is a
+    // premium AI provider gateway (pay-per-message Claude/ChatGPT/Gemini), not
+    // a chat surface. Old folder renamed via git mv; redirects catch existing
+    // bookmarks, social shares, and search-index hits at the old path.
+    { source: '/void-chat',         destination: '/void-pro-ai',          permanent: true },
+    { source: '/void-chat/:path*',  destination: '/void-pro-ai/:path*',   permanent: true },
+    { source: '/admin/void-chat',   destination: '/admin/void-pro-ai',    permanent: true },
   ],
 
   headers: async () => [
