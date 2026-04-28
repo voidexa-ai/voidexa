@@ -89,806 +89,318 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6a complete** | `bf1ce98` | **994** | **In-game Shop GHAI flow — mount ShopCosmeticsClient, /shop modal rewire, /inventory page** |
 | **AFS-6a-fix complete** | `6144e08` | **1014** | **Post-ship bugfixes — Universe nav +Inventory, back-link, cross-nav, Alpha copy, pack Coming Soon lockdown** |
 | **AFS-6d complete** | `bdc6f3f` | **1087** | **Cards Premium Rebuild — 1000 Alpha cards in DB, paginated catalog, deck builder, 5 saved slots** |
-| **AFS-6g complete** | `sprint-afs-6g-complete` | **1141** | **Battle Scene v2 — SpaceSkybox (battle + freeflight), WoW-style orbit camera, footer hotfix, 27 CVEs deferred** |
-| **afs-6g-skybox-fix complete** | `21c5db7` | **1150** | **Canvas alpha buffer fix — `gl.alpha=false` on BattleCanvas + FreeFlightCanvas; skybox no longer renders transparent** |
-| **afs-6g-skybox-fix-2 complete** | `191eede` | **1152** | **Vignette darkness 0.78 → 0.55 — unblocks nebula midtones that post-processing crushed below fallback color** |
-| **afs-6g-skybox-fix-3 complete** | `8d8021a` | **1157** | **`brightness` prop on SpaceSkybox + battle uses 2.5x — boosts dim nebula past Bloom threshold and over scene.background fallback** |
-| **afs-6g-skybox-fix-4 complete** | `26cbde1` | **1158** | **Imperative `matRef.current.color.setRGB()` replaces prop-based color — fix-3 prop did not reach shader; ref-based mutation guaranteed to apply** |
-| **afs-6g-skybox-fix-5 complete** | `3a18aa6` | **1159** | **Skybox material `fog={false}` — scene fog (far=160) was masking sphere (radius 1500) at fogFactor=0, overwriting all earlier fixes with fogColor=scene.background** |
-| **afs-6g-skybox-fix-6 complete** | `9cd590d` | **1160** | **Empirical brightness tuning 2.5 → 4.0 — fog disable lifted skybox to avgSum 28.7, brightness bump pushes nebula past sum 50 visibility threshold** |
-| **afs-6g-skybox-fix-7 complete** | `8aedc1a` | **1162** | **Texture swap to custom AI-generated `deep_space_universe.png` — closes 7-fix skybox bug-cluster; asset quality > pipeline tuning** |
-| **commbubble-hotfix complete** | `commbubble-hotfix-complete` | **1168** | **Move Jarvis bubble to bottom-right + route-skip on /starmap and /dk/starmap — fixes z-[60] vs z-50 overlap with UniverseChat on 9 ruter while preserving Sprint 16 Task 6 KCP-90 collision avoidance** |
+| **AFS-6g complete** | `7f09077` | **1141** | **Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep** |
+| **AFS-18 complete** | `fdfca34` | **1240** | **Alpha 1000 Cards Deploy — Storage bucket + 1000 webp uploaded + per-card image wiring + /cards V3→Alpha swap + V3 deck-builder 308 redirects** |
 
 ---
 
 ## SESSION LOG
 
-### Session 2026-04-26 — CommBubble Hotfix COMPLETE (Jarvis → bottom-right + /starmap route-skip)
+### Session 2026-04-28 — AFS-18 COMPLETE (Alpha 1000 Cards Deploy + V3 Retirement)
 
-**Status:** ✅ SHIPPED to `origin/main`, tag `commbubble-hotfix-complete` pushed, build clean, 1168/1168 tests green. Live verify pending Jix browser check on 3 ruter (incognito + hard reload).
-**Tag:** `commbubble-hotfix-complete`
-**Backup:** `backup/pre-commbubble-hotfix-20260426` → `3683d52`
-**Tests:** 1168/1168 green (was 1162, +6 new commbubble-position assertions). Pre-existing `tests/sprint-16-performance-and-asset-pipeline.test.ts` flipped one assertion to track new state (same pattern as AFS-3 nav-dropdown flip).
-**SKILL:** `docs/skills/bugfix-commbubble-position.md` (already committed at `3683d52`)
+**Status:** ✅ SHIPPED to `origin/main`, live-verified on voidexa.com — `/cards` now renders the 1000-card Alpha catalog with unique per-card art, V3 First Edition retired from `/cards` rendering, V3 deck-builder 308 redirects to Alpha deck-builder. Bucket "cards" applied to Supabase, 1000 webp uploaded.
+**Tag:** `sprint-afs-18-complete`
+**Backup:** `backup/pre-afs-18-20260428` → `8235a35` (existed pre-sprint, predates both v1 and v2 SKILL commits — cleaner rollback than HEAD~1)
+**Tests:** 1240/1240 green (was 1204, +36 new AFS-18 assertions)
+**Final HEAD:** `fdfca34`
 
-**Bug:** Live audit SLUT 11 (Apr 25) confirmed Jarvis (`z-[60]`) sat ON TOP of UniverseChat (`z-50`) — both at `fixed bottom-6 left-6` — blocking Universe Chat clicks on `/cards`, `/cards/alpha`, `/shop`, `/break-room`, `/wallet`, `/quantum/chat`, `/about`, `/home`, `/cards/alpha/deck-builder`. Pre-flight Task 0 confirmed exact identical positions, no `md:` responsive variants to chase.
-
-**Fix shipped (option (b) — route-conditional render):**
-- `components/ui/JarvisAssistant.tsx`:
-  1. Trigger bubble div: `fixed bottom-6 left-6 z-[60]` → `fixed bottom-6 right-6 z-[60]`
-  2. Chat panel motion.div: `fixed bottom-24 left-6 z-[60]` → `fixed bottom-24 right-6 z-[60]` (mirrors trigger so panel pops up next to bubble)
-  3. New route-skip: `if (/^\/(?:dk\/)?starmap(?:\/|$)/.test(pathname ?? '')) return null` — preserves Sprint 16 Task 6 fix (Jarvis was originally moved bottom-left to dodge KCP-90 terminal at bottom-right on `/starmap`; we move back to right but skip /starmap entirely)
-  4. Existing skips preserved (`/`, `/freeflight`, `/assembly-editor`)
-- UniverseChat stays at `fixed bottom-6 left-6 z-50` — UNCHANGED, still alone on bottom-left
-
-**Why option (b) over SKILL's option (a):** the SKILL as written would have re-introduced the Sprint 16 Task 6 collision on `/starmap` (KCP-90 terminal vs Jarvis at bottom-right). Pre-flight reading of the comment block on `JarvisAssistant.tsx:82-83` flagged this. Option (b) preserves both prior fixes — overlap on 9 routes goes away AND the KCP-90 terminal stays unblocked on /starmap.
-
-**Sprint deviations from SKILL (documented):**
-1. **Three className edits, not one** — SKILL flagged only the trigger bubble. Reading the file revealed the chat panel (`bottom-24 left-6`) also needed the `right-6` swap so the panel doesn't pop up away from the trigger. Caught at Task 0; no checkpoint surprise.
-2. **Test count overshoot** — 6 new assertions vs SKILL target of 3. Added coverage for chat panel position parity, route-skip regex presence, and existing route-skip preservation guard.
-3. **Pre-existing test flipped** — `tests/sprint-16-performance-and-asset-pipeline.test.ts:210` asserted `bottom-6 left-6 z-[60]` (the Sprint 16 Task 6 state). Updated to assert `bottom-6 right-6 z-[60]` AND the new `/starmap` route-skip is present, with comment block explaining both fixes are now active. Same pattern AFS-3 used for the Break Room/Inventory nav order flip.
-4. **SKILL Task 2 was a no-op** — SKILL was already committed at `3683d52` (HEAD) before this session started. Skipped re-commit.
-
-**Files modified:**
-- `components/ui/JarvisAssistant.tsx` (trigger position + chat panel position + new route-skip + comment block rewrite)
-- `tests/sprint-16-performance-and-asset-pipeline.test.ts` (one assertion flipped)
-- `CLAUDE.md` (this entry + sprint history row + P0 bug row update)
-
-**Files added:**
-- `tests/commbubble-position.test.ts` (6 assertions across 2 describe blocks)
-
-**Known items out-of-scope (tracked for AFS-13 CommBubble Merge):**
-- Chat-close-bubble-disappears (P0)
-- Chat cannot fold to bubble (P1)
-- Jarvis missing on `/` homepage (intentional skip — preserved in route-skip list)
-- `hello@voidexa.com` typo in JARVIS contact response copy
-- Two separate widgets → proper merge to ONE bubble with tabs
-
-**Live verification (pending Jix):**
-- Hard-reload + incognito on `/cards/alpha/deck-builder` — Jarvis bottom-right, Universe Chat bottom-left, both clickable separately, no overlap
-- `/starmap` Level 1 + Level 2 — Jarvis NOT visible (route-skip), KCP-90 terminal at bottom-right unblocked
-- One sample route from the original 9 (e.g. `/break-room`, `/wallet`) — Jarvis bottom-right, Universe Chat bottom-left
-
-**Rollback:**
-```bash
-git reset --hard backup/pre-commbubble-hotfix-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/commbubble-hotfix-complete
-git tag -d commbubble-hotfix-complete
+**Commit chain:**
+```
+fdfca34 test(afs-18): coverage for image URL helper + page swap + frame wiring (Task 10)
+7c86d9d feat(afs-18): /cards renders AlphaCatalog + V3 deck-builder redirects (Tasks 7-9)
+246266d feat(afs-18): per-card image wiring on AlphaCardFrame (Tasks 5+6)
+a975add feat(afs-18): upload script for Alpha webp to Supabase Storage (Task 4)
+0593446 feat(afs-18): Supabase Storage bucket "cards" migration (Task 3)
+b1c204f chore(afs-18): PNG to webp conversion script (Task 2)
+e9396a5 chore(afs-18): SKILL v2 reshape — narrow scope after pre-flight
+7ad3c91 chore(afs-18): add sprint SKILL documentation
 ```
 
----
-
-### Session 2026-04-26 — afs-6g-skybox-fix-7 COMPLETE (cluster closure)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-7-complete` pushed, build clean, 1162/1162 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-7-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-7-20260426` → `a5f591e`
-**Tests:** 1162/1162 green (was 1160, +4 fix-7 path assertions, -2 obsolete brightness assertions, +1 updated afs-6g-battle-camera assertion = +2 net)
-**Final HEAD:** `8aedc1a`
-
-**Closes:** afs-6g skybox bug-cluster (7 fixes, 9 commits across 5 hours of diagnostic-driven iteration)
-
-**Commit chain (SKILL + fix + docs):**
-```
-8aedc1a fix(afs-6g): swap battle skybox to custom AI-generated equirectangular nebula
-3a9fdb3 chore(afs-6g-fix-7): add skybox-fix-7 SKILL documentation (cluster closer)
-```
-
-**Bug-cluster summary (chronological):**
-| # | Fix | Commit | Real fix? | Diagnostic value |
-|---|---|---|---|---|
-| 1 | Canvas alpha buffer (`gl.alpha=false`) | `21c5db7` | ✅ Yes | Necessary, not sufficient |
-| 2 | Vignette darkness 0.78 → 0.55 | `191eede` | ✅ Yes | Cosmetic edge correction |
-| 3 | Brightness prop with `Color` instance | `8d8021a` | ❌ Dead-end | Proved R3F prop wasn't bottleneck |
-| 4 | Imperative `matRef.current.color.setRGB()` | `26cbde1` | ❌ Dead-end | Proved color setter mechanism wasn't bottleneck |
-| 5 | Skybox material `fog={false}` | `3a18aa6` | ✅ Yes — THE blocker | Single uniform replacement masking all earlier fixes |
-| 6 | Brightness 2.5 → 4.0 on dim texture | `9cd590d` | ⚠️ Partial workaround | Lifted avgSum 16 → 28.7; not enough |
-| 7 | **Texture swap to custom AI nebula** | `8aedc1a` | **✅ The proper solution** | **Closes the cluster** |
-
-**Final state of skybox stack:**
-- **Battle Scene:** `<SpaceSkybox texture="/skybox/deep_space_universe.png" radius={1500} rotateWithCamera={false} intensity={1} />` — no brightness prop (default 1.0)
-- **Free Flight:** unchanged — `<SpaceSkybox texture="/skybox/deep_space_01.png" radius={1500} rotateWithCamera={true} intensity={1} />` — no brightness prop
-- **SpaceSkybox component:** retains all architectural fixes (brightness prop API + imperative ref + setRGB + fog={false} + BackSide + toneMapped={false})
-- **BattleCanvas:** retains gl.alpha=false + vignette darkness 0.55
-
-**New asset:** `public/skybox/deep_space_universe.png` (1774×887, 2:1 equirectangular, ~2.6 MB, AI-generated by Jix via ChatGPT image gen, internal voidexa asset per OpenAI ToS)
-
-**Sprint deviations from convention (documented):**
-1. **SKILL committed** — bracket-symmetry with fix-1 SKILL commit. Substantial diagnostic document worth preserving for future cluster regressions; Jix override of "skip SKILL" default.
-2. **Default-path assertion retained** — `texture path unchanged` in fix-1 test asserts SpaceSkybox component DEFAULT (not battle usage). Free Flight depends on the default; assertion stays valid.
-3. **Test net +2 vs -2 brightness obsolete** — Removed `Battle scene brightness > 1` and `Battle scene brightness >= 4.0` assertions; added `Battle scene texture path is /skybox/deep_space_universe.png`, `Battle does NOT pass brightness`, `Battle does not reference deep_space_01`, `Free Flight still uses deep_space_01`. Updated existing `tests/afs-6g-battle-camera.test.ts` `bundled deep_space_01.png texture` assertion to point at new path.
-4. **brightness prop architecture retained even though Battle no longer uses it** — Free Flight may need brightness tuning later, and the architecture proved correct in fix-4 (just blocked by fog in fix-5). Keeping the API saves a future round-trip.
-
-**Files added:**
-- `public/skybox/deep_space_universe.png` (1774×887, ~2.6 MB)
-- `docs/skills/sprint-afs-6g-skybox-fix-7.md` (cluster-closer SKILL)
-
-**Files modified:**
-- `public/skybox/README.md` (+attribution block for custom asset)
-- `components/game/battle/BattleScene.tsx` (texture path + brightness prop removal, 2 lines)
-- `tests/afs-6g-skybox-fix.test.ts` (-2 obsolete brightness assertions, +4 fix-7 path assertions)
-- `tests/afs-6g-battle-camera.test.ts` (1 assertion updated to new texture path + comment)
-
-**Lesson:**
-Asset quality matters more than pipeline tuning. After 6 fixes against the wrong texture, the right texture closed the bug in one swap. Worth remembering for future visual regressions: validate the asset against the visual target before debugging the renderer.
-
-**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
-
-```js
-new Promise((resolve) => {
-  requestAnimationFrame(() => {
-    const canvas = document.querySelectorAll('canvas')[1];
-    const off = document.createElement('canvas');
-    off.width = canvas.width; off.height = canvas.height;
-    const ctx = off.getContext('2d');
-    ctx.drawImage(canvas, 0, 0);
-    const points = [
-      [639, 80], [250, 100], [1028, 100], [200, 270], [1078, 270],
-      [350, 450], [928, 450], [639, 500], [639, 600]
-    ];
-    let sums = []; let tints = {purple:0, blue:0, red:0, neutral:0};
-    for (const [x,y] of points) {
-      const d = ctx.getImageData(x, y, 1, 1).data;
-      const sum = d[0]+d[1]+d[2];
-      sums.push(sum);
-      let tint = 'neutral';
-      if (d[2] > d[0]+5 && d[2] > d[1]+5) tint = d[0] > d[1]+3 ? 'purple' : 'blue';
-      else if (d[0] > d[1]+5 && d[0] > d[2]+5) tint = 'red';
-      tints[tint]++;
-    }
-    resolve({avgSum: (sums.reduce((a,b)=>a+b,0)/sums.length).toFixed(1), maxSum: Math.max(...sums), over50: sums.filter(s=>s>50).length, over100: sums.filter(s=>s>100).length, tints});
-  });
-})
-```
-
-**Expected after fix-7:** `avgSum > 60`, `over50 > 5`, multiple non-neutral tints (purple/blue/red — not all neutral). If significantly lower, texture path may be wrong or asset failed to load.
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h Battle Scene v3 camera reframing — pre-flight done, awaiting Option A/B decision; scene now renders properly so live evaluation against `docs/design/battle_scene_v3_reference.png` becomes meaningful
-- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`. Free Flight uses unchanged `deep_space_01.png` so no impact
-
-**Rollback (reverts ONLY texture swap, keeps fixes 1-6):**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-7-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-7-complete
-git tag -d afs-6g-skybox-fix-7-complete
-```
-The new `public/skybox/deep_space_universe.png` will be removed from tracking but may persist in working tree — verify with `git status` and delete manually if needed.
-
----
-
-### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-6 COMPLETE (Brightness tuning 2.5 → 4.0)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-6-complete` pushed, build clean, 1160/1160 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-6-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-6-20260426` → `c73bca6`
-**Tests:** 1160/1160 green (was 1159, +1 brightness ≥ 4.0 lower-bound guard)
-**Final HEAD:** `9cd590d`
-
-**Why a sixth fix:**
-fix-5 (`fog={false}`) WAS the architectural root cause — pixel sampling after fix-5 confirmed the skybox color finally reaches the framebuffer:
-- avgSum 16.4 (fallback) → 28.7 (skybox visible)
-- maxSum 18 → 39
-- Channel imbalance starting to emerge (= nebula tint detectable but dim)
-
-But avgSum 28.7 is still below the perceptual sum-50 floor and `over50` was 0/9 samples — visually the skybox reads as "very dark blue/purple wash" rather than "nebula clouds." The pipeline is correct end-to-end now; only the empirical multiplier needs to land at the right value for `hazy_nebulae_1.png`'s native low luminance.
-
-**Fix shipped (single value):**
-- `components/game/battle/BattleScene.tsx:41`: `brightness={4.0}` (was `2.5`)
-
-That's it. All other dials stay locked from previous fixes:
-- `gl.alpha=false` (fix-1)
-- Vignette darkness 0.55 (fix-2)
-- Imperative ref-based `setRGB(brightness, brightness, brightness)` (fix-4)
-- Skybox material `fog={false}` (fix-5)
-- Free Flight `brightness=1.0` default (unchanged — Free Flight reads correctly without boost)
-
-**Sprint deviations from convention (documented):**
-1. **Sixth fix in same bug-cluster** — empirical tuning step after architectural fix landed. Granular separation lets future tuning regress this single line without touching architecture.
-2. **No SKILL.md** (sixth time in this cluster).
-3. **Test guard** — added `brightness >= 4.0` floor as regression guard. Original `brightness > 1` lower-bound retained; both must pass.
-
-**Files modified:**
-- `components/game/battle/BattleScene.tsx` (1 char change effectively: `2.5` → `4.0`)
-- `tests/afs-6g-skybox-fix.test.ts` (+1 lower-bound assertion + comment block on empirical tuning history)
-
-**Live verification command — same 41-sample script as fix-4/5.**
-
-**Decision matrix:**
-| Pixel sample result | Action |
-|---|---|
-| avgSum > 50 + channel imbalance visible | ✅ skybox bug-cluster CLOSED → AFS-6h camera reframing can begin |
-| avgSum 40-50, dim but tinted | Bump to 6.0 in fix-7 (one-line) |
-| Looks washed out / too white | Sink to 3.0 in fix-7 |
-| Still below sum 30 | Math is not the problem — texture is fundamentally too dim. Plan B: swap to brighter spacespheremaps texture (e.g., `nebulae_2.png`) or generate custom |
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
-- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`. Free Flight uses brightness=1.0 default (unchanged) — fix-6 has no effect there
-
-**Rollback (reverts ONLY brightness 4.0 → 2.5):**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-6-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-6-complete
-git tag -d afs-6g-skybox-fix-6-complete
-```
-
----
-
-### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-5 COMPLETE (Scene fog masking skybox)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-5-complete` pushed, build clean, 1159/1159 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-5-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-5-20260426` → `c7dabf9`
-**Tests:** 1159/1159 green (was 1158, +1 fog={false} regression guard)
-**Final HEAD:** `3a18aa6`
-
-**Why a fifth fix on the same skybox — and why it's the actual root cause:**
-After fix-4 (imperative ref-based color setter) ALSO produced zero visual change, pixel sampling showed:
-- avgSum 16.4 (identical to fix-3, identical to fix-2 baseline)
-- range 5 across 41 samples
-- ALL pixels matched scene.background `#04030b` modulo vignette
-
-This ruled out the entire investigation chain so far: alpha buffer, vignette aggression, brightness prop value, color-prop reconciliation, ref-based mutation — none of those were the dominant issue. The fog hypothesis emerged from the math: pixel range floor 12 matches `#04030b` × vignette 0.55 ≈ 8 (corners) to 18 (center). NO nebula colors were ever reaching the framebuffer.
-
-**Root cause:**
-`BattleScene.tsx:34`: `<fog attach="fog" args={['#04030b', 40, 160]} />` was added in AFS-6g for atmospheric depth on near-mid range ships. THREE's `meshBasicMaterial.fog` defaults to `true`. The skybox sphere (radius 1500) sits at distance ~1484 from the camera (z=16). With fog far=160, distance >> far means `fogFactor = 0` → `finalColor = mix(fogColor, materialColor, 0) = fogColor`. The skybox texture × brightness × everything else was being 100% replaced by fog color (= scene.background) before reaching the framebuffer.
-
-In other words: AFS-6g introduced fog and skybox in the same commit. The skybox has been visually broken since AFS-6g shipped — what users saw was always scene.background painted before meshes, plus skybox sphere fragments overwritten with the same color by fog. The earlier "23.7% skybox activity" reported in fix-2 was vignette modulation of fog-replaced skybox pixels, not actual nebula color.
-
-**Fix shipped (single prop):**
-- `components/three/SpaceSkybox.tsx`: added `fog={false}` to `<meshBasicMaterial>`. Skybox material now opts out of scene fog. Other meshes (ships, asteroids, ability effects) keep fog applied unchanged.
-
-**Sprint deviations from convention (documented):**
-1. **Fifth fix in same bug-cluster** — investigation sequence taught us five distinct things about R3F + post-processing + scene config interactions. Granular commits keep the diagnostic narrative intact for future cluster regressions.
-2. **No SKILL.md** (fifth time in this cluster). Commit message + this CLAUDE.md entry are the documentation trail.
-3. **Diagnostic-first methodology validated** — each fix shipped only after the previous one's failure was empirically verified via pixel sampling. Without that data, fix-5 would have been guessed at fix-2.
-
-**Files modified:**
-- `components/three/SpaceSkybox.tsx` (+1 line: `fog={false}` on meshBasicMaterial)
-- `tests/afs-6g-skybox-fix.test.ts` (+1 assertion + comment block explaining root cause for future cluster regressions)
-
-**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
-Same 41-sample script as fix-4. Expected after fix-5:
-- `range > 50` (vs fix-4 range 5)
-- `over50 > 5` of 41 samples
-- Channel imbalance — purple `b > r > g` if camera angled toward purple nebula region, red `r > g > b` toward red region, etc.
-- avgSum ~80-150 (vs fix-4 avg 16.4)
-
-**If those numbers land:** skybox bug-cluster CLOSED. brightness=2.5 + alpha=false + vignette=0.55 + ref-color + fog=false work in concert. Proceed to AFS-6h camera reframing.
-
-**If still uniform:** texture itself is too dim natively (hazy_nebulae_1 is the dimmest of the spacespheremaps catalog). Next move would be either (a) bump brightness to 4.0+ in BattleScene, or (b) swap to a brighter texture from spacespheremaps (e.g., `nebulae_2.png`). Architecture is now correct; only tuning remains.
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
-- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`. Note: Free Flight uses the same SpaceSkybox component, so fog={false} also lands there. Free Flight has `<fog>` only via NebulaZones (per-zone), so this fix is harmless if no nebula zone is active and correct if one is
-
-**Rollback (reverts ONLY fog disable, keeps everything else):**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-5-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-5-complete
-git tag -d afs-6g-skybox-fix-5-complete
-```
-
----
-
-### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-4 COMPLETE (Imperative color setter)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-4-complete` pushed, build clean, 1158/1158 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-4-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-4-20260426` → `ecb0703`
-**Tests:** 1158/1158 green (was 1157, +1 net — 2 added asserting ref+setRGB pattern, 1 removed asserting old prop pattern)
-**Final HEAD:** `26cbde1`
-
-**Why a fourth fix on the same skybox:**
-Empirical pixel sampling after fix-3 deployed showed brightness=2.5 had ZERO visual effect:
-- Average sum 16.4 across 41 horizontal samples (var. range 6, all in 12-18)
-- Pre-fix-3 baseline (fix-2): 23.7% of canvas in sum 8-12 = active skybox zone
-- Post-fix-3: skybox-active zone GONE — entire row reads as fallback `#04030b` (sum 18) modulated by vignette
-
-Verification ruled out three alternative theories:
-- Source code correct (color={colorMul}, brightness={2.5}, radius=1500) ✓
-- Camera at z=16 inside sphere of radius 1500 (BackSide rendrers correctly) ✓
-- Vercel deploy confirmed: commit ecb0703 → deploy `dpl_3mKp7oWJoJTfzMjamgpSYmVHF1dJ` → success ✓
-
-Conclusion: R3F's prop reconciliation for `color={ColorInstance}` with `r/g/b > 1` silently clamped or no-op'd the update on production. The implementation pattern itself was the bug, not the values.
-
-**Fix shipped:**
-- `components/three/SpaceSkybox.tsx`:
-  - Removed `Color` import; added `MeshBasicMaterial` type + `useEffect` from react
-  - Removed `colorMul` `useMemo` and `color={colorMul}` prop
-  - Added `matRef = useRef<MeshBasicMaterial>(null)` on the material
-  - Added `useEffect([brightness])` that calls `matRef.current.color.setRGB(brightness, brightness, brightness)` — direct mutation of `THREE.Color`'s raw r/g/b properties bypasses R3F prop reconciliation entirely
-- `components/game/battle/BattleScene.tsx`: NOT touched (still passes `brightness={2.5}`)
-
-**Sprint deviations from convention (documented):**
-1. **Fourth fix in same bug-cluster** — diagnostic-driven sequence: alpha buffer (fix-1) → vignette crush (fix-2) → brightness prop (fix-3) → imperative ref (fix-4). Each step revealed the next via empirical pixel sampling. Granular commits keep rollback surgical.
-2. **No SKILL.md committed** (fourth time in this cluster). Commit message + this CLAUDE.md entry are the documentation trail.
-3. **Test pattern swap** — replaced fix-3's `color={colorMul}` and `new Color(brightness, ...)` matchers with fix-4's `matRef.current.color.setRGB(brightness, ...)` and `<meshBasicMaterial ref={matRef}` matchers. Net +1 test.
-4. **Why ref over prop:** `meshBasicMaterial.color` is a `THREE.Color` instance with raw float `r/g/b` properties. Setting them directly via `setRGB(2.5, 2.5, 2.5)` stores values 1:1; the only clamping happens later at sRGB framebuffer encoding (which is the desired behavior — values > 1 clamp visually to white at the bright end). R3F's prop path may apply Color via `.set(value)` which internally branches on the value type and was apparently dropping our values somewhere.
-
-**Files modified:**
-- `components/three/SpaceSkybox.tsx` (- `Color` import, + `useEffect` import, + `MeshBasicMaterial` type import, - `colorMul` memo, - `color={colorMul}` prop, + `matRef` useRef, + `useEffect` for setRGB, + `ref={matRef}` on material)
-- `tests/afs-6g-skybox-fix.test.ts` (- 1 prop matcher, + 2 ref/setRGB matchers + regression guard)
-
-**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
-```js
-(() => {
-  const canvas = document.querySelectorAll('canvas')[1];
-  // 41 samples along Y=200 (background area, above ship)
-  const samples = [];
-  return new Promise(resolve => {
-    requestAnimationFrame(() => {
-      const off = document.createElement('canvas');
-      off.width = canvas.width; off.height = canvas.height;
-      off.getContext('2d').drawImage(canvas, 0, 0);
-      const ctx = off.getContext('2d');
-      const y = 200;
-      const step = Math.floor(canvas.width / 41);
-      for (let i = 0; i < 41; i++) {
-        const x = i * step;
-        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-        samples.push({ x, rgb: `(${r},${g},${b})`, sum: r+g+b });
-      }
-      const sums = samples.map(s => s.sum);
-      resolve({
-        avg: (sums.reduce((a,b)=>a+b,0)/sums.length).toFixed(1),
-        min: Math.min(...sums),
-        max: Math.max(...sums),
-        range: Math.max(...sums) - Math.min(...sums),
-        over50: sums.filter(s => s > 50).length,
-        over100: sums.filter(s => s > 100).length,
-        peakSamples: samples.filter(s => s.sum > 50).slice(0, 5)
-      });
-    });
-  });
-})()
-```
-
-**Expected after fix-4 if implementation was the bug:**
-- `range > 30` (vs fix-3's 6)
-- `over50 > 0` (vs fix-3's 0)
-- Some samples showing nebula tint (channel imbalance: purple b>r>g, red r>g, blue b>g)
-
-**If still range < 10 and 0 over 50:** the texture's native dim values × 2.5 are insufficient. Fix-5 bumps brightness to 4.0 or 5.0 (one-line change in `BattleScene.tsx:41`). The architecture (ref-based) stays.
-
-**If range > 30 and over50 > 0:** R3F prop was the bug, math holds, skybox bug-cluster CLOSED. Proceed to AFS-6h.
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
-- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight`
-
-**Rollback (reverts ONLY ref pattern, keeps brightness=2.5 prop wiring + vignette + alpha):**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-4-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-4-complete
-git tag -d afs-6g-skybox-fix-4-complete
-```
-
----
-
-### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-3 COMPLETE (SpaceSkybox brightness prop)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-3-complete` pushed, build clean, 1157/1157 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-3-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-3-20260426` → `abf9ff7`
-**Tests:** 1157/1157 green (was 1152, +5 brightness assertions appended to `tests/afs-6g-skybox-fix.test.ts`)
-**Final HEAD:** `8d8021a`
-
-**Why a third fix on the same skybox:**
-- `fix-1` opened the canvas (`gl.alpha=false`) — necessary, not sufficient
-- `fix-2` lowered Vignette (0.78 → 0.55) — cosmetic edge correction, not the dim-midtones cause
-- `fix-3` raises the texture's effective brightness — addresses the actual root cause (hazy_nebulae_1 native midtones too dim for Battle's lighting + Bloom config)
-
-Each step revealed the next layer of the bug via empirical pixel sampling. Three commits keep the rollback granularity clean: if brightness 2.5 reads "too washed out" we can revert ONLY fix-3 without losing the alpha + vignette work.
-
-**Root cause (per pixel sampling on prod after fix-2):**
-- 23.7% of canvas had skybox activity (not fallback) — proves SpaceSkybox WAS rendering
-- All those pixels in `sum=8-12` range — DARKER than scene.background fallback `rgb(4,3,11)` `sum=18`
-- `hazy_nebulae_1.png` native midtones are intentionally subtle ("hazy")
-- Free Flight reads correctly because of brighter directional light + Bloom `intensity=1.2`
-- Battle has subdued lighting + Bloom `intensity=0.85` + `luminanceThreshold=0.25` → skips dim midtones entirely
-- Result: skybox geometry rendered, but visually below the fallback color, indistinguishable from "missing skybox"
-
-**Fix shipped:**
-- `components/three/SpaceSkybox.tsx`: added optional `brightness?: number` prop (default 1.0). Memoized `THREE.Color(b, b, b)` passed to `<meshBasicMaterial color={...}>`. With existing `toneMapped={false}` from AFS-6g, the multiplier > 1 takes effect — nebula colors brighten linearly until clamped at framebuffer write (≤ white).
-- `components/game/battle/BattleScene.tsx`: `<SpaceSkybox ... brightness={2.5} />`. 2.5× chosen as starting point — pixel sampling math suggested 2-3× minimum to clear the fallback floor; 2.5 leaves headroom for live tuning up or down.
-- `components/freeflight/FreeFlightScene.tsx`: NOT touched. Default `brightness=1` preserves Free Flight visuals (already reads correctly).
-
-**Sprint deviations from convention (documented):**
-1. **No SKILL.md committed** (third time same pattern) — 3-line architectural change on documented hypothesis. Commit message + this CLAUDE.md entry are the trail.
-2. **Test consolidation** — appended fix-3 describe block to existing `tests/afs-6g-skybox-fix.test.ts` rather than creating fix-3 file. Same skybox bug-cluster.
-3. **`color={colorMul}` instead of `color={[b,b,b]}` shorthand** — explicit `THREE.Color` instance is memoized via `useMemo` so we don't allocate a new color each render frame. R3F would otherwise reconstruct the array prop every render.
-4. **Free Flight asymmetry intentional** — same skybox texture, different scenes render it differently. Per-scene brightness is the correct architectural answer. Documented in code comment.
-
-**Files modified:**
-- `components/three/SpaceSkybox.tsx` (+ `Color` import, + `brightness` prop interface, + `colorMul` memo, + `color={colorMul}` on material — 6 logical lines added, 1 modified)
-- `components/game/battle/BattleScene.tsx` (1 line: `brightness={2.5}` added to SpaceSkybox usage)
-- `tests/afs-6g-skybox-fix.test.ts` (added battleSceneSrc + freeFlightSceneSrc reads at top, + 5 assertions in new describe block)
-
-**Live verification command for Jix (paste in DevTools console on `/game/battle` Tier 1, hard-refresh + 5s wait):**
-```js
-(() => {
-  const canvas = document.querySelectorAll('canvas')[1];
-  const points = [
-    [0.5, 0.5], [0.5, 0.35], [0.35, 0.5], [0.65, 0.5], [0.5, 0.65],
-    [0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]  // closer to corners
-  ];
-  return new Promise(resolve => {
-    requestAnimationFrame(() => {
-      const off = document.createElement('canvas');
-      off.width = canvas.width; off.height = canvas.height;
-      off.getContext('2d').drawImage(canvas, 0, 0);
-      const ctx = off.getContext('2d');
-      resolve(points.map(([nx, ny]) => {
-        const x = Math.floor(nx * canvas.width);
-        const y = Math.floor(ny * canvas.height);
-        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-        return { pos: `${(nx*100)|0}%,${(ny*100)|0}%`, rgb: `(${r},${g},${b})`, sum: r+g+b };
-      }));
-    });
-  });
-})()
-```
-**Expected after fix-3:** non-edge `sum > 50`, ideally with channel imbalance showing nebula tint (purple `b > r > g`, red `r > g`, blue `b > g`). Fix-2 baseline was `sum=8-12`. Fix-3 target is 2.5× that minimum = `sum > 20-30` with nebula-shaped color distribution.
-
-**Next decision points:**
-- If `sum < 50` everywhere → tune brightness up to 3.5 in fix-4 (one-line change)
-- If looks washed out / too white → tune down to 2.0
-- If reads correctly → close skybox bug-cluster, proceed to AFS-6h Battle Scene v3 camera reframing
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h camera reframing — pre-flight done, awaiting Option A/B decision
-- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight` (source-level test only)
-
-**Rollback (reverts ONLY brightness, keeps alpha + vignette fixes):**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-3-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-3-complete
-git tag -d afs-6g-skybox-fix-3-complete
-```
-
----
-
-### Session 2026-04-26 — Bugfix afs-6g-skybox-fix-2 COMPLETE (Vignette midtone crush)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-2-complete` pushed, build clean, 1152/1152 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-2-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-2-20260426` → `6afcf22`
-**Tests:** 1152/1152 green (was 1150, +2 vignette assertions appended to existing `tests/afs-6g-skybox-fix.test.ts` since same bug-cluster)
-**Final HEAD:** `191eede`
-
-**Why a separate sprint and not amend:**
-`afs-6g-skybox-fix` (`21c5db7`) was already pushed + tagged + referenced in this CLAUDE.md sprint history. Amending would have forced a destructive rewrite of published main. New commit gives clean granular rollback if the vignette change reads worse than 0.78 looked.
-
-**Root cause (per pixel sampling on prod after fix-1 landed):**
-Alpha buffer fix correctly opened the canvas, but pixel sampling showed:
-- Corner pixels: `(1, 0, 2)` — Vignette `darkness=0.78` × fallback `#04030b` = exactly what we got
-- Center pixels: `(3, 3, 9)` — barely above scene.background fallback `rgb(4, 3, 11)`, no nebula saturation
-- `performance.getEntriesByType` confirmed `deep_space_01.png` decoded in 115ms (cached), status 200, GPU upload complete
-
-So the skybox WAS rendering — but Vignette darkness 0.78 was multiplying the dim `hazy_nebulae_1` nebula midtones below the visible threshold. Combined with `Bloom luminanceThreshold=0.25` filtering most of the nebula out of the bright pass, the post-FX chain crushed the texture back to fallback-color flat black.
-
-**Fix shipped (single line):**
-- `components/game/battle/BattleCanvas.tsx:54`: `<Vignette eskil={false} offset={0.22} darkness={0.55} />` (was `0.78`)
-
-`0.55` matches `FreeFlightCanvas.tsx:55` — Free Flight was already at this darkness and the nebula reads correctly there. Battle was the outlier.
-
-**Sprint deviations from convention (documented):**
-1. **No SKILL.md committed.** Single-line cosmetic tuning on a hypothesis already documented via `afs-6g-skybox-fix` SKILL + diagnostic log. SKILL overhead not warranted; commit message + this CLAUDE.md entry are the documentation trail.
-2. **Test placement** — appended 2 assertions to existing `tests/afs-6g-skybox-fix.test.ts` rather than creating fix-2 file. Same bug-cluster (canvas-alpha + post-FX visibility) reads better as one consolidated test surface than scattered files.
-3. **Tag naming** — `afs-6g-skybox-fix-2-complete` not `afs-6g-skybox-fix-fix-complete` to keep the increment-counter convention readable.
-
-**Files modified:**
-- `components/game/battle/BattleCanvas.tsx` (1 line: vignette darkness 0.78 → 0.55)
-- `tests/afs-6g-skybox-fix.test.ts` (appended new describe block with 2 assertions: vignette ≤ 0.6 + battle/freeflight parity)
-
-**Live verification command for Jix (paste into DevTools console on `/game/battle` Tier 1, AFTER hard-refresh + 5s wait for skybox decode):**
-```js
-(() => {
-  const canvas = document.querySelectorAll('canvas')[1];
-  // Sample center + 4 inner-ring (avoid extreme vignette zone)
-  const points = [
-    [0.5, 0.5],   // dead center
-    [0.5, 0.35],  // above ship
-    [0.35, 0.5],  // left of ship
-    [0.65, 0.5],  // right of ship
-    [0.5, 0.65],  // below ship
-  ];
-  return new Promise(resolve => {
-    requestAnimationFrame(() => {
-      const off = document.createElement('canvas');
-      off.width = canvas.width; off.height = canvas.height;
-      off.getContext('2d').drawImage(canvas, 0, 0);
-      const ctx = off.getContext('2d');
-      resolve(points.map(([nx, ny]) => {
-        const x = Math.floor(nx * canvas.width);
-        const y = Math.floor(ny * canvas.height);
-        const [r, g, b, a] = ctx.getImageData(x, y, 1, 1).data;
-        return { pos: `${(nx*100)|0}%,${(ny*100)|0}%`, rgb: `(${r},${g},${b})`, sum: r+g+b };
-      }));
-    });
-  });
-})()
-```
-**Expected after fix:** non-edge samples should show `sum > 100` with at least one channel showing nebula tint (purple `b > r`, red `r > g`, blue `b > g`). Pre-fix baseline was `sum < 15` everywhere.
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h Battle Scene v3 visual layer — pre-flight done, awaiting Option A/B decision; can now actually be live-evaluated against the reference image since the scene renders properly
-- Free Flight live verify still blocked by BUG-04 memory leak
-
-**Rollback:**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-2-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-2-complete
-git tag -d afs-6g-skybox-fix-2-complete
-```
-
-Reverts ONLY the vignette change. `afs-6g-skybox-fix` (alpha buffer) stays in place.
-
----
-
-### Session 2026-04-26 — Bugfix afs-6g-skybox-fix COMPLETE (Canvas alpha buffer)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `afs-6g-skybox-fix-complete` pushed, build clean, 1150/1150 tests green. Live visual verify pending Jix browser check.
-**Tag:** `afs-6g-skybox-fix-complete`
-**Backup:** `backup/pre-afs-6g-skybox-fix-20260426` → `7f09077`
-**Tests:** 1150/1150 green (was 1141, +9 new skybox-fix assertions — target was 6-8)
-**Final HEAD:** `21c5db7`
-
-**Commit chain (1 SKILL + 1 fix):**
-```
-21c5db7 fix(afs-6g): canvas alpha buffer drops skybox to transparent
-0b01dd2 chore(afs-6g-fix): add skybox-fix SKILL documentation
-```
-
-**Root cause (per live diagnostic Apr 26):**
-Production `/game/battle` showed `avgAlpha 0.5/255` and `coloredPercent 5.4%` across 425 sample points. SpaceSkybox renders correct nebula colors but the canvas reads as near-fully transparent — body `rgb(7,7,13)` shines through making the scene look like solid black. SKILL identified two compounding issues; pre-flight only confirmed one.
-
-**Fix shipped:**
-- `components/game/battle/BattleCanvas.tsx`: added `alpha: false` to `gl` prop. Forces opaque framebuffer; WebGL clears to opaque each frame so post-processing chain (Bloom + ChromaticAberration + Vignette) can no longer drop the alpha contribution from `<color attach="background" args={['#04030b']} />` on `BattleScene.tsx:33`.
-- `components/freeflight/FreeFlightCanvas.tsx`: same `alpha: false` for parity. FF was already masked by inline `style.background='#02030a'` on the canvas element so the visual change there is nil — but the underlying alpha-buffer behavior now matches battle.
-- `tests/afs-6g-skybox-fix.test.ts` — 9 source-level invariants across three describe blocks: alpha buffer config, wrapper opacity regression guard, SpaceSkybox component intact.
-
-**Sprint deviation from SKILL (documented):**
-1. **Task 4 — `opacity: 0.8` removal — NO-OP.** Pre-flight Task 0.1 ran exhaustive grep across `**/*.{tsx,ts,jsx,js,css}` for `opacity: 0.8`, `opacity:0.8`, `opacity-80`, `opacity.*\.8`, `opacity.*0?\.80`. Returned 40+ hits — none on the battle canvas, its wrapper stack (`S.wrap`/`S.canvasLayer` in `BattleController.tsx:225-226`), or any global `canvas { ... }` rule in `app/globals.css`. The Chrome diagnostic that reported `canvas opacity (computed): 0.8` was likely misattributed (hover state, wrong sample target, or computed-style fortolkningsfejl). Replaced Task 4 with regression-guard tests in Task 5 that fail if opacity is ever introduced on the wrapper styles.
-2. **Test overshoot** — 9 assertions vs SKILL target of 6-8.
-3. **Live verify** — automation bridge (Playwright extension) not connected this session, so the diagnostic re-run from Task 7 must be performed by Jix in Chrome. Source-level proof of fix is in place; visual proof pending.
-
-**Files added:**
-- `tests/afs-6g-skybox-fix.test.ts` (9 assertions across 3 describe blocks)
-
-**Files modified:**
-- `components/game/battle/BattleCanvas.tsx` (added `alpha: false` to `gl` prop + 4-line comment block explaining the alpha-buffer rationale)
-- `components/freeflight/FreeFlightCanvas.tsx` (added `alpha: false` to `gl` prop)
-
-**Live verification command for Jix (paste into DevTools console on `/game/battle` Tier 1):**
-```js
-(() => {
-  const canvas = document.querySelector('canvas');
-  const off = document.createElement('canvas');
-  off.width = canvas.width; off.height = canvas.height;
-  const ctx = off.getContext('2d');
-  ctx.drawImage(canvas, 0, 0);
-  let coloredPixels = 0; let alphaSum = 0;
-  const step = 50;
-  for (let y = 0; y < canvas.height; y += step) {
-    for (let x = 0; x < canvas.width; x += step) {
-      const d = ctx.getImageData(x, y, 1, 1).data;
-      alphaSum += d[3];
-      if (d[0] + d[1] + d[2] > 30) coloredPixels++;
-    }
-  }
-  const total = Math.floor(canvas.height/step) * Math.floor(canvas.width/step);
-  return { coloredPercent: (coloredPixels/total*100).toFixed(1), avgAlpha: (alphaSum/total).toFixed(1) };
-})()
-```
-**Expected after fix:** `coloredPercent` > 60%, `avgAlpha` > 200. Pre-fix baseline was 5.4% / 0.5.
-
-**Known items out-of-scope (unchanged):**
-- AFS-6h Battle Scene v3 visual layer (camera reframing per `docs/design/battle_scene_v3_reference.png`) — pre-flight done same session, awaiting Option A/B decision
-- BUG-04 Free Flight memory leak still blocks live verify on `/freeflight` — source-level test only
-- Any actual CSS opacity rule discovery (none found, treated as misattributed diagnostic)
-
-**Rollback:**
-```bash
-git reset --hard backup/pre-afs-6g-skybox-fix-20260426
-git push origin main --force-with-lease
-git push origin :refs/tags/afs-6g-skybox-fix-complete
-git tag -d afs-6g-skybox-fix-complete
-```
-
----
-
-### Session 2026-04-25 — Sprint AFS-6g COMPLETE (Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep)
-
-**Status:** ✅ SHIPPED to `origin/main`, tag `sprint-afs-6g-complete` pushed, build clean, 1141/1141 tests green.
-**Tag:** `sprint-afs-6g-complete`
-**Backup:** `backup/pre-afs-6g-20260425` → `bdc6f3f`
-**Tests:** 1141/1141 green (was 1087, +54 new AFS-6g assertions across 4 test files — target was ~15)
-**Final HEAD:** see tag
-
-**Commit chain (6 code commits + this docs commit):**
-```
-27fb644 chore(afs-6g): defer 27 CVEs with exploitability assessment
-15ddeba fix(afs-6g): hide footer on /game/battle to free fullscreen viewport
-274a981 feat(afs-6g): add SpaceSkybox component and CC-BY 4.0 nebula asset
-675fa49 feat(afs-6g): swap battle scene Stars for SpaceSkybox and add WoW-style orbit camera
-404c58e feat(afs-6g): swap freeflight Stars for SpaceSkybox
-fd3214e docs(afs-6g): document Star Map skybox skip rationale
-```
+**v1 → v2 reshape (caught by mandatory pre-flight):** Pre-flight 0.1-0.6 discovered AFS-6d had already shipped most of the v1 SKILL premise — `alpha_cards` table, `AlphaCardFrame`, `AlphaCatalog`, `AlphaDeckBuilder`, `/cards/alpha` + `/cards/alpha/deck-builder` routes (EN+DK). The actual remaining gap was narrower:
+
+1. `AlphaCardFrame` rendered 9 generic category PNGs instead of the 1000 unique webp Jix paid $41.52 for
+2. `/cards` and `/dk/cards` still rendered V3 (broken frames + missing cards per Jix audit)
+3. The 1000 PNGs weren't in Supabase Storage yet
+4. No image URL mapping between manifest IDs and Supabase paths
+
+v2 narrowed AFS-18 to wiring existing infrastructure to real assets. Locked decisions:
+- /cards: replace V3 import with `<AlphaCatalog />` server-rendered, keep `/cards/alpha` live as backward-compat alias
+- V3 deck-builder: 308 permanent redirect → `/cards/alpha/deck-builder` (V3 file stays on disk)
+- Image URL: deterministic `cards/alpha/{rarity}/{id}.webp` (Option A — strip numeric prefix on upload, no DB column, slug = `alpha_cards.id`)
+- Frame colors: keep `RARITY_GLOW` (per AFS-6d "do not touch")
+- Backup: D:\krypteret USB + Proton Drive both verified 1001 files before any source-touching task
 
 **What shipped:**
 
-**Section A — Security sweep (Tasks 1-2):**
-- `docs/security/deferred-cves.md` — full register for 27 CVEs (0 critical, 3 high, 24 moderate). All deferred per Jix decision; no `npm audit fix --force` (would break GHAI balance read by downgrading `@solana/spl-token` to 0.1.8 pre-modern API).
-- 3 high are the `bigint-buffer` chain (`@solana/buffer-layout-utils`, `@solana/spl-token`). Exploitability assessment: no user-controlled `Buffer` reaches `toBigIntLE`/`BE` in any of the 3 voidexa call sites (`lib/ghai/balance.ts`, `lib/ghai/verify-deposit.ts`, `components/WalletProvider.tsx`).
-- 24 moderate = vitest/vite/esbuild dev-server-only + transitive Solana via uuid/jayson/rpc-websockets. None reachable in production.
-- Cross-references existing `docs/SECURITY_DEFERRED.md` (Sprint 13F), keeps it as historical record.
-- 5 re-evaluation triggers documented (ADVORA approval, upstream patch, vitest 4 migration, etc.).
+**Section A — webp conversion + Supabase Storage:**
+- `scripts/convert_alpha_to_webp.ps1` — quality 85, resume-safe, 1000 PNG → 96 MB webp (**93.8% reduction**, beat 70% target)
+- `supabase/migrations/20260428_afs18_cards_bucket.sql` — public-read bucket "cards" with single SELECT policy `cards_public_read` on `bucket_id = 'cards'`. Idempotent (`ON CONFLICT DO NOTHING` + `DROP POLICY IF EXISTS`)
+- `scripts/upload_alpha_to_supabase.ts` — strips numeric prefix per Option A, uploads to `cards/alpha/{rarity}/{slug}.webp`, concurrency 10, resume-safe via per-rarity list call. 1000 files uploaded, distribution **400 common / 280 uncommon / 160 rare / 90 epic / 50 legendary / 20 mythic = 1000 total** (Jix verified via `storage.objects` SQL count + spot-check public URL)
 
-**Section B — CSS hotfix (Task 3):**
-- `components/layout/ConditionalFooter.tsx` — single-line addition: `pathname.startsWith('/game/battle')` to existing hide-list. No new layout file, no `<main>` height changes. Battle scene was already wrapped in `position: fixed inset: 0` via `BattleController`; the bug was purely the footer rendering below the collapsed `<main>`.
-- SKILL Option A (new `app/game/battle/layout.tsx`) and Option B (explicit `<main>` height) both bypassed because they would have introduced new layout abstractions when the existing `ConditionalFooter` hide-list pattern was already the right answer.
+**Section B — URL helper + frame wiring:**
+- `lib/cards/alpha-image-url.ts` — `getAlphaCardImageUrl(id, rarity)` returns deterministic public URL. Reads `NEXT_PUBLIC_SUPABASE_URL` with `.trim()` per project rule
+- `components/cards/AlphaCardFrame.tsx` — `'use client'` added (onError requires it), new optional `imageUrl?: string` prop. Replaced `next/image <Image>` with plain `<img>` to avoid coupling to `images.remotePatterns` (CSP `img-src 'self' data: https:` already permits Supabase). onError fallback to category PNG via `dataset.fallbackTried` flag (one-shot, no infinite loop). RARITY_GLOW + TYPE_TO_IMAGE preserved
+- `components/cards/AlphaCatalog.tsx` + `components/cards/AlphaDeckBuilder.tsx` — both wire `imageUrl={getAlphaCardImageUrl(card.id, card.rarity)}` per row. Data shapes (`AlphaCatalogCard`, `DeckBuilderCard`) untouched — URL is derived at render time, not stored
 
-**Section C — Universal SpaceSkybox (Tasks 4-5):**
-- `public/skybox/deep_space_01.png` — 8192x4096 equirectangular PNG, 7.6 MB. Sourced from spacespheremaps.com (`hazy_nebulae_1.png`). License: CC-BY 4.0 with attribution made optional, redistribution permitted, single restriction is no-AI-training.
-- `public/skybox/README.md` — full attribution + license + source URL.
-- `components/three/SpaceSkybox.tsx` (53 lines) — pure R3F backdrop component. Uses `useLoader` + `TextureLoader` with sRGB color space, `toneMapped={false}` so post-FX bloom does not blow out the nebula, `rotateWithCamera` implemented via `useFrame` (camera-locked for first-person scenes). Uses JSX primitives (`<sphereGeometry>`, `<meshBasicMaterial>`) for proper R3F disposal lifecycle.
-- `tests/afs-6g-skybox.test.ts` — 19 source-level invariants.
+**Section C — /cards page swap:**
+- `app/cards/page.tsx` — replaced V3 `<CardCollectionView>` import with server-side AlphaCatalog (basePath="/cards"). Same data fetch as `/cards/alpha`. Canonical metadata moved to `/cards`
+- `app/dk/cards/page.tsx` — same swap, DK metadata, basePath="/dk/cards", UI strings English (AFS-26 deferral)
+- `next.config.ts` — added two 308 redirects: `/cards/deck-builder` → `/cards/alpha/deck-builder`, `/dk/cards/deck-builder` → `/dk/cards/alpha/deck-builder`. V3 page files stay on disk; redirect intercepts before Next routes to them
 
-**Section D — Battle scene rework (Tasks 6-8):**
-- `components/game/battle/BattleScene.tsx`: replaced `<Stars>` (drei particle system, 2500 points) with `<SpaceSkybox texture="/skybox/deep_space_01.png" radius={1500} rotateWithCamera={false} intensity={1}>`, Suspense-wrapped.
-- `components/game/battle/BattleCanvas.tsx`: added `<OrbitControls>` with locked envelope per Jix spec — zoom 10-24, azimuth ±20° (Math.PI/9), polar 60-82° (Math.PI/3 to Math.PI/2.2), target [0,0,0], zoomSpeed 0.6, rotateSpeed 0.4, pan disabled.
-- `BattleCanvas.tsx`: bumped camera `far` plane 800 → 4000 so the radius-1500 skybox sphere is not frustum-culled. (Proactive deviation flagged at checkpoint, approved by Jix. Inline comment documents the reason.)
-- Ship positions, scales, fog, lighting all UNCHANGED — locked by 8 invariant tests in `tests/afs-6g-ship-positions.test.ts`. Camera position [0,0,16], fov 55, dpr [1, 1.75], post-processing (Bloom 0.85, ChromaticAberration, Vignette) all preserved.
-- `tests/afs-6g-battle-camera.test.ts` — 19 assertions (skybox swap + OrbitControls config + camera frustum bump).
+**Section D — Tests (+36 assertions):**
+- `tests/afs-18-alpha-image-url.test.ts` (10) — URL helper unit tests with `process.env.NEXT_PUBLIC_SUPABASE_URL` set before dynamic import so the test value beats anything inherited from `.env.local`
+- `tests/afs-18-cards-page-swap.test.ts` (13) — walker pattern: `/cards` + `/dk/cards` do not import V3 (anchored `^\s*import` so comment-level mentions of V3 path remain valid for future readers), import AlphaCatalog, pass right basePath, query alpha_cards. `next.config.ts` contains both redirects. Regression: V3 files still readable on disk
+- `tests/afs-18-frame-image-wiring.test.ts` (13) — AlphaCardFrame: 'use client', imageUrl prop, `<img>` not `<Image>`, onError + fallbackTried guard, TYPE_TO_IMAGE preserved. AlphaCatalog + AlphaDeckBuilder both import + pass `imageUrl`. Helper hygiene checks (`.trim()`, no signed token)
 
-**Section E — Cross-app skybox rollout (Tasks 9-10):**
-- Task 9: `components/freeflight/FreeFlightScene.tsx` — replaced single `<Stars radius={1200} depth={600} count={3500}>` line with `<SpaceSkybox radius={1500} rotateWithCamera={true}>`, Suspense-wrapped. `rotateWithCamera={true}` means the skybox follows the player ship origin in first-person flight (player can never reach the sphere).
-- Task 9 live verify deferred per BUG-04 (memory leak) — source-level test only via `tests/afs-6g-freeflight-skybox.test.ts` (8 assertions).
-- Task 10: SKIPPED. `components/starmap/README.md` documents the rationale. Star Map's `StarField` + `CSSStarfield` + `NebulaBg` are intentional curated design (stars are navigable game elements, not decoration). Universal skybox does not apply.
+**Sprint deviations from SKILL v2:**
+1. Test split into 3 flat `tests/afs-18-*.test.ts` files (matching AFS-6d split-by-concern naming) vs SKILL's suggested `tests/cards/` subfolder
+2. `<img>` over `<Image>` — avoids `images.remotePatterns` coupling to Supabase URL; webp at 96 KB avg makes Next image optimization marginal; CSP already permits any HTTPS image
+3. Test count overshoot — 36 vs target 20-30 (10/13/13 split, all source-level invariants)
+4. Backup tag `backup/pre-afs-18-20260428` already existed on origin pointing to `8235a35` (pre-AFS-18 state) — left untouched
+5. First test run exposed comment-level mention of V3 path tripping a broad `not.toMatch(/CardCollection/)` assertion. Tightened to anchored `^\s*import` so future devs can still grep V3 path from the source comment
 
-**Sprint scope deviations from SKILL (all approved at checkpoints):**
-1. **CVE counts wrong in SKILL** — pre-flight revealed 0 critical (SKILL claimed 1) + 3 high + 24 moderate (SKILL claimed 6 + 8). All deferred rather than patched, per Jix decision after seeing exploitability + breakage risk.
-2. **CSS fix path** — Skipped SKILL Option A (new layout file) and Option B (explicit `<main>` height). One-line `ConditionalFooter` edit was the existing pattern.
-3. **3D asset scope** — Skipped `usc_astroeagle01.glb` and zip mining entirely (license audit deferred to separate sprint). Ships unchanged at `qs_bob.glb` + `qs_executioner.glb` defaults.
-4. **Skybox source** — Polyhaven has zero space HDRIs (verified via WebFetch). Pivoted to spacespheremaps.com CC-BY 4.0 PNG. Filename uses `.png` not `.jpg`.
-5. **Camera position** — Kept current `[0, 0, 16]`, did NOT move to SKILL's proposed `[0, 1, 10]` per Jix decision.
-6. **Camera far plane** — Bumped 800 → 4000 (not in SKILL) so radius-1500 skybox sphere is not frustum-culled. Critical correctness fix.
-7. **OrbitControls envelope** — Adopted limited config (option (c) from checkpoint review): ±20° azimuth, narrow polar range, narrow zoom band. SKILL proposed wider envelope which would have allowed orbiting under the CardHand.
-8. **Ship positions UNCHANGED** — Did NOT reposition to SKILL's proposed `[0, -2, 5]` / `[0, 0, -8]`. Current `[0, -3.5, 8]` / `[0, 3.5, -14]` already gives more depth (z-distance 22 vs proposed 13).
-9. **Free Flight live verify skipped** — BUG-04 prevents safe entry. Source-level grep + test only.
-10. **Star Map skip** — Replaced Task 10's "swap or document" with explicit "skip + design doc" given star nodes carry click-to-travel semantics.
-11. **Test overshoot** — 54 new assertions vs SKILL target of ~15. Source-level invariants for skybox component, asset bundling, camera config, ship-position regression guards, and freeflight swap.
+**Known items out-of-scope (carried forward to AFS-18b candidate):**
+- Rarity badge text on card (only TYPE shown; color alone insufficient)
+- Rarity filter on `/cards` page (only type filter exists)
+- Mythic frame visual: solid magenta vs Jix's locked vision of rainbow/iridescent apex tier
+- DK route `/dk/cards/alpha/deck-builder` real translation (AFS-26 owns)
+- Battle scene cards (AFS-6h scope)
 
-**Files added:**
-- `docs/security/deferred-cves.md` (CVE register)
-- `components/three/SpaceSkybox.tsx` (53 lines, R3F backdrop)
-- `components/starmap/README.md` (Task 10 design rationale)
-- `public/skybox/deep_space_01.png` (7.6 MB, CC-BY 4.0 nebula)
-- `public/skybox/README.md` (asset attribution)
-- `tests/afs-6g-skybox.test.ts` (19 assertions)
-- `tests/afs-6g-battle-camera.test.ts` (19 assertions)
-- `tests/afs-6g-ship-positions.test.ts` (8 assertions)
-- `tests/afs-6g-freeflight-skybox.test.ts` (8 assertions)
+**Supabase Storage state (project `ihuljnekxkyqgroklurp`, EU):**
+- Bucket `cards`: public=true, single SELECT policy `cards_public_read` on `bucket_id = 'cards'`
+- Folder layout: `alpha/{common,uncommon,rare,epic,legendary,mythic}/{slug}.webp`, 1000 files total
 
-**Files modified:**
-- `components/layout/ConditionalFooter.tsx` (+1 line, footer hide-list)
-- `components/game/battle/BattleScene.tsx` (skybox swap)
-- `components/game/battle/BattleCanvas.tsx` (OrbitControls + far plane bump)
-- `components/freeflight/FreeFlightScene.tsx` (skybox swap)
+**Live verified by Jix (Apr 28):** `/cards` renders Alpha 1000 with unique per-card art, `/cards/alpha` backward-compat works, `/cards/deck-builder` + `/dk/cards/deck-builder` 308 redirect to Alpha builder, `/dk/cards` renders, 6 spot-check cards (1 per rarity tier) all show unique art.
 
-**Known items out-of-scope (unchanged):**
-- AFS-6e Pack Shop Alpha rewire (separate sprint, tracked in PENDING SPRINTS)
-- AFS-9 Free Flight memory leak (BUG-04, separate sprint)
-- AFS-10 Starmap Level 2 repair (separate sprint)
-- AFS-18 Alpha engine extension (Heat, 6-subsystem, Pilot select)
-- Card combat reactions (skud, shield flash) — separate sprint
-- 3D asset license audit for `voidexa-3d-assets/` zips — separate sprint
-- Per-scene skybox differentiation (currently same texture battle + freeflight) — P3 polish
-- Bloom oversaturation on bright nebula regions — P2 polish, log if observed during live verify
-- Hauling, Speedrun, Galaxy, ShipPreviewCanvas, ShopItemPreviewCanvas still use drei `<Stars>` — explicitly out-of-scope, replace if/when needed in future sprint
+**P0 status update:**
+- AFS-5 dependency unblocked (1000 cards live in production)
+- AFS-17 unblocked (LoRA pipeline can now train against deployed set)
+- `/cards` "blank art + missing cards" P0 closed
 
 **Rollback:**
 ```bash
-git reset --hard backup/pre-afs-6g-20260425
+git reset --hard backup/pre-afs-18-20260428
 git push origin main --force-with-lease
-git push origin :refs/tags/sprint-afs-6g-complete
+git push origin :refs/tags/sprint-afs-18-complete
+# Supabase: bucket can stay (no harm) or empty alpha/ folder via dashboard
 ```
 
 ---
 
-### Session 2026-04-25 — SLUT 12 — Brain-storm + Live audit + AFS-6g SKILL written
+### Session 2026-04-27 — AFS-5 COMPLETE confirmed + AFS-6b SKILL.md ready
 
-**Status:** 🔴 NO CODE PUSHED. Brain-storm session + live audit + AFS-6g SKILL drafting + secrets migration to D:\krypteret usb. SKILL ready for execution next session.
-**HEAD unchanged:** `bdc6f3f` (still AFS-6d)
-**Tests unchanged:** 1087/1087
+**Status:** ✅ AFS-5 1000-card generation finished on Jix PC (tiered pipeline $41.52, manifest.json + images_tiered/ output). 🔴 AFS-6b SKILL.md drafted and ready for pre-flight execution in Claude Code.
 
-**Session arc:**
+**AFS-5 outcome:**
+- 1000 alpha cards generated successfully via gpt-image-1-mini tiered tier strategy
+- Cost: $41.52 actual (matched estimate)
+- Output location: `images_tiered/` on Jix's local PC
+- manifest.json tracks per-card cost + tier + prompt version
+- Unblocks: AFS-17 (LoRA pipeline), AFS-18 (Alpha 1000 deploy to /cards page)
 
-**Phase 1 — Brain-storm (deck ownership + trading + economy):**
-- Jix raised concern: deck builder shipped in AFS-6d allows building decks from all 1000 alpha cards without ownership. Should be collection-gated like Hearthstone/MTG Arena.
-- Decision: ownership check added to AFS-6e scope (cards must be owned via packs to be used in decks). Same cards reusable across multiple decks (assignment, not consumption).
-- Universal inventory logic locked: cross-app ownership model (shop, game, trading, all read from same `user_inventory` source). New sprint planned: Universal Inventory Layer.
-- Trading Hub vision: peer-to-peer card swap (real trading hub, not just name). New sprint: Trading Hub v1.
-- Trade chat integration: `/trade` channel in universal chat with WTB/WTS posts. New sprint: Trade Chat Channel.
+**AFS-6b SKILL.md contents (delivered this session):**
+- File: `skills/AFS-6b-realworld-ghai-ux/SKILL.md`
+- Scope: GHAI vs DKK/EUR disambiguation across contact form + product pages + /wallet + FAQ
+- 6 tasks (SKILL commit + contact form + RealWorldPaymentNotice component + wallet section + FAQ + tests)
+- Pre-flight VERIFY-FIRST mandatory STOP point with grep commands
+- Test target: 1168 → ~1173
+- Backup tag: `backup/pre-afs-6b-YYYYMMDD`
+- Sprint tag: `sprint-afs-6b-complete`
+- Risks documented: missing product pages defer to AFS-6c, DK copy drift defer to AFS-26, Resend payload schema test required, GHAI top-up modal bug stays out of scope
 
-**Phase 2 — Trade fee economy (locked):**
-- Discussion of GHAI as utility token (V-Bucks model, NOT crypto-GHAI which is parked pending ADVORA/MiCA review).
-- Trade fee LOCKED: **5 GHAI flat per trade, paid by initiator alone**.
-- Why flat over percentage: simpler UX, no whale-penalty, anti-spam without revenue-driver framing.
-- GHAI as trade asset: ✅ allowed (cards + GHAI ↔ cards).
-- P2P GHAI gift: ❌ never (regulatory landmine — money laundering risk under MiCA/PSD2).
-- P2P item gift from inventory: ❌ never (laundering risk + secondary market problem).
-- "Gift a pack" (real money in, item out to friend): ⚪ future feature, safe legally.
+**No code shipped this session.** SKILL is ready for Jix to run via Claude Code with `claude --dangerously-skip-permissions`.
 
-**Phase 3 — Live audit `/game/battle`:**
-- Verified 2 ships ALREADY render in 3D (player + enemy face-to-face). Original assumption "only 1 ship" was wrong.
-- BUT: scene has issues — player ship hidden under cards, camera fixed/static, twinkling stars, footer overlapping battle viewport (`<main>` collapsed to 72px).
-- 2 Three.js canvases verified, "ENEMY HULL 60/60" element exists in DOM.
-- Scope for fix locked: camera rework (WoW scroll zoom + over-the-shoulder), Universal Skybox component, CSS hotfix.
+**Decisions locked this session:**
+- AFS-5 status flipped from RUNNING to COMPLETE
+- AFS-6b prioritized before AFS-6c (copy decisions must lock first)
+- AFS-6b stays parallel-safe with AFS-24b/c/d and any GHAI top-up modal investigation
 
-**Phase 4 — Skills.zip + tree.txt analysis:**
-- Jix uploaded skills.zip with 30 historical SKILL files (sprint-0 through AFS-6d).
-- Found Phase 4b commit `5d4ad07` shipped basic 3D battle scene with Kestrel boss.
-- Found `components/combat/` already has 11 files / 2319 lines (DON'T rebuild).
-- Tree.txt analysis of E:\ drive (mobil USB, 110k lines, 13MB) revealed:
-  - **GOLDFIND:** `E:\Archives\voidexa-3d-assets\` — 25+ ship asset zips + uncompressed `usc_astroeagle01.glb`
-  - Eliminates need for FLUX/Vast.ai rendering pipeline for battle scene v2 enemy ship
-  - 8 unique sensitive files migrated from E:\ to D:\krypteret usb (GitHub recovery codes, Wallet.json, Exodus pdf, Binance konto info, wallet transaction CSVs, Kostplan)
-  - 9 duplicate sensitive files deleted from E:\ (5x Google Passwords.csv, 1x Proton 2FA, 2x ekstra Binance, 1x ekstra GitHub recovery)
+**Files added to Project Knowledge:**
+- `skills/AFS-6b-realworld-ghai-ux/SKILL.md`
+- Updated `CLAUDE.md` (this file)
 
-**Phase 5 — AFS-6g SKILL written:**
-- Sprint scope: Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep (AFS-24b folded in)
-- Single sprint, 5 sections (A-E), 11 tasks, one tag.
-- Backup strategy decision: NO 2-SSD purchase needed pt. Jix has D:\krypteret usb + Google Drive + Proton Drive + local PC. AFS-24e SSD rotation deferred. Memory updated.
+**Next session entry points:**
+1. Run AFS-6b pre-flight in Claude Code → STOP for approval → execute
+2. OR start GHAI top-up modal investigation sprint (P0 bug still open)
+3. OR begin AFS-6c Shop v1 catalog SKILL drafting (depends on AFS-6b copy lock)
 
-**No git operations performed this session.**
+---
 
-### Decisions locked SLUT 12
+### Session 2026-04-25 — SLUT 12 — AFS-6g COMPLETE + Brain-storm + Secrets migration
 
-1. Trade fee: 5 GHAI flat, initiator pays alone
-2. GHAI rules: trade asset OK, P2P transfer forbidden, item gifting forbidden
-3. Universal inventory: cross-app ownership model
-4. Trading Hub v1: peer-to-peer card swap (separate sprint)
-5. Trade Chat: integrated `/trade` channel (separate sprint)
-6. Battle scene v2 scope: camera rework + skybox + CSS fix (AFS-6g)
-7. Backup strategy: D:\krypteret usb + cloud is sufficient for now (no SSD purchase)
+**Status:** ✅ AFS-6g SHIPPED. Brain-storm decisions locked. Secrets migrated to D:\krypteret usb. Battle scene v3 vision captured via reference image.
+**Tag:** `sprint-afs-6g-complete`
+**Backup:** `backup/pre-afs-6g-20260425` → `bdc6f3f`
+**Tests:** 1141/1141 green (was 1087, +54)
+**Final HEAD:** `7f09077`
+
+**Commit chain (AFS-6g, chronological):**
+```
+docs(afs-6g): SKILL for battle scene v2 + skybox + security sweep
+docs(afs-6g): deferred CVE register
+fix(afs-6g): one-line ConditionalFooter hide-list for /game/battle
+feat(afs-6g): SpaceSkybox component + skybox texture asset
+feat(afs-6g): battle scene Stars→SpaceSkybox + OrbitControls
+feat(afs-6g): freeflight Stars→SpaceSkybox source-level
+docs(afs-6g): starmap README explaining intentional retention
+test(afs-6g): skybox + battle camera + ship positions + freeflight invariants
+docs(afs-6g): session log + sprint complete
+```
+
+**5 sections shipped:**
+
+**Section A — Security:**
+- 0 critical CVEs (none existed)
+- 3 high CVEs from Solana wallet-adapter chain documented as deferred-pending-ADVORA in `docs/security/deferred-cves.md`
+- 24 moderate CVEs deferred (next sprint)
+- Crypto-GHAI parked, code not exploitable in current build
+
+**Section B — CSS Hotfix:**
+- One-line edit to `components/layout/ConditionalFooter.tsx` adding `pathname.startsWith('/game/battle')` to existing hide-list
+- Footer no longer overlaps battle viewport
+- No new layout file needed (SKILL Option A/B both unnecessary)
+
+**Section C — Universal Skybox:**
+- `components/three/SpaceSkybox.tsx` (53 lines, R3F primitives, SRGBColorSpace, toneMapped={false}, useFrame for rotateWithCamera)
+- `public/skybox/deep_space_01.png` (8K equirectangular, 7.6 MB) from spacespheremaps.com (CC-BY 4.0, attribution optional)
+- Polyhaven has zero space HDRIs — pivoted to spacespheremaps.com
+- `public/skybox/README.md` with full attribution + license
+- 19 assertions in `tests/afs-6g-skybox.test.ts`
+
+**Section D — Battle Scene Camera:**
+- `<Stars>` (2500 Points particle system) replaced with `<SpaceSkybox>` (Suspense-wrapped) in `components/game/battle/BattleScene.tsx`
+- `OrbitControls` added in `components/game/battle/BattleCanvas.tsx`:
+  - enableZoom={true}, minDistance={10}, maxDistance={24}
+  - enableRotate={true}, enablePan={false}
+  - Limited azimuth ±π/9 (~±20°)
+  - Polar π/3 to π/2.2 (~60°-82°)
+- Camera far plane bumped 800 → 4000 (proactive — skybox sphere radius 1500 would frustum-cull at 800)
+- Ship positions UNCHANGED — verified via 8-assertion regression test
+- 19 assertions in `tests/afs-6g-battle-camera.test.ts`
+
+**Section E — Cross-app:**
+- Free Flight: `<Stars>` swapped for `<SpaceSkybox rotateWithCamera={true}>` in `components/freeflight/FreeFlightScene.tsx`
+- Live verify SKIPPED for Free Flight due to BUG-04 memory leak — source-tested only
+- Star Map: intentionally retained (curated multi-layer starfield via `StarMapScene.tsx` + `CSSStarfield.tsx` + `NebulaBg.tsx` is by design) — documented in `components/starmap/README.md`
+- Hauling, speedrun, galaxy, preview canvases: out of scope per "no scope creep" rule
+- 8 assertions in `tests/afs-6g-freeflight-skybox.test.ts`
+
+**Sprint deviations from SKILL:**
+1. Skybox texture is `.png` not `.jpg` (source publishes PNG, no point transcoding)
+2. Camera far plane 800 → 4000 (proactive fix, in-code commented)
+3. Ship asset mining DROPPED (license unverified for `voidexa-3d-assets/`, deferred to separate sprint)
+4. Star Map skybox replacement DROPPED (curated by design, not a regression)
+5. Free Flight got 8 assertions vs ~5 nominal (over-tested, not a regression)
+6. Test count overshoot — 54 new vs ~26 nominal target
+
+**Live verification (Claude in Chrome):**
+- ✅ Footer no longer overlaps battle viewport
+- ✅ Skybox visible (no twinkling stars)
+- ✅ Bloom acceptable (no oversaturation)
+- ⚠️ OrbitControls interaction not screenshot-verifiable; source-tested + Jix manual sign-off
+
+### Brain-storm decisions locked SLUT 12
+
+**Trade fee economy:**
+- 5 GHAI flat per trade, paid by initiator alone
+- GHAI as trade asset (cards + GHAI ↔ cards): ✅ allowed
+- P2P GHAI gift / send to friend: ❌ never (regulatory landmine — money laundering risk under MiCA/PSD2)
+- P2P item gift from inventory: ❌ never
+- "Gift a pack" (real money in, item out): ⚪ future feature, safe legally
+
+**Universal inventory:**
+- Cross-app ownership model
+- All apps (shop, game, trading, cosmetics) read from same `user_inventory`
+
+**Battle scene v3 vision LOCKED via AI-generated reference image:**
+- Reference saved as `docs/design/battle_scene_v3_reference.png`
+- 3rd person drone-camera 80m bag player ship, slight downward angle
+- Player ship medium-small, enemy small-far, same horizontal level
+- 360° nebula skybox with visible purple/blue/red nebula clouds
+- 5 floating subsystem panels with connector lines around player ship
+- Cards as flat rectangular buttons side-by-side (NOT fanned hand)
+- Pilot panel top-left with buff icons row
+- Target panel top-center with enemy faction logo + name + hull bar
+- Turn counter top-right
+- Energy orb large bottom-left + Heat meter
+- End Turn button prominent bottom-right
+
+### Secrets migration (E:\ → D:\krypteret usb)
+
+USB tree analysis identified 8 unique sensitive files on E:\ that needed sikring + 9 duplicates of files already on D:\.
+
+**Migrated to `D:\krypteret usb\fra-e-drev-20260425\`:**
+- github-recovery-codes.txt (206 B)
+- Wallet.json (10 B, Samsung backup)
+- Exodus sf.pdf (217 KB)
+- konto-hos-binance.pdf (466 KB)
+- 3x wallet transaction CSVs
+- Kostplan - Jimmi.pdf (68 KB)
+
+**Deleted from E:\ (already on D:):**
+- 5x Google Passwords.csv
+- 1x proton_2FA_recovery_codes.txt
+- 1x github-recovery-codes.txt (extra)
+- 2x konto-hos-binance.pdf (extras)
+
+**Migration log:** `D:\krypteret usb\migration-log-20260425-184210.txt`
+
+### Backup strategy decision (locked)
+
+**No 2-SSD purchase needed currently.** Jix has D:\ + Google Drive + Proton Drive + local PC. AFS-24e SSD rotation deferred. Memory updated.
+
+### 3D assets goldmine identified (deferred)
+
+`E:\Archives\voidexa-3d-assets\` contains 25+ ship asset zips + uncompressed `usc_astroeagle01.glb`. License status UNKNOWN. Deferred to separate audit sprint (W-104) before any commit.
 
 ### New sprints added to roadmap
 
-- **AFS-6g** — Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep — SKILL READY
-- **AFS-?? Universal Inventory Layer** — central inventory cross-app
-- **AFS-?? Trading Hub v1** — P2P card swap with 5 GHAI fee
-- **AFS-?? Trade Chat Channel** — integrate `/trade` with universal chat
+- **AFS-6h** (proposed) — Battle Scene v3 (Camera + Ship positions per reference image)
+- **AFS-?? Skybox brighter nebula** — match reference image visual
+- **AFS-?? Battle HUD v1** — Static panels per reference
+- **AFS-?? Battle HUD v2** — 6 floating subsystem panels (depends on AFS-18)
+- **AFS-?? Card UI Rebuild** — flat rectangles side-by-side
+- **AFS-?? Universal Inventory Layer** — cross-app
+- **AFS-?? Trading Hub v1** — 5 GHAI flat fee swap
+- **AFS-?? Trade Chat Channel** — `/trade` in universal chat
+- **AFS-?? 3D Asset License Audit** — verify E:\ assets
+- **AFS-?? CVE source-of-truth audit** — Dependabot vs npm audit reconcile
 
-### Open items for next session
+### Outstanding open items
 
-- [ ] Approve AFS-6g pre-flight findings, then execute Tasks 1-11
-- [ ] Decide: cross-set trading (Alpha ↔ V3) or same-set only
-- [ ] Decide: soulbound rules (mythics, mission rewards)
-- [ ] Verify license status of `voidexa-3d-assets/` packs before commit
-- [ ] PvP scope decision (card PvP async vs real-time — partially discussed, not locked)
+- [ ] Battle scene v3 sprint (AFS-6h) using reference image as authoritative spec
+- [ ] Verify license status of `voidexa-3d-assets/` packs before any commit
+- [ ] PvP scope decision (card PvP async vs real-time — discussed, not locked)
+- [ ] Cross-set trading rules (Alpha ↔ V3) for Trading Hub v1
+- [ ] Soulbound rules (mythics, mission rewards)
+- [ ] Captain tier pricing
+- [ ] Chat moderation strategy (LLM only vs human escalation)
+- [ ] Replay system tier limits
 
-### Files migrated (E:\ → D:\krypteret usb\fra-e-drev-20260425):
+### Lessons learned this session
 
-| File | Size | Purpose |
-|---|---|---|
-| github-recovery-codes.txt | 206 B | GitHub backdoor |
-| Wallet.json | 10 B | Samsung BLOCKCHAIN_WALLET (likely empty) |
-| Exodus sf.pdf | 217 KB | Exodus wallet info |
-| konto-hos-binance.pdf | 466 KB | Binance konto details |
-| account-0x4C0db84... csv x2 | 146 B each | Wallet transaction history |
-| export-address-token-0xbfec559... csv | 3.6 KB | Token export |
-| Kostplan - Jimmi.pdf | 68 KB | Personal health (privacy) |
+- **Pre-flight VERIFY-FIRST is mandatory** — caught 5 wrong assumptions in this sprint alone
+- **Reference images > prose specs** — AI-generated reference image communicated more in 1 image than hours of mockups
+- **Communication style matters** — match person's level, especially when ADHD/tired
+- **Don't oversell shipped work** — honest framing prevents trust drift
+- **Single-sprint discipline holds** — 11 tasks with 4 checkpoint pauses worked well
+
+### Mid-session corrections (Jix → Claude)
+
+1. SKILL had wrong file paths (components/combat/ vs components/game/battle/) — pre-flight caught
+2. SKILL had wrong CVE counts (1 critical + 6 high vs actual 0 + 3) — pre-flight caught
+3. SKILL would have moved ships closer not farther (opposite of goal) — pre-flight caught
+4. Claude oversold AFS-6g visual results — Jix corrected, framing adjusted
+5. Claude wrote in too complex language — Jix corrected, simplified
+6. Claude attempted Playwright live audit when Jix said no — acknowledged
+
+### Rollback (if needed):
+
+```bash
+git reset --hard backup/pre-afs-6g-20260425
+git push --force-with-lease origin main
+git push origin :refs/tags/sprint-afs-6g-complete
+```
 
 ---
 
@@ -1474,12 +986,10 @@ can be executed.
 | ~~`/login`, `/signin`, `/wallet`, `/settings`, `/account` 404~~ | ✅ **AFS-2 COMPLETE** |
 | ~~`/game/card-battle`, `/game/deck-builder`, `/game/pilot-profile`, `/game/shop` 404~~ | ✅ **AFS-3 COMPLETE** |
 | ~~Admin Control Plane ZERO data~~ | ✅ **AFS-4 COMPLETE** |
-| Cards blank art (1000 Alpha scope) | AFS-5 (external chat in progress — scope pivoted from 257 V3 to 1000 Alpha) |
+| ~~Cards blank art (1000 Alpha scope)~~ | ✅ **AFS-5 COMPLETE** (Apr 27, 1000 cards generated tiered $41.52, manifest.json on Jix PC) |
 | ~~Shop 26 cosmetics "COMING SOON"~~ | ✅ **AFS-6a COMPLETE** (reality was narrower — see SKILL v2 reshape) |
 | ~~Shop nav + cross-nav + copy + pack lockdown~~ | ✅ **AFS-6a-fix COMPLETE** |
 | ~~`/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404~~ | ✅ **AFS-7 COMPLETE** |
-| ~~Battle scene footer overlap + twinkling Stars backdrop~~ | ✅ **AFS-6g COMPLETE** |
-| ~~Jarvis bubble overlapping UniverseChat on 9 ruter~~ | ✅ **CommBubble Hotfix COMPLETE** (proper merge in AFS-13) |
 | GHAI top-up modal stuck open across pages | **NEW — needs investigation sprint** |
 | Starmap Level 2 nebula zoom | AFS-10 |
 | Cinematic video end-frame ≠ new backdrop | AFS-11 (future, low prio) |
@@ -1492,7 +1002,7 @@ can be executed.
 
 ## PENDING SPRINTS (this chat)
 
-- **AFS-6b** — Real-world GHAI Commerce UX (disambiguation: DKK/EUR disclaimer on AEGIS/Comlink/Consulting pages, contact form "Ghost AI Chat" rename, wallet clarification)
+- **AFS-6b** — Real-world GHAI Commerce UX (disambiguation: DKK/EUR disclaimer on AEGIS/Comlink/Consulting pages, contact form "Ghost AI Chat" rename, wallet clarification) — **SKILL.md ready (Apr 27), pre-flight pending**
 - **AFS-6c** — voidexa Shop v1: catalog + "Kontakt for køb" form → contact@voidexa.com via Resend. Products: AEGIS Monitor, Comlink Node, Website Builder, AI Consulting. NO checkout/payment in v1. 2-year DK reklamationsret.
 
 ---
