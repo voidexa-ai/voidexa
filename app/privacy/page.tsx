@@ -38,7 +38,7 @@ export default function PrivacyPolicyPage() {
       </ul>
       <h3>Product usage</h3>
       <ul>
-        <li>Void Chat / Quantum / Trading Hub prompts and responses when you use those features</li>
+        <li>Void Pro AI (formerly Void Chat) / Quantum / Trading Hub prompts and responses when you use those features</li>
         <li>Break Room and Universe Wall posts you publish</li>
         <li>Card collection, deck loadouts, and match history</li>
         <li>Server logs with IP address and user agent (retained for abuse prevention and security)</li>
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
         <li><strong>Vercel</strong> — edge hosting and deployment of the voidexa.com frontend</li>
         <li><strong>Stripe</strong> — payment processing</li>
         <li><strong>Anthropic</strong> (Claude API) — AI chat, quantum debate, and automation features</li>
-        <li><strong>OpenAI</strong> — Void Chat, quantum debate</li>
+        <li><strong>OpenAI</strong> — Void Pro AI, quantum debate</li>
         <li><strong>Google</strong> (Gemini API) — quantum debate and select AI tools</li>
         <li><strong>Perplexity</strong> — quantum debate research leg</li>
       </ul>
