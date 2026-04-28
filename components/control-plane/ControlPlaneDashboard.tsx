@@ -210,7 +210,7 @@ const NAV_LINKS = [
   { id: 'trading',     label: 'Trading Bot',     icon: '◎' },
   { id: 'ghai',        label: 'GHAI Token',      icon: '◆' },
   { id: 'quantum',     label: 'Quantum',         icon: '◇' },
-  { id: 'voidchat',    label: 'Void Chat',       icon: '◉' },
+  { id: 'voidchat',    label: 'Void Pro AI',     icon: '◉' },
   { id: 'health',      label: 'System Health',   icon: '▣' },
   { id: 'activity',    label: 'Activity Feed',   icon: '≡' },
 ];
@@ -586,7 +586,7 @@ function GhaiPanel() {
 function QuantumPanel() {
   const data = [
     { label: 'status',     value: 'LIVE',        color: GREEN },
-    { label: 'tests passed', value: '960 / 960', color: '#4ade80' },
+    { label: 'tests passed', value: '1324 / 1324', color: '#4ade80' },
     { label: 'sessions',   value: '—',           color: '#94a3b8' },
     { label: 'providers',  value: '3 active',    color: '#94a3b8' },
     { label: 'avg latency', value: '142ms',      color: BLUE },
@@ -637,7 +637,7 @@ function VoidChatPanel() {
           borderRadius: 4, padding: '2px 7px', textTransform: 'uppercase', letterSpacing: '0.08em',
         }}>demo</span>
       </div>
-      <SectionHeader title="Void Chat" />
+      <SectionHeader title="Void Pro AI" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
         {data.map(({ label, value, color }) => (
           <div key={label} style={{
@@ -657,10 +657,10 @@ function VoidChatPanel() {
 
 const SYSTEMS = [
   { name: 'KCP-90 Protocol',    status: 'live',     color: GREEN,  note: 'Compression active across all products' },
-  { name: 'Quantum',            status: 'live',     color: GREEN,  note: '960 tests passed — fully operational' },
+  { name: 'Quantum',            status: 'live',     color: GREEN,  note: '1324 tests passed — fully operational' },
   { name: 'Trading Bot',        status: 'live',     color: GREEN,  note: 'APEX + SCALPER running S-03' },
   { name: 'GHAI Token',         status: 'planned',  color: 'rgba(148,163,184,0.6)',  note: 'Coming soon — token details at launch' },
-  { name: 'Void Chat',          status: 'live',     color: GREEN,  note: 'LIVE — $0.01/msg Sonnet, $0.02/msg Opus' },
+  { name: 'Void Pro AI',        status: 'live',     color: GREEN,  note: 'LIVE — $0.01/msg Sonnet, $0.02/msg Opus' },
   { name: 'Trading Hub',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 3' },
   { name: 'Node System',        status: 'planned',  color: 'rgba(148,163,184,0.6)', note: 'Phase 4' },
   { name: 'Comlink',            status: 'testing',  color: '#a78bfa', note: 'Internal testing' },
