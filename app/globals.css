@@ -391,3 +391,58 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.875rem;
   text-transform: uppercase;
 }
+
+/* AFS-18b - Mythic iridescent frame.
+ *
+ * The border is drawn via the padding-box + border-box gradient trick:
+ *   - inner solid background fills padding-box (the dark card body),
+ *   - conic gradient paints border-box, leaving a 2px colored ring.
+ *
+ * @property registers --mythic-angle as <angle> so the conic angle
+ * interpolates smoothly through the keyframe loop. Browsers without
+ * @property support degrade gracefully to a static gradient (still
+ * iridescent, no rotation) - equivalent to the prefers-reduced-motion
+ * fallback below.
+ *
+ * Palette (locked AFS-18b):
+ *   #ec4899  pink-500 (matches RARITY_GLOW.Mythic + rarity badge text)
+ *   #22d3ee  cyan-400 (vibrant sci-fi mid-tone)
+ *   #d4af37  metallic gold (distinct from legendary's #f59e0b amber so
+ *            the rotation does not produce a "legendary stripe")
+ *
+ * #0a0a0a is the literal hex for Tailwind zinc-950 (matches bg-zinc-950
+ * on the article element). Hardcoded to avoid relying on theme() fn
+ * availability in Tailwind v4 globals.css.
+ */
+
+@property --mythic-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.mythic-frame {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+    conic-gradient(
+      from var(--mythic-angle),
+      #ec4899,
+      #22d3ee,
+      #d4af37,
+      #ec4899
+    ) border-box;
+  animation: mythic-rotate 6s linear infinite;
+}
+
+@keyframes mythic-rotate {
+  to { --mythic-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mythic-frame {
+    animation: none;
+    /* Same conic gradient, frozen at 0deg. The conic paints all 3 stops
+     * around the full perimeter so every color is visible without rotation. */
+  }
+}

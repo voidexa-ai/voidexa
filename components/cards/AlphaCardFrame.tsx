@@ -3,15 +3,23 @@
 /**
  * components/cards/AlphaCardFrame.tsx
  *
- * AFS-6d - Premium frame for the 1000-card Alpha set.
- * AFS-18 - Per-card image wiring via optional imageUrl prop. When supplied,
- * renders the unique webp from Supabase Storage public bucket; otherwise
- * falls back to the 9-PNG category art (also used as onError fallback).
+ * AFS-6d  - Premium frame for the 1000-card Alpha set.
+ * AFS-18  - Per-card image wiring via optional imageUrl prop. When supplied,
+ *           renders the unique webp from Supabase Storage public bucket;
+ *           otherwise falls back to the 9-PNG category art (also used as
+ *           onError fallback).
+ * AFS-18b - Rarity badge text in the header + mythic iridescent frame
+ *           branch (animated conic gradient via .mythic-frame class in
+ *           app/globals.css). Other 5 rarities stay solid per the
+ *           AFS-6d/18 "do not touch" rule.
  *
- * 'use client' added in AFS-18 because the onError handler requires client.
+ * 'use client' is required because the onError handler runs in the browser.
  *
  * Color: rarity -> frame color is sourced from RARITY_GLOW in
- * components/combat/cardArt.ts. AFS-6d locked: do not touch existing colors.
+ * components/combat/cardArt.ts. RARITY_GLOW.Mythic (#ec4899 pink-500) is
+ * used for the rarity badge text on mythic cards, and matches one of the
+ * three conic-gradient stops so the badge stays visually coherent with the
+ * border.
  *
  * Type: titlecase strings ("AI Routine", "Ship Core") match
  * docs/alpha_set/batch_*.json source data verbatim.
@@ -99,16 +107,34 @@ export default function AlphaCardFrame({
   const fallbackSrc = typeImagePath(type)
   const initialSrc = imageUrl ?? fallbackSrc
   const hasStats = attack !== undefined || defense !== undefined
+  const isMythic = rarity === 'mythic'
+
+  // AFS-18b: mythic uses .mythic-frame (animated conic gradient defined in
+  // app/globals.css) instead of a solid border. Outer glow uses pink-500 +
+  // cyan-400 RGBA (2 of 3 conic stops) to keep the halo iridescent;
+  // intentionally omits the gold stop so the halo does not read as warm
+  // yellow.
+  const articleClass =
+    'relative flex w-full max-w-[280px] flex-col rounded-xl bg-zinc-950 text-zinc-100 shadow-lg transition-transform hover:scale-[1.02] ' +
+    (isMythic ? 'mythic-frame' : 'border-2')
+
+  const articleStyle: React.CSSProperties = isMythic
+    ? {
+        boxShadow:
+          '0 0 24px rgba(236, 72, 153, 0.45), 0 0 48px rgba(34, 211, 238, 0.25)',
+      }
+    : {
+        borderColor: color,
+        boxShadow: `0 0 12px ${color}55, inset 0 0 6px ${color}22`,
+      }
 
   return (
     <article
       data-rarity={rarity}
       data-type={type}
-      className="relative flex w-full max-w-[280px] flex-col rounded-xl border-2 bg-zinc-950 text-zinc-100 shadow-lg transition-transform hover:scale-[1.02]"
-      style={{
-        borderColor: color,
-        boxShadow: `0 0 12px ${color}55, inset 0 0 6px ${color}22`,
-      }}
+      data-mythic={isMythic ? 'true' : undefined}
+      className={articleClass}
+      style={articleStyle}
     >
       <header className="flex items-center justify-between gap-2 px-3 py-2">
         <span
@@ -117,6 +143,17 @@ export default function AlphaCardFrame({
         >
           {type}
         </span>
+
+        {/* AFS-18b: rarity badge (outlined pill, color matches frame). */}
+        <span
+          data-testid="rarity-badge"
+          aria-label={`Rarity ${rarity}`}
+          className="rounded-full border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider"
+          style={{ borderColor: color, color }}
+        >
+          {rarity}
+        </span>
+
         <span
           className="flex h-7 w-7 items-center justify-center rounded-full text-base font-bold"
           style={{ backgroundColor: color, color: '#0a0a0a' }}
@@ -141,8 +178,6 @@ export default function AlphaCardFrame({
           loading="lazy"
           decoding="async"
           onError={(e) => {
-            // One-shot fallback to category PNG. The data-fallback-tried flag
-            // prevents an infinite onError loop if the fallback also 404s.
             const target = e.currentTarget
             if (!target.dataset.fallbackTried) {
               target.dataset.fallbackTried = '1'
