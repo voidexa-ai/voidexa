@@ -38,6 +38,14 @@ const nextConfig: NextConfig = {
     { source: '/dk/game/deck-builder',  destination: '/game/cards/deck-builder',  permanent: true },
     { source: '/dk/game/pilot-profile', destination: '/game/profile',             permanent: true },
     { source: '/dk/game/shop',          destination: '/shop',                     permanent: true },
+
+    // AFS-18 - V3 deck-builder retired. The Alpha deck-builder under
+    // /cards/alpha/deck-builder is the canonical surface. Permanent (308)
+    // so users who bookmarked /cards/deck-builder land on the Alpha builder.
+    // /cards/deck-builder file stays on disk per "V3 stays on disk" rule;
+    // the redirect intercepts before Next routes to the V3 page.
+    { source: '/cards/deck-builder',    destination: '/cards/alpha/deck-builder',    permanent: true },
+    { source: '/dk/cards/deck-builder', destination: '/dk/cards/alpha/deck-builder', permanent: true },
   ],
 
   headers: async () => [
