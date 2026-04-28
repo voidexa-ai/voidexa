@@ -91,10 +91,92 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-6d complete** | `bdc6f3f` | **1087** | **Cards Premium Rebuild — 1000 Alpha cards in DB, paginated catalog, deck builder, 5 saved slots** |
 | **AFS-6g complete** | `7f09077` | **1141** | **Battle Scene v2 + Universal Skybox + CSS Hotfix + Security Sweep** |
 | **AFS-18 complete** | `fdfca34` | **1240** | **Alpha 1000 Cards Deploy — Storage bucket + 1000 webp uploaded + per-card image wiring + /cards V3→Alpha swap + V3 deck-builder 308 redirects** |
+| **AFS-18b complete** | `f1c2cef` | **1286** | **Rarity UX + Mythic Iridescent Frame + TCG Layout Overhaul — rarity filter pill row, mythic conic-gradient border (magenta · cyan · metallic gold), full TCG-grammar restructure (name+cost header, type-line below image, ATK/DEF opposite footer corners)** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-28 — AFS-18b COMPLETE (Rarity UX + Mythic Iridescent + TCG Layout Overhaul)
+
+**Status:** ✅ SHIPPED to `origin/main`, live-verified on voidexa.com — every Alpha card now displays a TCG-grammar layout (NAME + COST header, image, TYPE — RARITY type-line, effect + flavor body with separator, ATK/DEF in opposite footer corners). Rarity filter pill row live on `/cards` and `/dk/cards`. Mythic frames render rotating conic-gradient border in magenta · cyan · metallic gold.
+**Tag:** `sprint-afs-18b-complete`
+**Backup:** `backup/pre-afs-18b-20260428` → `225fb3d` (SKILL v2 commit, before any code change)
+**Tests:** 1286/1286 green (was 1240, +46 new AFS-18b assertions)
+**Final HEAD:** `f1c2cef`
+
+**Commit chain:**
+```
+f1c2cef test(afs-18b): coverage for helpers + filter + mythic + TCG layout (Task 6)
+c6b7c34 feat(afs-18b): TCG layout overhaul on AlphaCardFrame (Task 5b)
+5904592 feat(afs-18b): rarity badge + mythic iridescent frame (Tasks 2 + 5)
+7538954 feat(afs-18b): rarity helpers + badge + filter UI + server filter (Tasks 1-4)
+225fb3d chore(afs-18b): SKILL v2 with locked decisions + pre-flight findings
+f1fb157 chore(afs-18b): SKILL v1 — rarity badge + rarity filter + mythic iridescent frame
+```
+
+**v1 → v2 flow:** SKILL v1 paused for Jix to lock 20 OPEN DECISIONS. Pre-flight 0.1-0.6 confirmed v1 structure was sound. v2 baked in 18 default-locked decisions + 2 overrides (Q13 mythic palette = magenta/cyan/gold not yellow; Q16 RPM fallback = static conic so all 3 colors visible). Hex palette locked to `#ec4899` (RARITY_GLOW.Mythic for badge coherence) · `#22d3ee` (cyan-400) · `#d4af37` (metallic gold, distinct from legendary's `#f59e0b` amber to avoid mid-rotation stripe collision). v2 also corrected an off-by-one in v1's stop checkpoint list (visual review is between Task 5 and Task 6, not "Task 4").
+
+**5b layout overhaul (mid-sprint scope expansion):** After Tasks 1-5 shipped and Jix did an interim eyeball check, Jix flagged that the AFS-18b header (TYPE pill + rarity badge + cost circle in a single row) broke TCG player muscle memory. Per MTG / Hearthstone / Yu-Gi-Oh convention, rarity belongs in a type-line UNDER the image, not in a separate badge in the upper area, and ATK/DEF belongs in the opposite footer corners, not inline mid-body. Task 5b restructured `AlphaCardFrame.tsx` end-to-end while keeping all existing infrastructure (mythic frame, RARITY_GLOW colors, imageUrl wiring, deck-builder inheritance) untouched.
+
+**What shipped:**
+
+**Section A — Rarity helpers (Task 1):**
+- `lib/cards/alpha-types.ts` extended with `VALID_ALPHA_RARITIES`, `AlphaRarityDb` type, `ALPHA_RARITY_LABELS` map, `isValidAlphaRarity` type guard. Mirrors AFS-6d's type-side helpers, all six rarities in power order
+
+**Section B — Rarity filter (Tasks 3+4):**
+- `components/cards/AlphaCatalog.tsx` adds `activeRarity?: AlphaRarityDb | null` prop, extracts `pillClass()` + `buildHref()` helpers, renders second nav with `aria-label="Card rarity filter"` (All + 6 rarity pills in power order), refactors type tabs and pagination to route through `buildHref` so changing type preserves activeRarity (and vice versa)
+- `app/cards/page.tsx` + `app/dk/cards/page.tsx` parse `?rarity=` via `isValidAlphaRarity`, conditionally apply `.eq('rarity', rarity)` on count + cards queries (uses existing `idx_alpha_cards_rarity` index), pass `activeRarity` to AlphaCatalog
+- 2 obsolete AFS-6d catalog test assertions (pinned to old inline `${basePath}?type=...&page=1` template strings) updated to assert the new `buildHref(...)` invocation. Original intent ("tab change resets page", "pagination preserves type") preserved through the helper
+
+**Section C — Mythic iridescent frame (Task 5):**
+- `components/cards/AlphaCardFrame.tsx`: `isMythic` branch toggles className between `mythic-frame` (animated conic gradient) and `border-2` (solid RARITY_GLOW border). Mythic outer glow uses pink + cyan RGBA; gold deliberately omitted from halo so it doesn't read as warm-yellow
+- `app/globals.css` adds `@property --mythic-angle` (first `@property` usage in repo — graceful degradation on unsupporting browsers), `.mythic-frame` class using padding-box + border-box gradient trick, `@keyframes mythic-rotate` (6s linear infinite, `--mythic-angle` 0deg → 360deg), `@media (prefers-reduced-motion: reduce)` block (first RPM usage in repo — sets repo precedent for future animated surfaces). Conic gradient stays the same in RPM mode (animation: none) so all 3 colors remain visible around the perimeter
+
+**Section D — TCG layout overhaul (Task 5b):**
+- `components/cards/AlphaCardFrame.tsx` restructured to MTG/Hearthstone/Yu-Gi-Oh grammar:
+  - **Header:** card NAME on the left (`<h3 truncate>`), COST circle on the right
+  - **Image:** unchanged 3:2 aspect, per-card webp + onError fallback
+  - **Type-line:** `<p data-testid="type-line">` below image, `{type} — {rarity}` em-dash separator, uppercase + tracking-wider, rarity color text + tinted bottom border
+  - **Body:** effect text in regular weight, flavor text below with thin top-border separator + extra padding-top + italic + opacity-70
+  - **Footer:** `<footer flex justify-between>`, ATK left + DEF right, gated on `hasStats` so spell-style cards omit it. `aria-hidden="true"` empty placeholder spans preserve corner alignment when only one stat is set
+- TYPE pill + rarity badge from earlier AFS-18b iteration removed entirely. Rarity color hierarchy preserved via type-line text + cost circle background + ATK/DEF text + frame border (or mythic conic) all using the rarity color
+- AlphaDeckBuilder inheritance unchanged — same component, same props, same visual upgrade in the deck-builder inventory grid
+
+**Section E — Tests (+46 assertions across 4 files):**
+- `tests/afs-18b-rarity-helpers.test.ts` (7 — runtime unit, not walker) — VALID_ALPHA_RARITIES + ALPHA_RARITY_LABELS + isValidAlphaRarity + AFS-6d invariant regressions
+- `tests/afs-18b-rarity-filter.test.ts` (13 — walker) — AlphaCatalog rarity nav + EN/DK pages server-side filter
+- `tests/afs-18b-mythic-frame.test.ts` (10 — walker) — isMythic branch + globals.css `@property` + `@keyframes` + RPM block + 3 hex palette stops + zinc-950 hardcoded
+- `tests/afs-18b-tcg-layout.test.ts` (16 — walker) — header name+cost + type-line + body separator + footer ATK/DEF justify-between + aria-hidden placeholder spans
+
+**Sprint deviations from SKILL v2:**
+1. Task 5b layout overhaul added mid-sprint per Jix scope expansion. Was not in v2 SKILL; commit message documents the rationale (TCG industry-standard grammar)
+2. Test count overshoot — 46 vs target 18-22 (rarity-helpers as runtime unit tests added 7 quick smoke checks; tcg-layout split into 4 sub-describes with 16 assertions covering each card region)
+3. The earlier SKILL v2 mention of a `data-testid="rarity-badge"` element was made obsolete by Task 5b. Tests for that pattern were not written; new tests assert the post-5b structure (type-line below image, no rarity badge in source)
+
+**New patterns AFS-18b establishes in the codebase (first usages):**
+1. **`@property` declaration** — `--mythic-angle` registered as `<angle>` for smooth keyframe interpolation. Browsers without `@property` support degrade to a static gradient (no bug, equivalent to RPM fallback)
+2. **`prefers-reduced-motion` media query** — first repo usage. Future animated surfaces should adopt the same pattern
+
+**Live verified by Jix (Apr 28):** Rarity badge → type-line restructure shipped via Task 5b second visual review. All 8 visual checks passed on production: header name+cost, per-card webp art, type-line `WEAPON — RARITY` in rarity color, effect+flavor separator, ATK/DEF in opposite footer corners, rarity color hierarchy preserved, mythic iridescent rotation working (after enabling Windows animation effects), deck-builder inheritance via shared AlphaCardFrame. Rarity filter pill row also verified working (All · Common · Uncommon · Rare · Epic · Legendary · Mythic).
+
+**Known items out-of-scope (carried forward):**
+- DK strings for rarity labels and type-line — English UI per AFS-26 deferral
+- AlphaDeckBuilder filter UI redesign — its existing dropdown rarity filter stays until a convergence sprint
+- Pack-opening reveal animation — AFS-6c domain
+- Battle scene mythic visual — AFS-6h domain
+- Audit of other animated surfaces for RPM compliance — follow-up sprint
+
+**Rollback:**
+```bash
+git reset --hard backup/pre-afs-18b-20260428
+git push origin main --force-with-lease
+git push origin :refs/tags/sprint-afs-18b-complete
+```
+
+No Supabase changes in this sprint.
+
+---
 
 ### Session 2026-04-28 — AFS-18 COMPLETE (Alpha 1000 Cards Deploy + V3 Retirement)
 
