@@ -3,26 +3,40 @@
 /**
  * components/cards/AlphaCardFrame.tsx
  *
- * AFS-6d  - Premium frame for the 1000-card Alpha set.
- * AFS-18  - Per-card image wiring via optional imageUrl prop. When supplied,
- *           renders the unique webp from Supabase Storage public bucket;
- *           otherwise falls back to the 9-PNG category art (also used as
- *           onError fallback).
- * AFS-18b - Rarity badge text in the header + mythic iridescent frame
- *           branch (animated conic gradient via .mythic-frame class in
- *           app/globals.css). Other 5 rarities stay solid per the
- *           AFS-6d/18 "do not touch" rule.
+ * AFS-6d     - Premium frame for the 1000-card Alpha set.
+ * AFS-18     - Per-card image wiring via optional imageUrl prop. When
+ *              supplied, renders the unique webp from Supabase Storage
+ *              public bucket; otherwise falls back to category PNG.
+ * AFS-18b    - Mythic iridescent frame (.mythic-frame in app/globals.css)
+ *              + rarity badge experiment (now superseded by 5b layout).
+ * AFS-18b/5b - Layout overhaul to match TCG industry grammar
+ *              (MTG / Hearthstone / Yu-Gi-Oh):
  *
- * 'use client' is required because the onError handler runs in the browser.
+ *              ┌──────────────────────────┐
+ *              │ NAME              [COST] │  header
+ *              ├──────────────────────────┤
+ *              │       CARD ART           │  image
+ *              ├──────────────────────────┤
+ *              │ TYPE — RARITY            │  type-line
+ *              ├──────────────────────────┤
+ *              │ Effect text              │
+ *              │ ─────                    │
+ *              │ Flavor text (italic)     │
+ *              ├──────────────────────────┤
+ *              │ ATK 0          DEF 0     │  footer
+ *              └──────────────────────────┘
  *
- * Color: rarity -> frame color is sourced from RARITY_GLOW in
- * components/combat/cardArt.ts. RARITY_GLOW.Mythic (#ec4899 pink-500) is
- * used for the rarity badge text on mythic cards, and matches one of the
- * three conic-gradient stops so the badge stays visually coherent with the
- * border.
+ *              The TYPE pill + rarity badge that lived in the AFS-18b
+ *              header are removed; rarity color now tints the type-line
+ *              text and the ATK/DEF footer text instead. Visual rarity
+ *              hierarchy is preserved.
  *
- * Type: titlecase strings ("AI Routine", "Ship Core") match
- * docs/alpha_set/batch_*.json source data verbatim.
+ * 'use client' is required because the onError handler runs in browser.
+ *
+ * Color: rarity -> RARITY_GLOW value. Drives the cost circle background,
+ * the type-line text + its bottom border tint, the flavor separator, the
+ * footer border, and the ATK/DEF text. Mythic still uses the .mythic-frame
+ * conic-gradient class for the outer border per AFS-18b Task 5.
  *
  * Distinct from V3 frame at components/combat/CardCollection.tsx.
  */
@@ -110,10 +124,9 @@ export default function AlphaCardFrame({
   const isMythic = rarity === 'mythic'
 
   // AFS-18b: mythic uses .mythic-frame (animated conic gradient defined in
-  // app/globals.css) instead of a solid border. Outer glow uses pink-500 +
-  // cyan-400 RGBA (2 of 3 conic stops) to keep the halo iridescent;
-  // intentionally omits the gold stop so the halo does not read as warm
-  // yellow.
+  // app/globals.css). Outer glow on mythic uses pink + cyan RGBA (2 of 3
+  // conic stops); gold stop intentionally omitted from the halo so it
+  // does not read as warm-yellow.
   const articleClass =
     'relative flex w-full max-w-[280px] flex-col rounded-xl bg-zinc-950 text-zinc-100 shadow-lg transition-transform hover:scale-[1.02] ' +
     (isMythic ? 'mythic-frame' : 'border-2')
@@ -136,26 +149,13 @@ export default function AlphaCardFrame({
       className={articleClass}
       style={articleStyle}
     >
+      {/* Header: name on the left, cost circle on the right. */}
       <header className="flex items-center justify-between gap-2 px-3 py-2">
+        <h3 className="truncate text-base font-semibold leading-tight">
+          {name}
+        </h3>
         <span
-          className="rounded-full px-2 py-0.5 text-sm font-semibold uppercase tracking-wider"
-          style={{ backgroundColor: `${color}22`, color }}
-        >
-          {type}
-        </span>
-
-        {/* AFS-18b: rarity badge (outlined pill, color matches frame). */}
-        <span
-          data-testid="rarity-badge"
-          aria-label={`Rarity ${rarity}`}
-          className="rounded-full border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider"
-          style={{ borderColor: color, color }}
-        >
-          {rarity}
-        </span>
-
-        <span
-          className="flex h-7 w-7 items-center justify-center rounded-full text-base font-bold"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-base font-bold"
           style={{ backgroundColor: color, color: '#0a0a0a' }}
           aria-label={`Energy cost ${energy_cost}`}
         >
@@ -163,10 +163,7 @@ export default function AlphaCardFrame({
         </span>
       </header>
 
-      <h3 className="px-3 pb-2 text-base font-semibold leading-tight">
-        {name}
-      </h3>
-
+      {/* Image. */}
       <div
         className="relative aspect-[3/2] w-full overflow-hidden border-y"
         style={{ borderColor: `${color}66` }}
@@ -188,24 +185,55 @@ export default function AlphaCardFrame({
         />
       </div>
 
-      <div className="flex flex-col gap-2 px-3 py-3">
-        {hasStats && (
-          <div className="flex gap-3 text-sm font-mono uppercase opacity-80">
-            {attack !== undefined && (
-              <span data-testid="stat-attack">ATK {attack}</span>
-            )}
-            {defense !== undefined && (
-              <span data-testid="stat-defense">DEF {defense}</span>
-            )}
-          </div>
-        )}
+      {/* Type-line: TYPE - RARITY in rarity color, single line below image
+       * per TCG convention. CSS `uppercase` handles the text-transform so
+       * we keep the prop values as-is in JSX (titlecase type, lowercase
+       * rarity) for test simplicity. */}
+      <p
+        data-testid="type-line"
+        className="border-b px-3 py-1.5 text-xs font-semibold uppercase tracking-wider"
+        style={{ color, borderColor: `${color}33` }}
+      >
+        {type} — {rarity}
+      </p>
+
+      {/* Body: effect text, then flavor text separated by a thin top border. */}
+      <div className="flex flex-1 flex-col gap-2 px-3 py-3">
         <p className="text-base leading-snug">{effect_text}</p>
         {flavor_text && (
-          <p className="text-sm italic leading-snug opacity-70">
+          <p
+            className="border-t pt-2 text-sm italic leading-snug opacity-70"
+            style={{ borderColor: `${color}33` }}
+          >
             {flavor_text}
           </p>
         )}
       </div>
+
+      {/* Footer: ATK left, DEF right (opposite corners via justify-between).
+       * Empty placeholders preserve corner positioning when only one stat
+       * is set (e.g. weapon-style ATK-only or shield-style DEF-only). */}
+      {hasStats && (
+        <footer
+          className="flex items-center justify-between gap-2 border-t px-3 py-2 text-sm font-mono uppercase"
+          style={{ borderColor: `${color}33` }}
+        >
+          {attack !== undefined ? (
+            <span data-testid="stat-attack" style={{ color }}>
+              ATK {attack}
+            </span>
+          ) : (
+            <span aria-hidden="true" />
+          )}
+          {defense !== undefined ? (
+            <span data-testid="stat-defense" style={{ color }}>
+              DEF {defense}
+            </span>
+          ) : (
+            <span aria-hidden="true" />
+          )}
+        </footer>
+      )}
 
       {comingSoon && (
         <div
