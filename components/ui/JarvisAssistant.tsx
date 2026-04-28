@@ -62,7 +62,9 @@ export default function JarvisAssistant() {
   // not collide with the orb. Sprint 16 Task 6 originally moved Jarvis to the
   // left to avoid this; CommBubble Hotfix moved it back to the right and now
   // skips the route instead. See: docs/skills/bugfix-commbubble-position.md
-  if (/^\/(?:dk\/)?starmap(?:\/|$)/.test(pathname ?? '')) return null
+  // AFS-OVERLAY-FIX-V2: also skip /break-room (+/dk/break-room) where the
+  // Leaderboard pill occupies the bottom-right corner.
+  if (/^\/(?:dk\/)?(?:starmap|break-room)(?:\/|$)/.test(pathname ?? '')) return null
 
   function send() {
     const text = input.trim()
