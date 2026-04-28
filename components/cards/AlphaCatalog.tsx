@@ -3,9 +3,16 @@
 /**
  * components/cards/AlphaCatalog.tsx
  *
- * AFS-6d — Client renderer for /cards/alpha. Server pages handle searchParam
- * validation and Supabase fetch; this component receives the page slice plus
- * pagination metadata and renders 9 type tabs + a 20-per-page card grid.
+ * AFS-6d  - Client renderer for /cards/alpha. Server pages handle searchParam
+ *           validation and Supabase fetch; this component receives the page
+ *           slice plus pagination metadata and renders 9 type tabs + a
+ *           20-per-page card grid.
+ * AFS-18b - Added second filter row for rarity. URL pattern is
+ *             ?type=foo&rarity=bar&page=N
+ *           Both filters AND-combine. Changing either filter resets page
+ *           to 1. URL building extracted to buildHref helper so type-tab
+ *           and rarity-tab links each preserve the OTHER active filter,
+ *           and pagination preserves both.
  *
  * Distinct from V3 catalog at components/combat/CardCollection.tsx.
  */
@@ -18,7 +25,10 @@ import AlphaCardFrame, {
 import {
   ALPHA_DB_TO_LABEL,
   ALPHA_PAGE_SIZE,
+  ALPHA_RARITY_LABELS,
+  VALID_ALPHA_RARITIES,
   VALID_ALPHA_TYPES,
+  type AlphaRarityDb,
   type AlphaTypeDb,
 } from '@/lib/cards/alpha-types'
 import { getAlphaCardImageUrl } from '@/lib/cards/alpha-image-url'
@@ -40,6 +50,7 @@ export interface AlphaCatalogCard {
 
 interface Props {
   activeType: AlphaTypeDb
+  activeRarity?: AlphaRarityDb | null
   currentPage: number
   totalPages: number
   totalCount: number
@@ -47,8 +58,34 @@ interface Props {
   basePath?: string
 }
 
+function pillClass(active: boolean): string {
+  return (
+    'rounded-full px-4 py-2 text-sm font-semibold transition-colors ' +
+    (active
+      ? 'bg-zinc-100 text-zinc-900'
+      : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800')
+  )
+}
+
+// AFS-18b - URL builder used by all three nav surfaces (type tabs, rarity
+// tabs, pagination). Centralized so type+rarity always preserve each other
+// across navigation.
+function buildHref(
+  basePath: string,
+  type: AlphaTypeDb,
+  rarity: AlphaRarityDb | null,
+  page: number,
+): string {
+  const sp = new URLSearchParams()
+  sp.set('type', type)
+  if (rarity) sp.set('rarity', rarity)
+  sp.set('page', String(page))
+  return `${basePath}?${sp.toString()}`
+}
+
 export default function AlphaCatalog({
   activeType,
+  activeRarity = null,
   currentPage,
   totalPages,
   totalCount,
@@ -56,6 +93,9 @@ export default function AlphaCatalog({
   basePath = '/cards/alpha',
 }: Props) {
   const activeLabel = ALPHA_DB_TO_LABEL[activeType]
+  const activeRarityLabel = activeRarity
+    ? ALPHA_RARITY_LABELS[activeRarity]
+    : null
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 text-zinc-100">
@@ -71,21 +111,16 @@ export default function AlphaCatalog({
 
       <nav
         aria-label="Card type filter"
-        className="mb-8 flex flex-wrap gap-2 border-b border-zinc-800 pb-3"
+        className="mb-3 flex flex-wrap gap-2 border-b border-zinc-800 pb-3"
       >
         {VALID_ALPHA_TYPES.map((dbType) => {
           const isActive = dbType === activeType
           return (
             <Link
               key={dbType}
-              href={`${basePath}?type=${dbType}&page=1`}
+              href={buildHref(basePath, dbType, activeRarity, 1)}
               aria-current={isActive ? 'page' : undefined}
-              className={
-                'rounded-full px-4 py-2 text-sm font-semibold transition-colors ' +
-                (isActive
-                  ? 'bg-zinc-100 text-zinc-900'
-                  : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800')
-              }
+              className={pillClass(isActive)}
             >
               {ALPHA_DB_TO_LABEL[dbType]}
             </Link>
@@ -93,8 +128,35 @@ export default function AlphaCatalog({
         })}
       </nav>
 
+      <nav
+        aria-label="Card rarity filter"
+        className="mb-8 flex flex-wrap gap-2 border-b border-zinc-800 pb-3"
+      >
+        <Link
+          href={buildHref(basePath, activeType, null, 1)}
+          aria-current={!activeRarity ? 'page' : undefined}
+          className={pillClass(!activeRarity)}
+        >
+          All
+        </Link>
+        {VALID_ALPHA_RARITIES.map((dbRarity) => {
+          const isActive = dbRarity === activeRarity
+          return (
+            <Link
+              key={dbRarity}
+              href={buildHref(basePath, activeType, dbRarity, 1)}
+              aria-current={isActive ? 'page' : undefined}
+              className={pillClass(isActive)}
+            >
+              {ALPHA_RARITY_LABELS[dbRarity]}
+            </Link>
+          )
+        })}
+      </nav>
+
       <p className="mb-6 text-sm opacity-70">
-        Showing {cards.length} of {totalCount} {activeLabel} cards — page{' '}
+        Showing {cards.length} of {totalCount} {activeLabel} cards
+        {activeRarityLabel ? ` (${activeRarityLabel})` : ''} — page{' '}
         {currentPage} of {totalPages}
       </p>
 
@@ -125,6 +187,7 @@ export default function AlphaCatalog({
         <Pagination
           basePath={basePath}
           activeType={activeType}
+          activeRarity={activeRarity}
           currentPage={currentPage}
           totalPages={totalPages}
         />
@@ -136,16 +199,17 @@ export default function AlphaCatalog({
 function Pagination({
   basePath,
   activeType,
+  activeRarity,
   currentPage,
   totalPages,
 }: {
   basePath: string
   activeType: AlphaTypeDb
+  activeRarity: AlphaRarityDb | null
   currentPage: number
   totalPages: number
 }) {
-  const href = (p: number) =>
-    `${basePath}?type=${activeType}&page=${p}`
+  const href = (p: number) => buildHref(basePath, activeType, activeRarity, p)
 
   // Compact page list: 1, current-1, current, current+1, last (with ellipsis).
   const pages: Array<number | 'ellipsis'> = []

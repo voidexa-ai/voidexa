@@ -133,12 +133,21 @@ describe('AFS-6d AlphaCatalog client component — tabs + pagination', () => {
     )
   })
 
-  it('tab href uses ${basePath}?type=${dbType}&page=1 (resets page to 1 on tab change)', () => {
-    expect(CATALOG_SRC).toContain('${basePath}?type=${dbType}&page=1')
+  // AFS-18b update: href construction extracted to buildHref(basePath, type,
+  // rarity, page) helper so type tabs, rarity tabs, and pagination all
+  // preserve the OTHER active filter and reset page semantics stay
+  // consistent. The original AFS-6d intent ("tab change resets page to 1"
+  // and "pagination preserves type") is preserved through buildHref calls.
+  it('tab href calls buildHref(basePath, dbType, ..., 1) so a tab change resets page', () => {
+    expect(CATALOG_SRC).toMatch(
+      /buildHref\(\s*basePath\s*,\s*dbType\s*,[^)]*,\s*1\s*\)/,
+    )
   })
 
-  it('pagination href uses ${basePath}?type=${activeType}&page=${p}', () => {
-    expect(CATALOG_SRC).toContain('${basePath}?type=${activeType}&page=${p}')
+  it('pagination href calls buildHref(basePath, activeType, activeRarity, p) so it preserves both filters', () => {
+    expect(CATALOG_SRC).toMatch(
+      /buildHref\(\s*basePath\s*,\s*activeType\s*,\s*activeRarity\s*,\s*p\s*\)/,
+    )
   })
 
   it('renders cards via AlphaCardFrame from components/cards (NOT V3 combat)', () => {

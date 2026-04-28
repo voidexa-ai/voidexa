@@ -43,3 +43,32 @@ export function parsePage(raw: string | undefined): number {
   const n = Number.parseInt(raw ?? '1', 10)
   return Number.isFinite(n) && n >= 1 ? n : 1
 }
+
+// AFS-18b - Rarity helpers (matches alpha_cards.rarity CHECK constraint
+// in supabase/migrations/20260425_afs6d_alpha_cards_decks.sql).
+
+export const VALID_ALPHA_RARITIES = [
+  'common',
+  'uncommon',
+  'rare',
+  'epic',
+  'legendary',
+  'mythic',
+] as const
+
+export type AlphaRarityDb = (typeof VALID_ALPHA_RARITIES)[number]
+
+export const ALPHA_RARITY_LABELS: Readonly<Record<AlphaRarityDb, string>> = {
+  common: 'Common',
+  uncommon: 'Uncommon',
+  rare: 'Rare',
+  epic: 'Epic',
+  legendary: 'Legendary',
+  mythic: 'Mythic',
+}
+
+export function isValidAlphaRarity(
+  r: string | undefined,
+): r is AlphaRarityDb {
+  return (VALID_ALPHA_RARITIES as readonly string[]).includes(r ?? '')
+}

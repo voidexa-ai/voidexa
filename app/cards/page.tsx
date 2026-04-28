@@ -6,17 +6,19 @@ import AlphaCatalog, {
 import {
   ALPHA_PAGE_SIZE,
   DEFAULT_ALPHA_TYPE,
+  isValidAlphaRarity,
   isValidAlphaType,
   parsePage,
 } from '@/lib/cards/alpha-types'
 
-// AFS-18 (Apr 28): /cards now renders the Alpha 1000 catalog instead of the
-// V3 First Edition Core Set. V3 had missing cards + broken custom frames per
-// Jix audit. V3 components remain in repo
+// AFS-18  (Apr 28): /cards renders the Alpha 1000 catalog instead of the V3
+// First Edition Core Set. V3 components remain in repo
 // (components/combat/CardCollection.tsx, lib/cards/full_library.ts) for
 // possible future restoration. Do not re-import without explicit approval.
-// /cards/alpha route stays live as a backward-compat alias of the same
-// catalog rendering with basePath="/cards/alpha".
+// /cards/alpha route stays live as a backward-compat alias.
+//
+// AFS-18b (Apr 28): added ?rarity= search param. Both filters AND-combine
+// against alpha_cards.
 
 export const metadata: Metadata = {
   title: 'Cards - Alpha Library - voidexa',
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
   },
 }
 
-type SearchParams = { type?: string; page?: string }
+type SearchParams = { type?: string; rarity?: string; page?: string }
 
 export default async function CardsPage({
   searchParams,
@@ -41,34 +43,40 @@ export default async function CardsPage({
 }) {
   const params = await searchParams
   const type = isValidAlphaType(params.type) ? params.type : DEFAULT_ALPHA_TYPE
+  const rarity = isValidAlphaRarity(params.rarity) ? params.rarity : null
   const requestedPage = parsePage(params.page)
 
   const supabase = await createServerSupabaseClient()
 
-  const { count } = await supabase
+  let countQ = supabase
     .from('alpha_cards')
     .select('*', { count: 'exact', head: true })
     .eq('type', type)
     .eq('active', true)
+  if (rarity) countQ = countQ.eq('rarity', rarity)
+  const { count } = await countQ
 
   const totalCount = count ?? 0
   const totalPages = Math.max(1, Math.ceil(totalCount / ALPHA_PAGE_SIZE))
   const page = Math.min(requestedPage, totalPages)
   const offset = (page - 1) * ALPHA_PAGE_SIZE
 
-  const { data: cards } = await supabase
+  let cardsQ = supabase
     .from('alpha_cards')
     .select(
       'id, type, name, energy_cost, attack, defense, rarity, archetype, effect_text, flavor_text, keywords, extras',
     )
     .eq('type', type)
     .eq('active', true)
+  if (rarity) cardsQ = cardsQ.eq('rarity', rarity)
+  const { data: cards } = await cardsQ
     .order('id', { ascending: true })
     .range(offset, offset + ALPHA_PAGE_SIZE - 1)
 
   return (
     <AlphaCatalog
       activeType={type}
+      activeRarity={rarity}
       currentPage={page}
       totalPages={totalPages}
       totalCount={totalCount}
