@@ -24,7 +24,7 @@ export const en: Dict = {
       '/trading':     { label: 'AI Trading',  description: 'Autonomous crypto bot' },
       '/trading-hub': { label: 'Trading Hub', description: 'Bot leaderboard' },
       '/ai-tools':    { label: 'AI Tools',    description: 'Creator suite' },
-      '/void-chat':   { label: 'Void Chat',   description: 'Multi-AI chat' },
+      '/void-pro-ai': { label: 'Void Pro AI', description: 'Premium AI access' },
       '/services':    { label: 'Services',    description: 'AI development & consulting' },
       '/starmap':         { label: 'Star Map',        description: 'Galaxy view' },
       '/starmap/voidexa': { label: 'voidexa System',  description: 'Inside the voidexa star system' },

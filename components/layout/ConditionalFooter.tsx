@@ -16,7 +16,7 @@ export default function ConditionalFooter() {
     pathname === '/assembly-editor' ||
     pathname === '/starmap' ||
     pathname.startsWith('/starmap/') ||
-    pathname.startsWith('/void-chat') ||
+    pathname.startsWith('/void-pro-ai') ||
     pathname.startsWith('/quantum/chat') ||
     pathname.startsWith('/game/battle')
   ) return null

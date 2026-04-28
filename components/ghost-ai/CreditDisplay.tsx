@@ -48,7 +48,7 @@ export function CreditDisplay() {
       {/* Pro status or upgrade CTA */}
       {balance.tier !== 'pro' && (
         <a
-          href="/void-chat/pricing"
+          href="/void-pro-ai/pricing"
           className="flex items-center justify-center w-full mt-2 px-3 py-2.5 rounded-xl text-sm font-bold text-center transition-all"
           style={{
             background: 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(6,182,212,0.3))',

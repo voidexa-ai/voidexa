@@ -38,7 +38,7 @@ export function ChatSidebar({
       });
       if (res.ok) {
         const data = await res.json();
-        router.push(`/void-chat/${data.conversation.id}`);
+        router.push(`/void-pro-ai/${data.conversation.id}`);
       }
     } catch {
       // Handle error

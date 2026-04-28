@@ -127,8 +127,8 @@ export const STAR_MAP_NODES: StarNode[] = [
   // ── Undiscovered mystery nodes ──────────────────────────────────────────
   {
     id: 'ghost-ai',
-    label: 'Void Chat',
-    path: '/void-chat',
+    label: 'Void Pro AI',
+    path: '/void-pro-ai',
     position: [-5, 3, -14],
     color: '#0d0820',
     emissive: '#8b5cf6',

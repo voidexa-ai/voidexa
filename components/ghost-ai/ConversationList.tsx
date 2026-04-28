@@ -53,7 +53,7 @@ export function ConversationList() {
     if (res.ok) {
       setConversations((prev) => prev.filter((c) => c.id !== conversationId));
       if (params.conversationId === conversationId) {
-        router.push('/void-chat');
+        router.push('/void-pro-ai');
       }
     }
   }
@@ -85,7 +85,7 @@ export function ConversationList() {
         return (
           <div
             key={conv.id}
-            onClick={() => router.push(`/void-chat/${conv.id}`)}
+            onClick={() => router.push(`/void-pro-ai/${conv.id}`)}
             className="group flex items-center gap-2.5 px-2.5 py-2 rounded-xl cursor-pointer transition-all"
             style={{
               background: active ? 'rgba(139,92,246,0.12)' : 'transparent',

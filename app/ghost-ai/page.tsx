@@ -21,7 +21,7 @@ const GHAI_VALUE_CARDS = [
 ]
 
 const GHAI_USES = [
-  'Pay per AI session — Void Chat, Quantum debate, VoidForge generation',
+  'Pay per AI session — Void Pro AI, Quantum debate, VoidForge generation',
   'Unlock premium ships, cosmetics, and card packs in the voidexa universe',
   'Priority queue access during peak hours',
   'Seasonal content drops and pioneer-only perks',
@@ -267,7 +267,7 @@ export default function GhostAIPage() {
             className="flex flex-wrap items-center justify-center gap-3 mb-14"
           >
             <a
-              href="/void-chat"
+              href="/void-pro-ai"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-bold transition-all"
               style={{
                 background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
@@ -277,7 +277,7 @@ export default function GhostAIPage() {
               onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 50px rgba(139,92,246,0.6)'}
               onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 30px rgba(139,92,246,0.35)'}
             >
-              Try Void Chat — Multi-AI Chat <ArrowRight size={15} />
+              Try Void Pro AI — Premium AI Access <ArrowRight size={15} />
             </a>
 
             <Link
@@ -560,7 +560,7 @@ export default function GhostAIPage() {
       </section>
 
       {/* ══════════════════════════════════════════
-          VOID CHAT CTA
+          VOID PRO AI CTA
       ══════════════════════════════════════════ */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 pb-16">
         <motion.div
@@ -585,13 +585,13 @@ export default function GhostAIPage() {
             Powered by GHAI
           </p>
           <h3 className="relative text-3xl font-bold mb-3 text-white" style={{ fontFamily: 'var(--font-space)' }}>
-            Try Void Chat
+            Try Void Pro AI
           </h3>
           <p className="relative text-base mb-8 max-w-md mx-auto" style={{ color: '#64748b' }}>
             Claude, GPT-4o, and Gemini — one interface — powered by voidexa
           </p>
           <a
-            href="/void-chat"
+            href="/void-pro-ai"
             className="relative inline-flex items-center gap-2 px-8 py-4 rounded-full text-sm font-bold transition-all"
             style={{
               background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
@@ -601,7 +601,7 @@ export default function GhostAIPage() {
             onMouseEnter={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 50px rgba(139,92,246,0.65)'}
             onMouseLeave={e => (e.currentTarget as HTMLElement).style.boxShadow = '0 0 30px rgba(139,92,246,0.4)'}
           >
-            Open Void Chat — Multi-AI Chat <ArrowRight size={15} />
+            Open Void Pro AI — Premium AI Access <ArrowRight size={15} />
           </a>
         </motion.div>
       </section>
