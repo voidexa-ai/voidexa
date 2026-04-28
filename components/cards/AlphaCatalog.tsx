@@ -21,6 +21,7 @@ import {
   VALID_ALPHA_TYPES,
   type AlphaTypeDb,
 } from '@/lib/cards/alpha-types'
+import { getAlphaCardImageUrl } from '@/lib/cards/alpha-image-url'
 
 export interface AlphaCatalogCard {
   id: string
@@ -114,6 +115,7 @@ export default function AlphaCatalog({
               defense={card.defense ?? undefined}
               effect_text={card.effect_text}
               flavor_text={card.flavor_text ?? ''}
+              imageUrl={getAlphaCardImageUrl(card.id, card.rarity)}
             />
           ))}
         </div>

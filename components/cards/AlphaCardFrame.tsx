@@ -1,20 +1,24 @@
+'use client'
+
 /**
  * components/cards/AlphaCardFrame.tsx
  *
- * AFS-6d — Premium frame for the 1000-card Alpha set.
+ * AFS-6d - Premium frame for the 1000-card Alpha set.
+ * AFS-18 - Per-card image wiring via optional imageUrl prop. When supplied,
+ * renders the unique webp from Supabase Storage public bucket; otherwise
+ * falls back to the 9-PNG category art (also used as onError fallback).
  *
- * Color: rarity → frame color is sourced from RARITY_GLOW in
- * components/combat/cardArt.ts. That map already covers all 6 rarities
- * including Mythic. Per AFS-6d decision: do not touch existing colors.
+ * 'use client' added in AFS-18 because the onError handler requires client.
  *
- * Image: type → category-art PNG mapping is locked here. Source data
- * (docs/alpha_set/batch_*.json) uses titlecase strings like "AI Routine"
- * and "Ship Core" — verified by pre-flight 0.5d (149 + 49 cards).
+ * Color: rarity -> frame color is sourced from RARITY_GLOW in
+ * components/combat/cardArt.ts. AFS-6d locked: do not touch existing colors.
+ *
+ * Type: titlecase strings ("AI Routine", "Ship Core") match
+ * docs/alpha_set/batch_*.json source data verbatim.
  *
  * Distinct from V3 frame at components/combat/CardCollection.tsx.
  */
 
-import Image from 'next/image'
 import { CardRarity } from '@/lib/game/cards'
 import { RARITY_GLOW } from '@/components/combat/cardArt'
 
@@ -47,6 +51,7 @@ export interface AlphaCardFrameProps {
   effect_text: string
   flavor_text: string
   comingSoon?: boolean
+  imageUrl?: string
 }
 
 const RARITY_TO_ENUM: Readonly<Record<AlphaRarity, CardRarity>> = {
@@ -88,9 +93,11 @@ export default function AlphaCardFrame({
   effect_text,
   flavor_text,
   comingSoon = false,
+  imageUrl,
 }: AlphaCardFrameProps) {
   const color = frameColor(rarity)
-  const imageSrc = typeImagePath(type)
+  const fallbackSrc = typeImagePath(type)
+  const initialSrc = imageUrl ?? fallbackSrc
   const hasStats = attack !== undefined || defense !== undefined
 
   return (
@@ -127,12 +134,22 @@ export default function AlphaCardFrame({
         className="relative aspect-[3/2] w-full overflow-hidden border-y"
         style={{ borderColor: `${color}66` }}
       >
-        <Image
-          src={imageSrc}
-          alt={`${type} category art`}
-          fill
-          sizes="(max-width: 640px) 90vw, 280px"
-          className="object-cover"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={initialSrc}
+          alt={imageUrl ? name : `${type} category art`}
+          loading="lazy"
+          decoding="async"
+          onError={(e) => {
+            // One-shot fallback to category PNG. The data-fallback-tried flag
+            // prevents an infinite onError loop if the fallback also 404s.
+            const target = e.currentTarget
+            if (!target.dataset.fallbackTried) {
+              target.dataset.fallbackTried = '1'
+              target.src = fallbackSrc
+            }
+          }}
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
 
