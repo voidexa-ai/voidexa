@@ -28,7 +28,7 @@ interface BotRow {
 }
 
 const MOCK_BOTS: BotRow[] = [
-  { rank: 1, name: 'voidexa All-Season',  creator: 'voidexa',   return_pct: 357.0, sharpe: 3.21, max_drawdown: 8.4,  regime: 'all',      isHouse: true },
+  { rank: 1, name: 'voidexa All-Season',  creator: 'voidexa',   return_pct: 194.79, sharpe: 3.21, max_drawdown: 8.4,  regime: 'all',      isHouse: true },
   { rank: 2, name: 'BTC Momentum Alpha',  creator: 'cryptovoid', return_pct: 218.7, sharpe: 2.44, max_drawdown: 14.2, regime: 'btc'  },
   { rank: 3, name: 'ETH Grid Master',     creator: 'gridlord',   return_pct: 187.3, sharpe: 2.11, max_drawdown: 11.8, regime: 'eth'  },
   { rank: 4, name: 'AltSeason Hunter',    creator: 'moonbase9',  return_pct: 155.9, sharpe: 1.88, max_drawdown: 22.1, regime: 'alt'  },
@@ -197,8 +197,8 @@ export default function LeaderboardTab() {
             onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)'}
             onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = bot.isHouse ? 'rgba(204,153,85,0.04)' : 'transparent'}
           >
-            <div style={{ color: bot.rank <= 3 ? ACCENT : '#475569', fontWeight: 500, fontSize: '1rem' }}>
-              {bot.rank}
+            <div style={{ color: i < 3 ? ACCENT : '#475569', fontWeight: 500, fontSize: '1rem' }}>
+              {i + 1}
             </div>
             <div>
               <div className="flex items-center gap-2">
