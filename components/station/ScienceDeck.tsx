@@ -20,8 +20,8 @@ interface RoadmapItem {
 const ROADMAP: RoadmapItem[] = [
   // ── LIVE ─────────────────────────────────────────────────────────────────
   {
-    title: 'Void Chat',
-    desc: 'Multi-AI chat with KCP-90 compression. Claude, ChatGPT & Gemini.',
+    title: 'Void Pro AI',
+    desc: 'Premium AI access — Claude, ChatGPT, Gemini. Pay per message. KCP-90 context compression.',
     tooltip: 'KCP-90 context compression active — older messages compressed to extend context window.',
     status: 'live',
     phase: 'Phase 1',
@@ -35,15 +35,15 @@ const ROADMAP: RoadmapItem[] = [
   },
   {
     title: 'Quantum',
-    desc: 'Multi-AI debate engine. 960 tests. KCP-90 middleware.',
-    tooltip: '960 tests. KCP-90 middleware integrated. Multi-provider debate engine live.',
+    desc: 'Multi-AI debate engine. 1324 tests. KCP-90 middleware.',
+    tooltip: '1324 tests. KCP-90 middleware integrated. Multi-provider debate engine live.',
     status: 'live',
     phase: 'Phase 3',
   },
   {
     title: 'KCP-90',
     desc: 'AI-to-AI compression protocol. 95% proven. v0.4.0 GPU pipeline.',
-    tooltip: 'v0.4.0 GPU pipeline. 95% compression proven across 20 domains. Integrated in Void Chat, Quantum, Trading Bot.',
+    tooltip: 'v0.4.0 GPU pipeline. 95% compression proven across 20 domains. Integrated in Void Pro AI, Quantum, Trading Bot.',
     status: 'live',
     phase: 'Phase 4',
   },
@@ -192,7 +192,7 @@ interface Idea {
 
 const MOCK_IDEAS: Idea[] = [
   { id: '1', title: 'Dark/light mode toggle',                description: 'Some users prefer light mode for daytime use.', votes: 14 },
-  { id: '2', title: 'Mobile app (iOS + Android)',            description: 'Native app for void chat on mobile.',            votes: 31 },
+  { id: '2', title: 'Mobile app (iOS + Android)',            description: 'Native app for Void Pro AI on mobile.',          votes: 31 },
   { id: '3', title: 'Bot performance alerts via email/SMS', description: 'Notify when bot crosses threshold.',              votes: 22 },
 ]
 
