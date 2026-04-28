@@ -175,7 +175,7 @@ export default function QuantumPage() {
             </span>
             <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: ACCENT, background: `${ACCENT}18`, border: `1px solid ${ACCENT}44` }}>
-              960 tests
+              1324 tests
             </span>
             <span className="text-sm font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full"
               style={{ color: '#4ade80', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.22)' }}>
@@ -801,7 +801,7 @@ export default function QuantumPage() {
                 color: '#22d3ba',
                 bg: 'rgba(34,211,186,0.06)',
                 border: 'rgba(34,211,186,0.18)',
-                desc: '95% byte compression integrated as middleware in Quantum — every debate message compressed before transmission. v0.4.0 GPU pipeline. Fine-tuned Llama 3.1 8B via Ollama. ~200ms. Built and proven March 28, 2026.',
+                desc: '~93% byte compression integrated as middleware in Quantum — every debate message compressed before transmission. v0.4.0 GPU pipeline. Fine-tuned Llama 3.1 8B via Ollama. ~200ms. Built and proven March 28, 2026.',
               },
               {
                 tag: 'KCP-BINARY',
@@ -849,7 +849,7 @@ export default function QuantumPage() {
             className="text-center font-mono"
             style={{ fontSize: 14, color: 'rgba(148,163,184,0.35)', letterSpacing: '0.06em' }}
           >
-            KCP-90 middleware active · 95% compression · 960 Quantum tests passed · Built by voidexa · March 28, 2026
+            KCP-90 middleware active · ~93% compression · 1324 Quantum tests passed · Built by voidexa · March 28, 2026
           </motion.p>
         </section>
 
