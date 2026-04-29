@@ -73,8 +73,10 @@ export function ChatSidebar({
         <ConversationList />
       </div>
 
-      {/* Credits + GHAI ticker */}
-      <div className="p-4 border-t border-gray-800 space-y-3">
+      {/* Credits + GHAI ticker
+          AFS-MICRO-FIX: pb-24 clears the UniverseChat bubble (bottom-6 left-6,
+          ~56px + 24px margin = 80px footprint) so GhaiTicker text stays readable. */}
+      <div className="p-4 pb-24 border-t border-gray-800 space-y-3">
         <CreditDisplay />
         <GhaiTicker />
       </div>
