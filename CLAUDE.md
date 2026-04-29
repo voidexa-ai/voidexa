@@ -95,10 +95,121 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-18c complete** | `66b81b0` | **1324** | **Voidexa User Manual Deploy — 12 routes (6 EN + 6 DK), sticky-sidebar layout, react-markdown + remark-gfm renderer, etape 03 cross-links into /cards?type=X, "Read the rules" button on /cards, "How to Play" entry in Universe nav** |
 | **AFS-10-FIX complete** | `409a006` | **1377** | **Planet textures wired — `texture?: string` on StarNode, `useLoader(TextureLoader)` + `<Suspense>` fallback in NodeMesh, `meshBasicMaterial map={tex} color="#ffffff"` so textures render unmodified by scene lights, 11 satellite planets textured (station kept HTML thumbnail in v1)** |
 | **AFS-10-FIX-2 complete** | `55bee02` | **1385** | **Equirectangular planet PNGs (12 swapped, ~24 → 34 MB) + Saturn rings on Quantum (`<ringGeometry>` 1.6×–2.4× radius, tan #d4b88a, double-sided) + Space Station 3D upgrade (textured sphere + metallic torus + 4 cubic modules, HTML `<img>` thumbnail removed)** |
+| **AFS-10-FIX-3 complete** | `3ad2405` | **1393** | **Camera Set C pull-back-only zoom-out — galaxy z 28→38 + maxDistance 70→100, system z 8→12 + maxDistance 30→40, FOV unchanged 60°. Pre-flight discovered Conservative shrinks planets MORE than Aggressive due to FOV/distance math interplay; Set C (no FOV change) preserves nebula width while reducing planet apparent size.** |
+| **AFS-10-FIX-4 complete** | `bb0a461` | **1401** | **NebulaBg sphere shrink 5000→1500 + CSSStarfield removal — single source of truth flips both views simultaneously, surface area shrunk to 9% of original for 11× higher texture density. CSSStarfield import + render removed from StarMapPage.tsx + GalaxyPage.tsx (CSSStarfield.tsx file kept on disk as orphan).** |
+| **AFS-10-FIX-5 complete** | `9b52918` | **1415** | **R3F StarField + AmbientDust + GlobalStarfield path-guard — 5000+5000 R3F particles + 2000 AmbientDust haze removed from scenes; GlobalStarfield (3 radial gradients + ParticleField, mounted in app/layout.tsx) gains Option A surgical pathname guard `'/' \|\| '/starmap' \|\| startsWith('/starmap/')` so all other routes stay unchanged.** |
+| **AFS-10-FIX-6 complete** | `e3af4cf` | **1415** | **Sphere fine-tune 1500→800 — single-value follow-up after FIX-5 confirmed overlay/star problems solved but background still felt cropped at 1500. 8× safety margin over galaxy maxDistance 100; surface area now ~28% of FIX-4 / ~2.5% of original 5000.** |
+| **AFS-10-FIX-7 complete** | `b8a435d` | **1422** | **Starmap nodes cleanup — 12 → 10 per SLUT 21 lock. Removed about + ghost-ai + trading nodes; added game-hub (red_rocky.png, volcanic, position [3,2,-5]); changed services texture red_rocky→lilla; voidexa path /home→/. PATH B strict SLUT 21 alignment over Apr 29 AFS-10-FIX texture/path locks (process correction #70).** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-29 → 2026-04-30 — AFS-10-FIX-3 through FIX-7 — Starmap visual + structural cleanup
+
+**Status:** ✅ ALL 5 SHIPPED to `origin/main`, all live-verified by Jix on voidexa.com. Five back-to-back fix sprints across two days that took the starmap from "wired but visually broken" (post-FIX-2) to "matches the SLUT 21 locked architecture and visual intent." Visual layer (FIX-3/4/5/6) and structural layer (FIX-7) are deliberately separated — visual sprints touched no node data; the structural sprint touched no camera/sphere/overlay code. Each sprint has its own SKILL committed first per Rule C.
+
+**Final HEAD:** `b8a435d`
+**Tags pushed (in chronological order):**
+- `backup/pre-afs-10-fix-3-20260429` → `78b13e0` ; `sprint-afs-10-fix-3-complete` → `3ad2405`
+- `backup/pre-afs-10-fix-4-20260429` → `d19c68e` ; `sprint-afs-10-fix-4-complete` → `bb0a461`
+- `backup/pre-afs-10-fix-5-20260429` → `d993e50` ; `sprint-afs-10-fix-5-complete` → `9b52918`
+- `backup/pre-afs-10-fix-6-20260429` → `0b1c465` ; `sprint-afs-10-fix-6-complete` → `e3af4cf`
+- `backup/pre-afs-10-fix-7-20260430` → `e4b73a6` ; `sprint-afs-10-fix-7-complete` → `b8a435d`
+
+**Tests:** 1385 → 1393 → 1401 → 1415 → 1415 → **1422** (cumulative +37). Build clean throughout. Lint baseline: 222 (post-FIX-2) → 206 (post-FIX-5, dropped 16 errors when removing unused R3F imports) → **206** (held stable through FIX-6/7). Zero new lint errors introduced anywhere in the chain.
+
+---
+
+#### Visual layer — FIX-3 / FIX-4 / FIX-5 / FIX-6 (Apr 29)
+
+**FIX-3 — Camera Set C pull-back zoom-out** (`3ad2405`)
+- Galaxy view (`/starmap`): camera position `[0, 3, 28]` → `[0, 3, 38]`, OrbitControls maxDistance `70` → `100`
+- System view (`/starmap/voidexa`): camera position `[0, 0, 8]` → `[0, 0, 12]`, OrbitControls maxDistance `30` → `40`
+- FOV deliberately unchanged at `60°` in both — Set C, not Conservative or Aggressive (both proposed by SKILL pre-flight). The math gotcha caught at Checkpoint 1: Conservative (FOV `60→55` + z×1.3) actually shrinks planets more (~16%) than Aggressive (FOV `60→48` + z+40%, ~11%) because FOV-narrowing partially cancels camera pull-back. Set C (z+30–35%, no FOV change) preserves the 60° nebula width while reducing planet apparent size by ~25% — closer to the "vast universe" intent.
+- 4 files, +8 walker assertions in `tests/afs-10-fix-3-camera.test.ts`. CLAUDE.md docs commit (`78b13e0`) for AFS-10-FIX + AFS-10-FIX-2 entries shipped immediately before the backup tag per Option A workflow.
+
+**FIX-4 — NebulaBg sphere shrink + CSSStarfield removal** (`bb0a461`)
+- `components/starmap/NebulaBg.tsx` `SPHERE_RADIUS = 5000 → 1500`. Single source of truth — both views share the same `<NebulaBg />`, one constant flips both. Surface-area scales as r², so 5000→1500 reduces sphere surface to **9% of original** and texture density rises ~11×.
+- `<CSSStarfield />` import + render removed from `components/starmap/StarMapPage.tsx` + `components/galaxy/GalaxyPage.tsx`. `CSSStarfield.tsx` file kept on disk (orphan, no consumers; cleanup deferred).
+- Math gates: 1500 > galaxy maxDistance 100 (15× margin) > camera-far 20000.
+- 3 commits (sphere + CSSStarfield + docs/tests). +8 walker assertions in `tests/afs-10-fix-4-sphere-stars.test.ts`. README rewritten + CLAUDE.md AFS-6g log line annotated with forward-pointing supersession note (preserves history).
+
+**FIX-5 — R3F StarField + AmbientDust + GlobalStarfield path guard** (`9b52918`)
+- Pre-flight uncovered the actual root cause of "stars over background" complaint: my own AFS-10-FIX-4 pre-flight had warned that R3F particles might also be the issue but locked them out of scope; that warning was correct and that lock was wrong (lesson SLUT 24).
+- Removed inline `function StarField()` (5000 particles) from both `StarMapScene.tsx` and `GalaxyScene.tsx` (10 000 R3F points total). Removed inline `function AmbientDust()` (2000 purple-drift particles) from `StarMapScene.tsx` only — galaxy view never had it; symmetry fix.
+- Critical scope finding flagged at Checkpoint 1: the 3 radial-gradient overlays from the live DOM inspection were NOT in the page files but in `components/layout/GlobalStarfield.tsx`, mounted in `app/layout.tsx:61` — i.e., a **global** layout component affecting every non-homepage route. SKILL face-value (delete the divs) would have changed `/shop`, `/trading`, `/about`, etc.
+- **Option A surgical guard locked instead** — added `'/starmap'` and `startsWith('/starmap/')` to the existing `if (pathname === '/') return null` guard. Zero impact on other routes; complete overlay removal from starmap views. ParticleField also gated this way.
+- 5 commits (guard + StarField×2 + AmbientDust + docs/tests). +14 walker assertions in `tests/afs-10-fix-5-overlays.test.ts`. README rewritten end-to-end. As a side-effect, removing unused `useRef`/`useMemo`/`useFrame`/`THREE` imports cleared 16 pre-existing lint errors (222 → 206 baseline).
+
+**FIX-6 — Sphere fine-tune 1500 → 800** (`e3af4cf`)
+- Single-value tweak after FIX-5 confirmed visual layers were correct but background still felt "640×860 cropped" at 1500.
+- Pre-flight grep caught the "do-not-touch" trap: 4 of 6 `1500` references in tests were `<SpaceSkybox radius={1500}>` in battle-camera and freeflight-skybox tests — totally different component, out of scope. Net update: just one assertion + test-name string in `tests/afs-10-fix-4-sphere-stars.test.ts:19-20`.
+- Math: 800/100 = 8× margin galaxy maxDistance, still safe. Surface area now 28% of FIX-4 level (~2.5% of original 5000).
+- 1 commit (sphere + test). Test count unchanged at 1415.
+
+---
+
+#### Structural layer — FIX-7 (Apr 30)
+
+**FIX-7 — Starmap nodes cleanup** (`b8a435d`)
+- SLUT 21 (referenced via SKILL since the doc itself is not on disk) locked a 10-node mapping for `/starmap/voidexa`. AFS-10 main sprint had shipped 12 nodes, with 3 violations of the lock and 1 missing node. Process correction #70 noted this had not been searched against Project Knowledge before AFS-10-FIX (Apr 29) was locked.
+- **Path B strict SLUT 21 alignment** chosen over Path A (face-value 3-deletion) at Checkpoint 1 because face value would have left the system in 9-node state with services on the wrong texture and game-hub still missing. Path B accepts that AFS-10-FIX (Apr 29) made wrong texture/node decisions on `services` and `game-hub` and corrects them now.
+- **Net change:** 12 → 10 nodes. Removed `about` (was a planet, not in SLUT 21), `ghost-ai`/Void Pro AI (sub-product of `/quantum`, not a planet), `trading`/AI Trading (merged into `trading-hub` per SLUT 21). Added `game-hub` at the freed `[3, 2, -5]` position previously held by `trading`. Changed `services` texture `red_rocky.png` → `lilla.png` (red_rocky moves to game-hub). Changed `voidexa` node `path` `'/home'` → `'/'`.
+- Test cleanup: deleted obsolete `it('starmap node label + path renamed')` block in `tests/afs-overlay-fix-v2.test.ts` (only assertion was the now-removed `ghost-ai` node entry); cleaned up resulting orphaned `NODES_SRC` const declaration to keep lint at 206 baseline. All other `/void-pro-ai` product-route tests (top nav, ConditionalFooter hide-list, i18n keys, sidebar router pushes) preserved — the product itself still exists at `/void-pro-ai`, only the planet is removed.
+- New regression test file `tests/afs-10-fix-7-removed-nodes.test.ts` with +8 assertions (3 removal regression guards, 10-node count, full id-set match, voidexa root path, services lilla.png texture, game-hub red_rocky.png texture).
+- Texture files on disk untouched per scope lock — texture swap is purely a node-data field change.
+
+---
+
+#### Live-verify outcomes (all by Jix via Chrome bridge)
+
+- FIX-3: Set C visible "vast universe" feel achieved without breaking zoom-in. ✅
+- FIX-4: nebula notably more visible; CSSStarfield gone. Improvement felt but background still cropped. → drove FIX-5
+- FIX-5: "stjerner væk — overlay stars problem SOLVED." Background cropping persisted. → drove FIX-6
+- FIX-6: live-verified, sphere edge NOT visible at any zoom level on either view. ✅ Sphere=800 stable.
+- FIX-7: 10 nodes confirmed, all 3 removed nodes absent. New `game-hub` planet visible at correct position with red_rocky texture. ✅
+
+---
+
+#### Open follow-ups (NOT regressions)
+
+- 🔴 **`/game-hub` route 404** (logged as P0-NEW-8). The `game-hub` starmap node points at `/game-hub` per SLUT 21 lock, but the route was never built. Will be addressed in **Sprint B** (page restructure) where the `/game-hub` MVP 6-section landing page is built per SLUT 21 lock. **Not a regression** — the route was never built; the new node simply exposes it. Backup tag chain ensures clean rollback if needed.
+- 🟡 **`services` emissive `#ff0044` (red) vs `lilla.png` (purple) texture mismatch** — texture swap was strict per FIX-7 scope lock; emissive color was intentionally not retuned. Until a polish sprint flips emissive to a purple tone (e.g. `#cc66ff`), the services planet will render as a purple-textured body with a red glow / atmosphere shell. Tracked as polish, not blocking.
+- 🟢 **Lint debt** — 206 problems (137 errors, 69 warnings) all pre-existing; cumulative work across FIX-3/4/5/6/7 introduced zero new errors and cleared 16 (222 → 206). Backlog item AFS-LINT-DEBT still open for a dedicated cleanup sprint.
+
+---
+
+#### Architecture state at end of chain
+
+| Layer | Setting |
+|---|---|
+| Camera FOV (both views) | 60° |
+| Galaxy camera position | `[0, 3, 38]` (FIX-3) |
+| System camera position | `[0, 0, 12]` (FIX-3) |
+| Galaxy OrbitControls max | 100 (FIX-3) |
+| System OrbitControls max | 40 (FIX-3) |
+| `NebulaBg` sphere radius | **800** (FIX-4 + FIX-6) |
+| CSSStarfield (HTML overlay) | removed from starmap pages (FIX-4) |
+| R3F `StarField` particles | removed from both scenes (FIX-5) |
+| `AmbientDust` purple haze | removed from system scene (FIX-5) |
+| GlobalStarfield (gradients + ParticleField) | path-guarded off `/starmap*` (FIX-5); intact on every other route |
+| `nodes.ts` count | **10** (FIX-7, was 12) |
+| `nodes.ts` mapping | matches SLUT 21 verbatim |
+| Background visual stack on starmap | single layer — only `<NebulaBg>` + planet textures + Constellations / EnergyPulses |
+
+---
+
+#### Rollback (per-sprint, if ever needed)
+
+```bash
+# To roll back the whole chain, pick the earliest backup tag:
+git reset --hard backup/pre-afs-10-fix-3-20260429
+# Or to roll back just one sprint, use that sprint's backup tag.
+```
+Each sprint's tag rolls cleanly because the chain has no schema migrations, no DB changes, and no cross-sprint shared state. Texture files on disk are untouched throughout — purely code-level changes.
+
+---
 
 ### Session 2026-04-29 — AFS-10-FIX-2 COMPLETE (Equirectangular textures + Saturn rings + Space Station 3D)
 
@@ -1321,7 +1432,12 @@ can be executed.
 | GHAI top-up modal stuck open across pages | **NEW — needs investigation sprint** |
 | ~~Starmap planets render as flat colored circles (no PNG textures)~~ | ✅ **AFS-10-FIX COMPLETE** (Apr 29, 11 satellites textured via `useLoader` + `meshBasicMaterial`) |
 | ~~Starmap planet textures stretch on sphere wrap (1:1 source)~~ | ✅ **AFS-10-FIX-2 COMPLETE** (Apr 29, 12 equirectangular PNGs swapped + Saturn rings on Quantum + Space Station 3D) |
-| Starmap Level 2 nebula zoom | AFS-10 (camera FOV/distance — separate sprint, intentionally not bundled with FIX-2 per scope lock) |
+| ~~Starmap "too zoomed in" — camera too close~~ | ✅ **AFS-10-FIX-3 COMPLETE** (Apr 29, Set C pull-back-only zoom-out, FOV unchanged) |
+| ~~Starmap nebula texture cropped — sphere radius 5000 too large~~ | ✅ **AFS-10-FIX-4 + FIX-6 COMPLETE** (Apr 29, sphere 5000 → 1500 → 800; CSSStarfield removed) |
+| ~~Starmap "stars over background" double layer~~ | ✅ **AFS-10-FIX-5 COMPLETE** (Apr 29, R3F StarField + AmbientDust + GlobalStarfield path guard) |
+| ~~Starmap nodes violate SLUT 21 lock (12 vs 10, missing game-hub, wrong textures)~~ | ✅ **AFS-10-FIX-7 COMPLETE** (Apr 30, 12→10 nodes, game-hub added, services→lilla, voidexa→/) |
+| `/game-hub` route 404 (node points at non-existent route) | **P0-NEW-8 — Sprint B** (page restructure builds /game-hub MVP 6-section per SLUT 21 lock) |
+| Services planet emissive (red) vs lilla.png texture (purple) mismatch | Polish sprint (out of FIX-7 scope; flip emissive `#ff0044` → `#cc66ff` or similar) |
 | Cinematic video end-frame ≠ new backdrop | AFS-11 (future, low prio) |
 | "We are live. Welcome" banner | AFS-12 (polish) |
 | Danish i18n overflade-only | AFS-26 |
