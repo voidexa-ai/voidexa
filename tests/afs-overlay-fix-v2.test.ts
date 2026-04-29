@@ -131,7 +131,8 @@ describe('AFS-OVERLAY-FIX-V2 Fix 2 — renamed page content', () => {
 describe('AFS-OVERLAY-FIX-V2 Fix 2 — internal href + i18n', () => {
   const NAV_SRC      = read('components', 'layout', 'Navigation.tsx')
   const FOOTER_SRC   = read('components', 'layout', 'ConditionalFooter.tsx')
-  const NODES_SRC    = read('components', 'starmap', 'nodes.ts')
+  // NODES_SRC removed AFS-10-FIX-7: starmap-node assertion deleted with the
+  // ghost-ai node itself (nodes.ts no longer exports that node).
   const I18N_EN_SRC  = read('lib', 'i18n', 'en.ts')
   const I18N_DA_SRC  = read('lib', 'i18n', 'da.ts')
   const CONV_SRC     = read('components', 'ghost-ai', 'ConversationList.tsx')
@@ -145,10 +146,6 @@ describe('AFS-OVERLAY-FIX-V2 Fix 2 — internal href + i18n', () => {
   it('ConditionalFooter hide-list uses the new path prefix', () => {
     expect(FOOTER_SRC).toContain("pathname.startsWith('/void-pro-ai')")
     expect(FOOTER_SRC).not.toContain("pathname.startsWith('/void-chat')")
-  })
-
-  it('starmap node label + path renamed', () => {
-    expect(NODES_SRC).toMatch(/id:\s*'ghost-ai',\s*label:\s*'Void Pro AI',\s*path:\s*'\/void-pro-ai'/)
   })
 
   it('i18n EN + DK keys use /void-pro-ai with Void Pro AI labels', () => {
