@@ -179,14 +179,14 @@ function Kcp90FloatingPanel() {
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>{t.home.kcpCompress}</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>95%</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>~93%</span>
         </div>
 
         {/* range */}
         <div style={{ ...mono, display: 'flex' }}>
           <span style={{ color: 'rgba(59,130,246,0.7)', minWidth: 72 }}>{t.home.kcpRange}</span>
           <span style={{ color: 'rgba(255,255,255,0.15)', flex: 1 }}>...........</span>
-          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>95%</span>
+          <span style={{ color: '#60a5fa', fontSize: 14, fontWeight: 500 }}>~93%</span>
         </div>
 
         {/* Status line with blinking cursor */}
