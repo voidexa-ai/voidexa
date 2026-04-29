@@ -191,6 +191,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Content Hub',
     isDiscovered: true,
     planetType: 'station',
+    texture: '/textures/planets/spacestation_planet.png',
   },
   {
     id: 'claim-your-planet',

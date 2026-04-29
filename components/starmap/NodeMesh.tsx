@@ -85,17 +85,9 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
     const warpFade = warp.active ? Math.max(0.08, 1 - warp.progress * 0.92) : 1
 
     if (meshRef.current) {
-      // Station body still uses meshStandardMaterial (invisible box, opacity 0)
-      // and accepts emissiveIntensity. Other nodes now use meshBasicMaterial,
-      // which has no emissive — hover/pulse feedback is carried by the
-      // separate atmosphere shell, glow sphere, and pointLight below.
-      if (node.id === 'station') {
-        const mat = meshRef.current.material as THREE.MeshStandardMaterial
-        if (isDiscovered) {
-          const baseIntensity = emissiveIntensity * pulse * warpFade
-          mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 * warpFade : baseIntensity
-        }
-      }
+      // All planet bodies now use meshBasicMaterial (textured), which has no
+      // emissiveIntensity. Hover/pulse feedback is carried by the glow sphere,
+      // atmosphere shell, and pointLight elsewhere in the group.
       const targetScale = (isDiscovered && hovered) ? 1.2 : 1.0
       meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12)
     }
@@ -232,22 +224,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
-        {node.id === 'station' ? (
-          <>
-            <boxGeometry args={[size * 2.8, size * 1.8, size * 0.3]} />
-            <meshStandardMaterial
-              color={color}
-              emissive={emissive}
-              emissiveIntensity={0}
-              toneMapped={false}
-              transparent
-              opacity={0}
-              depthWrite={false}
-              roughness={0.3}
-              metalness={0.1}
-            />
-          </>
-        ) : node.texture ? (
+        {node.texture ? (
           <Suspense fallback={
             <>
               <sphereGeometry args={[size, 48, 48]} />
@@ -279,50 +256,6 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
           </>
         )}
       </mesh>
-
-      {/* Station: rectangular image thumbnail instead of a planet shape */}
-      {node.id === 'station' && (
-        <Html
-          center
-          distanceFactor={16}
-          position={[0, 0, 0]}
-          style={{ pointerEvents: 'none', userSelect: 'none' }}
-          zIndexRange={[1, 2]}
-        >
-          <div
-            onClick={handleNodeClick}
-            style={{
-              pointerEvents: isDiscovered ? 'auto' : 'none',
-              cursor: isDiscovered ? 'pointer' : 'default',
-              width: 60,
-              height: 40,
-              borderRadius: 4,
-              overflow: 'hidden',
-              border: `1px solid ${emissive}66`,
-              boxShadow: `0 0 12px ${emissive}55, 0 0 4px ${emissive}33`,
-              background: '#001322',
-              transition: 'box-shadow 0.2s, border-color 0.2s',
-            }}
-            onMouseEnter={e => {
-              const el = e.currentTarget as HTMLElement
-              el.style.boxShadow = `0 0 20px ${emissive}99, 0 0 8px ${emissive}66`
-              el.style.borderColor = `${emissive}cc`
-            }}
-            onMouseLeave={e => {
-              const el = e.currentTarget as HTMLElement
-              el.style.boxShadow = `0 0 12px ${emissive}55, 0 0 4px ${emissive}33`
-              el.style.borderColor = `${emissive}66`
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/space-station.jpg"
-              alt="Space Station"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
-          </div>
-        </Html>
-      )}
 
       {/* Outer glow sphere — excluded from raycasting so it can't block clicks */}
       <mesh ref={glowRef} scale={1.65} raycast={() => null}>
@@ -366,6 +299,44 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
         <mesh ref={stationRingRef} raycast={() => null} rotation={[Math.PI / 3, 0, 0]}>
           <torusGeometry args={[size * 2.2, 0.018, 8, 48]} />
           <meshBasicMaterial color={emissive} transparent opacity={0.5} toneMapped={false} />
+        </mesh>
+      )}
+
+      {/* Space station metallic orbital ring + 4 module boxes */}
+      {node.id === 'station' && (
+        <>
+          <mesh raycast={() => null} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[size * 1.8, size * 0.08, 16, 64]} />
+            <meshBasicMaterial color="#88aabb" />
+          </mesh>
+          {[0, Math.PI / 2, Math.PI, Math.PI * 1.5].map((angle, i) => (
+            <mesh
+              key={i}
+              raycast={() => null}
+              position={[
+                Math.cos(angle) * size * 1.8,
+                0,
+                Math.sin(angle) * size * 1.8,
+              ]}
+            >
+              <boxGeometry args={[size * 0.2, size * 0.15, size * 0.2]} />
+              <meshBasicMaterial color="#aaccdd" />
+            </mesh>
+          ))}
+        </>
+      )}
+
+      {/* Saturn-style rings for Quantum gas giant */}
+      {node.id === 'quantum' && (
+        <mesh raycast={() => null} rotation={[Math.PI / 2.2, 0, 0.15]}>
+          <ringGeometry args={[size * 1.6, size * 2.4, 64]} />
+          <meshBasicMaterial
+            color="#d4b88a"
+            side={THREE.DoubleSide}
+            transparent
+            opacity={0.75}
+            depthWrite={false}
+          />
         </mesh>
       )}
 
