@@ -5,7 +5,7 @@ import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
 const TEXTURE_URL = '/textures/nebula-backdrop.png'
-const SPHERE_RADIUS = 5000
+const SPHERE_RADIUS = 12000
 
 export default function NebulaBg() {
   const { gl } = useThree()
