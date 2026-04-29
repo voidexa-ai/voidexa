@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useMemo, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import type { ThreeEvent } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
@@ -25,7 +25,7 @@ const ATMOSPHERE_BY_TYPE: Record<PlanetType, { scale: number; opacity: number; c
   volcanic: { scale: 1.55, opacity: 0.22 },
   tech:     { scale: 1.65, opacity: 0.18 },
   mystery:  { scale: 1.50, opacity: 0.08 },
-  station:  { scale: 1.00, opacity: 0.00 },
+  station:  { scale: 1.30, opacity: 0.12 },
 }
 
 export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshProps) {
@@ -39,8 +39,23 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
   const stationRingRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
   const router = useRouter()
-  const { camera } = useThree()
+  const { camera, gl } = useThree()
   const phaseOffset = useRef(Math.random() * Math.PI * 2).current
+
+  // AFS-10 Task 2 — load planet texture if defined. Async, non-suspending.
+  // Each NodeMesh owns its own texture instance and disposes on unmount.
+  const texture = useMemo(() => {
+    if (!node.texture) return null
+    const loader = new THREE.TextureLoader()
+    const tex = loader.load(node.texture)
+    tex.colorSpace = THREE.SRGBColorSpace
+    tex.anisotropy = Math.min(4, gl.capabilities.getMaxAnisotropy())
+    return tex
+  }, [node.texture, gl])
+
+  useEffect(() => {
+    return () => { texture?.dispose() }
+  }, [texture])
 
   // Click guard: track pointer-down position to distinguish click from drag
   const pointerDownAt = useRef<[number, number] | null>(null)
@@ -64,6 +79,9 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
       }
       const targetScale = (isDiscovered && hovered) ? 1.2 : 1.0
       meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12)
+
+      // Slow rotation on textured planets so the surface map reads as a globe
+      if (texture) meshRef.current.rotation.y = t * 0.08
     }
 
     if (glowRef.current) {
@@ -71,7 +89,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
       mat.opacity = isDiscovered ? (hovered ? 0.28 : pulse * 0.1) * warpFade : 0
     }
 
-    if (atmoRef.current && planetType !== 'station') {
+    if (atmoRef.current) {
       const mat = atmoRef.current.material as THREE.MeshBasicMaterial
       const base = atmo.opacity
       const breath = 0.85 + Math.sin(t * 0.8 + phaseOffset) * 0.15
@@ -110,14 +128,12 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
   const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation()
     pointerDownAt.current = [e.clientX, e.clientY]
-    console.log('=== POINTER DOWN ===', label, path)
-  }, [label, path])
+  }, [])
 
   // Shared navigation logic — used by sphere (onPointerUp) and HTML labels (onClick)
   const handleNodeClick = useCallback(() => {
     if (!path) return
     if (warpRef.current.active) return
-    console.log('CLICK:', label, path, isCenter)
 
     onWarpStart?.(node)
 
@@ -174,7 +190,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
           camera.lookAt(look)
         },
       }, 0)
-  }, [path, label, camera, position, node, router, onWarpStart, isCenter])
+  }, [path, camera, position, node, router, onWarpStart])
 
   // onPointerUp: fire navigation only if pointer moved < 5px (click, not drag)
   const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -183,10 +199,9 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
     pointerDownAt.current = null
     if (!down) return
     const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1])
-    console.log('=== POINTER UP ===', label, path, '| moved:', moved.toFixed(1), 'px')
     if (moved >= 5) return // drag — ignore
     handleNodeClick()
-  }, [label, path, handleNodeClick])
+  }, [handleNodeClick])
 
   return (
     <group position={position}>
@@ -198,66 +213,19 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
-        {node.id === 'station'
-          ? <boxGeometry args={[size * 2.8, size * 1.8, size * 0.3]} />
-          : <sphereGeometry args={[size, 48, 48]} />
-        }
+        <sphereGeometry args={[size, 48, 48]} />
         <meshStandardMaterial
-          color={color}
+          map={texture ?? undefined}
+          color={texture ? '#ffffff' : color}
           emissive={emissive}
-          emissiveIntensity={node.id === 'station' ? 0 : (isDiscovered ? emissiveIntensity : 0.3)}
+          emissiveIntensity={isDiscovered ? emissiveIntensity : 0.2}
           toneMapped={false}
-          transparent
-          opacity={node.id === 'station' ? 0 : (isDiscovered ? 1 : 0.4)}
-          depthWrite={node.id === 'station' ? false : isDiscovered}
-          roughness={0.3}
-          metalness={0.1}
+          transparent={!isDiscovered}
+          opacity={isDiscovered ? 1 : 0.5}
+          roughness={texture ? 0.85 : 0.3}
+          metalness={texture ? 0.05 : 0.1}
         />
       </mesh>
-
-      {/* Station: rectangular image thumbnail instead of a planet shape */}
-      {node.id === 'station' && (
-        <Html
-          center
-          distanceFactor={16}
-          position={[0, 0, 0]}
-          style={{ pointerEvents: 'none', userSelect: 'none' }}
-          zIndexRange={[1, 2]}
-        >
-          <div
-            onClick={handleNodeClick}
-            style={{
-              pointerEvents: isDiscovered ? 'auto' : 'none',
-              cursor: isDiscovered ? 'pointer' : 'default',
-              width: 60,
-              height: 40,
-              borderRadius: 4,
-              overflow: 'hidden',
-              border: `1px solid ${emissive}66`,
-              boxShadow: `0 0 12px ${emissive}55, 0 0 4px ${emissive}33`,
-              background: '#001322',
-              transition: 'box-shadow 0.2s, border-color 0.2s',
-            }}
-            onMouseEnter={e => {
-              const el = e.currentTarget as HTMLElement
-              el.style.boxShadow = `0 0 20px ${emissive}99, 0 0 8px ${emissive}66`
-              el.style.borderColor = `${emissive}cc`
-            }}
-            onMouseLeave={e => {
-              const el = e.currentTarget as HTMLElement
-              el.style.boxShadow = `0 0 12px ${emissive}55, 0 0 4px ${emissive}33`
-              el.style.borderColor = `${emissive}66`
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/space-station.jpg"
-              alt="Space Station"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
-          </div>
-        </Html>
-      )}
 
       {/* Outer glow sphere — excluded from raycasting so it can't block clicks */}
       <mesh ref={glowRef} scale={1.65} raycast={() => null}>
@@ -273,20 +241,18 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
       </mesh>
 
       {/* Planet-type atmosphere shell */}
-      {planetType !== 'station' && (
-        <mesh ref={atmoRef} scale={atmo.scale} raycast={() => null}>
-          <sphereGeometry args={[size, 24, 24]} />
-          <meshBasicMaterial
-            color={atmo.color ?? emissive}
-            transparent
-            opacity={atmo.opacity}
-            depthWrite={false}
-            side={THREE.BackSide}
-            toneMapped={false}
-            blending={THREE.AdditiveBlending}
-          />
-        </mesh>
-      )}
+      <mesh ref={atmoRef} scale={atmo.scale} raycast={() => null}>
+        <sphereGeometry args={[size, 24, 24]} />
+        <meshBasicMaterial
+          color={atmo.color ?? emissive}
+          transparent
+          opacity={atmo.opacity}
+          depthWrite={false}
+          side={THREE.BackSide}
+          toneMapped={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
 
       {/* Point light */}
       <pointLight
@@ -296,7 +262,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
         decay={2}
       />
 
-      {/* Space station ring — only for station node */}
+      {/* Space station orbital ring — torus around 3D station planet */}
       {node.id === 'station' && (
         <mesh ref={stationRingRef} raycast={() => null} rotation={[Math.PI / 3, 0, 0]}>
           <torusGeometry args={[size * 2.2, 0.018, 8, 48]} />
