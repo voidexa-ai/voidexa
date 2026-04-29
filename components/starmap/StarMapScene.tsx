@@ -67,9 +67,11 @@ function StarField() {
         size={0.08}
         color="#e8f0ff"
         transparent
-        opacity={0.85}
+        opacity={0.95}
         sizeAttenuation
         vertexColors={false}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
       />
     </points>
   )
@@ -230,7 +232,7 @@ export default function StarMapScene() {
           autoRotateSpeed={0.22}
           enableZoom
           enablePan={false}
-          minDistance={5}
+          minDistance={2.5}
           maxDistance={30}
           minPolarAngle={Math.PI * 0.18}
           maxPolarAngle={Math.PI * 0.82}
