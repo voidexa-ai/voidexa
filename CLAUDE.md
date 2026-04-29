@@ -609,7 +609,7 @@ docs(afs-6g): session log + sprint complete
 **Section E — Cross-app:**
 - Free Flight: `<Stars>` swapped for `<SpaceSkybox rotateWithCamera={true}>` in `components/freeflight/FreeFlightScene.tsx`
 - Live verify SKIPPED for Free Flight due to BUG-04 memory leak — source-tested only
-- Star Map: intentionally retained (curated multi-layer starfield via `StarMapScene.tsx` + `CSSStarfield.tsx` + `NebulaBg.tsx` is by design) — documented in `components/starmap/README.md`
+- Star Map: intentionally retained (curated multi-layer starfield via `StarMapScene.tsx` + `CSSStarfield.tsx` + `NebulaBg.tsx` is by design) — documented in `components/starmap/README.md` *(superseded Apr 29 by AFS-10-FIX-4: CSSStarfield removed, NebulaBg sphere shrunk 5000→1500; R3F StarField in StarMapScene still load-bearing for click-to-travel)*
 - Hauling, speedrun, galaxy, preview canvases: out of scope per "no scope creep" rule
 - 8 assertions in `tests/afs-6g-freeflight-skybox.test.ts`
 
