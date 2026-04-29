@@ -10,43 +10,6 @@ import NebulaBg from './NebulaBg'
 import WarpStreaks from './WarpStreaks'
 import CameraRig from './CameraRig'
 
-// ── Ambient dust: 2000 drifting micro-particles ────────────────────────────
-function AmbientDust() {
-  const pointsRef = useRef<THREE.Points>(null)
-  const count = 2000
-
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 40
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 40
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 40
-    }
-    return arr
-  }, [])
-
-  useFrame(({ clock }) => {
-    if (!pointsRef.current) return
-    pointsRef.current.rotation.y = clock.elapsedTime * 0.003
-    pointsRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.002) * 0.02
-  })
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.04}
-        color="#7c4dff"
-        transparent
-        opacity={0.10}
-        sizeAttenuation
-      />
-    </points>
-  )
-}
-
 // ── Constellation lines with energy pulse dot ─────────────────────────────
 function ConstellationLines() {
   const satellites = STAR_MAP_NODES.filter(n => !n.isCenter)
@@ -133,9 +96,6 @@ export default function StarMapScene() {
       {/* Lighting */}
       <ambientLight intensity={0.08} />
       <directionalLight position={[10, 10, 5]} intensity={0.2} color="#ffffff" />
-
-      {/* Ambient dust haze */}
-      <AmbientDust />
 
       {/* Warp streaks — visible only during warp */}
       <WarpStreaks active={warping} />
