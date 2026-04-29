@@ -99,7 +99,7 @@ export default function GalaxyScene({ highlightedId, onHoverChange, onWarpChange
           enableZoom
           enablePan={false}
           minDistance={8}
-          maxDistance={70}
+          maxDistance={100}
           minPolarAngle={Math.PI * 0.18}
           maxPolarAngle={Math.PI * 0.82}
           target={[0, 0, 0]}
