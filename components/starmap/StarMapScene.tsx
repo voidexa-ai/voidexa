@@ -125,7 +125,7 @@ export default function StarMapScene() {
           enableZoom
           enablePan={false}
           minDistance={5}
-          maxDistance={40}
+          maxDistance={80}
           minPolarAngle={Math.PI * 0.18}
           maxPolarAngle={Math.PI * 0.82}
           target={[0, -0.5, -4]}

@@ -46,8 +46,8 @@ describe('AFS-10-FIX-3 — system view camera (pull-back-only)', () => {
     expect(SYSTEM_CANVAS).toMatch(/fov:\s*60/)
   })
 
-  test('StarMapScene OrbitControls maxDistance is 40', () => {
-    expect(SYSTEM_SCENE).toMatch(/maxDistance=\{40\}/)
+  test('StarMapScene OrbitControls maxDistance is 80', () => {
+    expect(SYSTEM_SCENE).toMatch(/maxDistance=\{80\}/)
   })
 
   test('StarMapScene OrbitControls minDistance unchanged at 5', () => {
