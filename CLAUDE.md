@@ -93,10 +93,161 @@ voidexa.com is a multi-product sovereign AI infrastructure platform combining:
 | **AFS-18 complete** | `fdfca34` | **1240** | **Alpha 1000 Cards Deploy — Storage bucket + 1000 webp uploaded + per-card image wiring + /cards V3→Alpha swap + V3 deck-builder 308 redirects** |
 | **AFS-18b complete** | `f1c2cef` | **1286** | **Rarity UX + Mythic Iridescent Frame + TCG Layout Overhaul — rarity filter pill row, mythic conic-gradient border (magenta · cyan · metallic gold), full TCG-grammar restructure (name+cost header, type-line below image, ATK/DEF opposite footer corners)** |
 | **AFS-18c complete** | `66b81b0` | **1324** | **Voidexa User Manual Deploy — 12 routes (6 EN + 6 DK), sticky-sidebar layout, react-markdown + remark-gfm renderer, etape 03 cross-links into /cards?type=X, "Read the rules" button on /cards, "How to Play" entry in Universe nav** |
+| **AFS-10-FIX complete** | `409a006` | **1377** | **Planet textures wired — `texture?: string` on StarNode, `useLoader(TextureLoader)` + `<Suspense>` fallback in NodeMesh, `meshBasicMaterial map={tex} color="#ffffff"` so textures render unmodified by scene lights, 11 satellite planets textured (station kept HTML thumbnail in v1)** |
+| **AFS-10-FIX-2 complete** | `55bee02` | **1385** | **Equirectangular planet PNGs (12 swapped, ~24 → 34 MB) + Saturn rings on Quantum (`<ringGeometry>` 1.6×–2.4× radius, tan #d4b88a, double-sided) + Space Station 3D upgrade (textured sphere + metallic torus + 4 cubic modules, HTML `<img>` thumbnail removed)** |
 
 ---
 
 ## SESSION LOG
+
+### Session 2026-04-29 — AFS-10-FIX-2 COMPLETE (Equirectangular textures + Saturn rings + Space Station 3D)
+
+**Status:** ✅ SHIPPED to `origin/main`, live-verified by Jix on voidexa.com — every planet on `/starmap/voidexa` now wraps a 2:1 equirectangular texture smoothly across the full sphere from any camera angle. Quantum has visible Saturn-style rings. Space Station replaced its HTML `<img>` thumbnail with a textured 3D sphere + metallic orbital ring + 4 cubic modules.
+**Tag:** `afs-10-fix-2-complete`
+**Backup:** `backup/pre-afs-10-fix-2-20260429` → `409a006` (AFS-10-FIX HEAD before this sprint)
+**Tests:** 1385/1385 green (was 1377, +8 new AFS-10-FIX-2 walker assertions in `tests/afs-10-fix-2-rings.test.ts`)
+**Final HEAD:** `55bee02`
+
+**Commit chain:**
+```
+55bee02 feat(afs-10-fix-2): Saturn rings on Quantum + Space Station 3D upgrade
+c8341d2 feat(afs-10-fix-2): replace 12 planet PNGs with equirectangular versions
+c0ec2c6 chore(afs-10-fix-2): add texture replacement + rings SKILL
+```
+
+**Pre-flight finding that reshaped Task 1 bash:** the 12 source PNGs in `C:\Users\Jixwu\Downloads\overførelser ny mappe\nye planets\` arrived with **spaces** in 6 of the filenames (`icy blue2.png`, `pastel green2.png`, `red rocky2.png`, `saturen like rings2.png`, `spacestation planet2.png`, `golden elecktrick gold all fasing voidexa2.png`). The SKILL's bash `cp` commands assumed underscores. Caught at Checkpoint 1 — `cp` commands re-quoted with the actual space-separated source names; destination filenames kept underscores so `nodes.ts` paths still resolved with no code change. All 12 copied successfully.
+
+**What shipped:**
+
+**Section A — Equirectangular PNG swap (Task 1):**
+- 12 PNGs replaced in place at `public/textures/planets/`. Per-file size table: voidexa 1.86→2.93 MB, earth 2.35→3.05 MB, icy_blue 1.88→2.62 MB, lilla 2.35→3.18 MB, orange 2.33→2.76 MB, pastel_green 1.68→2.41 MB, pink 1.57→2.08 MB, purpel-pink 1.74→2.42 MB, red_rocky 2.11→2.72 MB, **saturen_like_rings 2.38→1.81 MB** (only file that shrank — possible re-encode, flagged for re-gen if Quantum sphere shows stretching), spacestation_planet 3.00→3.01 MB (barely changed), goldenblue 1.91→2.99 MB. Total ~24 MB → ~34 MB.
+- AFS-10-FIX texture wiring picks up the new files with **zero code change** — `useLoader(TextureLoader, '/textures/planets/...')` resolves to the same paths.
+- Aspect ratios not scripted-verified per locked decision; visual verify post-deploy was the gate. All passed.
+
+**Section B — Quantum Saturn rings (Task 2):**
+- New `<mesh rotation={[Math.PI / 2.2, 0, 0.15]}>` block in `NodeMesh.tsx` gated on `node.id === 'quantum'`
+- `<ringGeometry args={[size * 1.6, size * 2.4, 64]}>` — inner 51% / outer 77% bigger than the planet sphere
+- `<meshBasicMaterial color="#d4b88a" side={THREE.DoubleSide} transparent opacity={0.75} depthWrite={false}>` — tan/beige, double-sided (visible from above and below), slight transparency, depthWrite off to prevent z-fighting with the gas-giant body
+- Tilt of `Math.PI / 2.2` (~82°) approximates Saturn's actual axial tilt; small `0.15 rad` z-roll adds visual interest
+
+**Section C — Space Station 3D upgrade (Task 3, Option A, locked at Checkpoint 2):**
+- `nodes.ts` station node gains `texture: '/textures/planets/spacestation_planet.png'` (one-line add); `planetType: 'station'` retained so atmosphere shell stays disabled per locked decision
+- `NodeMesh.tsx` main-mesh JSX **collapsed** the special station branch into the same textured branch as every other planet — sphereGeometry + `<Suspense>` + `<TexturedPlanetBody>` (was: invisible boxGeometry + meshStandardMaterial). Net JSX shrinkage: -28 lines from collapse + thumbnail removal
+- Old HTML `<Html>` `<img src="/images/space-station.jpg">` thumbnail block (40+ lines, lines 283–322 pre-edit) **deleted entirely**. `Html` import retained because it still renders planet labels at lines 353+
+- New visible metallic orbital ring: `<torusGeometry args={[size * 1.8, size * 0.08, 16, 64]}>` with `color="#88aabb"`, rotation `[Math.PI / 2, 0, 0]` (horizontal). Distinct from the existing thin tilted decorative `stationRingRef` torus, which is preserved verbatim
+- 4 cubic modules at cardinal angles: `[0, π/2, π, 3π/2].map(...)` → `<boxGeometry args={[size * 0.2, size * 0.15, size * 0.2]}>` with `color="#aaccdd"`, positioned at `[cos(angle) * size * 1.8, 0, sin(angle) * size * 1.8]`
+- All ring/module meshes have `raycast={() => null}` so they never intercept clicks meant for the planet sphere
+
+**Section D — Dead useFrame body-pulse path removed (refactor adjacent to Task 3):**
+- The `if (node.id === 'station')` block in `useFrame` (introduced in AFS-10-FIX as the only remaining `meshStandardMaterial.emissiveIntensity` writer) became dead code after the box→sphere swap. Removed. Comment updated to reflect that all bodies now use `meshBasicMaterial` and pulse feedback is carried by glow sphere + atmosphere shell + pointLight.
+
+**Section E — Tests (+8 walker assertions in `tests/afs-10-fix-2-rings.test.ts`):**
+- Quantum block (3): `<ringGeometry>` rendered under `node.id === 'quantum'`, args literal regex match on `size * 1.6, size * 2.4, 64`, material props match `color="#d4b88a"` + `side={THREE.DoubleSide}` + `opacity={0.75}` + `depthWrite={false}`
+- Station block (5): texture path in nodes.ts, no `/images/space-station.jpg` reference + no `alt="Space Station"` (HTML thumbnail removal regression guards), metallic torus args literal + color, 4 modules at cardinal angles literal + box dims + module color, existing `stationRingRef` thin torus preserved (`torusGeometry args=[size * 2.2, 0.018, 8, 48]` regression guard)
+
+**Sprint deviations from SKILL:**
+1. Source filename spaces (Pre-flight finding) — see above. Fixed at Checkpoint 1.
+2. Test count overshoot — 8 vs SKILL target of 5–6. Tighter coverage of regression guards (HTML thumbnail removal, stationRingRef preservation, exact-args regex) was the call.
+3. CLAUDE.md log entry not committed in the sprint commit chain — written separately after live-verify per Apr 25 SLUT 12 rule (CLAUDE.md updated at session end).
+4. Aspect ratio verification skipped at Jix's lock — visual verify was the gate. All 12 passed without per-file regen.
+
+**New patterns AFS-10-FIX-2 establishes:**
+1. **Equirectangular maps deserve 2:1 source assets** — 1:1 maps (used in AFS-10-FIX shipping) UV-stretch on sphere geometry. This is the first repo sprint that explicitly treats "swap PNG content, keep filename" as a deploy mechanism for visual upgrades, decoupled from code changes.
+2. **`<ringGeometry>` for planetary rings** — Three.js `ringGeometry` (vs `torusGeometry`) gives a flat ring better suited to Saturn-style appearance. Pattern reusable for other gas giants if added.
+
+**Live verified by Jix (Apr 29):** all checks passed on `voidexa.com/starmap/voidexa` — full equirectangular wrap on every planet, no transparent back-sides on camera rotate, voidexa-sun electric blue plasma surface, Apps pink Jupiter bands, AI Trading orange Mars surface, Services red volcanic lava, AI Tools earth-like blue/green continents, About gold-blue split with electric stars, Space Station blue planet sphere + cyan/metallic orbital ring + station modules (Option A), Quantum Saturn-like beige bands (rings present, subtle from default zoom — expected). KCP-90 terminal at ~93% intact. Auto-rotate smooth, no console errors.
+
+**Known items out-of-scope (carried forward):**
+- `saturen_like_rings.png` size shrank during regen — not a problem yet, but flagged for re-gen if Quantum surface ever shows stretching. Rings already mask most of the surface visually.
+- Atmosphere shell on station deliberately left disabled (`opacity: 0.00` config in `ATMOSPHERE_BY_TYPE.station` + `planetType !== 'station'` guard in NodeMesh). If station should glow, a future sprint adds an entry.
+- Mythic / boss-tier planet variants (e.g., gas giant atmospherics, ring shaders) — separate visual pass.
+- Pixel-sample diagnostic infrastructure — still missing. Visual live-verify remains the gate.
+
+**Rollback (if ever needed):**
+```bash
+git reset --hard backup/pre-afs-10-fix-2-20260429
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-10-fix-2-complete
+```
+This restores AFS-10-FIX state (1377 tests, 1:1 PNGs, no rings, station HTML thumbnail). The 12 source `*2.png` files in the user's local Downloads folder are untouched.
+
+---
+
+### Session 2026-04-29 — AFS-10-FIX COMPLETE (Planet texture wiring)
+
+**Status:** ✅ SHIPPED to `origin/main`, live-verified by Jix on voidexa.com — 11 satellite planets on `/starmap/voidexa` finally render their PNG textures. Replaces the post-AFS-10 reality where the 12 PNG files at `public/textures/planets/` had been on disk since Apr 19–20 but **never referenced by any component** (StarNode interface had no `texture` field; `NodeMesh.tsx` rendered emissive-only spheres + atmosphere shells with zero `useLoader` / `TextureLoader` / `map` prop usage).
+**Tag:** `afs-10-fix-complete`
+**Backup:** `backup/pre-afs-10-fix-20260429` → `a332baf` (post-FIX-B-rollback baseline)
+**Tests:** 1377/1377 green (matches the SKILL-stated baseline; no new test added — pixel-sample diagnostic infrastructure missing in voidexa, gap documented per SKILL §307–322 permission)
+**Final HEAD:** `409a006`
+
+**Commit chain:**
+```
+409a006 fix(afs-10-fix): wire planet textures via meshBasicMaterial + Suspense
+cb7f7bd chore(afs-10-fix): add bugfix SKILL
+```
+
+**Pre-flight finding that reshaped the SKILL premise:** SKILL-AFS-10-FIX.md was authored on the assumption *"AFS-10 wired `texture` field to nodes.ts and applied via NodeMesh.tsx, but live render shows none of it."* Pre-flight 0.3–0.7 proved that wiring **was never written**. `nodes.ts` `StarNode` interface had no `texture` field, `NodeMesh.tsx` rendered `<meshStandardMaterial>` with only `color` / `emissive` / `emissiveIntensity` and zero texture loader, and `grep voidexa.png components/ app/` returned **zero matches** outside the SKILL/docs themselves. The "Saturn rings on Quantum" observation that the SKILL took as evidence "something textured works" was actually `planetType: 'gas'` triggering an additive-blended atmosphere shell at scale 1.95 — not a texture render. None of Fix Paths A–F in the SKILL fit the actual situation.
+
+**Mapping conflict caught at Checkpoint 1 (after Path lock):** Jix's locked mapping listed `game-hub → red_rocky.png`, but `game-hub` is not a starmap node. Three nodes that DO exist (`trading`, `about`, `ghost-ai`) had no texture assignment. Authoritative `09_WISHES_PENDING_DELTA_APR29_SLUT21.md` doc didn't exist on disk; only on-disk reference was `docs/skills/sprint-17-completion.md` which disagreed with Jix's lock on `quantum` and `contact`. Stopped, asked, locked the **final 11-node mapping** (station deliberately untextured, kept HTML thumbnail in v1):
+
+| Node | Texture |
+|---|---|
+| voidexa | voidexa.png |
+| trading | orange.png |
+| apps | pink.png |
+| ai-tools | earth.png |
+| services | red_rocky.png |
+| about | goldenblue.png |
+| contact | purpel-pink.png |
+| ghost-ai | lilla.png |
+| quantum | saturen_like_rings.png |
+| trading-hub | icy_blue.png |
+| station | (none — kept HTML thumbnail in v1, addressed in AFS-10-FIX-2) |
+| claim-your-planet | pastel_green.png |
+
+**What shipped (Option 1 — minimal inline wiring):**
+
+**Section A — `components/starmap/nodes.ts` (+12 lines):**
+- `StarNode` interface gains `texture?: string`
+- 11 nodes populated with `/textures/planets/*.png` paths per locked mapping; station deliberately omitted
+
+**Section B — `components/starmap/NodeMesh.tsx` (+86 / -21):**
+- New module-level helper `TexturedPlanetBody`: `useLoader(THREE.TextureLoader, texturePath)` → `<sphereGeometry>` + `<meshBasicMaterial map={tex} color="#ffffff" toneMapped={false}` with existing opacity / depthWrite logic preserved
+- Imports updated: `Suspense` from react, `useLoader` from `@react-three/fiber`
+- Main mesh JSX branches three ways inside the same `<mesh>` (ref + pointer handlers preserved):
+  1. `node.id === 'station'` → existing box + meshStandardMaterial (opacity 0, identical to before)
+  2. `node.texture ?` → `<Suspense fallback={<>sphere + basic-material color hex</>}><TexturedPlanetBody/></Suspense>` (fallback uses solid `node.color` so the planet doesn't disappear during PNG load)
+  3. defensive untextured fallback → solid colored basic-material sphere
+- `useFrame` body-pulse logic gated to station only (since only station still used `meshStandardMaterial`); other nodes' visual feedback continues from glow sphere + atmosphere shell + pointLight unchanged
+- **NOT touched** (per scope lock): `NebulaBg.tsx` sphere radius, `StarMapCanvas.tsx` camera, `StarMapScene.tsx` lights/OrbitControls, atmosphere shell, glow sphere, isCenter torus, station ring, point light, all click/hover/warp logic
+
+**Sprint deviations from SKILL:**
+1. SKILL premise rewritten at Checkpoint 1 — see above. Sprint executed Path G (combination), narrowed to Option 1 (minimal inline wiring).
+2. Mapping locked at Checkpoint 1 differed from sprint-17-completion.md spec on quantum and contact (Jix overrode); `game-hub` dropped (not a node).
+3. Pixel-sample test (Task 2) **skipped** — voidexa has no headless r3f canvas test infrastructure; no existing `*-pixel*.test.ts`. Documented as risk for future "AFS-FUTURE pixel-diagnostic infrastructure" sprint per SKILL §307–322 explicit permission.
+4. CLAUDE.md log entry written after AFS-10-FIX-2 live-verify (this entry) per Apr 25 SLUT 12 rule.
+
+**New patterns AFS-10-FIX establishes:**
+1. **`useLoader(THREE.TextureLoader)` + `<Suspense>` for planet textures** — first repo usage on the starmap; pattern reusable for any future per-mesh texture loading where you want a colored fallback sphere during PNG load.
+2. **`meshBasicMaterial` for self-illuminating textures** — chosen over `meshStandardMaterial` because the scene's lights are intentionally dim (`ambientLight intensity={0.08}` + `directionalLight intensity={0.2}`) for emissive-only rendering. Basic material ignores lighting and shows the texture as authored, no relighting math; `color="#ffffff"` keeps the texture undimmed.
+
+**Live verified by Jix (Apr 29):** voidexa-sun shows voidexa.png plasma surface (was flat yellow ball), Apps shows pink.png Jupiter bands, AI Trading shows orange.png Mars surface, Services shows red_rocky.png lava, AI Tools shows earth.png blue/green, About shows goldenblue.png, Contact shows purpel-pink.png, Quantum shows saturen_like_rings.png surface (no rings yet — added in AFS-10-FIX-2), Trading Hub shows icy_blue.png, Void Pro AI shows lilla.png, Claim Your Planet shows pastel_green.png. Space Station unchanged in v1 (HTML thumbnail still rendering — upgraded in AFS-10-FIX-2).
+
+**Known items carried into AFS-10-FIX-2 (which immediately followed):**
+- 1:1 source PNGs UV-stretched on the sphere — fixed by AFS-10-FIX-2's equirectangular swap
+- No Saturn rings on Quantum despite the texture filename — fixed by AFS-10-FIX-2's `<ringGeometry>` addition
+- Space Station as HTML thumbnail rather than a 3D-consistent sphere — fixed by AFS-10-FIX-2's Option A upgrade
+
+**Rollback (if ever needed):**
+```bash
+git reset --hard backup/pre-afs-10-fix-20260429
+git push origin main --force-with-lease
+git push origin :refs/tags/afs-10-fix-complete
+```
+This restores `a332baf` baseline (no `texture` field, all planets rendering as emissive-only spheres). Note that AFS-10-FIX-2 builds on AFS-10-FIX, so rolling back this sprint also requires rolling back AFS-10-FIX-2 first.
+
+---
 
 ### Session 2026-04-28 — AFS-18c COMPLETE (Voidexa User Manual Deploy)
 
@@ -1168,7 +1319,9 @@ can be executed.
 | ~~Shop nav + cross-nav + copy + pack lockdown~~ | ✅ **AFS-6a-fix COMPLETE** |
 | ~~`/privacy`, `/terms`, `/cookies`, `/sitemap.xml`, `/robots.txt` 404~~ | ✅ **AFS-7 COMPLETE** |
 | GHAI top-up modal stuck open across pages | **NEW — needs investigation sprint** |
-| Starmap Level 2 nebula zoom | AFS-10 |
+| ~~Starmap planets render as flat colored circles (no PNG textures)~~ | ✅ **AFS-10-FIX COMPLETE** (Apr 29, 11 satellites textured via `useLoader` + `meshBasicMaterial`) |
+| ~~Starmap planet textures stretch on sphere wrap (1:1 source)~~ | ✅ **AFS-10-FIX-2 COMPLETE** (Apr 29, 12 equirectangular PNGs swapped + Saturn rings on Quantum + Space Station 3D) |
+| Starmap Level 2 nebula zoom | AFS-10 (camera FOV/distance — separate sprint, intentionally not bundled with FIX-2 per scope lock) |
 | Cinematic video end-frame ≠ new backdrop | AFS-11 (future, low prio) |
 | "We are live. Welcome" banner | AFS-12 (polish) |
 | Danish i18n overflade-only | AFS-26 |
