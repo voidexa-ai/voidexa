@@ -54,6 +54,19 @@ const nextConfig: NextConfig = {
     { source: '/void-chat',         destination: '/void-pro-ai',          permanent: true },
     { source: '/void-chat/:path*',  destination: '/void-pro-ai/:path*',   permanent: true },
     { source: '/admin/void-chat',   destination: '/admin/void-pro-ai',    permanent: true },
+
+    // AFS-10 — Starmap Level 2 lockdown. Three canonical aliases:
+    //   /space-station ⇒ /station        (Content Hub planet)
+    //   /tools         ⇒ /ai-tools       (Creator Suite)
+    //   /ai-trading    ⇒ /trading-hub    (merged platform — replaces former
+    //                                     server-component redirect that pointed
+    //                                     at /trading; /trading-hub is the new
+    //                                     canonical home for The Bot, Live,
+    //                                     Leaderboard, Backtesting, Beat the
+    //                                     House, and Konkurrence.)
+    { source: '/space-station', destination: '/station',     permanent: true },
+    { source: '/tools',         destination: '/ai-tools',    permanent: true },
+    { source: '/ai-trading',    destination: '/trading-hub', permanent: true },
   ],
 
   headers: async () => [
