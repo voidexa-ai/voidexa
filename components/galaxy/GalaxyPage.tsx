@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import CSSStarfield from '../starmap/CSSStarfield'
 import DirectorySidebar from './DirectorySidebar'
 import { GALAXY_PLANETS, type CompanyPlanet } from './companies'
 
@@ -42,7 +41,6 @@ export default function GalaxyPage() {
         overflow: 'hidden',
       }}
     >
-      <CSSStarfield />
       <GalaxyCanvas
         highlightedId={highlightedId}
         onHoverChange={setHighlightedId}

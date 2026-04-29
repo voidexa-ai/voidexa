@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState, useRef } from 'react'
-import CSSStarfield from './CSSStarfield'
 import { useT } from '@/lib/i18n/context'
 
 // R3F canvas — client-side only, no SSR
@@ -244,10 +243,7 @@ export default function StarMapPage({ fullscreen = true }: StarMapPageProps) {
         overflow: 'hidden',
       }}
     >
-      {/* CSS starfield — always visible, shows while WebGL loads */}
-      <CSSStarfield />
-
-      {/* R3F canvas — loads progressively on top */}
+      {/* R3F canvas — loads progressively on top of body background */}
       <StarMapCanvas />
 
       {/* KCP-90 floating stats panel — bottom-right */}
