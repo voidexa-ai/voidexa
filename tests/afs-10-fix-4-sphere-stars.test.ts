@@ -16,8 +16,8 @@ const GALAXY_PAGE = readFileSync(
 )
 
 describe('AFS-10-FIX-4 — nebula sphere shrink', () => {
-  test('NebulaBg SPHERE_RADIUS constant is 1500', () => {
-    expect(NEBULA_BG).toMatch(/const\s+SPHERE_RADIUS\s*=\s*1500\b/)
+  test('NebulaBg SPHERE_RADIUS constant is 800', () => {
+    expect(NEBULA_BG).toMatch(/const\s+SPHERE_RADIUS\s*=\s*800\b/)
   })
 
   test('NebulaBg no longer references SPHERE_RADIUS = 5000', () => {
