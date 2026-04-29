@@ -1,13 +1,41 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { Suspense, useRef, useState, useCallback } from 'react'
+import { useFrame, useLoader, useThree } from '@react-three/fiber'
 import type { ThreeEvent } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import { useRouter } from 'next/navigation'
 import * as THREE from 'three'
 import gsap from 'gsap'
 import type { StarNode, PlanetType } from './nodes'
+
+// Textured planet body — suspends on texture load. Color held at white so the
+// PNG renders unmodified; meshBasicMaterial ignores lighting so the texture
+// shows as authored regardless of scene lights.
+function TexturedPlanetBody({
+  texturePath,
+  size,
+  isDiscovered,
+}: {
+  texturePath: string
+  size: number
+  isDiscovered: boolean
+}) {
+  const tex = useLoader(THREE.TextureLoader, texturePath)
+  return (
+    <>
+      <sphereGeometry args={[size, 48, 48]} />
+      <meshBasicMaterial
+        map={tex}
+        color="#ffffff"
+        transparent
+        opacity={isDiscovered ? 1 : 0.4}
+        depthWrite={isDiscovered}
+        toneMapped={false}
+      />
+    </>
+  )
+}
 
 interface NodeMeshProps {
   node: StarNode
@@ -57,10 +85,16 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
     const warpFade = warp.active ? Math.max(0.08, 1 - warp.progress * 0.92) : 1
 
     if (meshRef.current) {
-      const mat = meshRef.current.material as THREE.MeshStandardMaterial
-      if (isDiscovered) {
-        const baseIntensity = emissiveIntensity * pulse * warpFade
-        mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 * warpFade : baseIntensity
+      // Station body still uses meshStandardMaterial (invisible box, opacity 0)
+      // and accepts emissiveIntensity. Other nodes now use meshBasicMaterial,
+      // which has no emissive — hover/pulse feedback is carried by the
+      // separate atmosphere shell, glow sphere, and pointLight below.
+      if (node.id === 'station') {
+        const mat = meshRef.current.material as THREE.MeshStandardMaterial
+        if (isDiscovered) {
+          const baseIntensity = emissiveIntensity * pulse * warpFade
+          mat.emissiveIntensity = hovered ? emissiveIntensity * 1.5 * warpFade : baseIntensity
+        }
       }
       const targetScale = (isDiscovered && hovered) ? 1.2 : 1.0
       meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12)
@@ -198,21 +232,52 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
       >
-        {node.id === 'station'
-          ? <boxGeometry args={[size * 2.8, size * 1.8, size * 0.3]} />
-          : <sphereGeometry args={[size, 48, 48]} />
-        }
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={node.id === 'station' ? 0 : (isDiscovered ? emissiveIntensity : 0.3)}
-          toneMapped={false}
-          transparent
-          opacity={node.id === 'station' ? 0 : (isDiscovered ? 1 : 0.4)}
-          depthWrite={node.id === 'station' ? false : isDiscovered}
-          roughness={0.3}
-          metalness={0.1}
-        />
+        {node.id === 'station' ? (
+          <>
+            <boxGeometry args={[size * 2.8, size * 1.8, size * 0.3]} />
+            <meshStandardMaterial
+              color={color}
+              emissive={emissive}
+              emissiveIntensity={0}
+              toneMapped={false}
+              transparent
+              opacity={0}
+              depthWrite={false}
+              roughness={0.3}
+              metalness={0.1}
+            />
+          </>
+        ) : node.texture ? (
+          <Suspense fallback={
+            <>
+              <sphereGeometry args={[size, 48, 48]} />
+              <meshBasicMaterial
+                color={color}
+                transparent
+                opacity={isDiscovered ? 1 : 0.4}
+                depthWrite={isDiscovered}
+                toneMapped={false}
+              />
+            </>
+          }>
+            <TexturedPlanetBody
+              texturePath={node.texture}
+              size={size}
+              isDiscovered={isDiscovered}
+            />
+          </Suspense>
+        ) : (
+          <>
+            <sphereGeometry args={[size, 48, 48]} />
+            <meshBasicMaterial
+              color={color}
+              transparent
+              opacity={isDiscovered ? 1 : 0.4}
+              depthWrite={isDiscovered}
+              toneMapped={false}
+            />
+          </>
+        )}
       </mesh>
 
       {/* Station: rectangular image thumbnail instead of a planet shape */}

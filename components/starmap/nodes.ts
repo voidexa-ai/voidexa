@@ -23,6 +23,7 @@ export interface StarNode {
   sublabel: string
   isDiscovered: boolean
   planetType?: PlanetType
+  texture?: string
 }
 
 export const STAR_MAP_NODES: StarNode[] = [
@@ -39,6 +40,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Sovereign AI Infrastructure',
     isDiscovered: true,
     planetType: 'sun',
+    texture: '/textures/planets/voidexa.png',
   },
   {
     id: 'trading',
@@ -53,6 +55,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Autonomous Bot Systems',
     isDiscovered: true,
     planetType: 'volcanic',
+    texture: '/textures/planets/orange.png',
   },
   {
     id: 'apps',
@@ -67,6 +70,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Secure Tools · Private by Design',
     isDiscovered: true,
     planetType: 'tech',
+    texture: '/textures/planets/pink.png',
   },
   {
     id: 'ai-tools',
@@ -81,6 +85,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Multi-AI Orchestration Suite',
     isDiscovered: true,
     planetType: 'jungle',
+    texture: '/textures/planets/earth.png',
   },
   {
     id: 'services',
@@ -95,6 +100,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Custom AI · Data Intelligence',
     isDiscovered: true,
     planetType: 'volcanic',
+    texture: '/textures/planets/red_rocky.png',
   },
   {
     id: 'about',
@@ -109,6 +115,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Born from the void',
     isDiscovered: true,
     planetType: 'ice',
+    texture: '/textures/planets/goldenblue.png',
   },
   {
     id: 'contact',
@@ -123,6 +130,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Get in touch',
     isDiscovered: true,
     planetType: 'desert',
+    texture: '/textures/planets/purpel-pink.png',
   },
   // ── Undiscovered mystery nodes ──────────────────────────────────────────
   {
@@ -138,6 +146,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Multi-AI chat with KCP-90 compression. Claude, ChatGPT & Gemini.',
     isDiscovered: true,
     planetType: 'gas',
+    texture: '/textures/planets/lilla.png',
   },
   {
     id: 'quantum',
@@ -152,6 +161,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Live — 1324 Tests Passed',
     isDiscovered: true,
     planetType: 'gas',
+    texture: '/textures/planets/saturen_like_rings.png',
   },
   {
     id: 'trading-hub',
@@ -166,6 +176,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Build · Compete · Learn',
     isDiscovered: true,
     planetType: 'desert',
+    texture: '/textures/planets/icy_blue.png',
   },
   {
     id: 'station',
@@ -194,6 +205,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     sublabel: 'Claim your planet',
     isDiscovered: false,
     planetType: 'mystery',
+    texture: '/textures/planets/pastel_green.png',
   },
 ]
 
