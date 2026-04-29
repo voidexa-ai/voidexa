@@ -40,9 +40,9 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     expect(hrefs).toHaveLength(3)
   })
 
-  it('Quantum Tools items are in order: Void Pro AI, Quantum Chat, Quantum Forge', () => {
+  it('Quantum Tools items are in order: Void Pro AI, Quantum Council, Quantum Forge', () => {
     const voidIdx = quantumToolsBlock.indexOf("'Void Pro AI'")
-    const quantumIdx = quantumToolsBlock.indexOf("'Quantum Chat'")
+    const quantumIdx = quantumToolsBlock.indexOf("'Quantum Council'")
     const forgeIdx = quantumToolsBlock.indexOf("'Quantum Forge'")
     expect(voidIdx).toBeGreaterThan(-1)
     expect(quantumIdx).toBeGreaterThan(voidIdx)
@@ -55,9 +55,9 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     )
   })
 
-  it('Quantum Chat uses the internal route /quantum/chat', () => {
+  it('Quantum Council uses the internal route /quantum/chat', () => {
     expect(quantumToolsBlock).toMatch(
-      /href:\s*['"]\/quantum\/chat['"][\s\S]*?label:\s*['"]Quantum Chat['"]/,
+      /href:\s*['"]\/quantum\/chat['"][\s\S]*?label:\s*['"]Quantum Council['"]/,
     )
   })
 

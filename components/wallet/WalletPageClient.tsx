@@ -57,7 +57,7 @@ export default function WalletPageClient({
         canUseLabel: 'GHAI kan bruges til:',
         canUse: [
           'In-game kosmetiske pakker (booster packs, ship skins, pilot avatars)',
-          'Pay-per-use AI-tjenester (Void Pro AI sessions, Quantum Chat debates)',
+          'Pay-per-use AI-tjenester (Void Pro AI sessions, Quantum Council debates)',
           'Wallet top-up via Stripe ($5 / $10 / $25 / $50)',
         ],
         cannotUseLabel: 'GHAI kan IKKE bruges til:',
@@ -74,7 +74,7 @@ export default function WalletPageClient({
         canUseLabel: 'GHAI can be used for:',
         canUse: [
           'In-game cosmetic packs (booster packs, ship skins, pilot avatars)',
-          'Pay-per-use AI services (Void Pro AI sessions, Quantum Chat debates)',
+          'Pay-per-use AI services (Void Pro AI sessions, Quantum Council debates)',
           'Wallet top-ups via Stripe ($5 / $10 / $25 / $50 tiers)',
         ],
         cannotUseLabel: 'GHAI cannot be used for:',

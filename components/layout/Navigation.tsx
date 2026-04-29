@@ -60,7 +60,7 @@ export default function Navigation() {
       label: 'Quantum Tools',
       children: [
         { href: '/void-pro-ai',               label: 'Void Pro AI',   description: 'Premium AI access' },
-        { href: '/quantum/chat',              label: 'Quantum Chat',  description: 'Multi-AI debate engine' },
+        { href: '/quantum/chat',              label: 'Quantum Council',  description: 'Multi-AI debate engine' },
         { href: 'https://forge.voidexa.com',  label: 'Quantum Forge', description: 'AI-assisted cockpit generator', external: true },
       ],
     },

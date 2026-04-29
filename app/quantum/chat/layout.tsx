@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'voidexa Quantum Chat — AI Consensus',
+  title: 'voidexa Quantum Council — AI Consensus',
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
