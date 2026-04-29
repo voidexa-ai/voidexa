@@ -5,8 +5,12 @@ import ParticleField from '@/components/ui/ParticleField'
 
 export default function GlobalStarfield() {
   const pathname = usePathname()
-  // Star map homepage (/) has its own R3F nebula — skip there
-  if (pathname === '/') return null
+  // Skip on routes that have their own self-contained background:
+  // - '/' (homepage R3F nebula)
+  // - '/starmap' (galaxy view) and '/starmap/voidexa' (system view) — AFS-10-FIX-5:
+  //   both views render NebulaBg + planet textures and must not be tinted by the
+  //   global gradients / ParticleField overlay.
+  if (pathname === '/' || pathname === '/starmap' || pathname.startsWith('/starmap/')) return null
 
   return (
     <div
