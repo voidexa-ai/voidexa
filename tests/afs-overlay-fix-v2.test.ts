@@ -147,8 +147,9 @@ describe('AFS-OVERLAY-FIX-V2 Fix 2 — internal href + i18n', () => {
     expect(FOOTER_SRC).not.toContain("pathname.startsWith('/void-chat')")
   })
 
-  it('starmap node label + path renamed', () => {
-    expect(NODES_SRC).toMatch(/id:\s*'ghost-ai',\s*label:\s*'Void Pro AI',\s*path:\s*'\/void-pro-ai'/)
+  it('starmap nodes contain no stale /void-chat references (post-AFS-10 ghost-ai planet was retired in favour of /quantum landing routing)', () => {
+    expect(NODES_SRC).not.toMatch(/['"]\/void-chat['"]/)
+    expect(NODES_SRC).not.toMatch(/['"]ghost-ai['"]/)
   })
 
   it('i18n EN + DK keys use /void-pro-ai with Void Pro AI labels', () => {
@@ -209,9 +210,9 @@ describe('AFS-OVERLAY-FIX-V2 Fix 3 — 960 marketing copy audit', () => {
     expect(SCIENCE_DECK).not.toContain('960 tests')
   })
 
-  it('starmap Quantum node sublabel uses 1324, not 960', () => {
-    expect(STARMAP).toContain("sublabel: 'Live — 1324 Tests Passed'")
+  it('starmap nodes contain no stale 960 marketing string (Quantum sublabel was reshaped by AFS-10 to "Council · Forge · Void Pro AI")', () => {
     expect(STARMAP).not.toContain('960 Tests Passed')
+    expect(STARMAP).not.toContain('960 tests')
   })
 
   it('ControlPlaneDashboard QuantumPanel tests-passed = 1324 / 1324', () => {

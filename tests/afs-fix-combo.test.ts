@@ -60,33 +60,31 @@ describe('AFS-FIX-COMBO Fix 3 — leaderboard rank uses sorted enumerator', () =
   })
 })
 
-describe('AFS-FIX-COMBO Fix 4 — /quantum test counter', () => {
-  it('top badge shows 1324 tests', () => {
-    expect(QUANTUM_PAGE_SRC).toContain('1324 tests')
-  })
-
-  it('footer string shows 1324 Quantum tests passed', () => {
-    expect(QUANTUM_PAGE_SRC).toContain('1324 Quantum tests passed')
-  })
-
-  it('does NOT contain the stale 960 marketing string anywhere on /quantum', () => {
+// AFS-FIX-COMBO Fix 4 + Fix 5 originally asserted on a 951-line marketing
+// surface at /quantum. AFS-10 replaced that surface wholesale with a 3-card
+// landing page (Quantum Council · Forge · Void Pro AI), so the historical
+// "1324 tests" / "~93% compression" copy no longer lives here. The intent of
+// these regression checks — guard the new landing from re-introducing stale
+// strings ("960 tests", "95% byte compression") — is preserved below.
+describe('AFS-FIX-COMBO Fix 4 — /quantum landing has no stale test-count marketing', () => {
+  it('does NOT contain the stale 960 marketing string', () => {
     expect(QUANTUM_PAGE_SRC).not.toContain('960 tests')
     expect(QUANTUM_PAGE_SRC).not.toContain('960 Quantum tests passed')
   })
+
+  it('does NOT carry a hardcoded test-count badge (drift-prone — covered by AFS-10 3-card layout)', () => {
+    expect(QUANTUM_PAGE_SRC).not.toMatch(/\d{3,4}\s*Quantum tests passed/)
+  })
 })
 
-describe('AFS-FIX-COMBO Fix 5 — /quantum KCP-90 percentage', () => {
-  it('body desc says ~93% byte compression', () => {
-    expect(QUANTUM_PAGE_SRC).toContain('~93% byte compression integrated as middleware in Quantum')
-  })
-
-  it('footer says ~93% compression', () => {
-    expect(QUANTUM_PAGE_SRC).toContain('~93% compression')
-  })
-
-  it('does NOT contain the stale 95% byte compression marketing string', () => {
+describe('AFS-FIX-COMBO Fix 5 — /quantum landing has no stale KCP-90 marketing', () => {
+  it('does NOT contain the stale 95% compression marketing string', () => {
     expect(QUANTUM_PAGE_SRC).not.toContain('95% byte compression')
     expect(QUANTUM_PAGE_SRC).not.toContain('95% compression · 1324')
+  })
+
+  it('does NOT carry a hardcoded compression percentage (drift-prone — moved to ScienceDeck per AFS-10)', () => {
+    expect(QUANTUM_PAGE_SRC).not.toMatch(/~9[0-9]%\s*(?:byte\s*)?compression/)
   })
 })
 
