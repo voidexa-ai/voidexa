@@ -13,12 +13,12 @@ const SYSTEM_SCENE = readFileSync(
 )
 
 describe('AFS-10-FIX-12 — corrected camera flip (negative z)', () => {
-  it('voidexa size is 3.5 (focal point from depth POV)', () => {
+  it('voidexa size is 5.0 (FIX-16 dominant focal point)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBeCloseTo(3.5, 1)
+    expect(voidexa.size).toBeCloseTo(5.0, 1)
   })
 
-  it('apps size matches voidexa at 3.5 (pink gas giant prominence)', () => {
+  it('apps stays at 3.5 (pink gas giant prominence — no longer ties voidexa post FIX-16)', () => {
     const apps = STAR_MAP_NODES.find(n => n.id === 'apps')!
     expect(apps.size).toBeCloseTo(3.5, 1)
   })

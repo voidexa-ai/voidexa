@@ -40,9 +40,10 @@ export default function HoverHUD({ node, screenPos, viewportWidth, viewportHeigh
 
   if (!renderedNode || !renderedPos) return null
 
-  // Side-aware: HUD appears on opposite side from hovered planet.
+  // Side-aware: HUD appears on SAME side as hovered planet (FIX-16) so the
+  // connector line stays in the same viewport half — no scene-crossing.
   const isPlanetOnLeft = renderedPos.x < viewportWidth / 2
-  const hudSide: 'left' | 'right' = isPlanetOnLeft ? 'right' : 'left'
+  const hudSide: 'left' | 'right' = isPlanetOnLeft ? 'left' : 'right'
   const hudX = hudSide === 'left'
     ? HUD_PADDING
     : viewportWidth - HUD_WIDTH - HUD_PADDING

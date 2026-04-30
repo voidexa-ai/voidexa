@@ -32,10 +32,10 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
     }
   })
 
-  it('voidexa position unchanged at origin (size bumped to 3.5 in FIX-12)', () => {
+  it('voidexa position unchanged at origin (size bumped to 5.0 in FIX-16)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
     expect(voidexa.position).toEqual([0, 0, 0])
-    expect(voidexa.size).toBeCloseTo(3.5, 1)
+    expect(voidexa.size).toBeCloseTo(5.0, 1)
   })
 
   it('all 10 nodes preserved (no cleanup regression)', () => {
@@ -48,14 +48,14 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
   })
 })
 
-describe('AFS-10-FIX-9 — label readability bump (current state via FIX-15)', () => {
+describe('AFS-10-FIX-9 — label readability bump (current state via FIX-16)', () => {
   const NODE_MESH_SRC = readFileSync(
     join(__dirname, '..', 'components', 'starmap', 'NodeMesh.tsx'),
     'utf-8',
   )
 
-  it('main label fontSize at FIX-15 values — center 36px / satellite 30px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'36px'\s*:\s*'30px'/)
+  it('main label fontSize at FIX-16 values — center 48px / satellite 42px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'48px'\s*:\s*'42px'/)
   })
 
   it('subtitle <Html> block removed (text moved to HoverHUD in FIX-15)', () => {
@@ -64,12 +64,13 @@ describe('AFS-10-FIX-9 — label readability bump (current state via FIX-15)', (
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'40px'/)
   })
 
-  it('previous FIX-8 through FIX-13 fontSize values no longer present (regression guard)', () => {
+  it('previous FIX-8 through FIX-15 fontSize values no longer present (regression guard)', () => {
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'18px'\s*:\s*'15px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'27px'\s*:\s*'23px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'35px'\s*:\s*'30px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'45px'\s*:\s*'39px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'52px'\s*:\s*'45px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'36px'\s*:\s*'30px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'14px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'21px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'27px'/)

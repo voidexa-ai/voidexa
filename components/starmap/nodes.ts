@@ -35,7 +35,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     color: '#041025',
     emissive: '#00ffff',       // bright cyan
     emissiveIntensity: 4.0,
-    size: 3.5,
+    size: 5.0,
     isCenter: true,
     sublabel: 'Sovereign AI Infrastructure',
     isDiscovered: true,

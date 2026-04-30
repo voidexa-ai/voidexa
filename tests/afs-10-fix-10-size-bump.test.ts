@@ -16,9 +16,9 @@ describe('AFS-10-FIX-10 — planet size + label bump', () => {
     expect(max).toBeLessThanOrEqual(4.0)
   })
 
-  it('voidexa sun size at 3.5 (FIX-12 bumped from 1.8 for depth POV)', () => {
+  it('voidexa sun size at 5.0 (FIX-16 bumped from 3.5 for sun dominance)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBeCloseTo(3.5, 1)
+    expect(voidexa.size).toBeCloseTo(5.0, 1)
   })
 
   it('voidexa position unchanged at origin', () => {

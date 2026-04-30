@@ -33,9 +33,9 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
     }
   })
 
-  it('voidexa size is exactly 3.5 (FIX-12 bumped from 1.8 for new POV)', () => {
+  it('voidexa size is exactly 5.0 (FIX-16 bumped from 3.5 for sun dominance)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBe(3.5)
+    expect(voidexa.size).toBe(5.0)
   })
 
   it('voidexa position unchanged at [0, 0, 0]', () => {

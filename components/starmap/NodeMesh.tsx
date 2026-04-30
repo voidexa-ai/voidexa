@@ -414,7 +414,7 @@ export default function NodeMesh({
             pointerEvents: (isDiscovered || node.id === 'claim-your-planet') ? 'auto' : 'none',
             cursor: (isDiscovered || node.id === 'claim-your-planet') ? 'pointer' : 'default',
             color: isDiscovered ? 'rgba(255,255,255,0.95)' : node.id === 'claim-your-planet' ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.4)',
-            fontSize: isCenter ? '36px' : '30px',
+            fontSize: isCenter ? '48px' : '42px',
             fontWeight: 600,
             fontFamily: 'var(--font-space, system-ui)',
             whiteSpace: 'nowrap',

@@ -30,9 +30,9 @@ describe('AFS-10-FIX-13 — contact + space station spacing fix', () => {
     expect(STAR_MAP_NODES.length).toBe(10)
   })
 
-  it('no size or voidexa-position regression from FIX-12', () => {
+  it('no size or voidexa-position regression (voidexa 5.0 post FIX-16)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBeCloseTo(3.5, 1)
+    expect(voidexa.size).toBeCloseTo(5.0, 1)
     expect(voidexa.position).toEqual([0, 0, 0])
 
     const apps = STAR_MAP_NODES.find(n => n.id === 'apps')!

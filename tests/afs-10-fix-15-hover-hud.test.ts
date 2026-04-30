@@ -30,8 +30,8 @@ describe('AFS-10-FIX-15 — hover HUD + auto-rotate + label cleanup', () => {
     expect(NODE_MESH_SRC).not.toMatch(/onHoverChange\?\.\(/)
   })
 
-  it('NodeMesh.tsx label fontSize is 36px (center) / 30px (satellite)', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'36px'\s*:\s*'30px'/)
+  it('NodeMesh.tsx label fontSize is 48px (center) / 42px (satellite) post FIX-16', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'48px'\s*:\s*'42px'/)
   })
 
   it('StarMapScene.tsx OrbitControls autoRotate is gated on hoveredNodeId', () => {
@@ -78,9 +78,9 @@ describe('AFS-10-FIX-15 — hover HUD + auto-rotate + label cleanup', () => {
     expect(CANVAS_SRC).toMatch(/hoveredScreenPos/)
   })
 
-  it('positions and sizes UNCHANGED from FIX-13 (no spatial regression)', () => {
+  it('positions UNCHANGED + voidexa 5.0 post FIX-16 (no spatial regression)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBeCloseTo(3.5, 1)
+    expect(voidexa.size).toBeCloseTo(5.0, 1)
     expect(voidexa.position).toEqual([0, 0, 0])
 
     const apps = STAR_MAP_NODES.find(n => n.id === 'apps')!
