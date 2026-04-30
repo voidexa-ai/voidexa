@@ -38,7 +38,7 @@ const HUD_CONTENT: Record<string, HudContent> = {
   quantum: {
     title: 'Quantum',
     body: 'Three AI-powered tools in one orbit. Council — 4 AIs debate and converge. Forge — describe a project, AIs debate it, Claude builds it. Void Pro AI — premium pay-per-message access to Claude, ChatGPT, Gemini.',
-    cta: '→ ENTER QUANTUM',
+    cta: '→ EXPLORE QUANTUM TOOLS',
   },
   'trading-hub': {
     title: 'Trading Hub',

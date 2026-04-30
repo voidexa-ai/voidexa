@@ -120,7 +120,7 @@ export const STAR_MAP_NODES: StarNode[] = [
   {
     id: 'quantum',
     label: 'Quantum',
-    path: '/quantum',
+    path: '/quantum-tools',
     position: [18, -9, -48],
     color: '#060618',
     emissive: '#a78bfa',

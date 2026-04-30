@@ -40,9 +40,11 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     expect(hrefs).toHaveLength(3)
   })
 
-  it('Quantum Tools items are in order: Void Pro AI, Quantum Chat, Quantum Forge', () => {
+  it('Quantum Tools items are in order: Void Pro AI, Quantum Council, Quantum Forge', () => {
+    // Sprint A renamed "Quantum Chat" -> "Quantum Council" and repointed the
+    // dropdown child to /quantum (Council marketing) instead of /quantum/chat.
     const voidIdx = quantumToolsBlock.indexOf("'Void Pro AI'")
-    const quantumIdx = quantumToolsBlock.indexOf("'Quantum Chat'")
+    const quantumIdx = quantumToolsBlock.indexOf("'Quantum Council'")
     const forgeIdx = quantumToolsBlock.indexOf("'Quantum Forge'")
     expect(voidIdx).toBeGreaterThan(-1)
     expect(quantumIdx).toBeGreaterThan(voidIdx)
@@ -55,10 +57,12 @@ describe('Nav Quantum Tools dropdown — sprint 14b', () => {
     )
   })
 
-  it('Quantum Chat uses the internal route /quantum/chat', () => {
+  it('Quantum Council uses the internal route /quantum (Sprint A rename from /quantum/chat)', () => {
     expect(quantumToolsBlock).toMatch(
-      /href:\s*['"]\/quantum\/chat['"][\s\S]*?label:\s*['"]Quantum Chat['"]/,
+      /href:\s*['"]\/quantum['"][\s\S]*?label:\s*['"]Quantum Council['"]/,
     )
+    // Old Sprint 14b href is gone from this dropdown.
+    expect(quantumToolsBlock).not.toMatch(/href:\s*['"]\/quantum\/chat['"]/)
   })
 
   it('Quantum Forge uses the external URL https://forge.voidexa.com and is flagged external', () => {
