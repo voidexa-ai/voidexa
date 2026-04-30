@@ -30,8 +30,8 @@ describe('AFS-10-FIX-15 — hover HUD + auto-rotate + label cleanup', () => {
     expect(NODE_MESH_SRC).not.toMatch(/onHoverChange\?\.\(/)
   })
 
-  it('NodeMesh.tsx label fontSize is 48px (center) / 42px (satellite) post FIX-16', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'48px'\s*:\s*'42px'/)
+  it('NodeMesh.tsx label fontSize is 64px (center) / 56px (satellite) post FIX-17', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'64px'\s*:\s*'56px'/)
   })
 
   it('StarMapScene.tsx OrbitControls autoRotate is gated on hoveredNodeId', () => {

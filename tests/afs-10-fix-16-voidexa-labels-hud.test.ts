@@ -29,10 +29,11 @@ describe('AFS-10-FIX-16 — voidexa bump + label readability + HUD same-side', (
     expect(apps.size).toBeLessThan(voidexa.size)
   })
 
-  it('NodeMesh.tsx uses 48px sun and 42px satellite fontSize (1.33x bump from FIX-15 36/30)', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'48px'\s*:\s*'42px'/)
-    // Old FIX-15 main-label values should be gone
+  it('NodeMesh.tsx uses 64px sun and 56px satellite fontSize (FIX-17 bump from FIX-16 48/42)', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'64px'\s*:\s*'56px'/)
+    // Old FIX-15/FIX-16 main-label values should be gone
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'36px'\s*:\s*'30px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'48px'\s*:\s*'42px'/)
   })
 
   it('NodeMesh.tsx still has distanceFactor=16 (NOT removed — FIX-14 lesson)', () => {

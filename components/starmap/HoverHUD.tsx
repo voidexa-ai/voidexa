@@ -15,6 +15,68 @@ const HUD_PADDING = 60
 const HUD_FADE_IN_MS = 200
 const HUD_FADE_OUT_MS = 150
 
+// FIX-17 — per-node HUD content authored from real route audits.
+// Title/body/cta drives the HUD panel. All 10 node ids mapped; the
+// fallback path inside the component should never trigger in practice.
+type HudContent = {
+  title: string
+  body: string
+  cta: string
+}
+
+const HUD_CONTENT: Record<string, HudContent> = {
+  voidexa: {
+    title: 'voidexa',
+    body: 'Sovereign AI Infrastructure. An ecosystem where developers, hardware builders, creators, and businesses build alongside us — from a single product to your own planet.',
+    cta: '→ ENTER ECOSYSTEM',
+  },
+  apps: {
+    title: 'Apps',
+    body: 'Tools for people who think in systems. Encrypted messaging (Comlink), custom apps, automation tools — software that respects your intelligence and your privacy.',
+    cta: '→ EXPLORE APPS',
+  },
+  quantum: {
+    title: 'Quantum',
+    body: 'Three AI-powered tools in one orbit. Council — 4 AIs debate and converge. Forge — describe a project, AIs debate it, Claude builds it. Void Pro AI — premium pay-per-message access to Claude, ChatGPT, Gemini.',
+    cta: '→ ENTER QUANTUM',
+  },
+  'trading-hub': {
+    title: 'Trading Hub',
+    body: 'AI trading systems and a live bot leaderboard. APEX Trader Core + Scalper Core run V3 regime-based trading. +194.79% backtest. Compete with your bot or watch autonomous bots trade.',
+    cta: '→ ENTER HUB',
+  },
+  services: {
+    title: 'Services',
+    body: 'Custom AI development, data intelligence, and consulting. We scope it, we ship it. No retainers, no padded teams — just the work, scoped and delivered.',
+    cta: '→ START A PROJECT',
+  },
+  'game-hub': {
+    title: 'Game Hub',
+    body: 'Card battle, free flight, and a living sci-fi universe. Build decks, fly your ship, explore the voidexa galaxy.',
+    cta: '→ COMING SOON',
+  },
+  'ai-tools': {
+    title: 'AI Tools',
+    body: "AI that does the work. From publishing a book to launching a website — voidexa's AI tools turn conversations into finished products.",
+    cta: '→ EXPLORE TOOLS',
+  },
+  contact: {
+    title: 'Contact',
+    body: "Let's build something. Tell us what you're working on. We respond within 24 hours.",
+    cta: '→ GET IN TOUCH',
+  },
+  station: {
+    title: 'Space Station',
+    body: 'The content hub for the voidexa universe. Cinema, Science, and Social decks — videos, full roadmap, and the team behind the mission.',
+    cta: '→ EXPLORE STATION',
+  },
+  'claim-your-planet': {
+    title: 'Your Planet?',
+    body: "Pioneer Program — 10 slots open. You're not renting a page. You're building a sovereign system inside the voidexa galaxy. Your planet, your economy, your orbit.",
+    cta: '→ CLAIM YOUR PLANET',
+  },
+}
+
 export default function HoverHUD({ node, screenPos, viewportWidth, viewportHeight }: HoverHUDProps) {
   const [visible, setVisible] = useState(false)
   // Cache the last hovered node + position so the HUD can fade out after the
@@ -39,6 +101,14 @@ export default function HoverHUD({ node, screenPos, viewportWidth, viewportHeigh
   }, [node, screenPos])
 
   if (!renderedNode || !renderedPos) return null
+
+  // FIX-17 — resolve per-node HUD content. Fallback covers the unlikely case
+  // of a node id missing from the map (defensive only — all 10 ids mapped).
+  const content: HudContent = HUD_CONTENT[renderedNode.id] ?? {
+    title: renderedNode.label,
+    body: renderedNode.sublabel ?? '',
+    cta: '→ CLICK TO ENTER',
+  }
 
   // Side-aware: HUD appears on SAME side as hovered planet (FIX-16) so the
   // connector line stays in the same viewport half — no scene-crossing.
@@ -118,7 +188,7 @@ export default function HoverHUD({ node, screenPos, viewportWidth, viewportHeigh
             letterSpacing: '-0.01em',
           }}
         >
-          {renderedNode.label}
+          {content.title}
         </div>
         <div
           style={{
@@ -128,7 +198,7 @@ export default function HoverHUD({ node, screenPos, viewportWidth, viewportHeigh
             marginBottom: 16,
           }}
         >
-          {renderedNode.sublabel}
+          {content.body}
         </div>
         <div
           style={{
@@ -138,7 +208,7 @@ export default function HoverHUD({ node, screenPos, viewportWidth, viewportHeigh
             textTransform: 'uppercase',
           }}
         >
-          → Click to enter
+          {content.cta}
         </div>
       </div>
     </>
