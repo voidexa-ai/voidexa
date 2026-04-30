@@ -32,10 +32,10 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
     }
   })
 
-  it('voidexa unchanged at origin', () => {
+  it('voidexa position unchanged at origin (size bumped 0.9 -> 1.8 in FIX-10)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
     expect(voidexa.position).toEqual([0, 0, 0])
-    expect(voidexa.size).toBeCloseTo(0.9, 1)
+    expect(voidexa.size).toBeCloseTo(1.8, 1)
   })
 
   it('all 10 nodes preserved (no cleanup regression)', () => {
@@ -48,22 +48,24 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
   })
 })
 
-describe('AFS-10-FIX-9 — label readability bump', () => {
+describe('AFS-10-FIX-9 — label readability bump (current state via FIX-10)', () => {
   const NODE_MESH_SRC = readFileSync(
     join(__dirname, '..', 'components', 'starmap', 'NodeMesh.tsx'),
     'utf-8',
   )
 
-  it('main label fontSize bumped 1.5x — center 27px / satellite 23px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'27px'\s*:\s*'23px'/)
+  it('main label fontSize at FIX-10 values — center 35px / satellite 30px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'35px'\s*:\s*'30px'/)
   })
 
-  it('subtitle fontSize bumped 1.5x to 21px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'21px'/)
+  it('subtitle fontSize at FIX-10 value 27px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'27px'/)
   })
 
-  it('previous FIX-8 fontSize values no longer present (regression guard)', () => {
+  it('previous FIX-8 + FIX-9 fontSize values no longer present (regression guard)', () => {
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'18px'\s*:\s*'15px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'27px'\s*:\s*'23px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'14px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'21px'/)
   })
 })

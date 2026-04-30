@@ -52,9 +52,9 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
     }
   })
 
-  it('voidexa size is exactly 0.9 (was 0.6, x1.5 multiplier)', () => {
+  it('voidexa size is exactly 1.8 (FIX-10 doubled from 0.9)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBe(0.9)
+    expect(voidexa.size).toBe(1.8)
   })
 
   it('voidexa position unchanged at [0, 0, 0]', () => {
@@ -62,9 +62,10 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
     expect(voidexa.position).toEqual([0, 0, 0])
   })
 
-  it('apps node is at scaled position with size 1.23', () => {
+  it('apps node is at scaled position with size 2.46', () => {
     const apps = STAR_MAP_NODES.find(n => n.id === 'apps')!
-    expect(apps.size).toBeCloseTo(1.23, 2)
+    // FIX-10 doubled satellite sizes: 1.23 -> 2.46.
+    expect(apps.size).toBeCloseTo(2.46, 2)
     // FIX-9 rebalanced position from [-8,3,-12] to [-12,4.5,-18]
     // (current x 1.5 = original x 3 — pulls near cluster away from sun).
     expect(apps.position).toEqual([-12, 4.5, -18])
