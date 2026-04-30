@@ -23,10 +23,10 @@ describe('AFS-10-FIX-12 — corrected camera flip (negative z)', () => {
     expect(apps.size).toBeCloseTo(3.5, 1)
   })
 
-  it('station size 2.5 + relocated to [10, 8, -36]', () => {
+  it('station size 2.5 (position further moved to [16, 5, -42] in FIX-13)', () => {
     const station = STAR_MAP_NODES.find(n => n.id === 'station')!
     expect(station.size).toBeCloseTo(2.5, 1)
-    expect(station.position).toEqual([10, 8, -36])
+    expect(station.position).toEqual([16, 5, -42])
   })
 
   it('voidexa position UNCHANGED at origin', () => {

@@ -106,7 +106,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     id: 'contact',
     label: 'Contact',
     path: '/contact',
-    position: [12, 9, -30],
+    position: [-6, 11, -28],
     color: '#1a1200',
     emissive: '#ffaa00',       // warm amber (distinct from orange Trading)
     emissiveIntensity: 2.0,
@@ -151,7 +151,7 @@ export const STAR_MAP_NODES: StarNode[] = [
     id: 'station',
     label: 'Space Station',
     path: '/station',
-    position: [10, 8, -36],
+    position: [16, 5, -42],
     color: '#001322',
     emissive: '#44aacc',
     emissiveIntensity: 1.6,

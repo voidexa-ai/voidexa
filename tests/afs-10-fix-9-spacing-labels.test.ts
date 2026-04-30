@@ -48,26 +48,28 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
   })
 })
 
-describe('AFS-10-FIX-9 — label readability bump (current state via FIX-12)', () => {
+describe('AFS-10-FIX-9 — label readability bump (current state via FIX-13)', () => {
   const NODE_MESH_SRC = readFileSync(
     join(__dirname, '..', 'components', 'starmap', 'NodeMesh.tsx'),
     'utf-8',
   )
 
-  it('main label fontSize at FIX-12 values — center 45px / satellite 39px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'45px'\s*:\s*'39px'/)
+  it('main label fontSize at FIX-13 values — center 52px / satellite 45px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'52px'\s*:\s*'45px'/)
   })
 
-  it('subtitle fontSize at FIX-12 value 35px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'35px'/)
+  it('subtitle fontSize at FIX-13 value 40px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'40px'/)
   })
 
-  it('previous FIX-8/9/10 fontSize values no longer present (regression guard)', () => {
+  it('previous FIX-8/9/10/11/12 fontSize values no longer present (regression guard)', () => {
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'18px'\s*:\s*'15px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'27px'\s*:\s*'23px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'35px'\s*:\s*'30px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'45px'\s*:\s*'39px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'14px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'21px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'27px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'35px'/)
   })
 })
