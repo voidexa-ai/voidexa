@@ -37,17 +37,17 @@ describe('AFS-10-FIX-3 — galaxy view camera (pull-back-only)', () => {
   })
 })
 
-describe('AFS-10-FIX-3 — system view camera (pull-back-only)', () => {
-  test('StarMapCanvas camera position is [0, 0, 12]', () => {
-    expect(SYSTEM_CANVAS).toMatch(/position:\s*\[0,\s*0,\s*12\]/)
+describe('AFS-10-FIX-3 — system view camera (current state via FIX-12 depth flip)', () => {
+  test('StarMapCanvas camera position is [0, 5, -90] (FIX-12 behind claim)', () => {
+    expect(SYSTEM_CANVAS).toMatch(/position:\s*\[0,\s*5,\s*-90\]/)
   })
 
   test('StarMapCanvas FOV unchanged at 60', () => {
     expect(SYSTEM_CANVAS).toMatch(/fov:\s*60/)
   })
 
-  test('StarMapScene OrbitControls maxDistance is 80', () => {
-    expect(SYSTEM_SCENE).toMatch(/maxDistance=\{80\}/)
+  test('StarMapScene OrbitControls maxDistance is 150 (FIX-12 bumped from 80)', () => {
+    expect(SYSTEM_SCENE).toMatch(/maxDistance=\{150\}/)
   })
 
   test('StarMapScene OrbitControls minDistance unchanged at 5', () => {

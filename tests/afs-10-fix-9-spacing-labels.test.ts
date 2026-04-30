@@ -32,10 +32,10 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
     }
   })
 
-  it('voidexa position unchanged at origin (size bumped 0.9 -> 1.8 in FIX-10)', () => {
+  it('voidexa position unchanged at origin (size bumped to 3.5 in FIX-12)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
     expect(voidexa.position).toEqual([0, 0, 0])
-    expect(voidexa.size).toBeCloseTo(1.8, 1)
+    expect(voidexa.size).toBeCloseTo(3.5, 1)
   })
 
   it('all 10 nodes preserved (no cleanup regression)', () => {
@@ -48,24 +48,26 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
   })
 })
 
-describe('AFS-10-FIX-9 — label readability bump (current state via FIX-10)', () => {
+describe('AFS-10-FIX-9 — label readability bump (current state via FIX-12)', () => {
   const NODE_MESH_SRC = readFileSync(
     join(__dirname, '..', 'components', 'starmap', 'NodeMesh.tsx'),
     'utf-8',
   )
 
-  it('main label fontSize at FIX-10 values — center 35px / satellite 30px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'35px'\s*:\s*'30px'/)
+  it('main label fontSize at FIX-12 values — center 45px / satellite 39px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'45px'\s*:\s*'39px'/)
   })
 
-  it('subtitle fontSize at FIX-10 value 27px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'27px'/)
+  it('subtitle fontSize at FIX-12 value 35px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'35px'/)
   })
 
-  it('previous FIX-8 + FIX-9 fontSize values no longer present (regression guard)', () => {
+  it('previous FIX-8/9/10 fontSize values no longer present (regression guard)', () => {
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'18px'\s*:\s*'15px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'27px'\s*:\s*'23px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'35px'\s*:\s*'30px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'14px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'21px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'27px'/)
   })
 })

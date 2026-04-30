@@ -9,16 +9,16 @@ describe('AFS-10-FIX-10 — planet size + label bump', () => {
     }
   })
 
-  it('largest satellite size is between 2.0 and 3.0', () => {
+  it('largest satellite size is between 2.0 and 4.0 (apps bumped to 3.5 in FIX-12)', () => {
     const satellites = STAR_MAP_NODES.filter(n => n.id !== 'voidexa')
     const max = Math.max(...satellites.map(n => n.size))
     expect(max).toBeGreaterThanOrEqual(2.0)
-    expect(max).toBeLessThanOrEqual(3.0)
+    expect(max).toBeLessThanOrEqual(4.0)
   })
 
-  it('voidexa sun size bumped to 1.8 (FIX-10 doubled from 0.9)', () => {
+  it('voidexa sun size at 3.5 (FIX-12 bumped from 1.8 for depth POV)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBeCloseTo(1.8, 1)
+    expect(voidexa.size).toBeCloseTo(3.5, 1)
   })
 
   it('voidexa position unchanged at origin', () => {

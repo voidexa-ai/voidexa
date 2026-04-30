@@ -2,38 +2,19 @@ import { describe, it, expect } from 'vitest'
 import { STAR_MAP_NODES } from '../components/starmap/nodes'
 
 describe('AFS-10-FIX-8 — planet scale increase', () => {
-  it('voidexa sun has the largest apparent screen size (camera-distance-aware)', () => {
-    // After AFS-10-FIX-8 asymmetric multipliers (1.5x sun, 3.5x satellites),
-    // raw node-size sun (0.9) is smaller than the largest satellite (1.23).
-    // Sun stays visually dominant only because it sits at origin while the
-    // system camera at [0, 0, 12] is much closer to the sun than to any
-    // satellite (which all sit at z ≤ -10). Apparent screen size ∝
-    // node.size / camera_distance.
-    const cam: [number, number, number] = [0, 0, 12]
-    const apparent = (n: { size: number; position: [number, number, number] }) => {
-      const [x, y, z] = n.position
-      const d = Math.sqrt(
-        (x - cam[0]) ** 2 + (y - cam[1]) ** 2 + (z - cam[2]) ** 2,
-      )
-      return n.size / d
-    }
+  it('voidexa is the largest body by raw size or matched by 1 satellite (apps)', () => {
+    // FIX-12 flipped camera to depth-perspective POV [0, 5, -90] looking
+    // toward voidexa at [0, 0, 0]. From this side, claim/trading-hub/quantum
+    // sit BETWEEN camera and voidexa, so they appear larger on screen by
+    // depth perspective (intentional). The original "voidexa apparent-largest"
+    // invariant no longer holds — it was camera-dependent.
+    //
+    // Replacement: raw-size invariant. From geometry alone (camera-independent),
+    // at most 1 satellite (apps, matched at 3.5) is as large as voidexa (3.5).
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
     const satellites = STAR_MAP_NODES.filter(n => n.id !== 'voidexa')
-    const voidexaApparent = apparent(voidexa)
-    for (const node of satellites) {
-      expect(voidexaApparent).toBeGreaterThan(apparent(node))
-    }
-  })
-
-  it('raw size ratio voidexa:avg-satellite is in expected post-FIX-8 band', () => {
-    // 1.5x sun + 3.5x satellites narrows the raw-size ratio below 1.
-    // Pre-FIX-8 was 0.6 / 0.30 = 2.0; post-FIX-8 is 0.9 / ~1.05 ≈ 0.86.
-    const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    const satellites = STAR_MAP_NODES.filter(n => n.id !== 'voidexa')
-    const avgSatelliteSize = satellites.reduce((s, n) => s + n.size, 0) / satellites.length
-    const ratio = voidexa.size / avgSatelliteSize
-    expect(ratio).toBeGreaterThan(0.7)
-    expect(ratio).toBeLessThan(1.0)
+    const biggerOrEqual = satellites.filter(n => n.size >= voidexa.size)
+    expect(biggerOrEqual.length).toBeLessThanOrEqual(1)
   })
 
   it('satellite planets are bigger than 0.5 unit (post FIX-8 floor)', () => {
@@ -52,9 +33,9 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
     }
   })
 
-  it('voidexa size is exactly 1.8 (FIX-10 doubled from 0.9)', () => {
+  it('voidexa size is exactly 3.5 (FIX-12 bumped from 1.8 for new POV)', () => {
     const voidexa = STAR_MAP_NODES.find(n => n.id === 'voidexa')!
-    expect(voidexa.size).toBe(1.8)
+    expect(voidexa.size).toBe(3.5)
   })
 
   it('voidexa position unchanged at [0, 0, 0]', () => {
@@ -62,10 +43,11 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
     expect(voidexa.position).toEqual([0, 0, 0])
   })
 
-  it('apps node is at scaled position with size 2.46', () => {
+  it('apps node is at scaled position with size 3.5', () => {
     const apps = STAR_MAP_NODES.find(n => n.id === 'apps')!
-    // FIX-10 doubled satellite sizes: 1.23 -> 2.46.
-    expect(apps.size).toBeCloseTo(2.46, 2)
+    // FIX-12 bumped apps to 3.5 (matches voidexa — pink gas giant
+    // prominence per Jix reference image).
+    expect(apps.size).toBeCloseTo(3.5, 1)
     // FIX-9 rebalanced position from [-8,3,-12] to [-12,4.5,-18]
     // (current x 1.5 = original x 3 — pulls near cluster away from sun).
     expect(apps.position).toEqual([-12, 4.5, -18])
@@ -75,8 +57,9 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
     const cyp = STAR_MAP_NODES.find(n => n.id === 'claim-your-planet')!
     const [x, y, z] = cyp.position
     const distance = Math.sqrt(x * x + y * y + z * z)
-    // After 2x position multiplier, must stay under StarMapScene
-    // OrbitControls maxDistance (bumped to 80 in this sprint).
-    expect(distance).toBeLessThan(80)
+    // FIX-12 bumped maxDistance to 150 (camera at distance ~90 from
+    // origin target on the negative-z side). claim-your-planet is at
+    // distance ~62.94 from origin — well within.
+    expect(distance).toBeLessThan(150)
   })
 })
