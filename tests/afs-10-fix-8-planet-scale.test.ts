@@ -65,7 +65,9 @@ describe('AFS-10-FIX-8 — planet scale increase', () => {
   it('apps node is at scaled position with size 1.23', () => {
     const apps = STAR_MAP_NODES.find(n => n.id === 'apps')!
     expect(apps.size).toBeCloseTo(1.23, 2)
-    expect(apps.position).toEqual([-8, 3, -12])
+    // FIX-9 rebalanced position from [-8,3,-12] to [-12,4.5,-18]
+    // (current x 1.5 = original x 3 — pulls near cluster away from sun).
+    expect(apps.position).toEqual([-12, 4.5, -18])
   })
 
   it('claim-your-planet (farthest) sits within scaled OrbitControls reach', () => {
