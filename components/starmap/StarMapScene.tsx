@@ -5,10 +5,17 @@ import { useFrame } from '@react-three/fiber'
 import { OrbitControls, Line } from '@react-three/drei'
 import * as THREE from 'three'
 import NodeMesh from './NodeMesh'
-import { STAR_MAP_NODES } from './nodes'
+import { STAR_MAP_NODES, type StarNode } from './nodes'
 import NebulaBg from './NebulaBg'
 import WarpStreaks from './WarpStreaks'
 import CameraRig from './CameraRig'
+
+interface StarMapSceneProps {
+  hoveredNodeId: string | null
+  onHoverStart: (node: StarNode, screenPos: { x: number; y: number }) => void
+  onHoverEnd: () => void
+  onHoverUpdate: (screenPos: { x: number; y: number }) => void
+}
 
 // ── Constellation lines with energy pulse dot ─────────────────────────────
 function ConstellationLines() {
@@ -84,9 +91,13 @@ function EnergyPulses() {
 }
 
 // ── Main scene ─────────────────────────────────────────────────────────────
-export default function StarMapScene() {
+export default function StarMapScene({
+  hoveredNodeId,
+  onHoverStart,
+  onHoverEnd,
+  onHoverUpdate,
+}: StarMapSceneProps) {
   const [warping, setWarping] = useState(false)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   return (
     <>
@@ -101,7 +112,7 @@ export default function StarMapScene() {
       <WarpStreaks active={warping} />
 
       {/* Camera rig: parallax + hover dolly (disabled during warp) */}
-      <CameraRig hoveredId={hoveredId} disabled={warping} />
+      <CameraRig hoveredId={hoveredNodeId} disabled={warping} />
 
       {/* Constellation network */}
       <ConstellationLines />
@@ -113,14 +124,17 @@ export default function StarMapScene() {
           key={node.id}
           node={node}
           onWarpStart={() => setWarping(true)}
-          onHoverChange={setHoveredId}
+          isHovered={hoveredNodeId === node.id}
+          onHoverStart={(pos) => onHoverStart(node, pos)}
+          onHoverEnd={onHoverEnd}
+          onHoverUpdate={onHoverUpdate}
         />
       ))}
 
       {/* Unmount OrbitControls during warp so it can't fight the camera animation */}
       {!warping && (
         <OrbitControls
-          autoRotate
+          autoRotate={!hoveredNodeId}
           autoRotateSpeed={0.22}
           enableZoom
           enablePan={false}

@@ -40,7 +40,10 @@ function TexturedPlanetBody({
 interface NodeMeshProps {
   node: StarNode
   onWarpStart?: (node: StarNode) => void
-  onHoverChange?: (id: string | null) => void
+  isHovered?: boolean
+  onHoverStart?: (screenPos: { x: number; y: number }) => void
+  onHoverEnd?: () => void
+  onHoverUpdate?: (screenPos: { x: number; y: number }) => void
 }
 
 const ATMOSPHERE_BY_TYPE: Record<PlanetType, { scale: number; opacity: number; color?: string }> = {
@@ -56,7 +59,14 @@ const ATMOSPHERE_BY_TYPE: Record<PlanetType, { scale: number; opacity: number; c
   station:  { scale: 1.00, opacity: 0.00 },
 }
 
-export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshProps) {
+export default function NodeMesh({
+  node,
+  onWarpStart,
+  isHovered = false,
+  onHoverStart,
+  onHoverEnd,
+  onHoverUpdate,
+}: NodeMeshProps) {
   const { position, size, color, emissive, emissiveIntensity, label, sublabel, path, isCenter, isDiscovered } = node
   const planetType: PlanetType = node.planetType ?? 'desert'
   const atmo = ATMOSPHERE_BY_TYPE[planetType]
@@ -67,7 +77,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
   const stationRingRef = useRef<THREE.Mesh>(null)
   const [hovered, setHovered] = useState(false)
   const router = useRouter()
-  const { camera } = useThree()
+  const { camera, size: viewportSize } = useThree()
   const phaseOffset = useRef(Math.random() * Math.PI * 2).current
 
   // Click guard: track pointer-down position to distinguish click from drag
@@ -116,21 +126,38 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
       stationRingRef.current.rotation.x = Math.sin(t * 0.25) * 0.5 + Math.PI / 4
     }
 
+    // FIX-15 — per-frame screen-space projection while hovered, so the HUD
+    // line follows the planet as user drags or auto-rotation moves it.
+    if (isHovered && meshRef.current && onHoverUpdate) {
+      const worldVec = new THREE.Vector3()
+      meshRef.current.getWorldPosition(worldVec)
+      worldVec.project(camera)
+      const x = (worldVec.x * 0.5 + 0.5) * viewportSize.width
+      const y = (-worldVec.y * 0.5 + 0.5) * viewportSize.height
+      onHoverUpdate({ x, y })
+    }
   })
 
   const onEnter = useCallback(() => {
     if (!isDiscovered && !path && node.id !== 'claim-your-planet') return
     if (!path) return
     setHovered(true)
-    onHoverChange?.(node.id)
     document.body.style.cursor = 'pointer'
-  }, [isDiscovered, path, node.id, onHoverChange])
+    if (meshRef.current && onHoverStart) {
+      const worldVec = new THREE.Vector3()
+      meshRef.current.getWorldPosition(worldVec)
+      worldVec.project(camera)
+      const x = (worldVec.x * 0.5 + 0.5) * viewportSize.width
+      const y = (-worldVec.y * 0.5 + 0.5) * viewportSize.height
+      onHoverStart({ x, y })
+    }
+  }, [isDiscovered, path, node.id, onHoverStart, camera, viewportSize])
 
   const onLeave = useCallback(() => {
     setHovered(false)
-    onHoverChange?.(null)
     document.body.style.cursor = 'grab'
-  }, [onHoverChange])
+    onHoverEnd?.()
+  }, [onHoverEnd])
 
   // onPointerDown: record screen position for click-vs-drag detection
   const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -374,7 +401,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
         </Html>
       )}
 
-      {/* Labels */}
+      {/* Name label only — subtitle moved to HoverHUD on hover (FIX-15) */}
       <Html
         center
         distanceFactor={16}
@@ -387,7 +414,7 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
             pointerEvents: (isDiscovered || node.id === 'claim-your-planet') ? 'auto' : 'none',
             cursor: (isDiscovered || node.id === 'claim-your-planet') ? 'pointer' : 'default',
             color: isDiscovered ? 'rgba(255,255,255,0.95)' : node.id === 'claim-your-planet' ? 'rgba(0,212,255,0.55)' : 'rgba(255,255,255,0.4)',
-            fontSize: isCenter ? '52px' : '45px',
+            fontSize: isCenter ? '36px' : '30px',
             fontWeight: 600,
             fontFamily: 'var(--font-space, system-ui)',
             whiteSpace: 'nowrap',
@@ -400,23 +427,6 @@ export default function NodeMesh({ node, onWarpStart, onHoverChange }: NodeMeshP
           }}
         >
           {label}{isDiscovered ? '' : ' ?'}
-        </div>
-        <div
-          onClick={handleNodeClick}
-          style={{
-            pointerEvents: isDiscovered ? 'auto' : 'none',
-            cursor: isDiscovered ? 'pointer' : 'default',
-            color: isDiscovered ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
-            fontSize: '40px',
-            fontWeight: 500,
-            fontFamily: 'var(--font-inter, system-ui)',
-            whiteSpace: 'nowrap',
-            marginTop: 4,
-            letterSpacing: '0.5px',
-            textShadow: '0 2px 8px rgba(0,0,0,0.8)',
-          }}
-        >
-          {sublabel}
         </div>
       </Html>
     </group>

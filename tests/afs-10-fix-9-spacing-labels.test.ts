@@ -48,28 +48,32 @@ describe('AFS-10-FIX-9 — spacing rebalance', () => {
   })
 })
 
-describe('AFS-10-FIX-9 — label readability bump (current state via FIX-13)', () => {
+describe('AFS-10-FIX-9 — label readability bump (current state via FIX-15)', () => {
   const NODE_MESH_SRC = readFileSync(
     join(__dirname, '..', 'components', 'starmap', 'NodeMesh.tsx'),
     'utf-8',
   )
 
-  it('main label fontSize at FIX-13 values — center 52px / satellite 45px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'52px'\s*:\s*'45px'/)
+  it('main label fontSize at FIX-15 values — center 36px / satellite 30px', () => {
+    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*isCenter\s*\?\s*'36px'\s*:\s*'30px'/)
   })
 
-  it('subtitle fontSize at FIX-13 value 40px', () => {
-    expect(NODE_MESH_SRC).toMatch(/fontSize:\s*'40px'/)
+  it('subtitle <Html> block removed (text moved to HoverHUD in FIX-15)', () => {
+    // The standalone subtitle div with fontSize 40px is gone — sublabel
+    // now renders in HoverHUD overlay on hover instead.
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'40px'/)
   })
 
-  it('previous FIX-8/9/10/11/12 fontSize values no longer present (regression guard)', () => {
+  it('previous FIX-8 through FIX-13 fontSize values no longer present (regression guard)', () => {
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'18px'\s*:\s*'15px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'27px'\s*:\s*'23px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'35px'\s*:\s*'30px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'45px'\s*:\s*'39px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*isCenter\s*\?\s*'52px'\s*:\s*'45px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'14px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'21px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'27px'/)
     expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'35px'/)
+    expect(NODE_MESH_SRC).not.toMatch(/fontSize:\s*'40px'/)
   })
 })
