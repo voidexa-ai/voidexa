@@ -10,15 +10,6 @@ const ACCENT = '#7777bb'
 
 const CAST = [
   {
-    id: 'jix',
-    name: 'Jix',
-    role: 'CEO',
-    oneliner: '47 ideas per minute, remembers 3',
-    image: '/images/cast/jix.jpg',
-    color: '#f59e0b',
-    glow: 'rgba(245,158,11,0.35)',
-  },
-  {
     id: 'claude',
     name: 'Claude',
     role: 'Chief Architect',
@@ -194,12 +185,34 @@ export default function QuantumPage() {
             Quantum by voidexa
           </motion.p>
 
-          {/* Hero image with Quantum label */}
+          {/* Sprint B: extract Quantum h1 ABOVE image so it lives in the
+              first viewport on every laptop height (was buried inside a
+              500px image at bottom-28, sat at y≈696 — below the fold). */}
+          <motion.h1
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mb-6"
+            style={{
+              fontFamily: 'var(--font-space)',
+              fontSize: 'clamp(48px, 7vw, 64px)',
+              fontWeight: 700,
+              letterSpacing: '-0.01em',
+              color: '#e2e8f0',
+              textShadow: `0 0 40px ${ACCENT}88`,
+              lineHeight: 1.05,
+            }}
+          >
+            Quantum
+          </motion.h1>
+
+          {/* Hero image — height reduced 500 -> 320 (Sprint B), in-image
+              Quantum label removed since the h1 above carries the title now. */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            style={{ position: 'relative', width: '100%', height: 500, borderRadius: 16, overflow: 'hidden', marginBottom: '1.2em' }}
+            transition={{ duration: 0.7, delay: 0.16 }}
+            style={{ position: 'relative', width: '100%', height: 320, borderRadius: 16, overflow: 'hidden', marginBottom: 24 }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -207,27 +220,11 @@ export default function QuantumPage() {
               alt="Quantum conference room"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
             />
-            {/* Bottom gradient so text is readable */}
+            {/* Subtle bottom gradient — kept for visual fade-into-page consistency */}
             <div style={{
               position: 'absolute', inset: 0,
-              background: 'linear-gradient(to bottom, transparent 40%, rgba(7,4,18,0.85) 100%)',
+              background: 'linear-gradient(to bottom, transparent 60%, rgba(7,4,18,0.6) 100%)',
             }} />
-            {/* "Quantum" label at bottom center */}
-            <div style={{
-              position: 'absolute', bottom: 28, left: 0, right: 0,
-              display: 'flex', justifyContent: 'center',
-            }}>
-              <span style={{
-                fontFamily: 'var(--font-space)',
-                fontSize: 36,
-                fontWeight: 700,
-                letterSpacing: '-0.01em',
-                color: '#e2e8f0',
-                textShadow: `0 0 40px ${ACCENT}88`,
-              }}>
-                Quantum
-              </span>
-            </div>
           </motion.div>
 
           {/* Subtitle */}
@@ -258,7 +255,7 @@ export default function QuantumPage() {
             className="text-base leading-relaxed mb-10 mx-auto max-w-lg"
             style={{ color: '#64748b' }}
           >
-            5 AI providers debate your question in real-time. They challenge each other,
+            4 AI providers debate your question in real-time. They challenge each other,
             cite sources, change positions, and converge on the best answer.
             No single-model bias — just collective intelligence.
           </motion.p>
@@ -485,8 +482,8 @@ export default function QuantumPage() {
                       {/* Left — avatar orbit + consensus */}
                       <div className="flex flex-col items-center gap-6 lg:w-52 shrink-0">
 
-                        {/* Orbit layout */}
-                        <div className="relative" style={{ width: 168, height: 168 }}>
+                        {/* Orbit layout — Sprint B: enlarged portraits + container so 5 AI faces are clearly readable */}
+                        <div className="relative" style={{ width: 200, height: 200 }}>
                           {/* Center label */}
                           <div style={{
                             position: 'absolute', top: '50%', left: '50%',
@@ -500,16 +497,16 @@ export default function QuantumPage() {
                           {/* Connection lines SVG */}
                           <svg
                             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.12 }}
-                            viewBox="0 0 168 168"
+                            viewBox="0 0 200 200"
                           >
                             {CAST.map((char, i) => {
                               const a1 = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
                               const a2 = ((i + 2) / CAST.length) * 2 * Math.PI - Math.PI / 2
-                              const r = 72
+                              const r = 80
                               return (
                                 <line key={i}
-                                  x1={84 + r * Math.cos(a1)} y1={84 + r * Math.sin(a1)}
-                                  x2={84 + r * Math.cos(a2)} y2={84 + r * Math.sin(a2)}
+                                  x1={100 + r * Math.cos(a1)} y1={100 + r * Math.sin(a1)}
+                                  x2={100 + r * Math.cos(a2)} y2={100 + r * Math.sin(a2)}
                                   stroke={char.color} strokeWidth="1"
                                 />
                               )
@@ -519,24 +516,24 @@ export default function QuantumPage() {
                           {/* Avatars */}
                           {CAST.map((char, i) => {
                             const angle = (i / CAST.length) * 2 * Math.PI - Math.PI / 2
-                            const r = 72
-                            const cx = 84 + r * Math.cos(angle)
-                            const cy = 84 + r * Math.sin(angle)
+                            const r = 80
+                            const cx = 100 + r * Math.cos(angle)
+                            const cy = 100 + r * Math.sin(angle)
                             return (
                               <div key={char.id} style={{
                                 position: 'absolute',
-                                left: cx - 23, top: cy - 23,
-                                width: 46, height: 46,
+                                left: cx - 32, top: cy - 32,
+                                width: 64, height: 64,
                               }}>
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src={char.image}
                                   alt={char.name}
                                   style={{
-                                    width: 46, height: 46, borderRadius: '50%',
+                                    width: 64, height: 64, borderRadius: '50%',
                                     objectFit: 'cover',
                                     border: `2px solid ${char.color}88`,
-                                    boxShadow: `0 0 14px ${char.glow}`,
+                                    boxShadow: `0 0 18px ${char.glow}`,
                                   }}
                                 />
                               </div>
@@ -561,7 +558,7 @@ export default function QuantumPage() {
                               transition={{ duration: 0.04 }}
                             />
                           </div>
-                          <p className="text-base mt-2" style={{ color: '#334155' }}>Emerging from 5 providers</p>
+                          <p className="text-base mt-2" style={{ color: '#334155' }}>Emerging from 4 providers</p>
                         </div>
                       </div>
 

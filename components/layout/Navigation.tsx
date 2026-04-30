@@ -61,7 +61,7 @@ export default function Navigation() {
       children: [
         { href: '/void-pro-ai',               label: 'Void Pro AI',   description: 'Premium AI access' },
         { href: '/quantum',                   label: 'Quantum Council', description: 'Multi-AI debate engine' },
-        { href: 'https://forge.voidexa.com',  label: 'Quantum Forge', description: 'AI-assisted cockpit generator', external: true },
+        { href: 'https://forge.voidexa.com',  label: 'Quantum Forge', description: 'Debate-to-build pipeline', external: true },
       ],
     },
     {
